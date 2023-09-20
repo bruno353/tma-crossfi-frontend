@@ -198,7 +198,6 @@ const MyAccount = () => {
     const formData = new FormData()
     formData.append('file', file)
 
-    // Configurações do axios para a API Pinata
     const pinataAxios = axios.create({
       baseURL: 'https://api.pinata.cloud/pinning/',
       headers: {
@@ -210,7 +209,6 @@ const MyAccount = () => {
 
     const response = await pinataAxios.post('pinFileToIPFS', formData)
 
-    // O hash é o identificador exclusivo do arquivo no IPFS
     const ipfsHash = response.data.IpfsHash
 
     console.log('File uploaded to IPFS with hash', ipfsHash)
