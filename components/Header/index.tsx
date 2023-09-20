@@ -62,11 +62,11 @@ const Header = () => {
       isCurrentlyPage: false,
       href: `${process.env.NEXT_PUBLIC_BASE_URL}/academy`,
     },
-    {
-      label: 'Success Stories',
-      isCurrentlyPage: false,
-      href: `${process.env.NEXT_PUBLIC_BASE_URL}/community`,
-    },
+    // {
+    //   label: 'Success Stories',
+    //   isCurrentlyPage: false,
+    //   href: `${process.env.NEXT_PUBLIC_BASE_URL}/community`,
+    // },
     {
       label: 'FAQs',
       isCurrentlyPage: isFAQPage,
