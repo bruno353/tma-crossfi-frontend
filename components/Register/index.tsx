@@ -190,8 +190,8 @@ const Register = () => {
       .email('Must be a valid email address'),
     companyName: Yup.string().notRequired(),
     foundingYear: Yup.number().notRequired(),
-    personalBlog: Yup.number().notRequired(),
-    githubLink: Yup.number().notRequired(),
+    personalBlog: Yup.string().notRequired(),
+    githubLink: Yup.string().notRequired(),
     website: Yup.string().notRequired(),
     description: Yup.string().required('Description is required'),
     location: Yup.string().required('Location is required'),
@@ -201,7 +201,7 @@ const Register = () => {
     tags: Yup.array()
       .of(Yup.string())
       .min(2, 'At least two tags are required')
-      .max(5, 'You can select up to 10 skills'),
+      .max(5, 'You can select up to 5 skills'),
   })
   const {
     register,
@@ -672,6 +672,9 @@ const Register = () => {
                                 marginBottom: `${
                                   field.value.length >= 2 ? '50px' : ''
                                 }`,
+                                height: `${
+                                  field.value.length >= 2 ? '100px' : '45px'
+                                }`,
                                 fieldset: {
                                   height: `${
                                     field.value.length >= 2 ? '100px' : '45px'
@@ -689,7 +692,9 @@ const Register = () => {
                   </div>
                   <div className="mt-[20px]">
                     <span className="flex flex-row">
-                      Description
+                      {!isCompany
+                        ? 'Provide a short description about yourself'
+                        : 'Provide a short description about your organization'}
                       <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
                         {errors.description?.message}
                       </p>
@@ -704,7 +709,7 @@ const Register = () => {
                   </div>
                   <div className="mt-[20px]">
                     <span className="flex flex-row">
-                      Add your Calendly link to display on yout profile
+                      Add your Calendly link to display on your profile
                       <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
                         {errors.scheduleCalendlyLink?.message}
                       </p>

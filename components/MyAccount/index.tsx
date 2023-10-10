@@ -27,6 +27,8 @@ type RegisterForm = {
   foundingYear: number
   location: string
   website: string
+  personalBlog?: string
+  githubLink?: string
   tags: string[]
   description: string
   scheduleCalendlyLink: string
@@ -73,16 +75,18 @@ const MyAccount = () => {
   const validSchema = Yup.object().shape({
     firstName: Yup.string().required('First name is required'),
     lastName: Yup.string().required('Last name is required'),
-    companyName: Yup.string().required('Company name is required'),
-    foundingYear: Yup.number().required('Founding year is required'),
-    website: Yup.string().required('Website is required'),
+    companyName: Yup.string().notRequired(),
+    foundingYear: Yup.number().notRequired(),
+    personalBlog: Yup.string().notRequired(),
+    githubLink: Yup.string().notRequired(),
+    website: Yup.string().notRequired(),
     description: Yup.string().required('Description is required'),
     location: Yup.string().required('Location is required'),
     scheduleCalendlyLink: Yup.string().notRequired(),
     tags: Yup.array()
       .of(Yup.string())
       .min(2, 'At least two tags are required')
-      .max(3, 'You can select up to 3 skills'),
+      .max(5, 'You can select up to 5 skills'),
   })
   const {
     register,
@@ -306,6 +310,8 @@ const MyAccount = () => {
     setValue('location', user.location)
     setValue('scheduleCalendlyLink', user.calendly)
     setValue('tags', user.tags)
+    setValue('githubLink', user.githubLink)
+    setValue('personalBlog', user.personalBlog)
     // reset({
     //   name: user.name,
     //   email: user.email,
@@ -409,64 +415,70 @@ const MyAccount = () => {
                         {...register('lastName')}
                       />
                     </div>
-                    <div className="mt-[20px]">
-                      <span className="flex flex-row">
-                        Company name
-                        <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
-                          {errors.companyName?.message}
-                        </p>
-                      </span>
-                      <input
-                        disabled={isLoading}
-                        className="mt-[10px] h-[45px] w-[280px] rounded-[10px] border border-[#D4D4D4] bg-white px-[12px] text-[17px] font-normal outline-0 lg:w-[500px]"
-                        type="text"
-                        maxLength={100}
-                        placeholder=""
-                        {...register('companyName')}
-                      />
-                    </div>
-                    <div className="mt-[20px]">
-                      <span className="flex flex-row">
-                        Founding year
-                        <p className="ml-[8px] text-[10px] font-normal text-[#ff0000]">
-                          {errors.foundingYear?.message}
-                        </p>
-                      </span>
-                      <Controller
-                        name="foundingYear"
-                        control={control}
-                        defaultValue={null}
-                        rules={{ required: 'Founding year is required' }}
-                        render={({ field }) => (
-                          <Autocomplete
-                            {...field}
-                            options={years}
-                            disableClearable
-                            getOptionLabel={(option) => option.toString()}
-                            onChange={(e, newValue) => field.onChange(newValue)}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                variant="outlined"
-                                placeholder="Select a year"
-                                error={Boolean(errors.foundingYear)}
-                                helperText={errors.foundingYear?.message}
-                                sx={{
-                                  width: isSmallScreen ? '280px' : '500px',
-                                  fieldset: {
-                                    height: '50px',
-                                    borderColor: '#D4D4D4',
-                                    borderRadius: '10px',
-                                    marginTop: '7px',
-                                  },
-                                  input: { color: 'black' },
-                                }}
-                              />
-                            )}
-                          />
-                        )}
-                      />
-                    </div>
+                    {user.isCompany && (
+                      <div className="mt-[20px]">
+                        <span className="flex flex-row">
+                          Company name
+                          <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
+                            {errors.companyName?.message}
+                          </p>
+                        </span>
+                        <input
+                          disabled={isLoading}
+                          className="mt-[10px] h-[45px] w-[280px] rounded-[10px] border border-[#D4D4D4] bg-white px-[12px] text-[17px] font-normal outline-0 lg:w-[500px]"
+                          type="text"
+                          maxLength={100}
+                          placeholder=""
+                          {...register('companyName')}
+                        />
+                      </div>
+                    )}
+                    {user.isCompany && (
+                      <div className="mt-[20px]">
+                        <span className="flex flex-row">
+                          Founding year
+                          <p className="ml-[8px] text-[10px] font-normal text-[#ff0000]">
+                            {errors.foundingYear?.message}
+                          </p>
+                        </span>
+                        <Controller
+                          name="foundingYear"
+                          control={control}
+                          defaultValue={null}
+                          rules={{ required: 'Founding year is required' }}
+                          render={({ field }) => (
+                            <Autocomplete
+                              {...field}
+                              options={years}
+                              disableClearable
+                              getOptionLabel={(option) => option.toString()}
+                              onChange={(e, newValue) =>
+                                field.onChange(newValue)
+                              }
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  variant="outlined"
+                                  placeholder="Select a year"
+                                  error={Boolean(errors.foundingYear)}
+                                  helperText={errors.foundingYear?.message}
+                                  sx={{
+                                    width: isSmallScreen ? '280px' : '500px',
+                                    fieldset: {
+                                      height: '50px',
+                                      borderColor: '#D4D4D4',
+                                      borderRadius: '10px',
+                                      marginTop: '7px',
+                                    },
+                                    input: { color: 'black' },
+                                  }}
+                                />
+                              )}
+                            />
+                          )}
+                        />
+                      </div>
+                    )}
                     <div className="mt-[20px]">
                       <span className="flex flex-row">
                         Location
@@ -483,22 +495,60 @@ const MyAccount = () => {
                         {...register('location')}
                       />
                     </div>
-                    <div className="mt-[20px]">
-                      <span className="flex flex-row">
-                        Website
-                        <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
-                          {errors.website?.message}
-                        </p>
-                      </span>
-                      <input
-                        disabled={isLoading}
-                        className="mt-[10px] h-[45px] w-[280px] rounded-[10px] border border-[#D4D4D4] bg-white px-[12px] text-[17px] font-normal outline-0 lg:w-[500px]"
-                        type="text"
-                        maxLength={100}
-                        placeholder=""
-                        {...register('website')}
-                      />
-                    </div>
+                    {user.isCompany && (
+                      <div className="mt-[20px]">
+                        <span className="flex flex-row">
+                          Website
+                          <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
+                            {errors.website?.message}
+                          </p>
+                        </span>
+                        <input
+                          disabled={isLoading}
+                          className="mt-[10px] h-[45px] w-[280px] rounded-[10px] border border-[#D4D4D4] bg-white px-[12px] text-[17px] font-normal outline-0 lg:w-[500px]"
+                          type="text"
+                          maxLength={100}
+                          placeholder=""
+                          {...register('website')}
+                        />
+                      </div>
+                    )}
+                    {!user.isCompany && (
+                      <div className="mt-[20px]">
+                        <span className="flex flex-row">
+                          Personal blog
+                          <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
+                            {errors.personalBlog?.message}
+                          </p>
+                        </span>
+                        <input
+                          disabled={isLoading}
+                          className="mt-[10px] h-[45px] w-[280px] rounded-[10px] border border-[#D4D4D4] bg-white px-[12px] text-[17px] font-normal outline-0 lg:w-[500px]"
+                          type="text"
+                          maxLength={100}
+                          placeholder=""
+                          {...register('personalBlog')}
+                        />
+                      </div>
+                    )}
+                    {!user.isCompany && (
+                      <div className="mt-[20px]">
+                        <span className="flex flex-row">
+                          Github
+                          <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
+                            {errors.githubLink?.message}
+                          </p>
+                        </span>
+                        <input
+                          disabled={isLoading}
+                          className="mt-[10px] h-[45px] w-[280px] rounded-[10px] border border-[#D4D4D4] bg-white px-[12px] text-[17px] font-normal outline-0 lg:w-[500px]"
+                          type="text"
+                          maxLength={100}
+                          placeholder=""
+                          {...register('githubLink')}
+                        />
+                      </div>
+                    )}
                     <div className="mt-[20px]">
                       <span className="flex flex-row">
                         Calendly link
@@ -520,7 +570,7 @@ const MyAccount = () => {
                         />
                       </div>
                     </div>
-                    <div className="mt-[20px]">
+                    <div className={`mt-[20px]`}>
                       <span className="flex flex-row">
                         Service tags
                         <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
@@ -554,11 +604,11 @@ const MyAccount = () => {
                               )
                             }
                             onChange={(e, newValue) => {
-                              if (newValue.length <= 8) {
+                              if (newValue.length <= 5) {
                                 field.onChange(newValue)
                               } else {
                                 console.log('not aloweed')
-                                toast.error('Only 8 tags', {
+                                toast.error('Only 5 tags', {
                                   position: toast.POSITION.TOP_RIGHT,
                                 })
                               }
@@ -570,9 +620,15 @@ const MyAccount = () => {
                                 id="margin-none"
                                 sx={{
                                   width: isSmallScreen ? '280px' : '500px',
+                                  marginBottom: `${
+                                    field.value.length >= 2 ? '50px' : ''
+                                  }`,
+                                  height: `${
+                                    field.value.length >= 2 ? '100px' : '45px'
+                                  }`,
                                   fieldset: {
                                     height: `${
-                                      field.value.length >= 4 ? '100px' : '45px'
+                                      field.value.length >= 2 ? '100px' : '45px'
                                     }`,
                                     borderColor: '#D4D4D4',
                                     borderRadius: '10px',
@@ -587,7 +643,9 @@ const MyAccount = () => {
                     </div>
                     <div className="mt-[20px]">
                       <span className="flex flex-row">
-                        Description
+                        {!user.isCompany
+                          ? 'Provide a short description about yourself'
+                          : 'Provide a short description about your organization'}
                         <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
                           {errors.description?.message}
                         </p>

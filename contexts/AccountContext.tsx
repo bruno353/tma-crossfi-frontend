@@ -4,10 +4,13 @@ export interface UserProps {
   firstName: string
   lastName: string
   email: string
-  companyName: string
-  foundingYear: number
+  companyName?: string
+  foundingYear?: number
   location: string
-  website: string
+  website?: string
+  personalBlog?: string
+  githubLink?: string
+  isCompany: boolean
   tags: string[]
   description: string
   password: string
