@@ -135,7 +135,7 @@ const Header = () => {
                 process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
                   ? process.env.NEXT_PUBLIC_BASE_PATH
                   : ''
-              }/images/header/openmesh-logo.svg`}
+              }/images/new/openmesh-logo-new.png`}
               alt="image"
               className={`w-[150px]`}
             />
@@ -281,9 +281,9 @@ const Header = () => {
                   process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
                     ? process.env.NEXT_PUBLIC_BASE_PATH
                     : ''
-                }/images/header/openmesh-logo.svg`}
+                }/images/new/openmesh-logo-new.png`}
                 alt="image"
-                className={`mr-[60px]`}
+                className={`mr-[60px] w-[200px]`}
               />
             </a>
             <div className="flex h-full items-center gap-x-[1px] text-[14px] font-medium !leading-[19px] 2xl:gap-x-[20px] 2xl:text-[16px]">
