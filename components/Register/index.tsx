@@ -194,7 +194,7 @@ const Register = () => {
     githubLink: Yup.string().notRequired(),
     website: Yup.string().notRequired(),
     description: Yup.string().required('Description is required'),
-    location: Yup.string().required('Location is required'),
+    location: Yup.string().notRequired(),
     password: Yup.string().required('Password is required'),
     confirmPassword: Yup.string().required('Confirm password is required'),
     scheduleCalendlyLink: Yup.string().notRequired(),
