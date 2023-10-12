@@ -49,7 +49,7 @@ const EmailConfirmation = (id: any) => {
       })
     } catch (err) {
       toast.error(`An error occurred`)
-      push('/community')
+      push('/oec')
     }
 
     return dado
@@ -67,7 +67,7 @@ const EmailConfirmation = (id: any) => {
       console.log(id.id)
       confirmEmail(id.id)
     } else {
-      push('/community')
+      push('/oec')
     }
   }, [id])
 
@@ -92,7 +92,7 @@ const EmailConfirmation = (id: any) => {
             <a
               href={`${
                 process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                  ? 'https://openmesh.network/community/login'
+                  ? 'https://openmesh.network/oec/login'
                   : '/login'
               }`}
               className="mx-auto flex w-fit cursor-pointer items-center rounded-[5px] border  border-[#0354EC] bg-transparent py-[11.5px] px-[24px] text-[16px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff]"

@@ -331,6 +331,51 @@ const Register = () => {
       element.scrollIntoView({ behavior: 'smooth' })
       return
     }
+
+    if (isCompany) {
+      if (!data.companyName) {
+        toast.error('Company name is mandatory.')
+        const element = document.getElementById('companyNameId')
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+      if (!data.firstName) {
+        toast.error('First name is mandatory.')
+        const element = document.getElementById('firstNameId')
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+      if (!data.lastName) {
+        toast.error('Last name is mandatory.')
+        const element = document.getElementById('lastNameId')
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+      if (!data.email) {
+        toast.error('Email is mandatory.')
+        const element = document.getElementById('emailId')
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    } else {
+      if (!data.githubLink) {
+        toast.error('Github is mandatory.')
+        const element = document.getElementById('githubId')
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+      if (!data.firstName) {
+        toast.error('First name is mandatory.')
+        const element = document.getElementById('firstNameId')
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+      if (!data.lastName) {
+        toast.error('Last name is mandatory.')
+        const element = document.getElementById('lastNameId')
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+      if (!data.email) {
+        toast.error('Email is mandatory.')
+        const element = document.getElementById('emailId')
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+
     setIsLoading(true)
 
     let fileIPFSHash = ''
@@ -440,9 +485,9 @@ const Register = () => {
                       </label>
                     </div>
                   </div>
-                  <div className="mt-[20px]">
+                  <div id="firstNameId" className="mt-[20px]">
                     <span className="flex flex-row">
-                      First Name
+                      First Name*
                       <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
                         {errors.firstName?.message}
                       </p>
@@ -456,9 +501,9 @@ const Register = () => {
                       {...register('firstName')}
                     />
                   </div>
-                  <div className="mt-[20px]">
+                  <div id="lastNameId" className="mt-[20px]">
                     <span className="flex flex-row">
-                      Last Name
+                      Last Name*
                       <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
                         {errors.lastName?.message}
                       </p>
@@ -472,9 +517,9 @@ const Register = () => {
                       {...register('lastName')}
                     />
                   </div>
-                  <div className="mt-[20px]">
+                  <div id="emailId" className="mt-[20px]">
                     <span className="flex flex-row">
-                      Email
+                      Email*
                       <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
                         {errors.email?.message}
                       </p>
@@ -489,9 +534,9 @@ const Register = () => {
                     />
                   </div>
                   {isCompany && (
-                    <div className="mt-[20px]">
+                    <div id="companyNameId" className="mt-[20px]">
                       <span className="flex flex-row">
-                        Company name
+                        Company name*
                         <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
                           {errors.companyName?.message}
                         </p>
@@ -605,19 +650,24 @@ const Register = () => {
                   {!isCompany && (
                     <div className="mt-[20px]">
                       <span className="flex flex-row">
-                        Github
+                        Github*
                         <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
                           {errors.githubLink?.message}
                         </p>
                       </span>
-                      <input
-                        disabled={isLoading}
-                        className="mt-[10px] h-[45px] w-[280px] rounded-[10px] border border-[#D4D4D4] bg-white px-[12px] text-[17px] font-normal outline-0 lg:w-[500px]"
-                        type="text"
-                        maxLength={100}
-                        placeholder=""
-                        {...register('githubLink')}
-                      />
+                      <div className="relative flex items-center">
+                        <span className="absolute left-3 top-[25px] self-center text-[17px] font-normal">
+                          github.com/
+                        </span>
+                        <input
+                          disabled={isLoading}
+                          className="mt-[10px] h-[45px] w-[280px] rounded-[10px] border border-[#D4D4D4] bg-white pl-[110px] pr-[10px] text-[17px] font-normal outline-0 lg:w-[500px]"
+                          type="text"
+                          maxLength={100}
+                          placeholder=""
+                          {...register('githubLink')}
+                        />
+                      </div>
                     </div>
                   )}
                   <div className={`mt-[20px]`}>
@@ -702,7 +752,7 @@ const Register = () => {
                     <textarea
                       disabled={isLoading}
                       className="mt-[10px] h-[200px] w-[380px] rounded-[10px] border border-[#D4D4D4] bg-white py-[25px] px-[20px] text-[17px] font-normal outline-0 lg:w-[500px]"
-                      maxLength={100}
+                      maxLength={400}
                       placeholder=""
                       {...register('description')}
                     />

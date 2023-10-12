@@ -277,7 +277,7 @@ const MyAccount = () => {
       toast.success('Account updated succesfully')
       await new Promise((resolve) => setTimeout(resolve, 2500))
       setIsLoading(false)
-      push('/community')
+      push('/oec')
     } catch (err) {
       console.log(err)
       if (err.response.data.message === 'Email already in use') {
@@ -342,7 +342,7 @@ const MyAccount = () => {
         }
       }
     } else {
-      push('/community')
+      push('/oec')
     }
 
     setIsPageLoading(false)

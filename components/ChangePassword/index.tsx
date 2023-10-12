@@ -149,7 +149,7 @@ const ChangePassword = () => {
       toast.success('Password changed succesfully')
       await new Promise((resolve) => setTimeout(resolve, 2500))
       setIsLoading(false)
-      push('/community')
+      push('/oec')
     } catch (err) {
       console.log(err)
       if (err.response.data.message === 'Email already in use') {
@@ -167,7 +167,7 @@ const ChangePassword = () => {
   useEffect(() => {
     setIsPageLoading(true)
     if (!userHasAnyCookie) {
-      push('/community')
+      push('/oec')
     }
     setIsPageLoading(false)
   }, [user])

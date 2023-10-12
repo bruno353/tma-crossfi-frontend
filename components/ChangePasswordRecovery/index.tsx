@@ -56,7 +56,7 @@ const ChangePasswordRecovery = (id: any) => {
     } catch (err) {
       toast.error(`Not a valid id`)
       await new Promise((resolve) => setTimeout(resolve, 1500))
-      push('/community')
+      push('/oec')
     }
 
     return dado
@@ -123,7 +123,7 @@ const ChangePasswordRecovery = (id: any) => {
       toast.success('Password changed succesfully')
       await new Promise((resolve) => setTimeout(resolve, 500))
       setIsLoading(false)
-      push('/community')
+      push('/oec')
     } catch (err) {
       console.log(err)
       if (err.response.data.message === 'Email already in use') {
@@ -148,7 +148,7 @@ const ChangePasswordRecovery = (id: any) => {
       console.log(id.id)
       checkId(id.id)
     } else {
-      push('/community')
+      push('/oec')
     }
   }, [id])
 

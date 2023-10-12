@@ -3,7 +3,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-  assetPrefix: 'https://openmesh-expert-community.vercel.app',
+  // assetPrefix: 'https://openmesh-expert-community.vercel.app',
 }
 
 module.exports = nextConfig

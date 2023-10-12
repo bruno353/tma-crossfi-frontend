@@ -100,7 +100,7 @@ const Login = () => {
       setUser(res)
       console.log('setting false')
       setIsLoading(false)
-      push('/community')
+      push('/oec')
     } catch (err) {
       console.log(err)
       if (err.response.data.message === 'Unconfirmed Email') {
@@ -212,7 +212,7 @@ const Login = () => {
               <a
                 href={`${
                   process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                    ? `${process.env.NEXT_PUBLIC_BASE_URL}/community/register`
+                    ? `${process.env.NEXT_PUBLIC_BASE_URL}/oec/register`
                     : '/register'
                 }`}
                 className="border-b-1 cursor-pointer border-b text-[#3253FE]"
@@ -225,7 +225,7 @@ const Login = () => {
               <a
                 href={`${
                   process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                    ? `${process.env.NEXT_PUBLIC_BASE_URL}/community/recover-password`
+                    ? `${process.env.NEXT_PUBLIC_BASE_URL}/oec/recover-password`
                     : '/recover-password'
                 }`}
                 className="border-b-1 cursor-pointer border-b text-[#3253FE]"
