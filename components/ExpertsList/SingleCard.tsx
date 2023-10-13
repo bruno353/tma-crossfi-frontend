@@ -26,7 +26,19 @@ const SingleCard = ({
           className={`2xlmd:h-[100px] 2xlmd:w-[100px] h-[70px] w-[70px] rounded-[8px] border  border-[#D9D9D9] md:h-[70px] md:w-[70px]`}
         />
         <div className="ml-auto ">
-          <div className="flex">
+          <div className="mt-[10px] flex">
+            <img
+              src={`${
+                process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
+                  ? process.env.NEXT_PUBLIC_BASE_PATH
+                  : ''
+              }/images/www.svg`}
+              alt="image"
+              className={`mr-[5px] ml-[3px] w-[13px]`}
+            />
+            <div className="flex items-center">{website}</div>
+          </div>
+          <div className="mt-[10px] flex">
             <img
               src={`${
                 process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
