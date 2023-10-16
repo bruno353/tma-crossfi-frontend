@@ -57,30 +57,34 @@ const ExpertsList = () => {
     : filteredTestimonials.slice(0, 6)
   return (
     <section className="bg-white pl-[30px] pr-[30px] pt-[46px] pb-[50px] text-[#000] md:pl-[90px] md:pr-[130px]">
-      <div className="mb-[25px] flex h-[32px] min-w-[150px] max-w-[500px] rounded-[5px] border border-[#D9D9D9] bg-white py-[11px] px-[15px] md:h-[42px]">
-        <img
-          src={`${
-            process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-              ? process.env.NEXT_PUBLIC_BASE_PATH
-              : ''
-          }/images/hero/search.svg`}
-          alt="image"
-          className={`mr-[10px] w-[18px]`}
-        />
-        <input
-          type="text"
-          placeholder="Search here"
-          className=" w-full bg-white text-[10px] font-medium text-[#000000] placeholder-[#575757] outline-none md:text-[14px] 2xl:text-[16px]"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      <div
-        id="experts"
-        className="text-[10px] font-bold -tracking-[2%] md:text-[12px] lg:text-[14px] lg:!leading-[150%] 2xl:text-[20px]"
-      >
-        Openmesh Experts
-      </div>
+      {testimonial.length > 0 && (
+        <div className="mb-[25px] flex h-[32px] min-w-[150px] max-w-[500px] rounded-[5px] border border-[#D9D9D9] bg-white py-[11px] px-[15px] md:h-[42px]">
+          <img
+            src={`${
+              process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
+                ? process.env.NEXT_PUBLIC_BASE_PATH
+                : ''
+            }/images/hero/search.svg`}
+            alt="image"
+            className={`mr-[10px] w-[18px]`}
+          />
+          <input
+            type="text"
+            placeholder="Search here"
+            className=" w-full bg-white text-[10px] font-medium text-[#000000] placeholder-[#575757] outline-none md:text-[14px] 2xl:text-[16px]"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+      )}
+      {testimonial.length > 0 && (
+        <div
+          id="experts"
+          className="text-[10px] font-bold -tracking-[2%] md:text-[12px] lg:text-[14px] lg:!leading-[150%] 2xl:text-[20px]"
+        >
+          Openmesh Experts
+        </div>
+      )}
       <div className="mt-[25px] grid max-h-[2500px] grid-cols-1 gap-x-[40px] gap-y-[40px] overflow-y-auto lg:grid-cols-2 xl:grid-cols-3">
         {testimonialsToShow.map((testimonial, index) => (
           <div key={index}>
@@ -96,18 +100,20 @@ const ExpertsList = () => {
           </div>
         ))}
       </div>
-      <div
-        onClick={() => {
-          if (viewAll) {
-            const element = document.getElementById('experts')
-            element.scrollIntoView({ behavior: 'smooth' })
-          }
-          setViewAll(!viewAll)
-        }}
-        className="mt-[31px] flex  cursor-pointer justify-end text-[10px] font-bold -tracking-[2%] text-[#0354EC] hover:text-[#2d5092] md:text-[14px] lg:!leading-[150%] xl:text-[16px] 2xl:text-[20px]"
-      >
-        {viewAll ? 'View Less' : 'View All'} {'-->'}
-      </div>
+      {testimonial.length > 0 && (
+        <div
+          onClick={() => {
+            if (viewAll) {
+              const element = document.getElementById('experts')
+              element.scrollIntoView({ behavior: 'smooth' })
+            }
+            setViewAll(!viewAll)
+          }}
+          className="mt-[31px] flex  cursor-pointer justify-end text-[10px] font-bold -tracking-[2%] text-[#0354EC] hover:text-[#2d5092] md:text-[14px] lg:!leading-[150%] xl:text-[16px] 2xl:text-[20px]"
+        >
+          {viewAll ? 'View Less' : 'View All'} {'-->'}
+        </div>
+      )}
     </section>
   )
 }
