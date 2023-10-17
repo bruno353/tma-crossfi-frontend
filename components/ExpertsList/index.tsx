@@ -93,9 +93,10 @@ const ExpertsList = () => {
               tags={testimonial.tags}
               description={testimonial.description}
               website={testimonial.website}
-              logo={testimonial.logo.fields.file.url}
+              logo={testimonial.logo?.fields.file.url}
               location={testimonial.location}
               year={testimonial.year}
+              calendly={testimonial.calendly}
             />
           </div>
         ))}
