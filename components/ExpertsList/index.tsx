@@ -2,10 +2,22 @@ import { useEffect, useState } from 'react'
 import SingleCard from './SingleCard'
 import { getPosts } from '@/lib/contentful'
 
+const options = [
+  {
+    value: 'Individuals',
+    label: 'Individuals',
+  },
+  {
+    value: 'Companies',
+    label: 'Companies',
+  },
+]
+
 const ExpertsList = () => {
   const [testimonial, setTestimonial] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [viewAll, setViewAll] = useState(false)
+  const [selected, setSelected] = useState<any>('Companies')
 
   async function getData() {
     const data = await getPosts()
@@ -41,15 +53,18 @@ const ExpertsList = () => {
   }, [])
 
   const filteredTestimonials = testimonial.filter((t) => {
+    const matchesSelectedCategory =
+      selected === 'Companies' ? t.isCompany : !t.isCompany
     return (
-      t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase()),
-      ) ||
-      t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.website.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.year.toString().includes(searchTerm)
+      matchesSelectedCategory &&
+      (t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.tags.some((tag) =>
+          tag.toLowerCase().includes(searchTerm.toLowerCase()),
+        ) ||
+        t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.website.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.year.toString().includes(searchTerm))
     )
   })
   const testimonialsToShow = viewAll
@@ -77,6 +92,17 @@ const ExpertsList = () => {
           />
         </div>
       )}
+      <select
+        className="nodrag mb-[25px] bg-[#fff] md:mb-[40px]"
+        onChange={(option) => setSelected(option.target.value)}
+        value={selected}
+      >
+        {options.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
       {testimonial.length > 0 && (
         <div
           id="experts"
@@ -97,6 +123,7 @@ const ExpertsList = () => {
               location={testimonial.location}
               year={testimonial.year}
               calendly={testimonial.calendly}
+              isCompany={testimonial.isCompany}
             />
           </div>
         ))}
