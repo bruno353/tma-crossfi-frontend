@@ -90,7 +90,11 @@ const ExpertsList = () => {
               className={`cursor-pointer ${
                 selected === 'Individuals' ? 'text-[#0354EC] underline' : ''
               }`}
-              onClick={() => setSelected('Individuals')}
+              onClick={() =>
+                setSelected((prev) =>
+                  prev === 'Individuals' ? null : 'Individuals',
+                )
+              }
             >
               Individuals
             </span>
@@ -99,7 +103,11 @@ const ExpertsList = () => {
               className={`cursor-pointer ${
                 selected === 'Companies' ? 'text-[#0354EC] underline' : ''
               }`}
-              onClick={() => setSelected('Companies')}
+              onClick={() =>
+                setSelected((prev) =>
+                  prev === 'Companies' ? null : 'Companies',
+                )
+              }
             >
               Companies
             </span>
