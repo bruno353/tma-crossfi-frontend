@@ -85,7 +85,7 @@ const SingleCard = ({
             />
             <div className="flex items-center">{location}</div>
           </div>
-          {isCompany && (
+          {year && (
             <div className="mt-[10px] flex">
               <img
                 src={`${
