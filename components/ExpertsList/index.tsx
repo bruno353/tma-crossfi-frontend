@@ -66,44 +66,47 @@ const ExpertsList = () => {
   return (
     <section className="bg-white pl-[30px] pr-[30px] pt-[46px] pb-[50px] text-[#000] md:pl-[90px] md:pr-[130px]">
       {testimonial.length > 0 && (
-        <div className="mb-[25px] flex h-[32px] min-w-[150px] max-w-[500px] rounded-[5px] border border-[#D9D9D9] bg-white py-[11px] px-[15px] md:h-[42px]">
-          <img
-            src={`${
-              process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                ? process.env.NEXT_PUBLIC_BASE_PATH
-                : ''
-            }/images/hero/search.svg`}
-            alt="image"
-            className={`mr-[10px] w-[18px]`}
-          />
-          <input
-            type="text"
-            placeholder="Search here"
-            className=" w-full bg-white text-[10px] font-medium text-[#000000] placeholder-[#575757] outline-none md:text-[14px] 2xl:text-[16px]"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className="flex gap-x-[50px]">
+          <div className="mb-[25px] flex h-[32px] min-w-[350px] max-w-[500px] rounded-[5px] border border-[#D9D9D9] bg-white py-[11px] px-[15px] md:h-[42px]">
+            <img
+              src={`${
+                process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
+                  ? process.env.NEXT_PUBLIC_BASE_PATH
+                  : ''
+              }/images/hero/search.svg`}
+              alt="image"
+              className={`mr-[10px] w-[18px]`}
+            />
+            <input
+              type="text"
+              placeholder="Search here"
+              className=" w-full bg-white text-[10px] font-medium text-[#000000] placeholder-[#575757] outline-none md:text-[14px] 2xl:text-[16px]"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="mb-[10px] flex items-center text-[8px] md:mb-[20px] md:text-[12px]  xl:text-[14px]">
+            <span
+              className={`cursor-pointer ${
+                selected === 'Individuals' ? 'text-[#0354EC] underline' : ''
+              }`}
+              onClick={() => setSelected('Individuals')}
+            >
+              Individuals
+            </span>
+            <span className="mx-4">|</span>
+            <span
+              className={`cursor-pointer ${
+                selected === 'Companies' ? 'text-[#0354EC] underline' : ''
+              }`}
+              onClick={() => setSelected('Companies')}
+            >
+              Companies
+            </span>
+          </div>
         </div>
       )}
-      <div className="mb-[25px] md:mb-[40px]">
-        <span
-          className={`cursor-pointer ${
-            selected === 'Individuals' ? 'text-[#0354EC] underline' : ''
-          }`}
-          onClick={() => setSelected('Individuals')}
-        >
-          Individuals
-        </span>
-        <span className="mx-4">|</span>
-        <span
-          className={`cursor-pointer ${
-            selected === 'Companies' ? 'text-[#0354EC] underline' : ''
-          }`}
-          onClick={() => setSelected('Companies')}
-        >
-          Companies
-        </span>
-      </div>
+
       {testimonial.length > 0 && (
         <div
           id="experts"
