@@ -2,22 +2,11 @@ import { useEffect, useState } from 'react'
 import SingleCard from './SingleCard'
 import { getPosts } from '@/lib/contentful'
 
-const options = [
-  {
-    value: 'Individuals',
-    label: 'Individuals',
-  },
-  {
-    value: 'Companies',
-    label: 'Companies',
-  },
-]
-
 const ExpertsList = () => {
   const [testimonial, setTestimonial] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [viewAll, setViewAll] = useState(false)
-  const [selected, setSelected] = useState<any>('Companies')
+  const [selected, setSelected] = useState<any>(null)
 
   async function getData() {
     const data = await getPosts()
@@ -54,7 +43,11 @@ const ExpertsList = () => {
 
   const filteredTestimonials = testimonial.filter((t) => {
     const matchesSelectedCategory =
-      selected === 'Companies' ? t.isCompany : !t.isCompany
+      selected === null
+        ? true
+        : selected === 'Companies'
+        ? t.isCompany
+        : !t.isCompany
     return (
       matchesSelectedCategory &&
       (t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -92,17 +85,25 @@ const ExpertsList = () => {
           />
         </div>
       )}
-      <select
-        className="nodrag mb-[25px] bg-[#fff] md:mb-[40px]"
-        onChange={(option) => setSelected(option.target.value)}
-        value={selected}
-      >
-        {options.map((option, index) => (
-          <option key={index} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <div className="mb-[25px] md:mb-[40px]">
+        <span
+          className={`cursor-pointer ${
+            selected === 'Individuals' ? 'text-[#0354EC] underline' : ''
+          }`}
+          onClick={() => setSelected('Individuals')}
+        >
+          Individuals
+        </span>
+        <span className="mx-4">|</span>
+        <span
+          className={`cursor-pointer ${
+            selected === 'Companies' ? 'text-[#0354EC] underline' : ''
+          }`}
+          onClick={() => setSelected('Companies')}
+        >
+          Companies
+        </span>
+      </div>
       {testimonial.length > 0 && (
         <div
           id="experts"
