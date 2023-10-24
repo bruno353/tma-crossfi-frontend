@@ -105,6 +105,10 @@ const Login = () => {
       console.log(err)
       if (err.response.data.message === 'Unconfirmed Email') {
         toast.error('Unconfirmed email')
+      } else if (err.response.data.message === 'User disabled') {
+        toast.error(
+          'Please allow 24 to 48 hours for the community to approve your application',
+        )
       } else {
         toast.error('Incorrect credentials')
       }
