@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import ScrollUp from '@/components/Common/ScrollUp'
-import Login from '@/components/Login/Login'
+import Login from '@/components/Login'
 import { Inter } from '@next/font/google'
 // import NewTask from '@/components/NewTask'
 
