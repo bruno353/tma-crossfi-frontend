@@ -19,6 +19,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 const EmailConfirmation = (id: any) => {
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false)
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
+  const [pageRedirect, setPageRedirect] = useState<string>()
 
   const { push } = useRouter()
 
@@ -44,6 +45,9 @@ const EmailConfirmation = (id: any) => {
         if (response.data) {
           dado = response.data
           console.log(dado)
+          if (dado.pageRedirect) {
+            setPageRedirect(dado.pageRedirect)
+          }
         }
         setIsConfirmed(true)
       })
@@ -71,6 +75,16 @@ const EmailConfirmation = (id: any) => {
     }
   }, [id])
 
+  function renderRedirectButton() {
+    if (pageRedirect) {
+      return pageRedirect
+    } else {
+      return process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
+        ? 'https://openmesh.network/oec/login'
+        : '/login'
+    }
+  }
+
   if (!isConfirmed) {
     return (
       <section className="py-16 px-32 text-black md:py-20 lg:pt-40">
@@ -90,11 +104,7 @@ const EmailConfirmation = (id: any) => {
           </div>
           <div className="mt-[50px]">
             <a
-              href={`${
-                process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                  ? 'https://openmesh.network/oec/login'
-                  : '/login'
-              }`}
+              href={renderRedirectButton()}
               className="mx-auto flex w-fit cursor-pointer items-center rounded-[5px] border  border-[#0354EC] bg-transparent py-[11.5px] px-[24px] text-[16px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff]"
             >
               Proceed to Login

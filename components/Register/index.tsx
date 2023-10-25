@@ -64,6 +64,8 @@ const Register = () => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
   const [googleRecaptchaToken, setGoogleRecaptchaToken] = useState('')
   const [isCompany, setIsCompany] = useState<boolean>(false)
+  const [isOpenRD, setIsOpenRD] = useState<boolean>(false)
+  const [isPageRedirect, setIsPageRedirect] = useState<string>()
 
   function onChange(value) {
     console.log('Captcha value:', value)
@@ -74,6 +76,10 @@ const Register = () => {
   const toggleFundingView = () => {
     setIsCompany(!isCompany)
   }
+
+  const searchParams = useSearchParams()
+  const openRD = searchParams.get('openRD')
+  const pageRedirect = searchParams.get('pageRedirect')
 
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
@@ -396,6 +402,8 @@ const Register = () => {
       googleRecaptchaToken,
       profilePictureHash: fileIPFSHash,
       isCompany: isCompany,
+      registrationByOpenRD: isOpenRD,
+      pageRedirect,
     }
     try {
       const res = await createUser(finalData)
@@ -420,6 +428,19 @@ const Register = () => {
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (openRD === 'true') {
+      setIsOpenRD(true)
+      console.log('sim senhorio meu')
+      // Faça algo quando isOpenrd for true
+    }
+    if (pageRedirect) {
+      setIsPageRedirect(pageRedirect)
+      console.log('setei page redirect')
+      console.log(pageRedirect)
+    }
+  }, [openRD])
 
   if (accountCreated) {
     return (
