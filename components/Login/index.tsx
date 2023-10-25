@@ -114,6 +114,7 @@ const Login = () => {
       }
       const element = document.getElementById('emailId')
       element.scrollIntoView({ behavior: 'smooth' })
+      console.log('the error')
       console.log(err.response.data.message)
       setIsLoading(false)
     }
