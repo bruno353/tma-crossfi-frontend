@@ -6,7 +6,7 @@ import ThemeToggler from './ThemeToggler'
 import menuData from './menuData'
 import { UserCircle } from 'phosphor-react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { parseCookies, destroyCookie } from 'nookies'
+import nookies, { parseCookies, destroyCookie } from 'nookies'
 import axios from 'axios'
 import { AccountContext } from '../../contexts/AccountContext'
 import { usePathname } from 'next/navigation'
@@ -43,6 +43,7 @@ const Header = () => {
 
   function signOutUser() {
     destroyCookie(undefined, 'userSessionToken')
+    nookies.destroy(null, 'userSessionToken')
     setUser(null)
   }
 
