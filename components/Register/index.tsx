@@ -206,7 +206,7 @@ const Register = () => {
     scheduleCalendlyLink: Yup.string().notRequired(),
     tags: Yup.array()
       .of(Yup.string())
-      .min(2, 'At least two tags are required')
+      .min(3, 'At least three tags are required')
       .max(5, 'You can select up to 5 skills'),
   })
   const {
@@ -220,6 +220,14 @@ const Register = () => {
   } = useForm<RegisterForm>({
     resolver: yupResolver<any>(validSchema),
   })
+  useEffect(() => {
+    if (errors.tags) {
+      const element = document.getElementById('tagsId')
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }, [errors])
 
   const FileList: FC<FileListProps> = ({ files, onRemove }) => {
     return (
@@ -616,7 +624,7 @@ const Register = () => {
                       />
                     </div>
                   )}
-                  <div className="mt-[20px]">
+                  <div id="tagsId" className="mt-[20px]">
                     <span className="flex flex-row">
                       Location
                       <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
@@ -703,9 +711,10 @@ const Register = () => {
                       control={control}
                       defaultValue={[]}
                       rules={{
-                        required: 'At least two tags are required',
+                        required: 'At least three tags are required',
                         validate: (value) =>
-                          value.length >= 2 || 'At least two tags are required',
+                          value.length >= 3 ||
+                          'At least three tags are required',
                       }}
                       render={({ field }) => (
                         <Autocomplete
