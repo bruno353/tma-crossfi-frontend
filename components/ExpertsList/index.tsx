@@ -62,7 +62,7 @@ const ExpertsList = () => {
   })
   const testimonialsToShow = viewAll
     ? filteredTestimonials
-    : filteredTestimonials.slice(0, 6)
+    : filteredTestimonials.slice(0, 10)
   return (
     <section className="bg-white pl-[30px] pr-[30px] pt-[46px] pb-[50px] text-[#000] md:pl-[90px] md:pr-[130px]">
       {testimonial.length > 0 && (
