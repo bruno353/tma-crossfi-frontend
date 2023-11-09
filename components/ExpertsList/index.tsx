@@ -62,7 +62,7 @@ const ExpertsList = () => {
   })
   const testimonialsToShow = viewAll
     ? filteredTestimonials
-    : filteredTestimonials.slice(0, 10)
+    : filteredTestimonials.slice(0, 12)
   return (
     <section className="bg-white pl-[30px] pr-[30px] pt-[46px] pb-[50px] text-[#000] md:pl-[90px] md:pr-[130px]">
       {testimonial.length > 0 && (
@@ -123,7 +123,7 @@ const ExpertsList = () => {
           Openmesh Experts
         </div>
       )}
-      <div className="mt-[25px] grid max-h-[2500px] grid-cols-1 gap-x-[40px] gap-y-[40px] overflow-y-auto lg:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-[25px] grid grid-cols-1 gap-x-[40px] gap-y-[40px] lg:grid-cols-2 xl:grid-cols-3">
         {testimonialsToShow.map((testimonial, index) => (
           <div key={index}>
             <SingleCard
