@@ -67,7 +67,7 @@ const ExpertsList = () => {
     <section className="bg-white pl-[30px] pr-[30px] pt-[46px] pb-[50px] text-[#000] md:pl-[90px] md:pr-[130px]">
       {testimonial.length > 0 && (
         <div className="grid gap-y-[20px] gap-x-[50px] md:flex">
-          <div className="mb-[25px] flex h-[32px] min-w-[350px] max-w-[500px] rounded-[5px] border border-[#D9D9D9] bg-white py-[11px] px-[15px] md:h-[42px]">
+          <div className="mb-[25px] flex h-[32px] min-w-[250px] max-w-[500px] rounded-[5px] border border-[#D9D9D9] bg-white py-[11px] px-[15px] md:h-[42px]">
             <img
               src={`${
                 process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
