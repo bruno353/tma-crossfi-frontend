@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 /* eslint-disable dot-notation */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
@@ -18,6 +19,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
+import Link from 'next/link'
 
 import { createHash } from 'crypto'
 import ScrollToTop from '../ScrollToTop/index'
@@ -30,6 +32,10 @@ type LoginForm = {
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
+  const handleCheckboxChange = (event) => {
+    setIsCheckboxChecked(event.target.checked)
+  }
 
   const { push } = useRouter()
 
@@ -115,44 +121,100 @@ const SignUp = () => {
 
   return (
     <>
-      <section className="mt-12 mb-[0px] px-[20px] pt-[50px]  text-[11px] font-medium !leading-[17px] text-[#000000] lg:mb-24 lg:px-[100px]  lg:text-[14px]">
-        <div className="mx-auto flex w-fit justify-center rounded-[8px] border border-[#cacaca] p-[100px]">
-          <form onSubmit={handleSubmit(onSubmit)} className="">
-            <div className="">
-              <div>
-                <div id="emailId" className="">
-                  <div className="">
-                    <span className="flex flex-row">
-                      Email
-                      <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
-                        {errors.email?.message}
-                      </p>
-                    </span>
+      <section className="relative z-10 overflow-hidden pt-36 pb-16 md:pb-20 lg:pt-[180px] lg:pb-28">
+        <div className="container">
+          <div className="-mx-4 flex flex-wrap">
+            <div className="w-full px-4">
+              <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 py-10 px-6 dark:bg-dark sm:p-[60px]">
+                <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
+                  Create account
+                </h3>
+                <p className="mb-11 text-center text-base font-medium text-body-color">
+                  Free & Fast
+                </p>
+                <button className="mb-6 flex w-full items-center justify-center rounded-md bg-white p-3 text-base font-medium text-body-color shadow-one hover:text-primary dark:bg-[#242B51] dark:text-body-color dark:shadow-signUp dark:hover:text-white">
+                  <span className="mr-3">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_95:967)">
+                        <path
+                          d="M20.0001 10.2216C20.0122 9.53416 19.9397 8.84776 19.7844 8.17725H10.2042V11.8883H15.8277C15.7211 12.539 15.4814 13.1618 15.1229 13.7194C14.7644 14.2769 14.2946 14.7577 13.7416 15.1327L13.722 15.257L16.7512 17.5567L16.961 17.5772C18.8883 15.8328 19.9997 13.266 19.9997 10.2216"
+                          fill="#4285F4"
+                        />
+                        <path
+                          d="M10.2042 20.0001C12.9592 20.0001 15.2721 19.1111 16.9616 17.5778L13.7416 15.1332C12.88 15.7223 11.7235 16.1334 10.2042 16.1334C8.91385 16.126 7.65863 15.7206 6.61663 14.9747C5.57464 14.2287 4.79879 13.1802 4.39915 11.9778L4.27957 11.9878L1.12973 14.3766L1.08856 14.4888C1.93689 16.1457 3.23879 17.5387 4.84869 18.512C6.45859 19.4852 8.31301 20.0005 10.2046 20.0001"
+                          fill="#34A853"
+                        />
+                        <path
+                          d="M4.39911 11.9777C4.17592 11.3411 4.06075 10.673 4.05819 9.99996C4.0623 9.32799 4.17322 8.66075 4.38696 8.02225L4.38127 7.88968L1.19282 5.4624L1.08852 5.51101C0.372885 6.90343 0.00012207 8.4408 0.00012207 9.99987C0.00012207 11.5589 0.372885 13.0963 1.08852 14.4887L4.39911 11.9777Z"
+                          fill="#FBBC05"
+                        />
+                        <path
+                          d="M10.2042 3.86663C11.6663 3.84438 13.0804 4.37803 14.1498 5.35558L17.0296 2.59996C15.1826 0.901848 12.7366 -0.0298855 10.2042 -3.6784e-05C8.3126 -0.000477834 6.45819 0.514732 4.8483 1.48798C3.2384 2.46124 1.93649 3.85416 1.08813 5.51101L4.38775 8.02225C4.79132 6.82005 5.56974 5.77231 6.61327 5.02675C7.6568 4.28118 8.91279 3.87541 10.2042 3.86663Z"
+                          fill="#EB4335"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_95:967">
+                          <rect width="20" height="20" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </span>
+                  Sign up with Google
+                </button>
+                <div className="mb-8 flex items-center justify-center">
+                  <span className="hidden h-[1px] w-full max-w-[60px] bg-body-color sm:block"></span>
+                  <p className="w-full px-5 text-center text-base font-medium text-body-color">
+                    Or, register with your email
+                  </p>
+                  <span className="hidden h-[1px] w-full max-w-[60px] bg-body-color sm:block"></span>
+                </div>
+                <form>
+                  <div className="mb-8">
+                    <label
+                      htmlFor="name"
+                      className="mb-3 block text-sm font-medium text-dark dark:text-white"
+                    >
+                      {' '}
+                      Name{' '}
+                    </label>
                     <input
-                      disabled={isLoading}
-                      className="mt-[10px] h-[50px] w-[280px] rounded-[10px] border border-[#D4D4D4] bg-white px-[12px] text-[17px] font-normal outline-0 lg:w-[500px]"
                       type="text"
-                      maxLength={500}
-                      placeholder=""
-                      {...register('email')}
+                      name="name"
+                      placeholder="Enter your name"
+                      className="w-full rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                     />
                   </div>
-                  <div className="mt-[20px]">
-                    <span className="flex flex-row">
-                      Password
-                      <p className="ml-[8px] text-[10px] font-normal text-[#ff0000] ">
-                        {errors.password?.message}
-                      </p>
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={isLoading}
-                        className="mt-[10px] mr-[20px] h-[50px] w-[280px] rounded-[10px] border border-[#D4D4D4] bg-white px-[12px] text-[17px] font-normal outline-0 lg:w-[500px]"
-                        type={passwordVisibility ? 'password' : 'text'}
-                        maxLength={500}
-                        placeholder=""
-                        {...register('password')}
-                      />
+                  <div className="mb-8">
+                    <label
+                      htmlFor="email"
+                      className="mb-3 block text-sm font-medium text-dark dark:text-white"
+                    >
+                      {' '}
+                      Email{' '}
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Enter your Email"
+                      className="w-full rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                    />
+                  </div>
+                  <div className="mb-8">
+                    <div className="mb-3 flex gap-x-[15px]">
+                      <label
+                        htmlFor="password"
+                        className=" block text-sm font-medium text-dark dark:text-white"
+                      >
+                        {' '}
+                        Password{' '}
+                      </label>
                       {passwordVisibility ? (
                         <div
                           onClick={() => setPasswordVisibility(false)}
@@ -169,69 +231,92 @@ const SignUp = () => {
                         </div>
                       )}
                     </div>
+
+                    <div>
+                      <input
+                        type={passwordVisibility ? 'password' : 'text'}
+                        name="password"
+                        placeholder="Enter your Password"
+                        className="w-full rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                      />
+                    </div>
                   </div>
-                </div>
+                  <div className="mb-8">
+                    <label
+                      htmlFor="password"
+                      className="mb-3 block text-sm font-medium text-dark dark:text-white"
+                    >
+                      {' '}
+                      Confirm password{' '}
+                    </label>
+                    <input
+                      type={passwordVisibility ? 'password' : 'text'}
+                      name="password"
+                      placeholder="Confirm your Password"
+                      className="w-full rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                    />
+                  </div>
+                  <div className="mb-8 flex">
+                    <label
+                      htmlFor="checkboxLabel"
+                      className="flex cursor-pointer select-none text-sm font-medium text-body-color"
+                    >
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          checked={isCheckboxChecked}
+                          onChange={handleCheckboxChange}
+                          id="checkboxLabel"
+                          className="sr-only"
+                        />
+                        <div className="box mr-4 mt-1 flex h-5 w-5 items-center justify-center rounded border border-body-color border-opacity-20 dark:border-white dark:border-opacity-10">
+                          <span className="opacity-0">
+                            <svg
+                              width="11"
+                              height="8"
+                              viewBox="0 0 11 8"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M10.0915 0.951972L10.0867 0.946075L10.0813 0.940568C9.90076 0.753564 9.61034 0.753146 9.42927 0.939309L4.16201 6.22962L1.58507 3.63469C1.40401 3.44841 1.11351 3.44879 0.932892 3.63584C0.755703 3.81933 0.755703 4.10875 0.932892 4.29224L0.932878 4.29225L0.934851 4.29424L3.58046 6.95832C3.73676 7.11955 3.94983 7.2 4.1473 7.2C4.36196 7.2 4.55963 7.11773 4.71406 6.9584L10.0468 1.60234C10.2436 1.4199 10.2421 1.1339 10.0915 0.951972ZM4.2327 6.30081L4.2317 6.2998C4.23206 6.30015 4.23237 6.30049 4.23269 6.30082L4.2327 6.30081Z"
+                                fill="#3056D3"
+                                stroke="#3056D3"
+                                strokeWidth="0.4"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                      <span>
+                        By creating account means you agree to the
+                        <a href="#0" className="text-primary hover:underline">
+                          {' '}
+                          Terms and Conditions{' '}
+                        </a>
+                        , and our
+                        <a href="#0" className="text-primary hover:underline">
+                          {' '}
+                          Privacy Policy{' '}
+                        </a>
+                      </span>
+                    </label>
+                  </div>
+                  <div className="mb-6">
+                    <button className="flex w-full items-center justify-center rounded-md bg-primary py-4 px-9 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp">
+                      Sign up
+                    </button>
+                  </div>
+                </form>
+                <p className="text-center text-base font-medium text-body-color">
+                  Already have an account? <br />
+                  <Link href="/signin" className="text-primary hover:underline">
+                    Sign in
+                  </Link>
+                </p>
               </div>
             </div>
-            {isLoading ? (
-              <div className="mt-[30px] flex">
-                <button
-                  disabled={true}
-                  className=" cursor-pointer items-center rounded-[5px] border  border-[#000] bg-transparent py-[8px] px-[25px] text-[13px] font-bold !leading-[19px] text-[#575757] hover:bg-[#ececec] lg:text-[16px]"
-                  onClick={handleSubmit(onSubmit)}
-                >
-                  <span className="">Sign in</span>
-                </button>
-                <svg
-                  className="mt-1 animate-spin"
-                  height="40px"
-                  id="Icons"
-                  version="1.1"
-                  viewBox="0 0 80 80"
-                  width="40px"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M58.385,34.343V21.615L53.77,26.23C50.244,22.694,45.377,20.5,40,20.5c-10.752,0-19.5,8.748-19.5,19.5S29.248,59.5,40,59.5  c7.205,0,13.496-3.939,16.871-9.767l-4.326-2.496C50.035,51.571,45.358,54.5,40,54.5c-7.995,0-14.5-6.505-14.5-14.5  S32.005,25.5,40,25.5c3.998,0,7.617,1.632,10.239,4.261l-4.583,4.583H58.385z" />
-                </svg>
-              </div>
-            ) : (
-              <div className="mt-[30px]">
-                <button
-                  type="submit"
-                  className=" cursor-pointer items-center rounded-[5px] border  border-[#000] bg-transparent py-[8px] px-[25px] text-[13px] font-bold !leading-[19px] text-[#575757] hover:bg-[#ececec] lg:text-[16px]"
-                  onClick={handleSubmit(onSubmit)}
-                >
-                  <span className="">Sign in</span>
-                </button>
-              </div>
-            )}
-            <div className="lg:mt-[50px]">
-              Does not have an account yet?{' '}
-              <a
-                href={`${
-                  process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                    ? `${process.env.NEXT_PUBLIC_BASE_URL}/oec/register`
-                    : '/register'
-                }`}
-                className="border-b-1 cursor-pointer border-b text-[#3253FE]"
-              >
-                Create account
-              </a>
-            </div>
-            <div className="lg:mt-[20px]">
-              Forgot your password?{' '}
-              <a
-                href={`${
-                  process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                    ? `${process.env.NEXT_PUBLIC_BASE_URL}/oec/recover-password`
-                    : '/recover-password'
-                }`}
-                className="border-b-1 cursor-pointer border-b text-[#3253FE]"
-              >
-                Recover password
-              </a>
-            </div>
-          </form>
+          </div>
         </div>
       </section>
     </>
