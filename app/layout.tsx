@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 
 // import Footer from '@/components/Footer'
@@ -21,9 +22,9 @@ export default function RootLayout({
       */}
       <head />
 
-      <body className="max-w-screen w-full bg-white">
+      <body className="max-w-screen w-full bg-[#060621]">
         <Providers>
-          <Header />
+          {/* <Header /> */}
           {children}
           <ScrollToTop />
         </Providers>
