@@ -13,13 +13,9 @@ import { toast } from 'react-toastify'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import 'react-datepicker/dist/react-datepicker.css'
 import { AccountContext } from '../../contexts/AccountContext'
 import { EyeSlash, Eye } from 'phosphor-react'
-
-import { TextField, Autocomplete } from '@mui/material'
 
 type RegisterForm = {
   oldPassword: string
@@ -46,9 +42,6 @@ const ChangePassword = () => {
   const userHasAnyCookie = cookies.userSessionToken
 
   const { push } = useRouter()
-
-  const theme = useTheme()
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const skillOptions = [
     'IoT',

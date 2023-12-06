@@ -10,19 +10,14 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Eye, EyeSlash } from 'phosphor-react'
 import * as Yup from 'yup'
 import axios from 'axios'
-import Checkbox from '@material-ui/core/Checkbox'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css' // import styles
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
-
-import { TextField, Autocomplete } from '@mui/material'
 
 import { createHash } from 'crypto'
 
@@ -36,9 +31,6 @@ const Login = () => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
 
   const { push } = useRouter()
-
-  const theme = useTheme()
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const { user, setUser } = useContext(AccountContext)
 

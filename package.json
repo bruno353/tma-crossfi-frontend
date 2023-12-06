@@ -12,7 +12,6 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "^3.3.1",
-    "@mui/material": "^5.14.8",
     "@next/font": "13.1.6",
     "@radix-ui/react-dialog": "^1.0.4",
     "@rocketseat/eslint-config": "^1.2.0",

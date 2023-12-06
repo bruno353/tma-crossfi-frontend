@@ -13,12 +13,8 @@ import { toast } from 'react-toastify'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import 'react-datepicker/dist/react-datepicker.css'
 import { AccountContext } from '../../contexts/AccountContext'
-
-import { TextField, Autocomplete } from '@mui/material'
 
 type RegisterForm = {
   firstName: string
@@ -57,9 +53,6 @@ const MyAccount = () => {
   const userHasAnyCookie = cookies.userSessionToken
 
   const { push } = useRouter()
-
-  const theme = useTheme()
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const currentYear = new Date().getFullYear()
   const years = Array.from({ length: 133 }, (_, index) => currentYear - index)
