@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable no-unused-vars */
 import Image from 'next/image'
 import Link from 'next/link'
@@ -128,7 +129,7 @@ const Header = () => {
           </span>
         </div>
       </Link> */}
-      <header className="max-w-screen top-0 left-0 z-40 mx-0 flex h-[95px] w-full  items-center bg-[#F9F9F9]  bg-opacity-80 text-[#000000]">
+      <header className="max-w-screen left-0 top-0 z-40 mx-0 flex h-[95px] w-full  items-center bg-[#F9F9F9]  bg-opacity-80 text-[#000000]">
         <div className="w-full justify-between px-[20px] md:px-[90px] xl:hidden">
           <div className="">
             <img
@@ -165,7 +166,7 @@ const Header = () => {
           </button>
           <nav
             id="navbarCollapse"
-            className={`navbar absolute right-7 z-50 w-[250px] rounded border-[.5px] bg-[#e6e4e4] py-6  px-6 text-[13px] text-[#fff] duration-300  ${
+            className={`navbar absolute right-7 z-50 w-[250px] rounded border-[.5px] bg-[#e6e4e4] px-6  py-6 text-[13px] text-[#fff] duration-300  ${
               navbarOpen
                 ? 'visibility top-20 opacity-100'
                 : 'invisible top-20 opacity-0'
@@ -191,7 +192,7 @@ const Header = () => {
                 {' '}
                 <a
                   href={`/oec/register`}
-                  className=" cursor-pointer items-center rounded-[5px] border border-[#0354EC] bg-transparent py-[9px] px-[18px] text-[13px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff]"
+                  className=" cursor-pointer items-center rounded-[5px] border border-[#0354EC] bg-transparent px-[18px] py-[9px] text-[13px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff]"
                 >
                   Become an expert
                 </a>
@@ -251,7 +252,7 @@ const Header = () => {
                   <div className="mt-[25px]">
                     <a
                       onClick={signOutUser}
-                      className=" cursor-pointer items-center rounded-[5px] border  border-[#000] bg-transparent py-[6px] px-[18px] text-[12px] font-bold !leading-[19px] text-[#575757] hover:bg-[#ececec]"
+                      className=" cursor-pointer items-center rounded-[5px] border  border-[#000] bg-transparent px-[18px] py-[6px] text-[12px] font-bold !leading-[19px] text-[#575757] hover:bg-[#ececec]"
                     >
                       Sign out
                     </a>
@@ -311,7 +312,7 @@ const Header = () => {
           >
             <a
               href={`/oec/register`}
-              className="flex cursor-pointer items-center rounded-[5px] border border-[#0354EC] bg-transparent  py-[9px] px-[18px] text-[14px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff] 2xl:py-[11.5px] 2xl:px-[24px] 2xl:text-[16px]"
+              className="flex cursor-pointer items-center rounded-[5px] border border-[#0354EC] bg-transparent  px-[18px] py-[9px] text-[14px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff] 2xl:px-[24px] 2xl:py-[11.5px] 2xl:text-[16px]"
             >
               Become an expert
             </a>
@@ -334,7 +335,7 @@ const Header = () => {
                   className={`mr-[15px] h-[50px] w-[50px] cursor-pointer rounded-[100%] 2xl:mr-[15px]`}
                 />
                 <nav
-                  className={`navbar absolute right-[100px] z-50 flex w-[220px] rounded-[8px] border-[.5px] bg-[#e6e4e4] pt-[19px] pr-6 pl-[35px] pb-[30px] text-[13px] text-[#fff] duration-300  ${
+                  className={`navbar absolute right-[100px] z-50 flex w-[220px] rounded-[8px] border-[.5px] bg-[#e6e4e4] pb-[30px] pl-[35px] pr-6 pt-[19px] text-[13px] text-[#fff] duration-300  ${
                     userNavbarOpen
                       ? 'visibility top-20 opacity-100'
                       : 'invisible top-20 opacity-0'
@@ -370,7 +371,7 @@ const Header = () => {
                     <div className="mt-[25px]">
                       <a
                         onClick={signOutUser}
-                        className=" cursor-pointer items-center rounded-[5px] border  border-[#000] bg-transparent py-[6px] px-[18px] text-[12px] font-bold !leading-[19px] text-[#575757] hover:bg-[#ececec]"
+                        className=" cursor-pointer items-center rounded-[5px] border  border-[#000] bg-transparent px-[18px] py-[6px] text-[12px] font-bold !leading-[19px] text-[#575757] hover:bg-[#ececec]"
                       >
                         Sign out
                       </a>

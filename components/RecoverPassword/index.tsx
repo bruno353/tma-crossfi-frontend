@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable dot-notation */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
@@ -110,7 +111,7 @@ const RecoverPassword = () => {
             </div>
           </div>
         </section>
-        <section className="mt-12 mb-[0px] flex justify-center px-[20px] pt-[15px] text-center text-[11px]  font-medium !leading-[17px] text-[#000000] lg:mb-24 lg:px-[100px] lg:pt-[30px]  lg:text-[14px]">
+        <section className="mb-[0px] mt-12 flex justify-center px-[20px] pt-[15px] text-center text-[11px]  font-medium !leading-[17px] text-[#000000] lg:mb-24 lg:px-[100px] lg:pt-[30px]  lg:text-[14px]">
           <div>
             <div className="text-[12px] font-normal !leading-[150%] text-[#000000] lg:mt-[25px] lg:text-[16px]">
               If this email is valid, a password recovery link has been sent to
@@ -142,7 +143,7 @@ const RecoverPassword = () => {
             </div>
           </div>
         </section>
-        <section className="mt-12 mb-[0px] px-[20px] pt-[15px] text-[11px]  font-medium !leading-[17px] text-[#000000] lg:mb-24 lg:px-[100px] lg:pt-[10px]  lg:text-[14px]">
+        <section className="mb-[0px] mt-12 px-[20px] pt-[15px] text-[11px]  font-medium !leading-[17px] text-[#000000] lg:mb-24 lg:px-[100px] lg:pt-[10px]  lg:text-[14px]">
           <div className="flex gap-x-[70px] lg:gap-x-[200px] lg:px-[150px]">
             <form onSubmit={handleSubmit(onSubmit)} className="">
               <div className="">
@@ -173,7 +174,7 @@ const RecoverPassword = () => {
                 <div className="mt-[60px] flex pb-[10px] lg:pb-60">
                   <button
                     disabled={true}
-                    className={`h-[40px] w-[180px] rounded-[10px] border border-[#0354EC] bg-[#0354EC] bg-transparent py-[9px] px-[25px] text-[11px]  font-bold text-[#0354EC]  hover:bg-[#0354EC] hover:text-[#fff] lg:text-[14px]`}
+                    className={`h-[40px] w-[180px] rounded-[10px] border border-[#0354EC] bg-[#0354EC] bg-transparent px-[25px] py-[9px] text-[11px]  font-bold text-[#0354EC]  hover:bg-[#0354EC] hover:text-[#fff] lg:text-[14px]`}
                   >
                     <span className="">Recover password</span>
                   </button>
@@ -194,7 +195,7 @@ const RecoverPassword = () => {
                   <button
                     type="submit"
                     onClick={handleSubmit(onSubmit)}
-                    className={`h-[40px] w-[180px] rounded-[10px] border border-[#0354EC] bg-transparent py-[9px] px-[25px] text-[11px]  font-bold text-[#0354EC]  hover:bg-[#0354EC] hover:text-[#fff] lg:text-[14px]`}
+                    className={`h-[40px] w-[180px] rounded-[10px] border border-[#0354EC] bg-transparent px-[25px] py-[9px] text-[11px]  font-bold text-[#0354EC]  hover:bg-[#0354EC] hover:text-[#fff] lg:text-[14px]`}
                   >
                     <span className="">Recover password</span>
                   </button>
