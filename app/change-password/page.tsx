@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import ChangePassword from '@/components/ChangePassword'
 import ScrollUp from '@/components/Common/ScrollUp'
-import MyAccount from '@/components/MyAccount'
 import { Inter } from '@next/font/google'
 // import NewTask from '@/components/NewTask'
 
