@@ -20,7 +20,7 @@ import nookies, { parseCookies, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 
 import { createHash } from 'crypto'
-import ScrollToTop from '../ScrollToTop/index';
+import ScrollToTop from '../ScrollToTop/index'
 
 type LoginForm = {
   email: string
