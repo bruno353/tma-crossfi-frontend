@@ -10,7 +10,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Eye, EyeSlash } from 'phosphor-react'
 import * as Yup from 'yup'
 import axios from 'axios'
-import Checkbox from '@material-ui/core/Checkbox'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
