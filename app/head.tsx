@@ -3,8 +3,8 @@ export default function Head() {
     <>
       <title>Openmesh Community</title>
       <meta content="width=device-width, initial-scale=1" name="viewport" />
-      <meta name="description" content="Openmesh Community" />
-      <link rel="icon" href="/openmesh-ico-logo.png" />
+      <meta name="description" content="Accelar App" />
+      <link rel="icon" href="/images/logo-icon.png" />
     </>
   )
 }
