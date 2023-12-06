@@ -20,6 +20,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 import Link from 'next/link'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 import { createHash } from 'crypto'
 import ScrollToTop from '../ScrollToTop/index'
@@ -33,6 +34,16 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
+  const [isRecaptchaValidated, setIsRecaptchaValidated] =
+    useState<boolean>(true)
+  const [googleRecaptchaToken, setGoogleRecaptchaToken] = useState()
+
+  function onChange(value) {
+    console.log('Captcha value:', value)
+    setIsRecaptchaValidated(true)
+    setGoogleRecaptchaToken(value)
+  }
+
   const handleCheckboxChange = (event) => {
     setIsCheckboxChecked(event.target.checked)
   }
@@ -290,18 +301,30 @@ const SignUp = () => {
                       </div>
                       <span>
                         By creating account means you agree to the
-                        <a href="#0" className="text-primary hover:underline">
+                        <a
+                          href="/privacy-policy"
+                          target="_blank"
+                          className="text-primary hover:underline"
+                        >
                           {' '}
                           Terms and Conditions{' '}
                         </a>
                         , and our
-                        <a href="#0" className="text-primary hover:underline">
+                        <a
+                          href="/privacy-policy"
+                          target="_blank"
+                          className="text-primary hover:underline"
+                        >
                           {' '}
                           Privacy Policy{' '}
                         </a>
                       </span>
                     </label>
                   </div>
+                  <ReCAPTCHA
+                    sitekey="6Ld9YR0pAAAAAPaq2xBLMZXyfPdAKMCik2cBVbJ4"
+                    onChange={onChange}
+                  />
                   <div className="mb-6">
                     <button className="flex w-full items-center justify-center rounded-md bg-primary py-4 px-9 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp">
                       Sign up
