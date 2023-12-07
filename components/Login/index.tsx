@@ -36,13 +36,8 @@ const SignUp = () => {
   const { user, setUser } = useContext(AccountContext)
 
   const validSchema = Yup.object().shape({
-    name: Yup.string().max(100).required('Name is required'),
     email: Yup.string().max(500).required('Email is required'),
-    password: Yup.string()
-      .min(8, 'Min of 8 digits')
-      .max(500)
-      .required('Password is required'),
-    confirmPassword: Yup.string().max(500).required('Password is required'),
+    password: Yup.string().max(500).required('Password is required'),
   })
   const {
     register,
@@ -57,6 +52,7 @@ const SignUp = () => {
   })
 
   async function onSubmit(data: SigninForm) {
+    console.log('oiii')
     setIsLoading(true)
 
     try {
