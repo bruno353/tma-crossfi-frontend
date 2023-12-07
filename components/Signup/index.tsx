@@ -33,7 +33,7 @@ const SignUp = () => {
   const [accountCreated, setAccountCreated] = useState<boolean>(false)
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
   const [isRecaptchaValidated, setIsRecaptchaValidated] =
-    useState<boolean>(true)
+    useState<boolean>(false)
   const [googleRecaptchaToken, setGoogleRecaptchaToken] = useState()
 
   function onChange(value) {
@@ -349,7 +349,7 @@ const SignUp = () => {
                     </div>
                     <div className="mb-6">
                       <button
-                        disabled={isRecaptchaValidated}
+                        disabled={!isRecaptchaValidated}
                         onClick={handleSubmit(onSubmit)}
                         className={`flex w-full items-center justify-center rounded-md bg-primary px-9 py-4 text-base font-medium text-white transition duration-300 ease-in-out
                     ${
