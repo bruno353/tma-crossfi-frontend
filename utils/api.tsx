@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-as-const */
 'use client'
 import { SignupForm } from '@/types/user'
 import axios from 'axios'

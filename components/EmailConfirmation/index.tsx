@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable dot-notation */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
@@ -86,7 +87,7 @@ const EmailConfirmation = (id: any) => {
 
   if (!isConfirmed) {
     return (
-      <section className="py-16 px-32 text-black md:py-20 lg:pt-40">
+      <section className="px-32 py-16 text-black md:py-20 lg:pt-40">
         <div className="container h-40 animate-pulse px-0 pb-12">
           <div className="mr-10 w-full animate-pulse bg-[#dfdfdf]"></div>
           <div className="w-full animate-pulse bg-[#dfdfdf]"></div>
@@ -96,7 +97,7 @@ const EmailConfirmation = (id: any) => {
   }
   return (
     <>
-      <section className="mt-12 mb-[0px] flex justify-center px-[20px] pt-[15px] text-center text-[11px]  font-medium !leading-[17px] text-[#000000] lg:mb-24 lg:px-[100px] lg:pt-[100px]  lg:text-[14px]">
+      <section className="mb-[0px] mt-12 flex justify-center px-[20px] pt-[15px] text-center text-[11px]  font-medium !leading-[17px] text-[#000000] lg:mb-24 lg:px-[100px] lg:pt-[100px]  lg:text-[14px]">
         <div>
           <div className="text-[15px] font-bold !leading-[150%] text-[#000000] lg:text-[24px]">
             Email confirmed succesfully!
@@ -104,7 +105,7 @@ const EmailConfirmation = (id: any) => {
           <div className="mt-[50px]">
             <a
               href={renderRedirectButton()}
-              className="mx-auto flex w-fit cursor-pointer items-center rounded-[5px] border  border-[#0354EC] bg-transparent py-[11.5px] px-[24px] text-[16px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff]"
+              className="mx-auto flex w-fit cursor-pointer items-center rounded-[5px] border  border-[#0354EC] bg-transparent px-[24px] py-[11.5px] text-[16px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff]"
             >
               Proceed to Login
             </a>

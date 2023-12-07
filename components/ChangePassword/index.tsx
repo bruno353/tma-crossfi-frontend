@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable dot-notation */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
@@ -167,7 +168,7 @@ const ChangePassword = () => {
 
   if (isPageLoading) {
     return (
-      <section className="py-16 px-32 text-black md:py-20 lg:pt-40">
+      <section className="px-32 py-16 text-black md:py-20 lg:pt-40">
         <div className="container flex h-60 animate-pulse px-0 pb-12">
           <div className="mr-10 w-3/4 animate-pulse bg-[#dfdfdf]"></div>
           <div className="w-1/4 animate-pulse bg-[#dfdfdf]"></div>
@@ -193,7 +194,7 @@ const ChangePassword = () => {
             </div>
           </div>
         </section>
-        <section className="mt-12 mb-[0px] px-[20px] pt-[15px] text-[11px]  font-medium !leading-[17px] text-[#000000] lg:mb-24 lg:px-[100px] lg:pt-[30px]  lg:text-[14px]">
+        <section className="mb-[0px] mt-12 px-[20px] pt-[15px] text-[11px]  font-medium !leading-[17px] text-[#000000] lg:mb-24 lg:px-[100px] lg:pt-[30px]  lg:text-[14px]">
           <div className="flex gap-x-[70px] lg:gap-x-[200px] lg:px-[150px]">
             <form onSubmit={handleSubmit(onSubmit)} className="">
               <div className="">
@@ -271,7 +272,7 @@ const ChangePassword = () => {
                 <div className="mt-[60px] flex pb-[10px] lg:pb-60">
                   <button
                     disabled={true}
-                    className=" mr-[15px] h-[50px] w-[250px] rounded-[10px] bg-[#7a89a5] py-[12px] px-[25px] text-[12px] font-bold text-white  lg:text-[16px]"
+                    className=" mr-[15px] h-[50px] w-[250px] rounded-[10px] bg-[#7a89a5] px-[25px] py-[12px] text-[12px] font-bold text-white  lg:text-[16px]"
                     onClick={handleSubmit(onSubmit)}
                   >
                     <span className="">Change password</span>
@@ -293,7 +294,7 @@ const ChangePassword = () => {
                   <button
                     type="submit"
                     onClick={handleSubmit(onSubmit)}
-                    className={`h-[50px] w-[250px] rounded-[10px] bg-[#0354EC] py-[12px] px-[25px] text-[12px] font-bold text-white  hover:bg-[#103881] lg:text-[16px]`}
+                    className={`h-[50px] w-[250px] rounded-[10px] bg-[#0354EC] px-[25px] py-[12px] text-[12px] font-bold text-white  hover:bg-[#103881] lg:text-[16px]`}
                   >
                     <span className="">Change password</span>
                   </button>
