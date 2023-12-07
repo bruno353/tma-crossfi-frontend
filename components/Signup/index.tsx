@@ -73,11 +73,21 @@ const SignUp = () => {
 
   async function onSubmit(data: SignupForm) {
     setIsLoading(true)
-    const finalData = {
-      ...data,
+
+    if (data.password !== data.confirmPassword) {
+      toast.error('Passwords do not match.')
+      setIsLoading(false)
+      return
+    }
+
+    const { confirmPassword, ...finalDataBody } = data
+
+    const final = {
+      googleRecaptchaToken,
+      ...finalDataBody,
     }
     try {
-      await createUser(finalData)
+      await createUser(final)
       // setCookie(null, 'userSessionToken', res.sessionToken)
       // nookies.set(null, 'userSessionToken', res.sessionToken)
       // setCookie(null, 'user', res)
