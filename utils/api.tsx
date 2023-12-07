@@ -26,7 +26,7 @@ export async function createUser(data: SignupForm) {
   return finalData
 }
 
-export async function confirmEmail(data: any) {
+export async function confirmEmailUser(data: any) {
   const config = {
     method: 'post' as 'post',
     url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/user/functions/confirmEmail`,
