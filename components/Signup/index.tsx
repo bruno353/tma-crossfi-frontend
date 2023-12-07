@@ -74,6 +74,12 @@ const SignUp = () => {
   async function onSubmit(data: SignupForm) {
     setIsLoading(true)
 
+    if (!isCheckboxChecked) {
+      toast.error('You need to accept the privacy policy before proceeding.')
+      setIsLoading(false)
+      return
+    }
+
     if (data.password !== data.confirmPassword) {
       toast.error('Passwords do not match.')
       setIsLoading(false)
