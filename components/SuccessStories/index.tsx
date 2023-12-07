@@ -3,7 +3,7 @@ const SuccessStories = () => {
     <>
       <section
         id="success"
-        className="relative z-10  bg-[#F3F3F3] px-[30px] pb-[125px] pt-[55px] text-[#000000] md:px-[90px] lg:pt-[70px] lg:pb-[70px] 2xl:pt-[103px] 2xl:pb-[103px]"
+        className="relative z-10  bg-[#F3F3F3] px-[30px] pb-[125px] pt-[55px] text-[#000000] md:px-[90px] lg:pb-[70px] lg:pt-[70px] 2xl:pb-[103px] 2xl:pt-[103px]"
       >
         <div className="">
           <div className="pr-[40px] lg:pr-[90px] xl:pr-[170px]">
@@ -22,7 +22,7 @@ const SuccessStories = () => {
               for implementing blockchain data solutions for Web2 and Web3
               companies
             </div>
-            <div className="absolute mt-[20px] md:flex xl:top-0 xl:left-[550px] xl:mt-0 xl:max-w-[950px]">
+            <div className="absolute mt-[20px] md:flex xl:left-[550px] xl:top-0 xl:mt-0 xl:max-w-[950px]">
               <div className="flex justify-center rounded-[5px] bg-[#FAFAFA] p-[25px]">
                 <div>
                   <div className="h-[90px]  rounded-[10px] bg-[#E6E6E6] xl:h-[113px]"></div>

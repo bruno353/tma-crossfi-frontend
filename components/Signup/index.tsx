@@ -96,12 +96,12 @@ const SignUp = () => {
   if (accountCreated) {
     return (
       <>
-        <section className="relative z-10 overflow-hidden pt-36 pb-16 md:pb-20 lg:pt-[180px] lg:pb-[180px]">
+        <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-[180px] lg:pt-[180px]">
           <div className="container">
             <form onSubmit={handleSubmit(onSubmit)} className="">
               <div className="-mx-4 flex flex-wrap">
                 <div className="w-full px-4">
-                  <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 py-10 px-6 dark:bg-dark sm:p-[60px]">
+                  <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:p-[60px]">
                     <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
                       Account set up successfully!
                     </h3>
@@ -120,12 +120,12 @@ const SignUp = () => {
 
   return (
     <>
-      <section className="relative z-10 overflow-hidden pt-36 pb-16 md:pb-20 lg:pt-[180px] lg:pb-28">
+      <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
         <div className="container">
           <form onSubmit={handleSubmit(onSubmit)} className="">
             <div className="-mx-4 flex flex-wrap">
               <div className="w-full px-4">
-                <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 py-10 px-6 dark:bg-dark sm:p-[60px]">
+                <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:p-[60px]">
                   <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
                     Create account
                   </h3>
@@ -190,7 +190,7 @@ const SignUp = () => {
                         disabled={isLoading}
                         maxLength={100}
                         placeholder="Enter your name"
-                        className="w-full rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                        className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                         {...register('name')}
                       />
                     </div>
@@ -211,7 +211,7 @@ const SignUp = () => {
                         disabled={isLoading}
                         maxLength={500}
                         placeholder="Enter your Email"
-                        className="w-full rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                        className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                         {...register('email')}
                       />
                     </div>
@@ -251,7 +251,7 @@ const SignUp = () => {
                           maxLength={500}
                           name="password"
                           placeholder="Enter your Password"
-                          className="w-full rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                          className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                           {...register('password')}
                         />
                       </div>
@@ -273,7 +273,7 @@ const SignUp = () => {
                         disabled={isLoading}
                         maxLength={500}
                         placeholder="Confirm your Password"
-                        className="w-full rounded-md border border-transparent py-3 px-6 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                        className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                         {...register('confirmPassword')}
                       />
                     </div>
@@ -339,8 +339,8 @@ const SignUp = () => {
                     </div>
                     <div className="mb-6">
                       <button
-                        onClick={() => {}}
-                        className={`flex w-full items-center justify-center rounded-md bg-primary py-4 px-9 text-base font-medium text-white transition duration-300 ease-in-out
+                        onClick={handleSubmit(onSubmit)}
+                        className={`flex w-full items-center justify-center rounded-md bg-primary px-9 py-4 text-base font-medium text-white transition duration-300 ease-in-out
                     ${
                       isLoading
                         ? 'animate-pulse cursor-default'
