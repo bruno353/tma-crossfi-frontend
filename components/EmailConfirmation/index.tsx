@@ -18,8 +18,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 const EmailConfirmation = (id: any) => {
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false)
-  const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
-  const [pageRedirect, setPageRedirect] = useState<string>()
 
   const { push } = useRouter()
 
@@ -33,7 +31,7 @@ const EmailConfirmation = (id: any) => {
       setIsConfirmed(true)
     } catch (err) {
       toast.error(`An error occurred`)
-      push('/')
+      // push('/')
     }
   }
 
@@ -49,7 +47,8 @@ const EmailConfirmation = (id: any) => {
       console.log(id.id)
       confirmEmail(id.id)
     } else {
-      push('/')
+      console.log('no id')
+      // push('/')
     }
   }, [id])
 
