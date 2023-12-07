@@ -277,7 +277,7 @@ const SignUp = () => {
                         {...register('confirmPassword')}
                       />
                     </div>
-                    <div className="mb-8 flex">
+                    <div className="mb-12 flex">
                       <label
                         htmlFor="checkboxLabel"
                         className="flex cursor-pointer select-none text-sm font-medium text-body-color"
@@ -331,7 +331,7 @@ const SignUp = () => {
                         </span>
                       </label>
                     </div>
-                    <div className="mb-6">
+                    <div className="mb-8 w-[50px]">
                       <ReCAPTCHA
                         sitekey="6Ld9YR0pAAAAAPaq2xBLMZXyfPdAKMCik2cBVbJ4"
                         onChange={onChange}
@@ -339,11 +339,12 @@ const SignUp = () => {
                     </div>
                     <div className="mb-6">
                       <button
+                        disabled={isRecaptchaValidated}
                         onClick={handleSubmit(onSubmit)}
                         className={`flex w-full items-center justify-center rounded-md bg-primary px-9 py-4 text-base font-medium text-white transition duration-300 ease-in-out
                     ${
                       isLoading
-                        ? 'animate-pulse cursor-default'
+                        ? 'animate-pulse cursor-default bg-[#5970da]'
                         : ' hover:bg-opacity-80 hover:shadow-signUp'
                     }`}
                       >
