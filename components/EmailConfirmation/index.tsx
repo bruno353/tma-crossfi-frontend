@@ -27,36 +27,14 @@ const EmailConfirmation = (id: any) => {
     const data = {
       id,
     }
-    console.log(data)
-    const config = {
-      method: 'post' as 'post',
-      url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/openmesh-experts/functions/confirmEmail`,
-      headers: {
-        'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      data,
-    }
-
-    let dado
 
     try {
-      await axios(config).then(function (response) {
-        if (response.data) {
-          dado = response.data
-          console.log(dado)
-          if (dado.pageRedirect) {
-            setPageRedirect(dado.pageRedirect)
-          }
-        }
-        setIsConfirmed(true)
-      })
+      await confirmEmail(data)
+      setIsConfirmed(true)
     } catch (err) {
       toast.error(`An error occurred`)
-      push('/oec')
+      push('/')
     }
-
-    return dado
   }
 
   useEffect(() => {
@@ -65,25 +43,15 @@ const EmailConfirmation = (id: any) => {
       behavior: 'smooth',
     })
     if (id) {
-      console.log('search for the task info on blockchain')
+      console.log('search for the task info')
       console.log('received value')
       console.log(id)
       console.log(id.id)
       confirmEmail(id.id)
     } else {
-      push('/oec')
+      push('/')
     }
   }, [id])
-
-  function renderRedirectButton() {
-    if (pageRedirect) {
-      return pageRedirect
-    } else {
-      return process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-        ? 'https://openmesh.network/oec/login'
-        : '/login'
-    }
-  }
 
   if (!isConfirmed) {
     return (
@@ -95,20 +63,29 @@ const EmailConfirmation = (id: any) => {
       </section>
     )
   }
+
   return (
     <>
-      <section className="mb-[0px] mt-12 flex justify-center px-[20px] pt-[15px] text-center text-[11px]  font-medium !leading-[17px] text-[#000000] lg:mb-24 lg:px-[100px] lg:pt-[100px]  lg:text-[14px]">
-        <div>
-          <div className="text-[15px] font-bold !leading-[150%] text-[#000000] lg:text-[24px]">
-            Email confirmed succesfully!
-          </div>
-          <div className="mt-[50px]">
-            <a
-              href={renderRedirectButton()}
-              className="mx-auto flex w-fit cursor-pointer items-center rounded-[5px] border  border-[#0354EC] bg-transparent px-[24px] py-[11.5px] text-[16px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff]"
-            >
-              Proceed to Login
-            </a>
+      <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-[180px] lg:pt-[180px]">
+        <div className="container">
+          <div className="-mx-4 flex flex-wrap">
+            <div className="w-full px-4">
+              <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:p-[60px]">
+                <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
+                  Email confirmed succesfully!{' '}
+                </h3>
+                <div className="mt-[50px]">
+                  <a href="/login">
+                    <button
+                      className={`flex w-full items-center justify-center rounded-md bg-primary px-9 py-4 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp
+                    `}
+                    >
+                      Proceed to Login
+                    </button>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
