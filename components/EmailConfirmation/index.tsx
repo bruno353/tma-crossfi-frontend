@@ -29,13 +29,12 @@ const EmailConfirmation = (id: any) => {
 
     try {
       await confirmEmailUser(data)
-      console.log('deu certo')
       setIsConfirmed(true)
+      toast.success(`Success`)
     } catch (err) {
-      console.log('deu ruim')
       console.log(err)
       toast.error(`An error occurred`)
-      // push('/')
+      push('/login')
     }
   }
 
@@ -52,7 +51,7 @@ const EmailConfirmation = (id: any) => {
       confirmEmail(id.id)
     } else {
       console.log('no id')
-      // push('/')
+      push('/login')
     }
   }, [id])
 
