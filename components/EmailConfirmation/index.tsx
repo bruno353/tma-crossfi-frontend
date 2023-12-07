@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
+import { confirmEmailUser } from '@/utils/api'
 
 const EmailConfirmation = (id: any) => {
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false)
@@ -27,9 +28,12 @@ const EmailConfirmation = (id: any) => {
     }
 
     try {
-      await confirmEmail(data)
+      await confirmEmailUser(data)
+      console.log('deu certo')
       setIsConfirmed(true)
     } catch (err) {
+      console.log('deu ruim')
+      console.log(err)
       toast.error(`An error occurred`)
       // push('/')
     }
