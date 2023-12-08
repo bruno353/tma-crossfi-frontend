@@ -18,5 +18,6 @@ export type EmailRecoverPassword = {
 
 export type RecoverPassword = {
   newPassword: string
+  confirmPassword?: string
   objectId: string
 }
