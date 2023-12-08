@@ -20,7 +20,7 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import { EmailRecoverPassword, SignupForm } from '@/types/user'
 import { createUser, emailRecoverPassword } from '@/utils/api'
 
-const SignUp = () => {
+const RecoverPassword = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [recoverCreated, setRecoverCreated] = useState<boolean>(false)
   const [isRecaptchaValidated, setIsRecaptchaValidated] =
@@ -167,4 +167,4 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+export default RecoverPassword
