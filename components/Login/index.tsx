@@ -89,7 +89,7 @@ const SignUp = () => {
                     onClick={() =>
                       (window.location.href = `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/user/functions/google/login`)
                     }
-                    className="mb-6 flex w-full items-center justify-center rounded-md bg-white p-3 text-base font-medium text-body-color shadow-one hover:text-primary dark:bg-[#242B51] dark:text-body-color dark:shadow-signUp dark:hover:text-white"
+                    className="mb-6 flex w-full cursor-pointer items-center justify-center rounded-md bg-white p-3 text-base font-medium text-body-color shadow-one hover:text-primary dark:bg-[#242B51] dark:text-body-color dark:shadow-signUp dark:hover:text-white"
                   >
                     <span className="mr-3">
                       <svg
