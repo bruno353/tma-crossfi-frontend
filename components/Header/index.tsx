@@ -72,6 +72,8 @@ const Header = () => {
       }
       const dado = await getCurrentUser(userSessionToken)
       if (dado) {
+        console.log('recebi o dadodddd')
+        console.log(dado.profilePicture)
         setUser(dado)
         setCookie(null, 'userSessionToken', dado.sessionToken)
         nookies.set(null, 'userSessionToken', dado.sessionToken)
@@ -125,6 +127,9 @@ const Header = () => {
           <div className="relative -mx-4 flex items-center justify-between">
             <div className="w-60 max-w-full px-4 xl:mr-12">
               <Link
+                onClick={() => {
+                  console.log(user)
+                }}
                 href={user ? '/dashboard' : '/'}
                 className={`header-logo block w-full ${
                   sticky ? 'py-5 lg:py-2' : 'py-8'
@@ -140,18 +145,13 @@ const Header = () => {
               </Link>
             </div>
             <div className="flex items-center justify-end pr-16 lg:pr-0">
-              <Link
-                href="/signin"
-                className="rounded-md bg-transparent px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-[#652ee786] "
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/signup"
-                className="rounded-md bg-transparent px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-[#652ee786] "
-              >
-                Sign Up
-              </Link>
+              <div>
+                <img
+                  alt="ethereum avatar"
+                  src={user?.profilePicture}
+                  className="w-[50px] rounded-full"
+                ></img>
+              </div>
               {/* <div>
                   <ThemeToggler />
                 </div> */}
