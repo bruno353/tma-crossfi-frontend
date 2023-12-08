@@ -1,6 +1,7 @@
 'use client'
 
 import ChangePasswordRecovery from '@/components/ChangePasswordRecovery'
+import ChangePasswordRecoveryFinal from '@/components/ChangePasswordRecovery2'
 import ScrollUp from '@/components/Common/ScrollUp'
 import { Inter } from '@next/font/google'
 
@@ -12,7 +13,7 @@ export default function UserPage({ params }) {
   return (
     <>
       <ScrollUp />
-      <ChangePasswordRecovery id={params.id} />
+      <ChangePasswordRecoveryFinal id={params.id} />
     </>
   )
 }

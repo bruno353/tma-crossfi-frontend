@@ -4,7 +4,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 // import { useState } from 'react'
-import { useState, FC, useContext } from 'react'
+import { useState, FC, useContext, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -18,12 +18,19 @@ import { AccountContext } from '../../contexts/AccountContext'
 import Link from 'next/link'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { EmailRecoverPassword, SignupForm, RecoverPassword } from '@/types/user'
-import { createUser, emailRecoverPassword } from '@/utils/api'
+import {
+  createUser,
+  emailRecoverPassword,
+  recoverPassword,
+  recoverPasswordIdIsValid,
+} from '@/utils/api'
 
-const RecoverPassword = (id: string) => {
+const ChangePasswordRecoveryFinal = (id: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isValid, setIsValid] = useState<boolean>(false)
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
+
+  const { push } = useRouter()
 
   const validSchema = Yup.object().shape({
     newPassword: Yup.string()
@@ -35,10 +42,6 @@ const RecoverPassword = (id: string) => {
   const {
     register,
     handleSubmit,
-    setValue,
-    control, // Adicione esta linha
-    // eslint-disable-next-line no-unused-vars
-    reset,
     formState: { errors },
   } = useForm<RecoverPassword>({
     resolver: yupResolver<any>(validSchema),
@@ -47,14 +50,24 @@ const RecoverPassword = (id: string) => {
   async function onSubmit(data: RecoverPassword) {
     setIsLoading(true)
 
+    if (data.newPassword !== data.confirmPassword) {
+      toast.error('Passwords do not match.')
+      setIsLoading(false)
+      return
+    }
+
+    const { confirmPassword, ...finalData } = data
+
     const final = {
-      ...data,
+      objectId: id,
+      ...finalData,
     }
     try {
-      await emailRecoverPassword(final)
+      await recoverPassword(final)
       setIsLoading(false)
-      setRecoverCreated(true)
       toast.error(`Success`)
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      push('/signin')
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -62,24 +75,45 @@ const RecoverPassword = (id: string) => {
     }
   }
 
-  if (recoverCreated) {
+  async function checkId(id: any) {
+    setIsLoading(true)
+    const data = {
+      objectId: id,
+    }
+
+    try {
+      await recoverPasswordIdIsValid(data)
+      setIsLoading(false)
+      setIsValid(true)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+      setIsLoading(false)
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      push('/signin')
+    }
+  }
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+    if (id) {
+      console.log(id)
+      console.log(id.id)
+      checkId(id.id)
+    } else {
+      push('/signin')
+    }
+  }, [id])
+
+  if (!isValid) {
     return (
       <>
-        <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-[180px] lg:pt-[180px]">
-          <div className="container">
-            <div className="-mx-4 flex flex-wrap">
-              <div className="w-full px-4">
-                <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:p-[60px]">
-                  <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
-                    Password recovery created!
-                  </h3>
-                  <p className="mt-[20px] text-center text-xl font-medium text-body-color">
-                    Check your email to proceed with the password recovery
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <section className="relative z-10 grid h-full w-full gap-y-[30px] overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
+          <div className="container h-40 w-96 animate-pulse bg-dark px-0 pb-12"></div>
+          <div className="container h-40 w-96 animate-pulse bg-dark px-0 pb-12"></div>
         </section>
       </>
     )
@@ -107,9 +141,9 @@ const RecoverPassword = (id: string) => {
                           className=" block text-sm font-medium text-dark dark:text-white"
                         >
                           {' '}
-                          Password{' '}
+                          New password{' '}
                           <p className="ml-[8px] text-[10px] font-normal text-[#ff0000]">
-                            {errors.password?.message}
+                            {errors.newPassword?.message}
                           </p>
                         </label>
                         {passwordVisibility ? (
@@ -137,7 +171,7 @@ const RecoverPassword = (id: string) => {
                           name="password"
                           placeholder="Enter your Password"
                           className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                          {...register('password')}
+                          {...register('newPassword')}
                         />
                       </div>
                     </div>
@@ -162,15 +196,8 @@ const RecoverPassword = (id: string) => {
                         {...register('confirmPassword')}
                       />
                     </div>
-                    <div className="mb-8 w-[50px]">
-                      <ReCAPTCHA
-                        sitekey="6Ld9YR0pAAAAAPaq2xBLMZXyfPdAKMCik2cBVbJ4"
-                        onChange={onChange}
-                      />
-                    </div>
                     <div className="mb-6">
                       <button
-                        disabled={!isRecaptchaValidated}
                         onClick={handleSubmit(onSubmit)}
                         className={`flex w-full items-center justify-center rounded-md bg-primary px-9 py-4 text-base font-medium text-white transition duration-300 ease-in-out
                     ${
@@ -179,19 +206,10 @@ const RecoverPassword = (id: string) => {
                         : ' hover:bg-opacity-80 hover:shadow-signUp'
                     }`}
                       >
-                        Recover
+                        Change new password
                       </button>
                     </div>
                   </form>
-                  <p className="mt-10 text-center text-base font-medium text-body-color">
-                    Don't have an account? <br />
-                    <Link
-                      href="/signup"
-                      className="text-primary hover:underline"
-                    >
-                      Sign up
-                    </Link>
-                  </p>
                 </div>
               </div>
             </div>
@@ -202,4 +220,4 @@ const RecoverPassword = (id: string) => {
   )
 }
 
-export default RecoverPassword
+export default ChangePasswordRecoveryFinal
