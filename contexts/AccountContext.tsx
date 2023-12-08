@@ -1,26 +1,5 @@
+import { UserProps } from '@/types/user'
 import React, { createContext, useState } from 'react'
-
-export interface UserProps {
-  firstName: string
-  lastName: string
-  email: string
-  companyName?: string
-  foundingYear?: number
-  location: string
-  website?: string
-  personalBlog?: string
-  githubLink?: string
-  isCompany: boolean
-  tags: string[]
-  description: string
-  password: string
-  confirmPassword: string
-  profilePictureHash: string
-  calendly: string
-  sessionToken: string
-  createdAt: string
-  updatedAt: string
-}
 
 interface CreateContextProps {
   children: React.ReactNode
