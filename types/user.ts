@@ -15,3 +15,8 @@ export type EmailRecoverPassword = {
   email: string
   googleRecaptchaToken: string
 }
+
+export type RecoverPassword = {
+  newPassword: string
+  objectId: string
+}
