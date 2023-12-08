@@ -8,6 +8,7 @@ import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 import { getCurrentUser } from '@/utils/api'
 import { usePathname, useRouter } from 'next/navigation'
+import Menu from './Menu'
 
 const Header = () => {
   // Navbar toggle
@@ -72,8 +73,6 @@ const Header = () => {
       }
       const dado = await getCurrentUser(userSessionToken)
       if (dado) {
-        console.log('recebi o dadodddd')
-        console.log(dado.profilePicture)
         setUser(dado)
         setCookie(null, 'userSessionToken', dado.sessionToken)
         nookies.set(null, 'userSessionToken', dado.sessionToken)
@@ -144,17 +143,34 @@ const Header = () => {
                 />
               </Link>
             </div>
-            <div className="flex items-center justify-end pr-16 lg:pr-0">
-              <div>
-                <img
-                  alt="ethereum avatar"
-                  src={user?.profilePicture}
-                  className="w-[50px] rounded-full"
-                ></img>
-              </div>
+            <div className="relative flex items-center justify-end pr-16 lg:pr-0">
+              {user && (
+                <div
+                  onClick={() => {
+                    navbarToggleHandler()
+                  }}
+                  className="flex cursor-pointer gap-x-[15px]"
+                >
+                  <img
+                    alt="ethereum avatar"
+                    src={user.profilePicture}
+                    className="w-[40px] rounded-full"
+                  ></img>
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/header/arrow.svg"
+                    className="w-[15px] rounded-full"
+                  ></img>
+                </div>
+              )}
               {/* <div>
                   <ThemeToggler />
                 </div> */}
+              {user && navbarOpen && (
+                <div className="absolute top-[50px]">
+                  <Menu user={user} />{' '}
+                </div>
+              )}
             </div>
           </div>
         </div>
