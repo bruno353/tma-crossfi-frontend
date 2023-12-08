@@ -24,7 +24,7 @@ export default function RootLayout({
 
       <body className="max-w-screen w-full bg-[#060621]">
         <Providers>
-          {/* <Header /> */}
+          <Header />
           {children}
           <ScrollToTop />
         </Providers>
