@@ -96,7 +96,7 @@ const SignUp = () => {
       await createUser(final)
       setIsLoading(false)
       setAccountCreated(true)
-      toast.error(`Success`)
+      toast.success(`Success`)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
