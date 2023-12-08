@@ -85,7 +85,7 @@ const SignUp = () => {
                   <p className="mb-11 text-center text-base font-medium text-body-color">
                     Start the revolution
                   </p>
-                  <button
+                  <div
                     onClick={() =>
                       (window.location.href = `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/user/functions/google/login`)
                     }
@@ -125,7 +125,7 @@ const SignUp = () => {
                       </svg>
                     </span>
                     Sign in with Google
-                  </button>
+                  </div>
                   <div className="mb-8 flex items-center justify-center">
                     <span className="hidden h-[1px] w-full max-w-[60px] bg-body-color sm:block"></span>
                     <p className="w-full px-5 text-center text-base font-medium text-body-color">
