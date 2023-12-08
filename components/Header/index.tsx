@@ -1,31 +1,29 @@
-/* eslint-disable @typescript-eslint/prefer-as-const */
-/* eslint-disable no-unused-vars */
+'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState } from 'react'
 import ThemeToggler from './ThemeToggler'
 import menuData from './menuData'
-import { UserCircle } from 'phosphor-react'
-import * as Dialog from '@radix-ui/react-dialog'
-import nookies, { parseCookies, destroyCookie } from 'nookies'
-import axios from 'axios'
-import { AccountContext } from '../../contexts/AccountContext'
-import { usePathname } from 'next/navigation'
+
 const Header = () => {
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false)
-  const [userNavbarOpen, setUserNavbarOpen] = useState(false)
-  const [userConnected, setUserConnected] = useState()
   const navbarToggleHandler = () => {
     setNavbarOpen(!navbarOpen)
   }
-  const pathname = usePathname()
-  const isFAQPage = pathname.includes('/faqs')
 
-  const cookies = parseCookies()
-  const userHasAnyCookie = cookies.userSessionToken
-
-  const { user, setUser } = useContext(AccountContext)
+  // Sticky Navbar
+  const [sticky, setSticky] = useState(false)
+  const handleStickyNavbar = () => {
+    if (window.scrollY >= 80) {
+      setSticky(true)
+    } else {
+      setSticky(false)
+    }
+  }
+  useEffect(() => {
+    window.addEventListener('scroll', handleStickyNavbar)
+  })
 
   // submenu handler
   const [openIndex, setOpenIndex] = useState(-1)
@@ -37,377 +35,140 @@ const Header = () => {
     }
   }
 
-  function onClickTrans(element: string) {
-    const taskStartElement = document.getElementById(element)
-    taskStartElement.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  function signOutUser() {
-    destroyCookie(undefined, 'userSessionToken')
-    nookies.destroy(null, 'userSessionToken')
-    setUser(null)
-  }
-
-  const features = [
-    {
-      label: 'About',
-      isCurrentlyPage: false,
-      href: `${process.env.NEXT_PUBLIC_BASE_URL}/oen/about`,
-    },
-    {
-      label: 'Expert community',
-      isCurrentlyPage: !isFAQPage,
-      href: `${process.env.NEXT_PUBLIC_BASE_URL}/oec`,
-    },
-    {
-      label: 'Academy',
-      isCurrentlyPage: false,
-      href: `${process.env.NEXT_PUBLIC_BASE_URL}/academy`,
-    },
-    // {
-    //   label: 'Success Stories',
-    //   isCurrentlyPage: false,
-    //   href: `${process.env.NEXT_PUBLIC_BASE_URL}/community`,
-    // },
-    {
-      label: 'FAQs',
-      isCurrentlyPage: isFAQPage,
-      href: `${process.env.NEXT_PUBLIC_BASE_URL}/oec/faqs`,
-    },
-  ]
-
-  async function getUserData() {
-    const { userSessionToken } = parseCookies()
-    console.log('no user data')
-    console.log(userSessionToken)
-    if (userSessionToken) {
-      const config = {
-        method: 'post' as 'post',
-        url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/openmesh-experts/functions/getCurrentUser`,
-        headers: {
-          'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
-          'X-Parse-Session-Token': userSessionToken,
-          'Content-Type': 'application/json',
-        },
-      }
-      let dado
-
-      await axios(config).then(function (response) {
-        if (response.data) {
-          dado = response.data
-          console.log(dado)
-          setUser(dado)
-        }
-      })
-    }
-  }
-
-  useEffect(() => {
-    if (userHasAnyCookie) {
-      console.log('user has cookis')
-      console.log(userHasAnyCookie)
-      console.log(cookies.userSessionToken)
-      try {
-        getUserData()
-      } catch (err) {
-        destroyCookie(undefined, 'userSessionToken')
-        setUser(null)
-      }
-    } else {
-      localStorage.removeItem('@scalable: user-state-1.0.0')
-      destroyCookie(undefined, 'userSessionToken')
-      setUser(null)
-    }
-  }, [])
-
   return (
     <>
-      {/* <Link href="#">
-        <div className="max-w-screen flex h-[32px] w-full items-center justify-center bg-gradient-to-r from-[#2250C4] via-[#D18BC0] to-[#E48D92]">
-          <span className="text-xs text-white">
-            Query engine is live! Apply for beta testing here
-          </span>
-        </div>
-      </Link> */}
-      <header className="max-w-screen left-0 top-0 z-40 mx-0 flex h-[95px] w-full  items-center bg-[#F9F9F9]  bg-opacity-80 text-[#000000]">
-        <div className="w-full justify-between px-[20px] md:px-[90px] xl:hidden">
-          <div className="">
-            <img
-              src={`${
-                process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                  ? process.env.NEXT_PUBLIC_BASE_PATH
-                  : ''
-              }/images/new/logo.png`}
-              alt="image"
-              className={`w-[150px]`}
-            />
-          </div>
-          <button
-            onClick={navbarToggleHandler}
-            id="navbarToggler"
-            aria-label="Mobile Menu"
-            className="absolute right-7 top-7 block  rounded-lg px-3 py-[6px] ring-primary focus:ring-2"
-          >
-            <span
-              className={`relative my-1.5 block h-0.5 w-[30px] bg-black transition-all duration-300  ${
-                navbarOpen ? ' top-[7px] rotate-45' : ' '
-              }`}
-            />
-            <span
-              className={`relative my-1.5 block h-0.5 w-[30px] bg-black transition-all duration-300 ${
-                navbarOpen ? 'opacity-0 ' : ' '
-              }`}
-            />
-            <span
-              className={`relative my-1.5 block h-0.5 w-[30px] bg-black transition-all duration-300  ${
-                navbarOpen ? ' top-[-8px] -rotate-45' : ' '
-              }`}
-            />
-          </button>
-          <nav
-            id="navbarCollapse"
-            className={`navbar absolute right-7 z-50 w-[250px] rounded border-[.5px] bg-[#e6e4e4] px-6  py-6 text-[13px] text-[#fff] duration-300  ${
-              navbarOpen
-                ? 'visibility top-20 opacity-100'
-                : 'invisible top-20 opacity-0'
-            }`}
-          >
-            <div className=" grid gap-y-[15px] text-[12px]  font-medium !leading-[19px]">
-              {features.map((feature, index) => (
-                <div className="flex h-full items-center" key={index}>
-                  <a
-                    className={`flex h-full cursor-pointer items-center text-[#000]  hover:bg-[#ececec] ${
-                      feature.isCurrentlyPage
-                        ? 'border-b  text-[14px] font-bold '
-                        : ''
-                    }`}
-                  >
-                    {feature.label}
-                  </a>
-                </div>
-              ))}
-            </div>
-            <div className="mt-[35px]">
-              <div>
-                {' '}
-                <a
-                  href={`/oec/register`}
-                  className=" cursor-pointer items-center rounded-[5px] border border-[#0354EC] bg-transparent px-[18px] py-[9px] text-[13px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff]"
-                >
-                  Become an expert
-                </a>
-              </div>
-
-              {user?.sessionToken ? (
-                <div className="mt-[30px]">
-                  <div className="mx-auto flex w-3/4 justify-center border-b border-[#000]">
-                    {' '}
-                  </div>
-                  <div className="flex">
-                    {' '}
-                    <img
-                      src={
-                        !user.profilePictureHash
-                          ? `${
-                              process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                                ? process.env.NEXT_PUBLIC_BASE_PATH
-                                : ''
-                            }/images/header/user-circle.svg`
-                          : `https://cloudflare-ipfs.com/ipfs/${user.profilePictureHash}`
-                      }
-                      alt="image"
-                      onClick={() => {
-                        setUserNavbarOpen(!userNavbarOpen)
-                      }}
-                      className={`mr-[15px] mt-[25px] h-[50px] w-[50px] cursor-pointer rounded-[100%] 2xl:mr-[15px]`}
-                    />
-                    <div className="mt-[30px] h-fit py-0 text-[12px] font-medium !leading-[19px]">
-                      <div className=" flex items-center">
-                        <a
-                          href={`${
-                            process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                              ? `${process.env.NEXT_PUBLIC_BASE_URL}/oec/my-account`
-                              : '/my-account'
-                          }`}
-                          className={`flex cursor-pointer items-center text-[#000]   hover:text-[#313131]`}
-                        >
-                          My account
-                        </a>
-                      </div>
-                      <div className="mt-[5px] flex items-center">
-                        <a
-                          href={`${
-                            process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                              ? `${process.env.NEXT_PUBLIC_BASE_URL}/oec/change-password`
-                              : '/change-password'
-                          }`}
-                          className={`flex cursor-pointer items-center text-[#000]  hover:text-[#313131]`}
-                        >
-                          Change password
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-[25px]">
-                    <a
-                      onClick={signOutUser}
-                      className=" cursor-pointer items-center rounded-[5px] border  border-[#000] bg-transparent px-[18px] py-[6px] text-[12px] font-bold !leading-[19px] text-[#575757] hover:bg-[#ececec]"
-                    >
-                      Sign out
-                    </a>
-                  </div>
-                </div>
-              ) : (
-                <div className="mt-[25px]">
-                  <a
-                    href={`${
-                      process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                        ? `/oec/login`
-                        : '/login'
-                    }`}
-                    className=" cursor-pointer items-center bg-transparent text-[13px]  font-bold !leading-[19px] text-[#000] hover:text-[#3b3a3a]"
-                  >
-                    Login
-                  </a>
-                </div>
-              )}
-            </div>
-          </nav>
-        </div>
-        <div className="hidden h-full w-full items-center justify-between px-[70px] xl:flex">
-          <div className="flex  h-full items-center">
-            <a href={'/oen'}>
-              <img
-                src={`${
-                  process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                    ? process.env.NEXT_PUBLIC_BASE_PATH
-                    : ''
-                }/images/new/logo.png`}
-                alt="image"
-                className={`mr-[60px] w-[200px]`}
-              />
-            </a>
-            <div className="flex h-full items-center gap-x-[1px] text-[14px] font-medium !leading-[19px] 2xl:gap-x-[20px] 2xl:text-[16px]">
-              {features.map((feature, index) => (
-                <div className="flex h-full items-center" key={index}>
-                  <a
-                    className={`flex h-full cursor-pointer  items-center px-[25px] hover:bg-[#ececec] 2xl:px-[45px] ${
-                      feature.isCurrentlyPage ? 'bg-[#ececec] font-bold' : ''
-                    }`}
-                    href={feature.href}
-                  >
-                    {feature.label}
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div
-            className={` flex justify-between  ${
-              user?.sessionToken
-                ? 'gap-x-[20px]'
-                : 'gap-x-[40px] 2xl:gap-x-[80px]'
-            }`}
-          >
-            <a
-              href={`/oec/register`}
-              className="flex cursor-pointer items-center rounded-[5px] border border-[#0354EC] bg-transparent  px-[18px] py-[9px] text-[14px] font-bold !leading-[19px] text-[#0354EC] hover:bg-[#0354EC] hover:text-[#fff] 2xl:px-[24px] 2xl:py-[11.5px] 2xl:text-[16px]"
-            >
-              Become an expert
-            </a>
-            {user?.sessionToken ? (
-              <div>
-                <img
-                  src={
-                    !user.profilePictureHash
-                      ? `${
-                          process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                            ? process.env.NEXT_PUBLIC_BASE_PATH
-                            : ''
-                        }/images/header/user-circle.svg`
-                      : `https://cloudflare-ipfs.com/ipfs/${user.profilePictureHash}`
-                  }
-                  alt="image"
-                  onClick={() => {
-                    setUserNavbarOpen(!userNavbarOpen)
-                  }}
-                  className={`mr-[15px] h-[50px] w-[50px] cursor-pointer rounded-[100%] 2xl:mr-[15px]`}
+      <header
+        className={`header left-0 top-0 z-40 flex w-full items-center bg-transparent ${
+          !sticky
+            ? '!fixed !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#040015] dark:!bg-opacity-60'
+            : '!fixed !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#040015] dark:!bg-opacity-60'
+        }`}
+      >
+        <div className="container">
+          <div className="relative -mx-4 flex items-center justify-between">
+            <div className="w-60 max-w-full px-4 xl:mr-12">
+              <Link
+                href="/"
+                className={`header-logo block w-full ${
+                  sticky ? 'py-5 lg:py-2' : 'py-8'
+                } `}
+              >
+                <Image
+                  src="/images/logo/logo-2.svg"
+                  alt="logo"
+                  width={140}
+                  height={30}
+                  className="w-full dark:hidden"
                 />
+                <Image
+                  src="/images/logo.svg"
+                  alt="logo"
+                  width={129}
+                  height={29}
+                  className="hidden w-full dark:block"
+                />
+              </Link>
+            </div>
+            <div className="flex w-full items-center justify-between px-4">
+              <div>
+                <button
+                  onClick={navbarToggleHandler}
+                  id="navbarToggler"
+                  aria-label="Mobile Menu"
+                  className="absolute right-4 top-1/2 block translate-y-[-50%] rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden"
+                >
+                  <span
+                    className={`relative my-1.5 block h-0.5 w-[30px] bg-black transition-all duration-300 dark:bg-white ${
+                      navbarOpen ? ' top-[7px] rotate-45' : ' '
+                    }`}
+                  />
+                  <span
+                    className={`relative my-1.5 block h-0.5 w-[30px] bg-black transition-all duration-300 dark:bg-white ${
+                      navbarOpen ? 'opacity-0 ' : ' '
+                    }`}
+                  />
+                  <span
+                    className={`relative my-1.5 block h-0.5 w-[30px] bg-black transition-all duration-300 dark:bg-white ${
+                      navbarOpen ? ' top-[-8px] -rotate-45' : ' '
+                    }`}
+                  />
+                </button>
                 <nav
-                  className={`navbar absolute right-[100px] z-50 flex w-[220px] rounded-[8px] border-[.5px] bg-[#e6e4e4] pb-[30px] pl-[35px] pr-6 pt-[19px] text-[13px] text-[#fff] duration-300  ${
-                    userNavbarOpen
-                      ? 'visibility top-20 opacity-100'
-                      : 'invisible top-20 opacity-0'
+                  id="navbarCollapse"
+                  className={`navbar absolute right-0 z-30 w-[250px] rounded border-[.5px] border-body-color/50 bg-white px-6 py-4 duration-300 dark:border-body-color/20 dark:bg-dark lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100 ${
+                    navbarOpen
+                      ? 'visibility top-full opacity-100'
+                      : 'invisible top-[120%] opacity-0'
                   }`}
                 >
-                  <div className="mt-[10px]">
-                    <div className=" grid gap-y-[15px] text-[15px]  font-medium !leading-[19px]">
-                      <div className="flex h-full items-center">
-                        <a
-                          href={`${
-                            process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                              ? `/oec/my-account`
-                              : '/my-account'
-                          }`}
-                          className={`flex h-full cursor-pointer items-center text-[#000]  hover:text-[#313131]`}
-                        >
-                          My account
-                        </a>
-                      </div>
-                      <div className="flex h-full items-center">
-                        <a
-                          href={`${
-                            process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                              ? `/oec/change-password`
-                              : '/change-password'
-                          }`}
-                          className={`flex h-full cursor-pointer items-center text-[#000]  hover:text-[#313131]`}
-                        >
-                          Change password
-                        </a>
-                      </div>
-                    </div>
-                    <div className="mt-[25px]">
-                      <a
-                        onClick={signOutUser}
-                        className=" cursor-pointer items-center rounded-[5px] border  border-[#000] bg-transparent px-[18px] py-[6px] text-[12px] font-bold !leading-[19px] text-[#575757] hover:bg-[#ececec]"
-                      >
-                        Sign out
-                      </a>
-                    </div>
-                  </div>
-                  <div
-                    onClick={() => {
-                      setUserNavbarOpen(false)
-                    }}
-                    className="ml-[20px]  flex cursor-pointer justify-end text-[16px] font-bold text-[#000] hover:text-[#313131]"
-                  >
-                    x
-                  </div>
+                  <ul className="block lg:flex lg:space-x-12">
+                    {menuData.map((menuItem, index) => (
+                      <li key={menuItem.id} className="group relative">
+                        {menuItem.path ? (
+                          <Link
+                            href={menuItem.path}
+                            onClick={menuItem.onClick} // Adicione isso
+                            className={`flex py-2 text-base text-dark group-hover:opacity-70 dark:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6`}
+                          >
+                            {menuItem.title}
+                          </Link>
+                        ) : (
+                          <>
+                            <a
+                              onClick={() => handleSubmenu(index)}
+                              className="flex cursor-pointer items-center justify-between py-2 text-base text-dark group-hover:opacity-70 dark:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6"
+                            >
+                              {menuItem.title}
+                              <span className="pl-3">
+                                <svg width="15" height="14" viewBox="0 0 15 14">
+                                  <path
+                                    d="M7.81602 9.97495C7.68477 9.97495 7.57539 9.9312 7.46602 9.8437L2.43477 4.89995C2.23789 4.70308 2.23789 4.39683 2.43477 4.19995C2.63164 4.00308 2.93789 4.00308 3.13477 4.19995L7.81602 8.77183L12.4973 4.1562C12.6941 3.95933 13.0004 3.95933 13.1973 4.1562C13.3941 4.35308 13.3941 4.65933 13.1973 4.8562L8.16601 9.79995C8.05664 9.90933 7.94727 9.97495 7.81602 9.97495Z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </a>
+                            <div
+                              className={`submenu relative left-0 top-full rounded-md bg-white transition-[top] duration-300 group-hover:opacity-100 dark:bg-dark lg:invisible lg:absolute lg:top-[110%] lg:block lg:w-[250px] lg:p-4 lg:opacity-0 lg:shadow-lg lg:group-hover:visible lg:group-hover:top-full ${
+                                openIndex === index ? 'block' : 'hidden'
+                              }`}
+                            >
+                              {menuItem.submenu.map((submenuItem) => (
+                                <Link
+                                  href={submenuItem.path}
+                                  key={submenuItem.id}
+                                  className="block rounded py-2.5 text-sm text-dark hover:opacity-70 dark:text-white lg:px-3"
+                                >
+                                  {submenuItem.title}
+                                </Link>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 </nav>
               </div>
-            ) : (
-              <a
-                href={`${
-                  process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                    ? `/oec/login`
-                    : '/login'
-                }`}
-                className=" my-auto h-fit cursor-pointer items-center   border-b  border-[#000] bg-transparent text-[16px]  font-bold !leading-[19px] text-[#000] hover:text-[#3b3a3a]"
-              >
-                Login
-              </a>
-            )}
+              <div className="flex items-center justify-end pr-16 lg:pr-0">
+                <Link
+                  href="/signin"
+                  className="rounded-md bg-transparent px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-[#652ee786] "
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="rounded-md bg-transparent px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-[#652ee786] "
+                >
+                  Sign Up
+                </Link>
+                {/* <div>
+                  <ThemeToggler />
+                </div> */}
+              </div>
+            </div>
           </div>
-          {/* <div className="lg:hidden">
-              <Dialog.Root>
-                <Dialog.Trigger>
-                  <List className="text-black" size={24} weight="bold" />
-                </Dialog.Trigger>
-                <HeaderModal navigationItems={navigationItems} />
-              </Dialog.Root>
-            </div> */}
         </div>
       </header>
     </>
