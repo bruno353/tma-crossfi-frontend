@@ -94,11 +94,6 @@ const SignUp = () => {
     }
     try {
       await createUser(final)
-      // setCookie(null, 'userSessionToken', res.sessionToken)
-      // nookies.set(null, 'userSessionToken', res.sessionToken)
-      // setCookie(null, 'user', res)
-      // nookies.set(null, 'user', res)
-      // setUser(res)
       setIsLoading(false)
       setAccountCreated(true)
       toast.error(`Success`)
@@ -114,20 +109,18 @@ const SignUp = () => {
       <>
         <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-[180px] lg:pt-[180px]">
           <div className="container">
-            <form onSubmit={handleSubmit(onSubmit)} className="">
-              <div className="-mx-4 flex flex-wrap">
-                <div className="w-full px-4">
-                  <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:p-[60px]">
-                    <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
-                      Account set up successfully!
-                    </h3>
-                    <p className="mt-[20px] text-center text-xl font-medium text-body-color">
-                      Check your email to confirm the account creation
-                    </p>
-                  </div>
+            <div className="-mx-4 flex flex-wrap">
+              <div className="w-full px-4">
+                <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:p-[60px]">
+                  <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
+                    Account set up successfully!
+                  </h3>
+                  <p className="mt-[20px] text-center text-xl font-medium text-body-color">
+                    Check your email to confirm the account creation
+                  </p>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </section>
       </>
