@@ -199,7 +199,7 @@ const Header = () => {
                 </div> */}
               {user && navbarOpen && (
                 <div className="absolute top-[50px]" ref={menuRef}>
-                  <Menu user={user} />{' '}
+                  <Menu user={user} onSignOut={signOutUser} />{' '}
                 </div>
               )}
             </div>
