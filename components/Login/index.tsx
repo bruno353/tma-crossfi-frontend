@@ -25,7 +25,7 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import { createHash } from 'crypto'
 import ScrollToTop from '../ScrollToTop/index'
 import { SigninForm, SignupForm } from '@/types/user'
-import { createUser, loginUser } from '@/utils/api'
+import { createUser, googleRedirect, loginUser } from '@/utils/api'
 
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -70,6 +70,36 @@ const SignUp = () => {
       setIsLoading(false)
     }
   }
+
+  async function handleLoginGoogle(url: string) {
+    setIsLoading(true)
+    try {
+      const user = await googleRedirect(url)
+      if (user) {
+        setCookie(null, 'userSessionToken', user['sessionToken'])
+        nookies.set(null, 'userSessionToken', user['sessionToken'])
+        setCookie(null, 'user', JSON.stringify(user))
+        nookies.set(null, 'user', JSON.stringify(user))
+        setUser(user)
+        push('/dashboard')
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const code = urlParams.get('code')
+    if (code) {
+      const url = window.location.href
+      const loginIndex = url.indexOf('signin')
+      const afterLogin = url.substring(loginIndex + 'signin'.length)
+
+      console.log(afterLogin)
+      handleLoginGoogle(afterLogin)
+    }
+  }, [])
 
   return (
     <>
