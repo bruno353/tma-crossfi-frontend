@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import ThemeToggler from './ThemeToggler'
 import menuData from './menuData'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
@@ -15,7 +15,38 @@ const Header = () => {
   const [navbarOpen, setNavbarOpen] = useState(false)
   const navbarToggleHandler = () => {
     setNavbarOpen(!navbarOpen)
+    setMenuOpen(!menuOpen)
   }
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const menuRef = useRef(null)
+
+  const closeMenu = () => {
+    setNavbarOpen(false)
+    setMenuOpen(false)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        // Clicked outside of the menu, so close it
+        closeMenu()
+      }
+    }
+
+    // Add event listener when the menu is open
+    if (menuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      // Remove event listener when the menu is closed
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [menuOpen])
 
   const pathname = usePathname()
 
@@ -167,7 +198,7 @@ const Header = () => {
                   <ThemeToggler />
                 </div> */}
               {user && navbarOpen && (
-                <div className="absolute top-[50px]">
+                <div className="absolute top-[50px]" ref={menuRef}>
                   <Menu user={user} />{' '}
                 </div>
               )}
