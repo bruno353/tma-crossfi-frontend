@@ -22,6 +22,7 @@ import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 const NewWorkspaceModal = ({ isOpen, onClose }) => {
   const [workspaceName, setWorkspaceName] = useState('')
   const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedFile, setSelectedFile] = useState(null)
   const [isLoading, setIsLoading] = useState(null)
   const fileInputRef = useRef(null)
 
@@ -45,6 +46,7 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
     if (isLoading) return
 
     const file = e.target.files[0]
+    setSelectedFile(file)
     const reader = new FileReader()
     reader.onloadend = () => {
       setSelectedImage(reader.result)
@@ -63,7 +65,7 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
 
     const formData = new FormData()
     formData.append('name', workspaceName)
-    formData.append('files', selectedImage[0])
+    formData.append('files', selectedFile)
 
     try {
       await createWorkspace(formData, userSessionToken)
@@ -108,19 +110,19 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
           </label>
         </div>
         <div
-          className="groupLogo group relative mb-6 h-fit w-[90px] cursor-pointer"
+          className="groupLogo group relative mb-6 h-fit w-[60px] cursor-pointer"
           onClick={handleImageClick}
         >
           {selectedImage ? (
             <>
               <img
                 src={selectedImage}
-                className="w-[90px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
+                className="w-[60px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
               />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
                 <img
                   src="/images/dashboard/pencil.svg"
-                  className="mb-1 w-[50px] rounded-full"
+                  className="mb-1 w-[30px] rounded-full"
                 />
               </div>
             </>
@@ -128,12 +130,12 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
             <>
               <img
                 src="/images/dashboard/work.webp"
-                className="w-[90px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
+                className="w-[60px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
               />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
                 <img
                   src="/images/dashboard/pencil.svg"
-                  className="mb-1 w-[50px] rounded-full"
+                  className="mb-1 w-[30px] rounded-full"
                 />
               </div>
             </>

@@ -78,24 +78,32 @@ const Dashboard = () => {
               + New workspace
             </div>
           </div>
-          <div className="mt-[50px] flex w-full justify-between gap-x-[30px]">
+          <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]">
             {workspaces.map((workspace, index) => (
-              <div
-                key={index}
-                className="grid h-40 w-1/3 cursor-pointer rounded-[5px]  bg-[#504E5E]  p-[20px] text-[#fff] hover:bg-[#777584]"
-              >
-                <div className="flex items-start gap-x-[20px]">
-                  <img
-                    src={workspace.logoURL}
-                    alt="image"
-                    className="w-[90px] rounded-full"
-                  />
-                  <div>{workspace.name}</div>
+              <a key={index} href={`/workspace/${workspace.id}`}>
+                <div className="grid h-40 w-full cursor-pointer rounded-[5px]  bg-[#504E5E]  p-[20px] text-[#fff] hover:bg-[#777584]">
+                  <div className="flex items-start gap-x-[20px] overflow-hidden ">
+                    <img
+                      src={
+                        workspace.finalURL
+                          ? workspace.finalURL
+                          : '/images/dashboard/work.webp'
+                      }
+                      alt="image"
+                      className="w-[40px] rounded-full"
+                    />
+                    <div
+                      title={workspace.name}
+                      className="overflow-hidden truncate text-ellipsis whitespace-nowrap"
+                    >
+                      {workspace.name}
+                    </div>
+                  </div>
+                  <div className="mt-auto text-[12px] text-[#C5C4C4]">
+                    Created at: {workspace.createdAt}
+                  </div>
                 </div>
-                <div className="mt-auto text-[12px] text-[#C5C4C4]">
-                  Created at: {workspace.createdAt}
-                </div>
-              </div>
+              </a>
             ))}
           </div>
           {isLoading && (

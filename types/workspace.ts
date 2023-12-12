@@ -1,6 +1,8 @@
 export interface WorkspaceProps {
+  id: string
   name: string
-  logoURL: string
+  logoURL?: string
+  finalURL?: string
   createdAt: string
   updatedAt: string
 }
