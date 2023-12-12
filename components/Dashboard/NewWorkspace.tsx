@@ -16,6 +16,8 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
+import { createWorkspace } from '@/utils/api'
+import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 
 const NewWorkspaceModal = ({ isOpen, onClose }) => {
   const [workspaceName, setWorkspaceName] = useState('')
@@ -56,6 +58,23 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
 
   const handleCreateWorkspace = async () => {
     setIsLoading(true)
+
+    const { userSessionToken } = parseCookies()
+
+    const formData = new FormData()
+    formData.append('name', workspaceName)
+    formData.append('files', selectedImage[0])
+
+    try {
+      await createWorkspace(formData, userSessionToken)
+      setIsLoading(false)
+      toast.success(`Success`)
+      onClose()
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -101,7 +120,7 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
               <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
                 <img
                   src="/images/dashboard/pencil.svg"
-                  className="mb-6 w-[50px] rounded-full"
+                  className="mb-1 w-[50px] rounded-full"
                 />
               </div>
             </>
@@ -114,7 +133,7 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
               <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
                 <img
                   src="/images/dashboard/pencil.svg"
-                  className="mb-6 w-[50px] rounded-full"
+                  className="mb-1 w-[50px] rounded-full"
                 />
               </div>
             </>
@@ -149,13 +168,10 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
           <div
             className={`${
               isLoading
-                ? 'animate-pulse bg-[#8e68e829] '
+                ? 'animate-pulse bg-[#8e68e829]'
                 : 'cursor-pointer  hover:bg-[#8e68e829]'
             }  rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] `}
             onClick={() => {
-              // Add your logic here to create a new workspace
-              // You can use workspaceName state to get the entered name
-              // Close the modal when done
               handleCreateWorkspace()
             }}
           >
