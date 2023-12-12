@@ -220,7 +220,7 @@ export async function createWorkspace(data: any, userSessionToken: string) {
 export async function getUserWorkspace(userSessionToken: string) {
   const config = {
     method: 'get' as 'get',
-    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/workspace/functions/createWorkspace`,
+    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/workspace/functions/getUserWorkspaces`,
     headers: {
       'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
       'X-Parse-Session-Token': userSessionToken,

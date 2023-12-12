@@ -41,7 +41,8 @@ const Dashboard = () => {
     const { userSessionToken } = parseCookies()
 
     try {
-      await getUserWorkspace(userSessionToken)
+      const res = await getUserWorkspace(userSessionToken)
+      setWorkspaces(res)
       setIsLoading(false)
     } catch (err) {
       console.log(err)
@@ -77,14 +78,33 @@ const Dashboard = () => {
               + New workspace
             </div>
           </div>
+          <div className="mt-[50px] flex w-full justify-between gap-x-[30px]">
+            {workspaces.map((workspace, index) => (
+              <div
+                key={index}
+                className="grid h-40 w-1/3 cursor-pointer rounded-[5px]  bg-[#504E5E]  p-[20px] text-[#fff] hover:bg-[#777584]"
+              >
+                <div className="flex items-start gap-x-[20px]">
+                  <img
+                    src={workspace.logoURL}
+                    alt="image"
+                    className="w-[90px] rounded-full"
+                  />
+                  <div>{workspace.name}</div>
+                </div>
+                <div className="mt-auto text-[12px] text-[#C5C4C4]">
+                  Created at: {workspace.createdAt}
+                </div>
+              </div>
+            ))}
+          </div>
           {isLoading && (
-            <div className="mt-[50px] flex w-full justify-between gap-x-[30px]">
+            <div className="flex w-full justify-between gap-x-[30px]">
               <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
               <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
               <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
             </div>
           )}
-
           {workspaces.length === 0 && !isLoading && (
             <div className="mt-[100px] w-full items-center">
               {NoWorkspaces()}
