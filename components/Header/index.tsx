@@ -150,8 +150,8 @@ const Header = () => {
       <header
         className={`header left-0 top-0 z-40 flex w-full items-center bg-transparent ${
           !sticky
-            ? '!fixed !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#060621] dark:!bg-opacity-60'
-            : '!fixed !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#060621] dark:!bg-opacity-60'
+            ? '!fixed !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#040015] dark:!bg-opacity-60'
+            : '!fixed !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#040015] dark:!bg-opacity-60'
         }`}
       >
         <div className="container">

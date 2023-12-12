@@ -23,6 +23,29 @@ const Workspace = (id: any) => {
 
   const { push } = useRouter()
 
+  const sidebarOptions = [
+    {
+      name: 'Home',
+      imgSource: '/images/workspace/home.svg',
+    },
+    {
+      name: 'Chat',
+      imgSource: '/images/workspace/chat.svg',
+    },
+    {
+      name: 'Notes',
+      imgSource: '/images/workspace/note.svg',
+    },
+    {
+      name: 'Deploy',
+      imgSource: '/images/workspace/rocket.svg',
+    },
+    {
+      name: 'Tasks',
+      imgSource: '/images/workspace/tasks.svg',
+    },
+  ]
+
   async function getData(id: any) {
     const { userSessionToken } = parseCookies()
 
@@ -58,7 +81,22 @@ const Workspace = (id: any) => {
 
   return (
     <>
-      <div>testing</div>
+      <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#040015] pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[180px]">
+        <div className="px-[20px] text-[#fff]">
+          {sidebarOptions.map((option, index) => (
+            <div key={index}>
+              <div className="">
+                <img
+                  src={option.imgSource}
+                  alt="image"
+                  className="w-[40px] rounded-full"
+                />
+                <div>{option.name}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </>
   )
 }
