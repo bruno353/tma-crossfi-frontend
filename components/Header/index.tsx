@@ -140,6 +140,7 @@ const Header = () => {
         cleanData()
       }
     } else {
+      console.log('user has no cookies')
       cleanData()
     }
   }, [])

@@ -20,64 +20,38 @@ import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 import Link from 'next/link'
-import ReCAPTCHA from 'react-google-recaptcha'
+import NewWorkspaceModal from './NewWorkspace'
 
-import { createHash } from 'crypto'
-import ScrollToTop from '../ScrollToTop/index'
-import { SigninForm, SignupForm } from '@/types/user'
-import { createUser, loginUser } from '@/utils/api'
+const Dashboard = () => {
+  const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
 
-const SignUp = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
+  const openModal = () => {
+    setIsCreatingNewWorkspace(true)
+  }
 
-  const { push } = useRouter()
-
-  const { user, setUser } = useContext(AccountContext)
-
-  const validSchema = Yup.object().shape({
-    email: Yup.string().max(500).required('Email is required'),
-    password: Yup.string().max(500).required('Password is required'),
-  })
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    control, // Adicione esta linha
-    // eslint-disable-next-line no-unused-vars
-    reset,
-    formState: { errors },
-  } = useForm<SigninForm>({
-    resolver: yupResolver<any>(validSchema),
-  })
-
-  async function onSubmit(data: SigninForm) {
-    console.log('oiii')
-    setIsLoading(true)
-
-    try {
-      const res = await loginUser(data)
-      setCookie(null, 'userSessionToken', res.sessionToken)
-      nookies.set(null, 'userSessionToken', res.sessionToken)
-      setCookie(null, 'user', res)
-      nookies.set(null, 'user', res)
-      setUser(res)
-      setIsLoading(false)
-      push('/dashboard')
-    } catch (err) {
-      console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
-      setIsLoading(false)
-    }
+  const closeModal = () => {
+    setIsCreatingNewWorkspace(false)
   }
 
   return (
     <>
-      <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
-        <div className="container text-[#fff]">Dashboard</div>
+      <section className="relative z-10 overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[180px]">
+        <div className="container text-[#fff]">
+          <div className="flex items-center gap-x-[20px]">
+            <div>Dashboard</div>
+            <div
+              onClick={openModal}
+              className="cursor-pointer rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] hover:bg-[#8e68e829]"
+            >
+              + New workspace
+            </div>
+          </div>
+        </div>
       </section>
+
+      <NewWorkspaceModal isOpen={isCreatingNewWorkspace} onClose={closeModal} />
     </>
   )
 }
 
-export default SignUp
+export default Dashboard
