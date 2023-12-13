@@ -18,15 +18,17 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import Sidebar from '../Sidebar'
+import ChatSidebar from './ChatSidebar'
 
-const Workspace = (id: any) => {
+const Chat = (id: any) => {
   return (
     <>
       <div className="flex">
         <Sidebar id={id.id} />
+        <ChatSidebar id={id.id} />
       </div>
     </>
   )
 }
 
-export default Workspace
+export default Chat

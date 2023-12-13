@@ -18,8 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 
-const Sidebar = (id: any) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+const ChatSidebar = (id: any) => {
   const [sidebarOption, setSidebarOption] = useState<string>('')
 
   const { push } = useRouter()
@@ -109,11 +108,7 @@ const Sidebar = (id: any) => {
 
   return (
     <>
-      <div
-        onMouseEnter={() => setIsSidebarOpen(true)}
-        onMouseLeave={() => setIsSidebarOpen(false)}
-        className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#040015] bg-opacity-60 pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[140px]"
-      >
+      <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#33323E] pb-16 pt-5 text-[16px] md:pb-20 lg:mt-[100px] lg:pb-28">
         <div className="text-[#fff]">
           {sidebarOptions.map((option, index) => (
             <div
@@ -132,11 +127,9 @@ const Sidebar = (id: any) => {
                   alt="image"
                   className="mx-auto w-[22px] rounded-full"
                 />
-                {isSidebarOpen && (
-                  <div className="text-center text-[12px] font-light">
-                    {option.name}
-                  </div>
-                )}
+                <div className="text-center text-[12px] font-light">
+                  {option.name}
+                </div>
               </div>
             </div>
           ))}
@@ -146,4 +139,4 @@ const Sidebar = (id: any) => {
   )
 }
 
-export default Sidebar
+export default ChatSidebar
