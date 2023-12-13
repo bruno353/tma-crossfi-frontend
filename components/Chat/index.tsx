@@ -19,8 +19,37 @@ import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import Sidebar from '../Sidebar'
 import ChatSidebar from './ChatSidebar'
+import { getUserChannels } from '@/utils/api-chat'
 
 const Chat = (id: any) => {
+  const { push } = useRouter()
+
+  async function getData() {
+    const { userSessionToken } = parseCookies()
+
+    let dado
+    try {
+      dado = await getUserChannels(userSessionToken)
+    } catch (err) {
+      toast.error(`Not a valid workspace here`)
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      push('/dashboard')
+    }
+
+    return dado
+  }
+
+//   useEffect(() => {
+//     window.scrollTo({
+//       top: 0,
+//       behavior: 'smooth',
+//     })
+//     if (id) {
+//       getData()
+//     } else {
+//       push('/dashboard')
+//     }
+//   }, [id])
   return (
     <>
       <div className="flex">

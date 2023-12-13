@@ -19,117 +19,56 @@ import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 
 const ChatSidebar = (id: any) => {
-  const [sidebarOption, setSidebarOption] = useState<string>('')
+  const [sidebarOption, setSidebarOption] = useState<any>({
+    TEXT: true,
+    AUDIO: true,
+    VIDEO: true,
+  })
 
-  const { push } = useRouter()
-  const pathname = usePathname()
-
-  const sidebarOptions = [
+  const channelOption = [
     {
-      name: 'Home',
-      option: '/home',
-      imgSource: '/images/workspace/home.svg',
+      name: 'TEXT CHATS',
+      type: 'TEXT',
     },
     {
-      name: 'Chat',
-      option: '/chat',
-      imgSource: '/images/workspace/chat.svg',
+      name: 'AUDIO CHATS',
+      type: 'AUDIO',
     },
     {
-      name: 'Notes',
-      option: '/notes',
-      imgSource: '/images/workspace/note.svg',
-    },
-    {
-      name: 'Deploy',
-      option: '/deploy',
-      imgSource: '/images/workspace/rocket.svg',
-    },
-    {
-      name: 'Tasks',
-      option: '/tasks',
-      imgSource: '/images/workspace/tasks.svg',
+      name: 'VIDEO CHATS',
+      type: 'VIDEO',
     },
   ]
 
-  async function getData(id: any) {
-    const { userSessionToken } = parseCookies()
+  const handleSidebarClick = (type) => {
+    const newSideBar = sidebarOption
+    newSideBar[type] = !sidebarOption[type]
 
-    const data = {
-      id,
-    }
-
-    let dado
-    try {
-      dado = await getWorkspace(data, userSessionToken)
-    } catch (err) {
-      toast.error(`Not a valid workspace`)
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      push('/dashboard')
-    }
-
-    return dado
+    console.log('newSidebar')
+    console.log(newSideBar)
+    setSidebarOption(newSideBar)
   }
-
-  const handleSidebarClick = (name, option) => {
-    const newPath = pathname.endsWith(option)
-      ? pathname
-      : `${pathname}${option}`
-
-    push(newPath)
-
-    setSidebarOption(name)
-  }
-
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
-    if (id) {
-      console.log(id)
-      console.log(id.id)
-      getData(id.id)
-    } else {
-      push('/dashboard')
-    }
-  }, [id])
-
-  useEffect(() => {
-    for (let i = 0; i < sidebarOptions.length; i++) {
-      const pathFinal = pathname.endsWith(sidebarOptions[i].option)
-
-      if (pathFinal) {
-        setSidebarOption(sidebarOptions[i].name)
-        break
-      }
-    }
-  }, [pathname])
 
   return (
     <>
-      <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#33323E] pb-16 pt-5 text-[16px] md:pb-20 lg:mt-[100px] lg:pb-28">
-        <div className="text-[#fff]">
-          {sidebarOptions.map((option, index) => (
-            <div
-              onClick={() => {
-                handleSidebarClick(option.name, option.option)
-              }}
-              key={index}
-            >
+      <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#33323E] px-[10px] pb-16 pt-5 text-[16px] md:pb-20 lg:mt-[100px] lg:pb-28">
+        <div className="text-[11px] font-medium text-[#C5C4C4]">
+          {channelOption.map((option, index) => (
+            <div key={index} className="mb-[30px]">
               <div
-                className={`mb-[5px] cursor-pointer px-[20px] py-[20px] hover:bg-[#dbdbdb1e] ${
-                  sidebarOption === option.name && 'bg-[#dbdbdb1e]'
-                }`}
+                onClick={() => {
+                  handleSidebarClick(option.type)
+                }}
+                className={`flex cursor-pointer gap-x-[5px] hover:text-[#fff]`}
               >
                 <img
-                  src={option.imgSource}
+                  src="/images/chat/arrow-down.svg"
                   alt="image"
-                  className="mx-auto w-[22px] rounded-full"
+                  className={`w-[8px]  ${
+                    !sidebarOption[option.type] && '-rotate-90'
+                  }`}
                 />
-                <div className="text-center text-[12px] font-light">
-                  {option.name}
-                </div>
+                <div>{option.name}</div>
               </div>
             </div>
           ))}
