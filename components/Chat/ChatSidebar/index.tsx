@@ -17,8 +17,11 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
+import { getUserChannels } from '@/utils/api-chat'
+import { ChannelProps } from '@/types/chat'
 
 const ChatSidebar = (id: any) => {
+  const [channels, setChannels] = useState<ChannelProps[]>([])
   const [sidebarOption, setSidebarOption] = useState<any>({
     TEXT: true,
     AUDIO: true,
@@ -49,6 +52,36 @@ const ChatSidebar = (id: any) => {
     setSidebarOption(newSideBar)
   }
 
+  async function getData(id: any) {
+    const { userSessionToken } = parseCookies()
+    console.log('getting channels')
+    console.log(id)
+    console.log(userSessionToken)
+
+    const data = {
+      id,
+    }
+
+    let dado
+    try {
+      dado = await getUserChannels(data, userSessionToken)
+      setChannels(dado)
+    } catch (err) {
+      toast.error(`Error: ${err}`)
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+    }
+
+    return dado
+  }
+
+  useEffect(() => {
+    if (id) {
+      console.log(id)
+      console.log(id.id)
+      getData(id.id)
+    }
+  }, [id])
+
   return (
     <>
       <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#33323E] px-[10px] pb-16 pt-5 text-[16px] md:pb-20 lg:mt-[100px] lg:pb-28">
@@ -59,17 +92,34 @@ const ChatSidebar = (id: any) => {
                 onClick={() => {
                   handleSidebarClick(option.type)
                 }}
-                className={`flex cursor-pointer gap-x-[5px] hover:text-[#fff]`}
+                className={`flex items-center`}
               >
-                <img
-                  src="/images/chat/arrow-down.svg"
-                  alt="image"
-                  className={`w-[8px]  ${
-                    !sidebarOption[option.type] && '-rotate-90'
-                  }`}
-                />
-                <div>{option.name}</div>
+                <div className="flex cursor-pointer gap-x-[5px] hover:text-[#fff]">
+                  <img
+                    src="/images/chat/arrow-down.svg"
+                    alt="image"
+                    className={`w-[8px]  ${
+                      !sidebarOption[option.type] && '-rotate-90'
+                    }`}
+                  />
+                  <div>{option.name}</div>
+                </div>
+
+                <div className="ml-[50px] cursor-pointer text-[17px] font-light hover:text-[#fff]">
+                  +
+                </div>
               </div>
+              {sidebarOption[option.type] && (
+                <div>
+                  {channels?.map((optionChannel, index) => (
+                    <div key={index}>
+                      {option.type === optionChannel.type && (
+                        <div> {optionChannel.name} </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>

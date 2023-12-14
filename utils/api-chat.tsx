@@ -8,14 +8,15 @@ import {
 } from '@/types/user'
 import axios from 'axios'
 
-export async function getUserChannels(userSessionToken: string) {
+export async function getUserChannels(data: any, userSessionToken: string) {
   const config = {
-    method: 'get' as 'get',
+    method: 'post' as 'post',
     url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/chat/functions/getUserChannels`,
     headers: {
       'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
       'X-Parse-Session-Token': userSessionToken,
     },
+    data,
   }
 
   let finalData

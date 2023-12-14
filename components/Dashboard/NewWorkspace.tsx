@@ -96,7 +96,7 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
       >
         <div
           onClick={onClose}
-          className="absolute right-5 top-2 cursor-pointer text-[18px] font-light"
+          className="absolute right-5 top-2 cursor-pointer text-[18px] font-light text-[#C5C4C4]"
         >
           x
         </div>

@@ -55,6 +55,9 @@ const Sidebar = (id: any) => {
 
   async function getData(id: any) {
     const { userSessionToken } = parseCookies()
+    console.log('getting data')
+    console.log(id)
+    console.log(userSessionToken)
 
     const data = {
       id,
@@ -83,6 +86,9 @@ const Sidebar = (id: any) => {
   }
 
   useEffect(() => {
+    console.log('workspace entrado')
+    console.log('verificando se existe id')
+    console.log(id)
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
