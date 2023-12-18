@@ -22,6 +22,7 @@ import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 const NewChannelModal = ({ isOpen, onClose, channelType }) => {
   const [workspaceName, setWorkspaceName] = useState('')
   const [selectedImage, setSelectedImage] = useState(null)
+  const [isPrivate, setIsPrivate] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
   const [isLoading, setIsLoading] = useState(null)
   const fileInputRef = useRef(null)
@@ -36,6 +37,10 @@ const NewChannelModal = ({ isOpen, onClose, channelType }) => {
     if (!isLoading) {
       setWorkspaceName(e.target.value)
     }
+  }
+
+  const handleToggleChange = (e) => {
+    setIsPrivate(e.target.checked)
   }
 
   const handleOverlayClick = () => {
@@ -108,11 +113,11 @@ const NewChannelModal = ({ isOpen, onClose, channelType }) => {
         </div>
         <div className="mb-6">
           <h2 className="mb-1 text-xl">New channel</h2>
-          <div className="flex gap-x-[10px]">
+          <div className="flex gap-x-[5px]">
             <img
               src={channelTypeToLogo[channelType]}
               alt="image"
-              className={`w-[10px]`}
+              className={`w-[12px]`}
             />
             <div className="text-[10px] text-[#C5C4C4]">{channelType}</div>
           </div>
@@ -133,6 +138,29 @@ const NewChannelModal = ({ isOpen, onClose, channelType }) => {
             onChange={handleInputChange}
             className="w-full rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
           />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="workspaceName"
+            className="mb-2 block text-[14px] text-[#C5C4C4]"
+          >
+            Private channel
+          </label>
+          <div className="flex justify-between gap-x-[10px]">
+            <div className="text-[10px] text-[#C5C4C4]">
+              Only allowed members can interact with this chat
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="privateToggle"
+                checked={isPrivate}
+                onChange={handleToggleChange}
+                className="toggle-checkbox"
+              />
+              <label htmlFor="privateToggle" className="toggle-label"></label>
+            </div>
+          </div>
         </div>
         <div className="mt-10 flex justify-start">
           <div
