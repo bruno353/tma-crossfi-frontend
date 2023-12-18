@@ -19,9 +19,13 @@ import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import { getUserChannels } from '@/utils/api-chat'
 import { ChannelProps } from '@/types/chat'
+import NewChannelModal from '../Modals/NewChannelModal'
 
 const ChatSidebar = (id: any) => {
   const [channels, setChannels] = useState<ChannelProps[]>([])
+  const [isCreatingNewChannel, setIsCreatingNewChannel] = useState(false)
+  const [isCreatingNewChannelType, setIsCreatingNewChannelType] = useState('')
+
   const [sidebarOption, setSidebarOption] = useState<any>({
     TEXT: true,
     AUDIO: true,
@@ -50,6 +54,10 @@ const ChatSidebar = (id: any) => {
     console.log('newSidebar')
     console.log(newSideBar)
     setSidebarOption(newSideBar)
+  }
+
+  const closeModal = () => {
+    setIsCreatingNewChannel(false)
   }
 
   async function getData(id: any) {
@@ -92,7 +100,7 @@ const ChatSidebar = (id: any) => {
                 onClick={() => {
                   handleSidebarClick(option.type)
                 }}
-                className={`flex items-center`}
+                className={`flex min-w-[150px] items-center`}
               >
                 <div className="flex cursor-pointer gap-x-[5px] hover:text-[#fff]">
                   <img
@@ -105,7 +113,13 @@ const ChatSidebar = (id: any) => {
                   <div>{option.name}</div>
                 </div>
 
-                <div className="ml-[50px] cursor-pointer text-[17px] font-light hover:text-[#fff]">
+                <div
+                  onClick={() => {
+                    setIsCreatingNewChannel(true)
+                    setIsCreatingNewChannelType(option.type)
+                  }}
+                  className="ml-auto cursor-pointer text-[17px] font-light hover:text-[#fff]"
+                >
                   +
                 </div>
               </div>
@@ -124,6 +138,11 @@ const ChatSidebar = (id: any) => {
           ))}
         </div>
       </div>
+      <NewChannelModal
+        isOpen={isCreatingNewChannel}
+        onClose={closeModal}
+        channelType={isCreatingNewChannelType}
+      />
     </>
   )
 }

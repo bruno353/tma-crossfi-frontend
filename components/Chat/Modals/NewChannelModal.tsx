@@ -19,12 +19,18 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { createWorkspace } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 
-const NewWorkspaceModal = ({ isOpen, onClose }) => {
+const NewChannelModal = ({ isOpen, onClose, channelType }) => {
   const [workspaceName, setWorkspaceName] = useState('')
   const [selectedImage, setSelectedImage] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
   const [isLoading, setIsLoading] = useState(null)
   const fileInputRef = useRef(null)
+
+  const channelTypeToLogo = {
+    TEXT: '/images/chat/hashtag.svg',
+    AUDIO: '/images/chat/volume.svg',
+    VIDEO: '/images/chat/volume.svg',
+  }
 
   const handleInputChange = (e) => {
     if (!isLoading) {
@@ -100,54 +106,16 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
         >
           x
         </div>
-        <h2 className="mb-6 text-xl">New Workspace</h2>
-        <div>
-          <label
-            htmlFor="workspaceName"
-            className="mb-2 block text-[14px] text-[#C5C4C4]"
-          >
-            Workspace logo
-          </label>
-        </div>
-        <div
-          className="groupLogo group relative mb-6 h-fit w-[60px] cursor-pointer"
-          onClick={handleImageClick}
-        >
-          {selectedImage ? (
-            <>
-              <img
-                src={selectedImage}
-                className="w-[60px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
-              />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
-                <img
-                  src="/images/dashboard/pencil.svg"
-                  className="mb-1 w-[30px] rounded-full"
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <img
-                src="/images/dashboard/work.webp"
-                className="w-[60px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
-              />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
-                <img
-                  src="/images/dashboard/pencil.svg"
-                  className="mb-1 w-[30px] rounded-full"
-                />
-              </div>
-            </>
-          )}
-
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept=".png, .jpg, .jpeg, .svg, .webp"
-            style={{ display: 'none' }}
-          />
+        <div className="mb-6">
+          <h2 className="mb-1 text-xl">New channel</h2>
+          <div className="flex gap-x-[10px]">
+            <img
+              src={channelTypeToLogo[channelType]}
+              alt="image"
+              className={`w-[10px]`}
+            />
+            <div className="text-[10px] text-[#C5C4C4]">{channelType}</div>
+          </div>
         </div>
 
         <div className="mb-4">
@@ -155,7 +123,7 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            Workspace name
+            Channel name
           </label>
           <input
             type="text"
@@ -185,4 +153,4 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
   )
 }
 
-export default NewWorkspaceModal
+export default NewChannelModal
