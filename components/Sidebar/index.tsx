@@ -17,10 +17,13 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
+import Workspace from '@/components/Workspace'
+import { AccountContext } from '../../contexts/AccountContext'
 
 const Sidebar = (id: any) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
   const [sidebarOption, setSidebarOption] = useState<string>('')
+  const { workspace, setWorkspace } = useContext(AccountContext)
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -66,8 +69,12 @@ const Sidebar = (id: any) => {
     let dado
     try {
       dado = await getWorkspace(data, userSessionToken)
+      if (dado) {
+        setWorkspace(dado)
+      }
     } catch (err) {
       toast.error(`Not a valid workspace`)
+      toast.error(`Error: ${err}`)
       await new Promise((resolve) => setTimeout(resolve, 1500))
       push('/dashboard')
     }

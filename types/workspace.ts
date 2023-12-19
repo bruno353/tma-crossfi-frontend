@@ -1,3 +1,12 @@
+export interface UserWorkspaceProps {
+  id: string
+  workspaceId: string
+  userId: string
+  role: string
+  createdAt: string
+  updatedAt: string
+}
+
 export interface WorkspaceProps {
   id: string
   name: string
@@ -5,4 +14,6 @@ export interface WorkspaceProps {
   finalURL?: string
   createdAt: string
   updatedAt: string
+  UserWorkspace: UserWorkspaceProps[]
+  isUserAdmin: boolean
 }

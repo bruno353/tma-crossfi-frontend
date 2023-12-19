@@ -16,7 +16,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
-import { createWorkspace } from '@/utils/api'
+import { createChannel } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { Switch } from '@chakra-ui/react'
 
@@ -54,7 +54,7 @@ const NewChannelModal = ({ isOpen, onClose, channelType, workspaceId }) => {
     e.stopPropagation()
   }
 
-  const handleCreateWorkspace = async () => {
+  const handleCreateChannel = async () => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
@@ -67,7 +67,7 @@ const NewChannelModal = ({ isOpen, onClose, channelType, workspaceId }) => {
     }
 
     try {
-      await createWorkspace(final, userSessionToken)
+      await createChannel(final, userSessionToken)
       setIsLoading(false)
       toast.success(`Success`)
       onClose()
@@ -157,7 +157,7 @@ const NewChannelModal = ({ isOpen, onClose, channelType, workspaceId }) => {
             }  rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] `}
             onClick={() => {
               if (!isLoading) {
-                handleCreateWorkspace()
+                handleCreateChannel()
               }
             }}
           >

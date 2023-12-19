@@ -20,11 +20,13 @@ import nookies, { parseCookies, setCookie } from 'nookies'
 import { getUserChannels } from '@/utils/api-chat'
 import { ChannelProps } from '@/types/chat'
 import NewChannelModal from '../Modals/NewChannelModal'
+import { AccountContext } from '@/contexts/AccountContext'
 
 const ChatSidebar = (id: any) => {
   const [channels, setChannels] = useState<ChannelProps[]>([])
   const [isCreatingNewChannel, setIsCreatingNewChannel] = useState(false)
   const [isCreatingNewChannelType, setIsCreatingNewChannelType] = useState('')
+  const { workspace, setWorkspace } = useContext(AccountContext)
 
   const [sidebarOption, setSidebarOption] = useState<any>({
     TEXT: true,
@@ -113,15 +115,17 @@ const ChatSidebar = (id: any) => {
                   <div>{option.name}</div>
                 </div>
 
-                <div
-                  onClick={() => {
-                    setIsCreatingNewChannel(true)
-                    setIsCreatingNewChannelType(option.type)
-                  }}
-                  className="ml-auto cursor-pointer text-[17px] font-light hover:text-[#fff]"
-                >
-                  +
-                </div>
+                {workspace?.isUserAdmin && (
+                  <div
+                    onClick={() => {
+                      setIsCreatingNewChannel(true)
+                      setIsCreatingNewChannelType(option.type)
+                    }}
+                    className="ml-auto cursor-pointer text-[17px] font-light hover:text-[#fff]"
+                  >
+                    +
+                  </div>
+                )}
               </div>
               {sidebarOption[option.type] && (
                 <div>

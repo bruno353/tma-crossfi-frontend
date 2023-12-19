@@ -102,15 +102,21 @@ const Header = () => {
         console.log(JSON.parse(user))
         setUser(JSON.parse(user))
       }
-      const dado = await getCurrentUser(userSessionToken)
-      if (dado) {
-        setUser(dado)
-        setCookie(null, 'userSessionToken', dado.sessionToken)
-        nookies.set(null, 'userSessionToken', dado.sessionToken)
-        setCookie(null, 'user', JSON.stringify(dado))
-        nookies.set(null, 'user', JSON.stringify(dado))
-        handleUserPath(true)
-      } else {
+      try {
+        const dado = await getCurrentUser(userSessionToken)
+        if (dado) {
+          setUser(dado)
+          destroyCookie(undefined, 'user')
+          destroyCookie(undefined, 'userSessionToken')
+          setCookie(null, 'userSessionToken', dado.sessionToken)
+          setCookie(null, 'user', JSON.stringify(dado))
+          handleUserPath(true)
+        } else {
+          cleanData()
+          handleUserPath(false)
+        }
+      } catch (err) {
+        cleanData()
         handleUserPath(false)
       }
     }

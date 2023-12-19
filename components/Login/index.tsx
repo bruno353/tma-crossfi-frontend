@@ -17,7 +17,7 @@ import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css' // import styles
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import nookies, { parseCookies, setCookie } from 'nookies'
+import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 import Link from 'next/link'
 import ReCAPTCHA from 'react-google-recaptcha'
@@ -34,6 +34,14 @@ const SignUp = () => {
   const { push } = useRouter()
 
   const { user, setUser } = useContext(AccountContext)
+
+  function cleanData() {
+    destroyCookie(undefined, 'userSessionToken')
+    nookies.destroy(null, 'userSessionToken')
+    destroyCookie(undefined, 'user')
+    nookies.destroy(null, 'user')
+    setUser(null)
+  }
 
   const validSchema = Yup.object().shape({
     email: Yup.string().max(500).required('Email is required'),
@@ -58,9 +66,7 @@ const SignUp = () => {
     try {
       const res = await loginUser(data)
       setCookie(null, 'userSessionToken', res.sessionToken)
-      nookies.set(null, 'userSessionToken', res.sessionToken)
       setCookie(null, 'user', JSON.stringify(res))
-      nookies.set(null, 'user', JSON.stringify(res))
       setUser(res)
       setIsLoading(false)
       push('/dashboard')
@@ -76,9 +82,7 @@ const SignUp = () => {
     try {
       const user = await googleRedirect(url)
       if (user) {
-        setCookie(null, 'userSessionToken', user['sessionToken'])
         nookies.set(null, 'userSessionToken', user['sessionToken'])
-        setCookie(null, 'user', JSON.stringify(user))
         nookies.set(null, 'user', JSON.stringify(user))
         setUser(user)
         push('/dashboard')
