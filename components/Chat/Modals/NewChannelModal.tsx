@@ -20,8 +20,8 @@ import { createWorkspace } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { Switch } from '@chakra-ui/react'
 
-const NewChannelModal = ({ isOpen, onClose, channelType }) => {
-  const [workspaceName, setWorkspaceName] = useState('')
+const NewChannelModal = ({ isOpen, onClose, channelType, workspaceId }) => {
+  const [channelName, setChannelName] = useState('')
   const [selectedImage, setSelectedImage] = useState(null)
   const [isPrivate, setIsPrivate] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
@@ -36,7 +36,7 @@ const NewChannelModal = ({ isOpen, onClose, channelType }) => {
 
   const handleInputChange = (e) => {
     if (!isLoading) {
-      setWorkspaceName(e.target.value)
+      setChannelName(e.target.value)
     }
   }
 
@@ -54,33 +54,20 @@ const NewChannelModal = ({ isOpen, onClose, channelType }) => {
     e.stopPropagation()
   }
 
-  const handleFileChange = (e) => {
-    if (isLoading) return
-
-    const file = e.target.files[0]
-    setSelectedFile(file)
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      setSelectedImage(reader.result)
-    }
-    reader.readAsDataURL(file)
-  }
-
-  const handleImageClick = () => {
-    fileInputRef.current.click()
-  }
-
   const handleCreateWorkspace = async () => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
 
-    const formData = new FormData()
-    formData.append('name', workspaceName)
-    formData.append('files', selectedFile)
+    const final = {
+      workspaceId,
+      name: channelName,
+      isPrivate,
+      type: channelType,
+    }
 
     try {
-      await createWorkspace(formData, userSessionToken)
+      await createWorkspace(final, userSessionToken)
       setIsLoading(false)
       toast.success(`Success`)
       onClose()
@@ -124,7 +111,7 @@ const NewChannelModal = ({ isOpen, onClose, channelType }) => {
           </div>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-6">
           <label
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
@@ -135,27 +122,28 @@ const NewChannelModal = ({ isOpen, onClose, channelType }) => {
             type="text"
             id="workspaceName"
             name="workspaceName"
-            value={workspaceName}
+            value={channelName}
             onChange={handleInputChange}
             className="w-full rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
           />
         </div>
-        <div className="mb-4">
-          <label
-            htmlFor="workspaceName"
-            className="mb-2 block text-[14px] text-[#C5C4C4]"
-          >
-            Private channel
-          </label>
-          <div className="flex justify-between gap-x-[10px]">
+        <div className="mb-4 flex justify-between">
+          <div>
+            <div className="mb-2 block text-[14px] text-[#C5C4C4]">
+              Private channel
+            </div>
             <div className="text-[10px] text-[#C5C4C4]">
               Only allowed members can interact with this chat
             </div>
+          </div>
+
+          <div className="flex items-center justify-between gap-x-[10px]">
             <div>
               <Switch
                 id="email-alerts"
                 isChecked={isPrivate}
                 onChange={handleToggleChange}
+                colorScheme="purple"
               />
             </div>
           </div>
@@ -168,7 +156,9 @@ const NewChannelModal = ({ isOpen, onClose, channelType }) => {
                 : 'cursor-pointer  hover:bg-[#8e68e829]'
             }  rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] `}
             onClick={() => {
-              handleCreateWorkspace()
+              if (!isLoading) {
+                handleCreateWorkspace()
+              }
             }}
           >
             Create

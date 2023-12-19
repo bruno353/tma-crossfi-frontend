@@ -142,6 +142,7 @@ const ChatSidebar = (id: any) => {
         isOpen={isCreatingNewChannel}
         onClose={closeModal}
         channelType={isCreatingNewChannelType}
+        workspaceId={id.id}
       />
     </>
   )
