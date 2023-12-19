@@ -23,7 +23,7 @@ import NewChannelModal from '../Modals/NewChannelModal'
 import { AccountContext } from '@/contexts/AccountContext'
 
 const ChatSidebar = (id: any) => {
-  const [channels, setChannels] = useState<ChannelProps[]>([])
+  const [channels, setChannels] = useState<ChannelProps[]>()
   const [isCreatingNewChannel, setIsCreatingNewChannel] = useState(false)
   const [isCreatingNewChannelType, setIsCreatingNewChannelType] = useState('')
   const { workspace, setWorkspace } = useContext(AccountContext)
@@ -127,17 +127,19 @@ const ChatSidebar = (id: any) => {
                   </div>
                 )}
               </div>
-              {sidebarOption[option.type] && (
-                <div>
-                  {channels?.map((optionChannel, index) => (
-                    <div key={index}>
-                      {option.type === optionChannel.type && (
-                        <div> {optionChannel.name} </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+              {sidebarOption[option.type] &&
+                channels &&
+                channels.length > 0 && (
+                  <div>
+                    {channels?.map((optionChannel, index) => (
+                      <div key={index}>
+                        {option.type === optionChannel.type && (
+                          <div> {optionChannel.name} </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
           ))}
         </div>
