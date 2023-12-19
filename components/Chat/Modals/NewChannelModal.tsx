@@ -18,6 +18,7 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { createWorkspace } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
+import { Switch } from '@chakra-ui/react'
 
 const NewChannelModal = ({ isOpen, onClose, channelType }) => {
   const [workspaceName, setWorkspaceName] = useState('')
@@ -112,7 +113,7 @@ const NewChannelModal = ({ isOpen, onClose, channelType }) => {
           x
         </div>
         <div className="mb-6">
-          <h2 className="mb-1 text-xl">New channel</h2>
+          <h2 className="mb-1 text-xl text-[#C5C4C4]">New channel</h2>
           <div className="flex gap-x-[5px]">
             <img
               src={channelTypeToLogo[channelType]}
@@ -151,14 +152,11 @@ const NewChannelModal = ({ isOpen, onClose, channelType }) => {
               Only allowed members can interact with this chat
             </div>
             <div>
-              <input
-                type="checkbox"
-                id="privateToggle"
-                checked={isPrivate}
+              <Switch
+                id="email-alerts"
+                isChecked={isPrivate}
                 onChange={handleToggleChange}
-                className="toggle-checkbox"
               />
-              <label htmlFor="privateToggle" className="toggle-label"></label>
             </div>
           </div>
         </div>

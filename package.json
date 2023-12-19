@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "^3.3.1",
@@ -20,6 +21,7 @@
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
     "ethers": "^6.8.0",
+    "framer-motion": "^10.16.16",
     "install": "^0.13.0",
     "next": "13.1.6",
     "next-reveal": "^1.0.6",
