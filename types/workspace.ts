@@ -17,3 +17,11 @@ export interface WorkspaceProps {
   UserWorkspace: UserWorkspaceProps[]
   isUserAdmin: boolean
 }
+
+export interface WorkspaceInviteProps {
+  workspaceId: string
+  accepted: boolean
+  viewed: boolean
+  role: string
+  workspace: WorkspaceProps
+}

@@ -181,7 +181,14 @@ const Header = () => {
                 />
               </Link>
             </div>
-            <div className="flex items-center  justify-end gap-x-[10px]">
+            <div className="flex items-center  justify-end gap-x-[30px]">
+              <div>
+                <img
+                  src="/images/header/testing2.svg"
+                  alt="image"
+                  className={`w-[45px] cursor-pointer`}
+                />
+              </div>
               <div className="relative flex items-center justify-end pr-16 lg:pr-0">
                 {user && (
                   <div

@@ -1,3 +1,5 @@
+import { WorkspaceInviteProps } from './workspace'
+
 export interface UserProps {
   name: string
   email: string
@@ -6,6 +8,7 @@ export interface UserProps {
   sessionToken: string
   createdAt: string
   updatedAt: string
+  WorkspaceInvite: WorkspaceInviteProps[]
 }
 
 export type SignupForm = {
