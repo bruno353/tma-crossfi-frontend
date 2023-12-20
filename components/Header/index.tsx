@@ -181,34 +181,36 @@ const Header = () => {
                 />
               </Link>
             </div>
-            <div className="relative flex items-center justify-end pr-16 lg:pr-0">
-              {user && (
-                <div
-                  onClick={() => {
-                    navbarToggleHandler()
-                  }}
-                  className="flex cursor-pointer gap-x-[15px]"
-                >
-                  <img
-                    alt="ethereum avatar"
-                    src={user.profilePicture}
-                    className="w-[40px] rounded-full"
-                  ></img>
-                  <img
-                    alt="ethereum avatar"
-                    src="/images/header/arrow.svg"
-                    className="w-[15px] rounded-full"
-                  ></img>
-                </div>
-              )}
-              {/* <div>
+            <div className="flex items-center  justify-end gap-x-[10px]">
+              <div className="relative flex items-center justify-end pr-16 lg:pr-0">
+                {user && (
+                  <div
+                    onClick={() => {
+                      navbarToggleHandler()
+                    }}
+                    className="flex cursor-pointer gap-x-[15px]"
+                  >
+                    <img
+                      alt="ethereum avatar"
+                      src={user.profilePicture}
+                      className="w-[40px] rounded-full"
+                    ></img>
+                    <img
+                      alt="ethereum avatar"
+                      src="/images/header/arrow.svg"
+                      className="w-[15px] rounded-full"
+                    ></img>
+                  </div>
+                )}
+                {/* <div>
                   <ThemeToggler />
                 </div> */}
-              {user && navbarOpen && (
-                <div className="absolute top-[50px]" ref={menuRef}>
-                  <Menu user={user} onSignOut={signOutUser} />{' '}
-                </div>
-              )}
+                {user && navbarOpen && (
+                  <div className="absolute top-[50px]" ref={menuRef}>
+                    <Menu user={user} onSignOut={signOutUser} />{' '}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

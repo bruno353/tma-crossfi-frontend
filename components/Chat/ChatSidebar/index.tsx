@@ -75,6 +75,8 @@ const ChatSidebar = (id: any) => {
     let dado
     try {
       dado = await getUserChannels(data, userSessionToken)
+      console.log('channels q recebi')
+      console.log(dado)
       setChannels(dado)
     } catch (err) {
       toast.error(`Error: ${err}`)
