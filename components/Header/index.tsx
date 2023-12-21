@@ -198,9 +198,13 @@ const Header = () => {
               </Link>
             </div>
             <div className="flex items-center  justify-end gap-x-[30px]">
-              <div className="relative" onClick={notificationToggleHandler}>
+              <div className="relative">
                 {user && user.WorkspaceInvite?.length > 0 && (
-                  <>
+                  <div
+                    onClick={() => {
+                      notificationToggleHandler()
+                    }}
+                  >
                     {hasUnreadenInvitation ? (
                       <img
                         src="/images/header/inviteWithSignal.svg"
@@ -214,7 +218,7 @@ const Header = () => {
                         className={`w-[45px] cursor-pointer`}
                       />
                     )}
-                  </>
+                  </div>
                 )}
                 {user && notificationOpen && (
                   <div className="absolute right-0 top-[50px]" ref={menuRef}>

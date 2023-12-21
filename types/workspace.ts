@@ -1,3 +1,5 @@
+import { UserProps } from './user'
+
 export interface UserWorkspaceProps {
   id: string
   workspaceId: string
@@ -27,4 +29,5 @@ export interface WorkspaceInviteProps {
   workspace: WorkspaceProps
   createdAt: string
   updatedAt: string
+  user: UserProps
 }
