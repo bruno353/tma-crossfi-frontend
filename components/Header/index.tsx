@@ -187,7 +187,7 @@ const Header = () => {
             </div>
             <div className="flex items-center  justify-end gap-x-[30px]">
               <div>
-                {user && user.WorkspaceInvite.length > 0 && (
+                {user && user.WorkspaceInvite?.length > 0 && (
                   <>
                     {hasUnreadenInvitation ? (
                       <img

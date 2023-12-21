@@ -110,7 +110,7 @@ const Sidebar = (id: any) => {
   }, [id])
 
   useEffect(() => {
-    for (let i = 0; i < sidebarOptions.length; i++) {
+    for (let i = 0; i < sidebarOptions?.length; i++) {
       const pathFinal = pathname.endsWith(sidebarOptions[i].option)
 
       if (pathFinal) {

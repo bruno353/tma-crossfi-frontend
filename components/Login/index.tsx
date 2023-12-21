@@ -98,6 +98,7 @@ const SignUp = () => {
     if (code) {
       const url = window.location.href
       const loginIndex = url.indexOf('signin')
+      console.log('getting length after login')
       const afterLogin = url.substring(loginIndex + 'signin'.length)
 
       console.log(afterLogin)

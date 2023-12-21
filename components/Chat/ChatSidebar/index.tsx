@@ -131,7 +131,7 @@ const ChatSidebar = (id: any) => {
               </div>
               {sidebarOption[option.type] &&
                 channels &&
-                channels.length > 0 && (
+                channels?.length > 0 && (
                   <div>
                     {channels?.map((optionChannel, index) => (
                       <div key={index}>

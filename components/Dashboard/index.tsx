@@ -113,7 +113,7 @@ const Dashboard = () => {
               <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
             </div>
           )}
-          {workspaces.length === 0 && !isLoading && (
+          {workspaces?.length === 0 && !isLoading && (
             <div className="mt-[100px] w-full items-center">
               {NoWorkspaces()}
             </div>
