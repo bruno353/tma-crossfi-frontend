@@ -9,19 +9,31 @@ import { AccountContext } from '../../contexts/AccountContext'
 import { getCurrentUser } from '@/utils/api'
 import { usePathname, useRouter } from 'next/navigation'
 import Menu from './Menu'
+import NotificationMenu from './NotificationMenu'
 
 const Header = () => {
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false)
+  const [notificationOpen, setNotificationOpen] = useState(false)
+
   const navbarToggleHandler = () => {
+    console.log(user)
     setNavbarOpen(!navbarOpen)
     setMenuOpen(!menuOpen)
+    setNotificationOpen(false)
   }
+  const notificationToggleHandler = () => {
+    setNotificationOpen(!notificationOpen)
+    setNavbarOpen(false)
+    setMenuOpen(!menuOpen)
+  }
+
   const [menuOpen, setMenuOpen] = useState(false)
 
   const menuRef = useRef(null)
 
   const closeMenu = () => {
+    setNotificationOpen(false)
     setNavbarOpen(false)
     setMenuOpen(false)
   }
@@ -186,7 +198,7 @@ const Header = () => {
               </Link>
             </div>
             <div className="flex items-center  justify-end gap-x-[30px]">
-              <div>
+              <div className="relative" onClick={notificationToggleHandler}>
                 {user && user.WorkspaceInvite?.length > 0 && (
                   <>
                     {hasUnreadenInvitation ? (
@@ -203,6 +215,15 @@ const Header = () => {
                       />
                     )}
                   </>
+                )}
+                {user && notificationOpen && (
+                  <div className="absolute right-0 top-[50px]" ref={menuRef}>
+                    <NotificationMenu
+                      workspaceInvites={user.WorkspaceInvite}
+                      user={user}
+                      onSignOut={signOutUser}
+                    />{' '}
+                  </div>
                 )}
               </div>
               <div className="relative flex items-center justify-end pr-16 lg:pr-0">

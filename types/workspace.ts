@@ -19,9 +19,12 @@ export interface WorkspaceProps {
 }
 
 export interface WorkspaceInviteProps {
+  id: string
   workspaceId: string
   accepted: boolean
   viewed: boolean
   role: string
   workspace: WorkspaceProps
+  createdAt: string
+  updatedAt: string
 }
