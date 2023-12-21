@@ -59,7 +59,7 @@ const ChangePasswordRecoveryFinal = (id: any) => {
     const { confirmPassword, ...finalData } = data
 
     const final = {
-      objectId: id,
+      objectId: id.id,
       ...finalData,
     }
     try {
