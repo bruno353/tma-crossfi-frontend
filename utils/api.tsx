@@ -79,7 +79,7 @@ export async function emailRecoverPassword(data: EmailRecoverPassword) {
 
 export async function recoverPassword(data: RecoverPassword) {
   const config = {
-    method: 'post' as 'post',
+    method: 'put' as 'put',
     url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/user/functions/recoverPassword`,
     headers: {
       'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,

@@ -206,14 +206,14 @@ const SignUp = () => {
                             onClick={() => setPasswordVisibility(false)}
                             className="flex cursor-pointer items-center text-center"
                           >
-                            <EyeSlash className="cursor-pointer" />
+                            <EyeSlash className="cursor-pointer text-[#C5C4C4]" />
                           </div>
                         ) : (
                           <div
                             onClick={() => setPasswordVisibility(true)}
                             className="flex cursor-pointer items-center text-center"
                           >
-                            <Eye className="cursor-pointer" />
+                            <Eye className="cursor-pointer text-[#C5C4C4]" />
                           </div>
                         )}
                       </div>
