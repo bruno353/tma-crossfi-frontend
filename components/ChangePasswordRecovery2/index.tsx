@@ -65,7 +65,7 @@ const ChangePasswordRecoveryFinal = (id: any) => {
     try {
       await recoverPassword(final)
       setIsLoading(false)
-      toast.error(`Success`)
+      toast.success(`Success`)
       await new Promise((resolve) => setTimeout(resolve, 1500))
       push('/signin')
     } catch (err) {
