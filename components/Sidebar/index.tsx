@@ -31,27 +31,27 @@ const Sidebar = (id: any) => {
   const sidebarOptions = [
     {
       name: 'Home',
-      option: '/home',
+      option: `/${id.id}`,
       imgSource: '/images/workspace/home.svg',
     },
     {
       name: 'Chat',
-      option: '/chat',
+      option: `/${id.id}/chat`,
       imgSource: '/images/workspace/chat.svg',
     },
     {
       name: 'Notes',
-      option: '/notes',
+      option: `/${id.id}/notes`,
       imgSource: '/images/workspace/note.svg',
     },
     {
       name: 'Deploy',
-      option: '/deploy',
+      option: `/${id.id}/deploy`,
       imgSource: '/images/workspace/rocket.svg',
     },
     {
       name: 'Tasks',
-      option: '/tasks',
+      option: `/${id.id}/tasks`,
       imgSource: '/images/workspace/tasks.svg',
     },
   ]
@@ -83,9 +83,8 @@ const Sidebar = (id: any) => {
   }
 
   const handleSidebarClick = (name, option) => {
-    const newPath = pathname.endsWith(option)
-      ? pathname
-      : `${pathname}${option}`
+    const basePath = pathname.split('/')[1]
+    const newPath = `/${basePath}${option}` // Constrói o novo caminho
 
     push(newPath)
 

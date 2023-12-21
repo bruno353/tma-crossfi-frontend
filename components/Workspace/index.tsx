@@ -18,12 +18,16 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import Sidebar from '../Sidebar'
+import WorkspacePage from './WorkspacePage'
 
 const Workspace = (id: any) => {
   return (
     <>
       <div className="flex">
         <Sidebar id={id.id} />
+        <div className="w-full">
+          <WorkspacePage id={id.id} />
+        </div>
       </div>
     </>
   )
