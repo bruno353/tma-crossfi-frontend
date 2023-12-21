@@ -135,6 +135,10 @@ const Header = () => {
     }
   }
 
+  const hasUnreadenInvitation = user?.WorkspaceInvite?.some(
+    (work) => !work.viewed,
+  )
+
   useEffect(() => {
     if (userHasAnyCookie) {
       console.log('user has cookis')
@@ -183,11 +187,23 @@ const Header = () => {
             </div>
             <div className="flex items-center  justify-end gap-x-[30px]">
               <div>
-                <img
-                  src="/images/header/testing2.svg"
-                  alt="image"
-                  className={`w-[45px] cursor-pointer`}
-                />
+                {user && user.WorkspaceInvite.length > 0 && (
+                  <>
+                    {hasUnreadenInvitation ? (
+                      <img
+                        src="/images/header/inviteWithSignal.svg"
+                        alt="image"
+                        className={`w-[45px] cursor-pointer`}
+                      />
+                    ) : (
+                      <img
+                        src="/images/header/inviteWithoutSignal.svg"
+                        alt="image"
+                        className={`w-[45px] cursor-pointer`}
+                      />
+                    )}
+                  </>
+                )}
               </div>
               <div className="relative flex items-center justify-end pr-16 lg:pr-0">
                 {user && (
