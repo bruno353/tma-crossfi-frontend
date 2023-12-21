@@ -5,6 +5,7 @@ import { AccountContext } from '../../contexts/AccountContext'
 import {
   acceptInviteUserToWorkspace,
   getCurrentUser,
+  setInviteUserToWorkspaceArchived,
   setInviteUserToWorkspaceViewed,
 } from '@/utils/api'
 import { usePathname, useRouter } from 'next/navigation'
@@ -30,6 +31,9 @@ const NotificationMenu = ({
     useState<WorkspaceInviteProps>()
   const [isLoading, setIsLoading] = useState(false)
   const [localWorkspacesViewed, setLocalWorkspacesViewed] = useState([]) // utilized to store locally when a workspace has been viewed
+  const [localWorkspacesArchived, setLocalWorkspacesArchived] = useState([]) // utilized to store locally when a workspace has been viewed
+
+  const { push } = useRouter()
 
   const handleClickInvite = (workspace: WorkspaceInviteProps) => {
     if (!isLoading) {
@@ -51,11 +55,32 @@ const NotificationMenu = ({
       await acceptInviteUserToWorkspace(data, userSessionToken)
       setIsLoading(false)
       toast.success(`Success`)
+      push(`workspace/${workspaceSelected.workspaceId}`)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
     }
     setIsLoading(false)
+  }
+
+  const handleSetInviteUserToWorkspaceArchived = async (id: string) => {
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id,
+    }
+
+    try {
+      handleLocalWorkspaceArchived(id)
+      await setInviteUserToWorkspaceArchived(data, userSessionToken)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const handleLocalWorkspaceArchived = (id: string) => {
+    if (!localWorkspacesArchived.includes(id)) {
+      setLocalWorkspacesArchived([id, ...localWorkspacesArchived])
+    }
   }
 
   const handleSetInviteUserToWorkspaceViewed = async (id: string) => {
@@ -66,8 +91,8 @@ const NotificationMenu = ({
     }
 
     try {
-      await setInviteUserToWorkspaceViewed(data, userSessionToken)
       handleLocalWorkspaceViewed(id)
+      await setInviteUserToWorkspaceViewed(data, userSessionToken)
     } catch (err) {
       console.log(err)
     }
@@ -89,7 +114,9 @@ const NotificationMenu = ({
               handleClickInvite(workspace)
             }}
             key={index}
-            className="flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] py-[20px] hover:bg-[#c5c5c510]"
+            className={`cursor-pointer ${
+              localWorkspacesArchived.includes(workspace.id) ? 'hidden' : 'flex'
+            } items-center gap-x-[12px] rounded-[5px] p-[5px] py-[20px] hover:bg-[#c5c5c510]`}
           >
             <div
               className={`h-[10px] w-[10px] flex-shrink-0 rounded-full  ${
@@ -119,6 +146,7 @@ const NotificationMenu = ({
                     }  w-fit rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[11px]  text-[#642EE7] `}
                     onClick={() => {
                       console.log(localWorkspacesViewed)
+                      handleJoinWorkspace()
                     }}
                   >
                     Join workspace
@@ -126,7 +154,12 @@ const NotificationMenu = ({
                 </div>
               )}
             </div>
-            <div className="ml-auto mr-[5px] cursor-pointer p-[5px] text-[12px] hover:text-[#bc1212]">
+            <div
+              onClick={() => {
+                handleSetInviteUserToWorkspaceArchived(workspace.id)
+              }}
+              className="ml-auto mr-[5px] cursor-pointer p-[5px] text-[12px] hover:text-[#bc1212]"
+            >
               X
             </div>
           </div>
