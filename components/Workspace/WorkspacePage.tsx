@@ -81,12 +81,14 @@ const WorkspacePage = ({ id }) => {
                 {workspace?.name}
               </div>
             </div>
-            <div
-              onClick={openModal}
-              className="cursor-pointer rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] hover:bg-[#8e68e829]"
-            >
-              Edit workspace
-            </div>
+            {workspace?.isUserAdmin && (
+              <div
+                onClick={openModal}
+                className="cursor-pointer rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] hover:bg-[#8e68e829]"
+              >
+                Edit workspace
+              </div>
+            )}
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
           {isLoading && (
@@ -98,7 +100,6 @@ const WorkspacePage = ({ id }) => {
           )}
         </div>
       </section>
-
       <EditWorkspaceModal
         isOpen={isEditingWorkspace}
         onClose={closeModal}
