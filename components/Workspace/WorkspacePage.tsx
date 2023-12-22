@@ -31,7 +31,7 @@ const WorkspacePage = ({ id }) => {
   const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [workspaceNavBarSelected, setWorkspaceNavBarSelected] =
-    useState('members')
+    useState('Members')
   const [workspace, setWorkspace] = useState<WorkspaceProps>()
 
   const openModal = () => {
@@ -96,12 +96,18 @@ const WorkspacePage = ({ id }) => {
           </div>
           <div className="mt-[45px]">
             <WorkspaceNavBar
-              onChangeModule={(value) => {
-                setWorkspaceNavBarSelected(value)
+              onChangeSettings={() => {
+                console.log('settings selected')
+                setWorkspaceNavBarSelected('Settings')
               }}
+              onChangeMembers={() => {
+                console.log('members selected')
+                setWorkspaceNavBarSelected('Members')
+              }}
+              selected={workspaceNavBarSelected}
             />
-            <div className="mt-[20px]">
-              <WorkspaceMembers onChangeModule={undefined} />
+            <div className="mt-[50px]">
+              <WorkspaceMembers onChangeModule={undefined} id={id} />
             </div>
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>

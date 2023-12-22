@@ -23,18 +23,26 @@ import {
 } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 
-const WorkspaceNavBar = ({ onChangeModule }) => {
+const WorkspaceNavBar = ({ onChangeMembers, onChangeSettings, selected }) => {
   return (
     <div className="flex w-fit cursor-pointer  px-[15px] text-[#C5C4C4]">
       <div
-        onClick={onChangeModule('members')}
-        className="border-b-[1.2px] border-[#908f8f] px-[15px] pb-[5px] hover:border-[#642EE7]"
+        onClick={onChangeMembers}
+        className={`border-b-[1.2px]  px-[15px] pb-[5px] hover:border-[#642EE7] ${
+          selected === 'Members'
+            ? 'border-[#642EE7] text-[#642EE7]'
+            : 'border-[#908f8f]'
+        }`}
       >
         Members
       </div>
       <div
-        onClick={onChangeModule('settings')}
-        className="border-b-[1.2px] border-[#908f8f] px-[15px] pb-[5px] hover:border-[#642EE7]"
+        onClick={onChangeSettings}
+        className={`border-b-[1.2px]  px-[15px] pb-[5px] hover:border-[#642EE7] ${
+          selected === 'Settings'
+            ? 'border-[#642EE7] text-[#642EE7]'
+            : 'border-[#908f8f]'
+        }`}
       >
         Settings
       </div>

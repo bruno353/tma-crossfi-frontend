@@ -18,15 +18,16 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import {
   createWorkspace,
+  inviteUserToWorkspace,
   updateWorkspace,
   updateWorkspaceLogo,
 } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 
-const WorkspaceMembers = ({ onChangeModule }) => {
-  const [memberEmailToAdd, setMemberEmailToAdd] = useState()
+const WorkspaceMembers = ({ onChangeModule, id }) => {
+  const [memberEmailToAdd, setMemberEmailToAdd] = useState<string>()
   const [isLoading, setIsLoading] = useState(null)
-  const [selected, setSelected] = useState<any>()
+  const [selected, setSelected] = useState<any>('normal')
 
   const optionsMembers = [
     {
@@ -44,13 +45,36 @@ const WorkspaceMembers = ({ onChangeModule }) => {
     }
   }
 
+  const handleInviteMember = async () => {
+    setIsLoading(true)
+
+    const { userSessionToken } = parseCookies()
+    if (memberEmailToAdd.length > 0) {
+      const data = {
+        role: selected,
+        userEmail: memberEmailToAdd,
+        id,
+      }
+
+      try {
+        await inviteUserToWorkspace(data, userSessionToken)
+        toast.success(`Success`)
+        setMemberEmailToAdd('')
+      } catch (err) {
+        console.log(err)
+        toast.error(`Error: ${err.response.data.message}`)
+      }
+    }
+    setIsLoading(false)
+  }
+
   return (
     <div className="text-[14px] text-[#C5C4C4]">
       <div className="">
         <label htmlFor="workspaceName" className="mb-4 block text-[16px]">
-          Invite members
+          Invite member to workspace
         </label>
-        <div className="flex gap-x-[20px] h-[40px]">
+        <div className="flex h-[40px] gap-x-[20px]">
           <input
             type="text"
             id="workspaceName"
@@ -62,7 +86,7 @@ const WorkspaceMembers = ({ onChangeModule }) => {
             className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
           />
           <select
-            className="w-[100px] rounded-md bg-[#242B51] bg-transparent px-[5px]"
+            className="w-[100px] rounded-md bg-[#242B51] bg-transparent px-[5px] text-[#C5C4C4]"
             onChange={(option) => setSelected(option.target.value)}
             value={selected}
           >
@@ -73,16 +97,17 @@ const WorkspaceMembers = ({ onChangeModule }) => {
             ))}
           </select>
           <div
-              className={`${
-                isLoading
-                  ? 'animate-pulse bg-[#8e68e829]'
-                  : 'cursor-pointer  hover:bg-[#8e68e829]'
-              }  rounded-[5px] flex  text-center  border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] `}
-              onClick={() => {
-              }}
-            >
-              Save
-            </div>
+            className={`${
+              isLoading
+                ? 'animate-pulse bg-[#8e68e829]'
+                : 'cursor-pointer  hover:bg-[#8e68e829]'
+            }  ml-[20px] flex items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
+            onClick={() => {
+              handleInviteMember()
+            }}
+          >
+            Invite member
+          </div>
         </div>
       </div>
     </div>
