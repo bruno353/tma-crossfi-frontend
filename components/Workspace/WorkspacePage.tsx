@@ -23,25 +23,30 @@ import Link from 'next/link'
 // import NewWorkspaceModal from './NewWorkspace'
 import { getUserWorkspace, getWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
+import EditWorkspaceModal from './EditWorkspaceModal'
 
 const WorkspacePage = ({ id }) => {
-  const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
+  const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [workspace, setWorkspace] = useState<WorkspaceProps>()
 
   const openModal = () => {
-    setIsCreatingNewWorkspace(true)
+    setIsEditingWorkspace(true)
   }
 
   const closeModal = () => {
-    setIsCreatingNewWorkspace(false)
+    setIsEditingWorkspace(false)
   }
 
   async function getData() {
     const { userSessionToken } = parseCookies()
 
+    const data = {
+      id,
+    }
+
     try {
-      const res = await getWorkspace(id, userSessionToken)
+      const res = await getWorkspace(data, userSessionToken)
       setWorkspace(res)
     } catch (err) {
       console.log(err)
@@ -60,7 +65,22 @@ const WorkspacePage = ({ id }) => {
       <section className="relative z-10 overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[180px]">
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
-            <div>Dashboard</div>
+            <div className="flex">
+              {workspace && (
+                <img
+                  alt="logo"
+                  src={
+                    workspace?.finalURL
+                      ? workspace?.finalURL
+                      : '/images/dashboard/work.webp'
+                  }
+                  className="w-[70px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
+                />
+              )}
+              <div className="ml-[10px] mt-auto text-[24px] font-medium">
+                {workspace?.name}
+              </div>
+            </div>
             <div
               onClick={openModal}
               className="cursor-pointer rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] hover:bg-[#8e68e829]"
@@ -79,7 +99,14 @@ const WorkspacePage = ({ id }) => {
         </div>
       </section>
 
-      {/* <NewWorkspaceModal isOpen={isCreatingNewWorkspace} onClose={closeModal} /> */}
+      <EditWorkspaceModal
+        isOpen={isEditingWorkspace}
+        onClose={closeModal}
+        onUpdate={getData}
+        previousWorkspaceName={workspace?.name}
+        previouslogoURL={workspace?.finalURL}
+        workspaceId={workspace?.id}
+      />
     </>
   )
 }
