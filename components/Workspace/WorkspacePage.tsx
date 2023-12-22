@@ -24,10 +24,14 @@ import Link from 'next/link'
 import { getUserWorkspace, getWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
 import EditWorkspaceModal from './EditWorkspaceModal'
+import WorkspaceNavBar from './WorkspaceNavBar'
+import WorkspaceMembers from './WorkspaceMembers'
 
 const WorkspacePage = ({ id }) => {
   const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [workspaceNavBarSelected, setWorkspaceNavBarSelected] =
+    useState('members')
   const [workspace, setWorkspace] = useState<WorkspaceProps>()
 
   const openModal = () => {
@@ -89,6 +93,16 @@ const WorkspacePage = ({ id }) => {
                 Edit workspace
               </div>
             )}
+          </div>
+          <div className="mt-[45px]">
+            <WorkspaceNavBar
+              onChangeModule={(value) => {
+                setWorkspaceNavBarSelected(value)
+              }}
+            />
+            <div className="mt-[20px]">
+              <WorkspaceMembers onChangeModule={undefined} />
+            </div>
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
           {isLoading && (
