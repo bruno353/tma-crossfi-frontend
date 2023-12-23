@@ -23,8 +23,14 @@ import {
   updateWorkspaceLogo,
 } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
+import { UserWorkspaceProps } from '@/types/workspace'
 
-const WorkspaceMembers = ({ onChangeModule, id }) => {
+export interface WorkspaceMembersI {
+  id: string
+  users: UserWorkspaceProps[]
+}
+
+const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
   const [memberEmailToAdd, setMemberEmailToAdd] = useState<string>()
   const [isLoading, setIsLoading] = useState(null)
   const [selected, setSelected] = useState<any>('normal')
@@ -110,6 +116,7 @@ const WorkspaceMembers = ({ onChangeModule, id }) => {
           </div>
         </div>
       </div>
+      <div>Members / {users?.length}</div>
     </div>
   )
 }
