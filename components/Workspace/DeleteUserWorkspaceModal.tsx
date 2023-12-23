@@ -24,7 +24,7 @@ const DeleteUserWorkspaceModal = ({ userWorkspace, onUpdateM }: MenuI) => {
 
     const { userSessionToken } = parseCookies()
     const data = {
-      id: userWorkspace.id,
+      id: userWorkspaceId,
     }
 
     try {
