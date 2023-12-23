@@ -81,7 +81,7 @@ const Dashboard = () => {
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]">
             {workspaces.map((workspace, index) => (
               <a key={index} href={`/workspace/${workspace.id}`}>
-                <div className="grid h-40 w-full cursor-pointer rounded-[5px]  border-[1px] border-[#310e82] bg-transparent  p-[20px] text-[#fff] hover:bg-[#8e68e829]">
+                <div className="grid h-40 w-full cursor-pointer rounded-[5px]  border-[0.6px] border-[#c5c4c495] bg-transparent  p-[20px] text-[#fff] hover:bg-[#8e68e829]">
                   <div className="flex items-start gap-x-[20px] overflow-hidden ">
                     <img
                       src={
