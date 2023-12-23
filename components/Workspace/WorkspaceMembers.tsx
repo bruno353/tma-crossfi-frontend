@@ -77,6 +77,15 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
     setIsLoading(false)
   }
 
+  const handleRoleChange = async (value: string) => {
+    
+  }
+
+  const roleToValue = {
+    normal: 'Member',
+    admin: 'Admin',
+  }
+
   return (
     <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
       <div className="">
@@ -95,7 +104,7 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
             className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
           />
           <select
-            className="w-[100px] rounded-md bg-[#242B51] bg-transparent px-[5px] text-[#C5C4C4]"
+            className="w-[100px] rounded-md bg-[#242B51] px-[5px] text-[#C5C4C4]"
             onChange={(option) => setSelected(option.target.value)}
             value={selected}
           >
@@ -145,6 +154,23 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
                     <UserWorkspaceInfoModal userWorkspace={workspaceUser} />
                   </div>
                 )}
+              </div>
+              <div>
+                <select
+                  className="w-[100px] rounded-md bg-transparent px-[5px] text-[#C5C4C4]"
+                  onChange={(option) => handleRoleChange(option.target.value)}
+                  value={
+                    workspaceUser.role === 'admin'
+                      ? optionsMembers[1].value
+                      : optionsMembers[0].value
+                  }
+                >
+                  {optionsMembers.map((option) => (
+                    <option key={option.name} value={option.value}>
+                      {option.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           ))}
