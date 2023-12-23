@@ -24,6 +24,7 @@ import {
 } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
+import UserWorkspaceInfoModal from './UserWorkspaceInfoModal'
 
 export interface WorkspaceMembersI {
   id: string
@@ -33,7 +34,7 @@ export interface WorkspaceMembersI {
 const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
   const [memberEmailToAdd, setMemberEmailToAdd] = useState<string>()
   const [isLoading, setIsLoading] = useState(null)
-  const [setIsUserModalOpen, isUserModalOpen] = useState<any>()
+  const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
 
   const [selected, setSelected] = useState<any>('normal')
 
@@ -127,9 +128,9 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
               className="flex items-center gap-x-[10px] text-[15px] font-normal"
             >
               <div
-                onMouseEnter={() => isUserModalOpen(workspaceUser.id)}
-                onMouseLeave={() => isUserModalOpen(null)}
-                className="flex items-center gap-x-[10px]"
+                onMouseEnter={() => setIsUserModalOpen(workspaceUser.id)}
+                onMouseLeave={() => setIsUserModalOpen(null)}
+                className="relative flex items-center gap-x-[10px]"
               >
                 <img
                   alt="ethereum avatar"
@@ -139,6 +140,9 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
                 <div className="w-[50px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                   {workspaceUser.user.email}
                 </div>
+                {isUserModalOpen === workspaceUser.id && (
+                  <UserWorkspaceInfoModal userWorkspace={workspaceUser} />
+                )}
               </div>
             </div>
           ))}
