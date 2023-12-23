@@ -137,11 +137,13 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
                   src={workspaceUser.user.profilePicture}
                   className="w-[35px] rounded-full"
                 ></img>
-                <div className="w-[50px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                <div className="w-[350px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                   {workspaceUser.user.email}
                 </div>
                 {isUserModalOpen === workspaceUser.id && (
-                  <UserWorkspaceInfoModal userWorkspace={workspaceUser} />
+                  <div className="absolute -top-[10px] -translate-y-[100%] ">
+                    <UserWorkspaceInfoModal userWorkspace={workspaceUser} />
+                  </div>
                 )}
               </div>
             </div>

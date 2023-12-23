@@ -21,7 +21,7 @@ const UserWorkspaceInfoModal = ({ userWorkspace }: MenuI) => {
   return (
     <>
       <div className="h-full w-[300px] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px] font-normal text-[#c5c4c4]">
-        <div className="grid gap-y-[20px]">
+        <div className="grid gap-y-[10px]">
           <div className="flex gap-x-[10px]">
             <img
               alt="ethereum avatar"
