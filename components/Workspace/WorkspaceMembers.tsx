@@ -124,13 +124,19 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
               key={index}
               className="flex items-center gap-x-[10px] text-[15px] font-normal"
             >
-              <img
-                alt="ethereum avatar"
-                src={workspaceUser.user.profilePicture}
-                className="w-[35px] rounded-full"
-              ></img>
-              <div className="w-[50px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                {workspaceUser.user.email}
+              <div
+                onMouseEnter={() => setIsSidebarOpen(true)}
+                onMouseLeave={() => setIsSidebarOpen(false)}
+                className="flex items-center gap-x-[10px]"
+              >
+                <img
+                  alt="ethereum avatar"
+                  src={workspaceUser.user.profilePicture}
+                  className="w-[35px] rounded-full"
+                ></img>
+                <div className="w-[50px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                  {workspaceUser.user.email}
+                </div>
               </div>
             </div>
           ))}
