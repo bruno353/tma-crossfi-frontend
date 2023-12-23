@@ -90,7 +90,7 @@ const WorkspaceMembers = ({ id, users, isUserAdmin }: WorkspaceMembersI) => {
       }
 
       try {
-        await inviteUserToWorkspace(data, userSessionToken)
+        // fazer aqui logica de mudar role
         toast.success(`User ${user} is now ${roleToValue[value]}`)
         setMemberEmailToAdd('')
       } catch (err) {
