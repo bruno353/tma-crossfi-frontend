@@ -33,6 +33,8 @@ export interface WorkspaceMembersI {
 const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
   const [memberEmailToAdd, setMemberEmailToAdd] = useState<string>()
   const [isLoading, setIsLoading] = useState(null)
+  const [setIsUserModalOpen, isUserModalOpen] = useState<any>()
+
   const [selected, setSelected] = useState<any>('normal')
 
   const optionsMembers = [
@@ -125,8 +127,8 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
               className="flex items-center gap-x-[10px] text-[15px] font-normal"
             >
               <div
-                onMouseEnter={() => setIsSidebarOpen(true)}
-                onMouseLeave={() => setIsSidebarOpen(false)}
+                onMouseEnter={() => isUserModalOpen(workspaceUser.id)}
+                onMouseLeave={() => isUserModalOpen(null)}
                 className="flex items-center gap-x-[10px]"
               >
                 <img
