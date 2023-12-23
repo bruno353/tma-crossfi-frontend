@@ -107,7 +107,11 @@ const WorkspacePage = ({ id }) => {
               selected={workspaceNavBarSelected}
             />
             <div className="mt-[50px]">
-              <WorkspaceMembers users={workspace?.UserWorkspace} id={id} />
+              <WorkspaceMembers
+                users={workspace?.UserWorkspace}
+                id={id}
+                isUserAdmin={workspace.isUserAdmin}
+              />
             </div>
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>

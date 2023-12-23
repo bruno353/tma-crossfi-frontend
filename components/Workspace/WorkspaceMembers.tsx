@@ -29,9 +29,10 @@ import UserWorkspaceInfoModal from './UserWorkspaceInfoModal'
 export interface WorkspaceMembersI {
   id: string
   users: UserWorkspaceProps[]
+  isUserAdmin: boolean
 }
 
-const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
+const WorkspaceMembers = ({ id, users, isUserAdmin }: WorkspaceMembersI) => {
   const [memberEmailToAdd, setMemberEmailToAdd] = useState<string>()
   const [isLoading, setIsLoading] = useState(null)
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
@@ -78,7 +79,7 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
   }
 
   const handleRoleChange = async (value: string) => {
-    
+
   }
 
   const roleToValue = {
@@ -88,7 +89,7 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
 
   return (
     <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
-      <div className="">
+      <div className={`${!isUserAdmin ? 'hidden' : ''}`}>
         <label htmlFor="workspaceName" className="mb-4 block text-[16px]">
           Invite member to workspace
         </label>
@@ -164,6 +165,7 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
                       ? optionsMembers[1].value
                       : optionsMembers[0].value
                   }
+                  disabled={!isUserAdmin}
                 >
                   {optionsMembers.map((option) => (
                     <option key={option.name} value={option.value}>
