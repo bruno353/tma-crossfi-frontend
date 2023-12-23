@@ -78,8 +78,27 @@ const WorkspaceMembers = ({ id, users, isUserAdmin }: WorkspaceMembersI) => {
     setIsLoading(false)
   }
 
-  const handleRoleChange = async (value: string) => {
+  const handleRoleChange = async (value: string, user: string) => {
+    setIsLoading(true)
 
+    const { userSessionToken } = parseCookies()
+    if (memberEmailToAdd.length > 0) {
+      const data = {
+        role: selected,
+        userEmail: memberEmailToAdd,
+        id,
+      }
+
+      try {
+        await inviteUserToWorkspace(data, userSessionToken)
+        toast.success(`User ${user} is now ${roleToValue[value]}`)
+        setMemberEmailToAdd('')
+      } catch (err) {
+        console.log(err)
+        toast.error(`Error: ${err.response.data.message}`)
+      }
+    }
+    setIsLoading(false)
   }
 
   const roleToValue = {
@@ -159,7 +178,12 @@ const WorkspaceMembers = ({ id, users, isUserAdmin }: WorkspaceMembersI) => {
               <div>
                 <select
                   className="w-[100px] rounded-md bg-transparent px-[5px] text-[#C5C4C4]"
-                  onChange={(option) => handleRoleChange(option.target.value)}
+                  onChange={(option) =>
+                    handleRoleChange(
+                      option.target.value,
+                      workspaceUser.user.email,
+                    )
+                  }
                   value={
                     workspaceUser.role === 'admin'
                       ? optionsMembers[1].value
