@@ -118,6 +118,18 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
       </div>
       <div className="mt-[50px] text-[18px] font-medium">
         <div>Members / {users?.length}</div>
+        <div>
+          {users.map((workspaceUser, index) => (
+            <div key={index} className="flex">
+              <img
+                alt="ethereum avatar"
+                src={workspaceUser.user.profilePicture}
+                className="w-[40px] rounded-full"
+              ></img>
+              <div>{workspaceUser.user.name}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
