@@ -75,7 +75,7 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
   }
 
   return (
-    <div className="text-[14px] text-[#C5C4C4]">
+    <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
       <div className="">
         <label htmlFor="workspaceName" className="mb-4 block text-[16px]">
           Invite member to workspace
@@ -116,7 +116,9 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
           </div>
         </div>
       </div>
-      <div>Members / {users?.length}</div>
+      <div className="mt-[50px] text-[18px] font-medium">
+        <div>Members / {users?.length}</div>
+      </div>
     </div>
   )
 }
