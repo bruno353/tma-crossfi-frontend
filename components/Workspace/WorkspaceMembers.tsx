@@ -80,7 +80,7 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
         <label htmlFor="workspaceName" className="mb-4 block text-[16px]">
           Invite member to workspace
         </label>
-        <div className="flex h-[40px] gap-x-[20px]">
+        <div className="flex h-[33px] gap-x-[20px]">
           <input
             type="text"
             id="workspaceName"
@@ -118,15 +118,20 @@ const WorkspaceMembers = ({ id, users }: WorkspaceMembersI) => {
       </div>
       <div className="mt-[50px] text-[18px] font-medium">
         <div>Members / {users?.length}</div>
-        <div>
-          {users.map((workspaceUser, index) => (
-            <div key={index} className="flex">
+        <div className="mt-[20px] grid gap-y-[25px]">
+          {users?.map((workspaceUser, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-x-[10px] text-[15px] font-normal"
+            >
               <img
                 alt="ethereum avatar"
                 src={workspaceUser.user.profilePicture}
-                className="w-[40px] rounded-full"
+                className="w-[35px] rounded-full"
               ></img>
-              <div>{workspaceUser.user.name}</div>
+              <div className="w-[50px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                {workspaceUser.user.email}
+              </div>
             </div>
           ))}
         </div>
