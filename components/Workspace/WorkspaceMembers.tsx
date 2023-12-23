@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import {
+  changeUserWorkspaceRole,
   createWorkspace,
   inviteUserToWorkspace,
   updateWorkspace,
@@ -25,19 +26,29 @@ import {
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
 import UserWorkspaceInfoModal from './UserWorkspaceInfoModal'
+import DeleteUserWorkspaceModal from './DeleteUserWorkspaceModal'
 
 export interface WorkspaceMembersI {
   id: string
   users: UserWorkspaceProps[]
   isUserAdmin: boolean
+  onUpdate(): void
 }
 
-const WorkspaceMembers = ({ id, users, isUserAdmin }: WorkspaceMembersI) => {
+const WorkspaceMembers = ({
+  id,
+  users,
+  isUserAdmin,
+  onUpdate,
+}: WorkspaceMembersI) => {
   const [memberEmailToAdd, setMemberEmailToAdd] = useState<string>()
-  const [isLoading, setIsLoading] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
 
   const [selected, setSelected] = useState<any>('normal')
+
+  const menuRef = useRef(null)
 
   const optionsMembers = [
     {
@@ -78,28 +89,56 @@ const WorkspaceMembers = ({ id, users, isUserAdmin }: WorkspaceMembersI) => {
     setIsLoading(false)
   }
 
-  const handleRoleChange = async (value: string, user: string) => {
+  const handleRoleChange = async (
+    value: string,
+    userId: string,
+    userEmail: string,
+  ) => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
-    if (memberEmailToAdd.length > 0) {
-      const data = {
-        role: selected,
-        userEmail: memberEmailToAdd,
-        id,
-      }
-
-      try {
-        // fazer aqui logica de mudar role
-        toast.success(`User ${user} is now ${roleToValue[value]}`)
-        setMemberEmailToAdd('')
-      } catch (err) {
-        console.log(err)
-        toast.error(`Error: ${err.response.data.message}`)
-      }
+    const data = {
+      role: value,
+      id: userId,
     }
+
+    try {
+      await changeUserWorkspaceRole(data, userSessionToken)
+      toast.success(`User ${userEmail} is now ${roleToValue[value]}`)
+      setMemberEmailToAdd('')
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    onUpdate()
     setIsLoading(false)
   }
+
+  const closeMenu = () => {
+    setIsDeleteUserOpen(false)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        // Clicked outside of the menu, so close it
+        closeMenu()
+      }
+    }
+
+    // Add event listener when the menu is open
+    if (isDeleteUserOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      // Remove event listener when the menu is closed
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isDeleteUserOpen])
 
   const roleToValue = {
     normal: 'Member',
@@ -177,10 +216,13 @@ const WorkspaceMembers = ({ id, users, isUserAdmin }: WorkspaceMembersI) => {
               </div>
               <div>
                 <select
-                  className="w-[100px] rounded-md bg-transparent px-[5px] text-[#C5C4C4]"
+                  className={`w-[100px] rounded-md bg-transparent ${
+                    isLoading ? 'animate-pulse' : ''
+                  } px-[5px] text-[#C5C4C4]`}
                   onChange={(option) =>
                     handleRoleChange(
                       option.target.value,
+                      workspaceUser.id,
                       workspaceUser.user.email,
                     )
                   }
@@ -189,7 +231,7 @@ const WorkspaceMembers = ({ id, users, isUserAdmin }: WorkspaceMembersI) => {
                       ? optionsMembers[1].value
                       : optionsMembers[0].value
                   }
-                  disabled={!isUserAdmin}
+                  disabled={!isUserAdmin || isLoading}
                 >
                   {optionsMembers.map((option) => (
                     <option key={option.name} value={option.value}>
@@ -198,6 +240,29 @@ const WorkspaceMembers = ({ id, users, isUserAdmin }: WorkspaceMembersI) => {
                   ))}
                 </select>
               </div>
+              {isUserAdmin && (
+                <div className="relative ml-[25px]">
+                  <img
+                    alt="delete"
+                    onClick={() => {
+                      setIsDeleteUserOpen(workspaceUser.id)
+                    }}
+                    src="/images/delete.svg"
+                    className="w-[25px]  cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921]"
+                  ></img>
+                  {isDeleteUserOpen === workspaceUser.id && (
+                    <div
+                      ref={menuRef}
+                      className="absolute right-0 top-0 z-50 translate-x-[100%]"
+                    >
+                      <DeleteUserWorkspaceModal
+                        userWorkspace={workspaceUser}
+                        onUpdateM={onUpdate}
+                      />{' '}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

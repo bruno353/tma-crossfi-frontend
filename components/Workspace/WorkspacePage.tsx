@@ -64,6 +64,15 @@ const WorkspacePage = ({ id }) => {
     getData()
   }, [id])
 
+  if (isLoading) {
+    return (
+      <div className="container grid w-full gap-y-[30px] pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[180px]">
+        <div className="h-20 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
+        <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
+      </div>
+    )
+  }
+
   return (
     <>
       <section className="relative z-10 overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[180px]">
@@ -107,21 +116,18 @@ const WorkspacePage = ({ id }) => {
               selected={workspaceNavBarSelected}
             />
             <div className="mt-[50px]">
-              <WorkspaceMembers
-                users={workspace?.UserWorkspace}
-                id={id}
-                isUserAdmin={workspace.isUserAdmin}
-              />
+              {workspaceNavBarSelected === 'Members' && (
+                <WorkspaceMembers
+                  users={workspace?.UserWorkspace}
+                  id={id}
+                  isUserAdmin={workspace?.isUserAdmin}
+                  onUpdate={getData}
+                />
+              )}
+              {workspaceNavBarSelected === 'Settings' && <div></div>}
             </div>
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
-          {isLoading && (
-            <div className="flex w-full justify-between gap-x-[30px]">
-              <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
-              <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
-              <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
-            </div>
-          )}
         </div>
       </section>
       <EditWorkspaceModal

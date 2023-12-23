@@ -443,3 +443,54 @@ export async function updateWorkspaceLogo(data: any, userSessionToken: string) {
 
   return finalData
 }
+
+export async function changeUserWorkspaceRole(
+  data: any,
+  userSessionToken: string,
+) {
+  const config = {
+    method: 'put' as 'put',
+    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/workspace/functions/changeUserWorkspaceRole`,
+    headers: {
+      'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
+      'X-Parse-Session-Token': userSessionToken,
+    },
+    data,
+  }
+
+  let finalData
+
+  await axios(config).then(function (response) {
+    if (response.data) {
+      finalData = response.data
+      console.log('api response')
+      console.log(finalData)
+    }
+  })
+
+  return finalData
+}
+
+export async function deleteUserWorkspace(data: any, userSessionToken: string) {
+  const config = {
+    method: 'delete' as 'delete',
+    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/workspace/functions/deleteUserWorkspace`,
+    headers: {
+      'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
+      'X-Parse-Session-Token': userSessionToken,
+    },
+    data,
+  }
+
+  let finalData
+
+  await axios(config).then(function (response) {
+    if (response.data) {
+      finalData = response.data
+      console.log('api response')
+      console.log(finalData)
+    }
+  })
+
+  return finalData
+}
