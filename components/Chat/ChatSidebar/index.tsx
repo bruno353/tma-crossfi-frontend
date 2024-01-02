@@ -34,17 +34,23 @@ const ChatSidebar = (id: any) => {
     VIDEO: true,
   })
 
+  const channelTypeToLogo = {
+    TEXT: '/images/chat/hashtag.svg',
+    AUDIO: '/images/chat/volume.svg',
+    VIDEO: '/images/chat/volume.svg',
+  }
+
   const channelOption = [
     {
-      name: 'TEXT CHATS',
+      name: 'Text chats',
       type: 'TEXT',
     },
     {
-      name: 'AUDIO CHATS',
+      name: 'Audio chats',
       type: 'AUDIO',
     },
     {
-      name: 'VIDEO CHATS',
+      name: 'Video chats',
       type: 'VIDEO',
     },
   ]
@@ -96,15 +102,15 @@ const ChatSidebar = (id: any) => {
 
   return (
     <>
-      <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#33323E] px-[10px] pb-16 pt-5 text-[16px] md:pb-20 lg:mt-[100px] lg:pb-28">
-        <div className="text-[10px] font-semibold text-[#C5C4C4]">
+      <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#33323E] px-[10px] pb-16 pt-5 text-[16px] md:pb-20 lg:mt-[100px] lg:pb-28 2xl:text-[18px]">
+        <div className="text-[12px] font-light text-[#C5C4C4] 2xl:text-[14px]">
           {channelOption.map((option, index) => (
             <div key={index} className="mb-[30px]">
               <div
                 onClick={() => {
                   handleSidebarClick(option.type)
                 }}
-                className={`flex min-w-[150px] items-center`}
+                className={`mb-1 flex min-w-[150px] items-center`}
               >
                 <div className="flex cursor-pointer gap-x-[5px] hover:text-[#fff]">
                   <img
@@ -123,7 +129,7 @@ const ChatSidebar = (id: any) => {
                       setIsCreatingNewChannel(true)
                       setIsCreatingNewChannelType(option.type)
                     }}
-                    className="ml-auto cursor-pointer text-[17px] font-light hover:text-[#fff]"
+                    className="ml-auto cursor-pointer text-[17px] font-normal hover:text-[#fff]"
                   >
                     +
                   </div>
@@ -136,7 +142,14 @@ const ChatSidebar = (id: any) => {
                     {channels?.map((optionChannel, index) => (
                       <div key={index}>
                         {option.type === optionChannel.type && (
-                          <div> {optionChannel.name} </div>
+                          <div className="flex cursor-pointer gap-x-[3px] 2xl:gap-x-[3px]">
+                            <img
+                              src={channelTypeToLogo[option.type]}
+                              alt="image"
+                              className={`w-[14px] 2xl:w-[16px]`}
+                            />
+                            <div> {optionChannel.name} </div>
+                          </div>
                         )}
                       </div>
                     ))}

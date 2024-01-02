@@ -93,12 +93,14 @@ const NewChannelModal = ({ isOpen, onClose, channelType, workspaceId }) => {
         className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 md:w-[500px]"
         onClick={handleModalClick}
       >
-        <div
-          onClick={onClose}
-          className="absolute right-5 top-2 cursor-pointer text-[18px] font-light text-[#C5C4C4]"
-        >
-          x
+        <div onClick={onClose} className="absolute right-5 top-2">
+          <img
+            alt="delete"
+            src="/images/delete.svg"
+            className="w-[25px]  cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921]"
+          ></img>
         </div>
+
         <div className="mb-6">
           <h2 className="mb-1 text-xl text-[#C5C4C4]">New channel</h2>
           <div className="flex gap-x-[5px]">
