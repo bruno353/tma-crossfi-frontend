@@ -163,7 +163,7 @@ const WorkspaceMembers = ({
             className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
           />
           <select
-            className="w-[100px] rounded-md bg-[#242B51] px-[5px] text-[#C5C4C4]"
+            className="w-[100px] cursor-pointer rounded-md bg-[#242B51] px-[5px] text-[#C5C4C4]"
             onChange={(option) => setSelected(option.target.value)}
             value={selected}
           >

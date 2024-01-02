@@ -20,12 +20,14 @@ export interface NotificationMenuI {
   user: UserProps
   workspaceInvites: WorkspaceInviteProps[]
   onSignOut(): void
+  onCloseNotifications(): void
 }
 
 const NotificationMenu = ({
   user,
   onSignOut,
   workspaceInvites,
+  onCloseNotifications,
 }: NotificationMenuI) => {
   const [workspaceSelected, setWorkspaceSelected] =
     useState<WorkspaceInviteProps>()
@@ -55,7 +57,9 @@ const NotificationMenu = ({
       await acceptInviteUserToWorkspace(data, userSessionToken)
       setIsLoading(false)
       toast.success(`Success`)
+      onCloseNotifications()
       push(`workspace/${workspaceSelected.workspaceId}`)
+      window.location.reload()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -104,11 +108,15 @@ const NotificationMenu = ({
     }
   }
 
+  const finalWorkspaceInvites = workspaceInvites.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  )
+
   return (
     <>
       <div className="h-full max-h-[500px] w-[400px] overflow-y-auto rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[14px] font-normal text-[#c5c4c4]">
         <div className="my-[20px] h-[1px] w-full bg-[#33323e]"></div>
-        {workspaceInvites?.map((workspace, index) => (
+        {finalWorkspaceInvites?.map((workspace, index) => (
           <div
             onClick={() => {
               handleClickInvite(workspace)
@@ -154,14 +162,14 @@ const NotificationMenu = ({
                 </div>
               )}
             </div>
-            <div
+            <img
+              alt="delete"
               onClick={() => {
                 handleSetInviteUserToWorkspaceArchived(workspace.id)
               }}
-              className="ml-auto mr-[5px] cursor-pointer p-[5px] text-[12px] hover:text-[#bc1212]"
-            >
-              X
-            </div>
+              src="/images/delete.svg"
+              className="ml-auto  mr-[5px] w-[25px] cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921]"
+            ></img>
           </div>
         ))}
         <div className="my-[20px] h-[0.5px] w-full bg-[#33323e]"></div>
