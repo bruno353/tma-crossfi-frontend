@@ -121,11 +121,12 @@ const EditWorkspaceModal = ({
         className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 md:w-[500px]"
         onClick={handleModalClick}
       >
-        <div
-          onClick={onClose}
-          className="absolute right-5 top-2 cursor-pointer text-[18px] font-light text-[#C5C4C4]"
-        >
-          x
+        <div onClick={onClose} className="absolute right-5 top-2">
+          <img
+            alt="delete"
+            src="/images/delete.svg"
+            className="w-[25px]  cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921]"
+          ></img>
         </div>
         <h2 className="mb-6 text-xl">Edit Workspace</h2>
         <div>
@@ -137,19 +138,19 @@ const EditWorkspaceModal = ({
           </label>
         </div>
         <div
-          className="groupLogo group relative mb-6 h-fit w-[60px] cursor-pointer"
+          className="groupLogo group relative mb-8 mt-[20px] h-fit w-[60px] cursor-pointer 2xl:w-[90px]"
           onClick={handleImageClick}
         >
           {selectedImage ? (
             <>
               <img
                 src={selectedImage}
-                className="w-[60px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
+                className="w-[60px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10 2xl:w-[90px]"
               />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
                 <img
                   src="/images/dashboard/pencil.svg"
-                  className="mb-1 w-[30px] rounded-full"
+                  className="mb-1 w-[30px] rounded-full 2xl:w-[35px]"
                 />
               </div>
             </>
@@ -160,12 +161,12 @@ const EditWorkspaceModal = ({
                   {' '}
                   <img
                     src={previouslogoURL}
-                    className="w-[60px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
+                    className="w-[60px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10 2xl:w-[90px]"
                   />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
                     <img
                       src="/images/dashboard/pencil.svg"
-                      className="mb-1 w-[30px] rounded-full"
+                      className="mb-1 w-[30px] rounded-full 2xl:w-[35px]"
                     />
                   </div>
                 </>
@@ -174,12 +175,12 @@ const EditWorkspaceModal = ({
                   {' '}
                   <img
                     src="/images/dashboard/work.webp"
-                    className="w-[60px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
+                    className="w-[60px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10 2xl:w-[90px]"
                   />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 ease-in-out group-hover:opacity-100">
                     <img
                       src="/images/dashboard/pencil.svg"
-                      className="mb-1 w-[30px] rounded-full"
+                      className="mb-1 w-[30px] rounded-full 2xl:w-[35px]"
                     />
                   </div>
                 </>

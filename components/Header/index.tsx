@@ -226,6 +226,9 @@ const Header = () => {
                       workspaceInvites={user.WorkspaceInvite}
                       user={user}
                       onSignOut={signOutUser}
+                      onCloseNotifications={() => {
+                        setNotificationOpen(false)
+                      }}
                     />{' '}
                   </div>
                 )}
