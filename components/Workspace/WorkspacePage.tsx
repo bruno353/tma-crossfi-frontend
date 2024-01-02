@@ -87,10 +87,10 @@ const WorkspacePage = ({ id }) => {
                       ? workspace?.finalURL
                       : '/images/dashboard/work.webp'
                   }
-                  className="w-[70px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
+                  className="w-[70px] max-w-[70px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
                 />
               )}
-              <div className="ml-[10px] mt-auto text-[24px] font-medium">
+              <div className="ml-[10px] mt-auto text-[24px] font-medium 2xl:ml-[20px]">
                 {workspace?.name}
               </div>
             </div>

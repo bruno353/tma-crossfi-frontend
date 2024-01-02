@@ -104,6 +104,7 @@ const EditWorkspaceModal = ({
     setIsLoading(false)
     setIsLoading(false)
     onClose()
+    window.location.reload()
   }
 
   return (
@@ -138,7 +139,7 @@ const EditWorkspaceModal = ({
           </label>
         </div>
         <div
-          className="groupLogo group relative mb-8 mt-[20px] h-fit w-[60px] cursor-pointer 2xl:w-[90px]"
+          className="groupLogo group relative mb-8 mt-[20px] h-fit w-[60px] max-w-[60px] cursor-pointer 2xl:w-[90px] 2xl:max-w-[90px]"
           onClick={handleImageClick}
         >
           {selectedImage ? (

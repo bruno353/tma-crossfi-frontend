@@ -216,7 +216,7 @@ const WorkspaceMembers = ({
               </div>
               <div>
                 <select
-                  className={`w-[100px] rounded-md bg-transparent ${
+                  className={`w-[100px] cursor-pointer rounded-md bg-[#060621] ${
                     isLoading ? 'animate-pulse' : ''
                   } px-[5px] text-[#C5C4C4]`}
                   onChange={(option) =>
