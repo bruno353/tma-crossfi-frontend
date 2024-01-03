@@ -106,13 +106,13 @@ const ChatSidebar = (id: any) => {
         <div className="text-[12px] font-light text-[#C5C4C4] 2xl:text-[14px]">
           {channelOption.map((option, index) => (
             <div key={index} className="mb-[30px]">
-              <div
-                onClick={() => {
-                  handleSidebarClick(option.type)
-                }}
-                className={`mb-1 flex min-w-[150px] items-center`}
-              >
-                <div className="flex cursor-pointer gap-x-[5px] hover:text-[#fff]">
+              <div className={`mb-1 flex min-w-[150px] items-center`}>
+                <div
+                  onClick={() => {
+                    handleSidebarClick(option.type)
+                  }}
+                  className="flex cursor-pointer gap-x-[5px] hover:text-[#fff]"
+                >
                   <img
                     src="/images/chat/arrow-down.svg"
                     alt="image"
@@ -142,7 +142,7 @@ const ChatSidebar = (id: any) => {
                     {channels?.map((optionChannel, index) => (
                       <div key={index}>
                         {option.type === optionChannel.type && (
-                          <div className="flex cursor-pointer gap-x-[3px] 2xl:gap-x-[3px]">
+                          <div className="mb-[7px] flex cursor-pointer gap-x-[3px] 2xl:gap-x-[3px]">
                             <img
                               src={channelTypeToLogo[option.type]}
                               alt="image"
