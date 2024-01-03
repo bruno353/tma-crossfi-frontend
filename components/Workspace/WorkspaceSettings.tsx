@@ -28,19 +28,17 @@ import { UserWorkspaceProps } from '@/types/workspace'
 import UserWorkspaceInfoModal from './UserWorkspaceInfoModal'
 import DeleteUserWorkspaceModal from './DeleteUserWorkspaceModal'
 
-export interface WorkspaceMembersI {
+export interface WorkspaceSettingsI {
   id: string
-  users: UserWorkspaceProps[]
   isUserAdmin: boolean
   onUpdate(): void
 }
 
 const WorkspaceSettings = ({
   id,
-  users,
   isUserAdmin,
   onUpdate,
-}: WorkspaceMembersI) => {
+}: WorkspaceSettingsI) => {
   const [memberEmailToAdd, setMemberEmailToAdd] = useState<string>()
   const [isLoading, setIsLoading] = useState(false)
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
@@ -188,84 +186,8 @@ const WorkspaceSettings = ({
         </div>
       </div>
       <div className="mt-[50px] text-[18px] font-medium">
-        <div>Members / {users?.length}</div>
-        <div className="mt-[20px] grid gap-y-[25px]">
-          {users?.map((workspaceUser, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-x-[10px] text-[15px] font-normal"
-            >
-              <div
-                onMouseEnter={() => setIsUserModalOpen(workspaceUser.id)}
-                onMouseLeave={() => setIsUserModalOpen(null)}
-                className="relative flex items-center gap-x-[10px]"
-              >
-                <img
-                  alt="ethereum avatar"
-                  src={workspaceUser.user.profilePicture}
-                  className="w-[35px] rounded-full"
-                ></img>
-                <div className="w-[350px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                  {workspaceUser.user.email}
-                </div>
-                {isUserModalOpen === workspaceUser.id && (
-                  <div className="absolute -top-[10px] -translate-y-[100%] ">
-                    <UserWorkspaceInfoModal userWorkspace={workspaceUser} />
-                  </div>
-                )}
-              </div>
-              <div>
-                <select
-                  className={`w-[100px] cursor-pointer rounded-md bg-[#060621] ${
-                    isLoading ? 'animate-pulse' : ''
-                  } px-[5px] text-[#C5C4C4]`}
-                  onChange={(option) =>
-                    handleRoleChange(
-                      option.target.value,
-                      workspaceUser.id,
-                      workspaceUser.user.email,
-                    )
-                  }
-                  value={
-                    workspaceUser.role === 'admin'
-                      ? optionsMembers[1].value
-                      : optionsMembers[0].value
-                  }
-                  disabled={!isUserAdmin || isLoading}
-                >
-                  {optionsMembers.map((option) => (
-                    <option key={option.name} value={option.value}>
-                      {option.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {isUserAdmin && (
-                <div className="relative ml-[25px]">
-                  <img
-                    alt="delete"
-                    onClick={() => {
-                      setIsDeleteUserOpen(workspaceUser.id)
-                    }}
-                    src="/images/delete.svg"
-                    className="w-[25px]  cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921]"
-                  ></img>
-                  {isDeleteUserOpen === workspaceUser.id && (
-                    <div
-                      ref={menuRef}
-                      className="absolute right-0 top-0 z-50 translate-x-[100%]"
-                    >
-                      <DeleteUserWorkspaceModal
-                        userWorkspace={workspaceUser}
-                        onUpdateM={onUpdate}
-                      />{' '}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        <div>Delete workspace</div>
+        <div className="mt-[20px]"></div>
       </div>
     </div>
   )
