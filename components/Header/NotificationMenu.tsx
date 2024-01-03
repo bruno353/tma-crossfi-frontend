@@ -59,7 +59,6 @@ const NotificationMenu = ({
       toast.success(`Success`)
       onCloseNotifications()
       push(`workspace/${workspaceSelected.workspaceId}`)
-      window.location.reload()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
