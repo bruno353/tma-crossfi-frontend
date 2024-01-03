@@ -138,7 +138,7 @@ const ChatSidebar = (id: any) => {
               {sidebarOption[option.type] &&
                 channels &&
                 channels?.length > 0 && (
-                  <div className="grid gap-y-[4px]">
+                  <div>
                     {channels?.map((optionChannel, index) => (
                       <div key={index}>
                         {option.type === optionChannel.type && (
@@ -148,7 +148,10 @@ const ChatSidebar = (id: any) => {
                               alt="image"
                               className={'w-[14px] 2xl:w-[16px]'}
                             />
-                            <div className="hover:text-[#fff]">
+                            <div
+                              title={optionChannel.name}
+                              className="max-w-[180px] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#fff] 2xl:max-w-[200px]"
+                            >
                               {' '}
                               {optionChannel.name}{' '}
                             </div>
