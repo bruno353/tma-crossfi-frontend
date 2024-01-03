@@ -146,12 +146,19 @@ const ChatSidebar = (id: any) => {
                             <img
                               src={channelTypeToLogo[option.type]}
                               alt="image"
-                              className={`w-[14px] 2xl:w-[16px]`}
+                              className={'w-[14px] 2xl:w-[16px]'}
                             />
                             <div className="hover:text-[#fff]">
                               {' '}
                               {optionChannel.name}{' '}
                             </div>
+                            {optionChannel.isPrivate && (
+                              <img
+                                src={'/images/chat/lock.svg'}
+                                alt="image"
+                                className={'w-[12px] 2xl:w-[14px]'}
+                              />
+                            )}
                           </div>
                         )}
                       </div>
