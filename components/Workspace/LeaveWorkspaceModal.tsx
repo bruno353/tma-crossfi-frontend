@@ -20,12 +20,12 @@ const LeaveWorkspace = ({ workspaceId, onUpdateM }: MenuI) => {
   const [isLoading, setIsLoading] = useState(false)
   const { push } = useRouter()
 
-  const handleLeaveWorkspace = async (userWorkspaceId: string) => {
+  const handleLeaveWorkspace = async (workspaceId: string) => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
     const data = {
-      id: userWorkspaceId,
+      workspaceId,
     }
 
     try {
@@ -54,7 +54,7 @@ const LeaveWorkspace = ({ workspaceId, onUpdateM }: MenuI) => {
               handleLeaveWorkspace(workspaceId)
             }}
           >
-            Delete
+            Leave
           </div>
         </div>
       </div>
