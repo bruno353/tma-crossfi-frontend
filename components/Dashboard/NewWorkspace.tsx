@@ -26,6 +26,8 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
   const [isLoading, setIsLoading] = useState(null)
   const fileInputRef = useRef(null)
 
+  const { push } = useRouter()
+
   const handleInputChange = (e) => {
     if (!isLoading) {
       setWorkspaceName(e.target.value)
@@ -68,9 +70,9 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
     formData.append('files', selectedFile)
 
     try {
-      await createWorkspace(formData, userSessionToken)
+      const res = await createWorkspace(formData, userSessionToken)
       setIsLoading(false)
-      toast.success(`Success`)
+      push(`/workspace/${res.id}`)
       onClose()
     } catch (err) {
       console.log(err)
