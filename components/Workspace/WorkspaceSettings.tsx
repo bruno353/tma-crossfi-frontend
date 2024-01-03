@@ -28,6 +28,7 @@ import { UserWorkspaceProps } from '@/types/workspace'
 import UserWorkspaceInfoModal from './UserWorkspaceInfoModal'
 import DeleteUserWorkspaceModal from './DeleteUserWorkspaceModal'
 import DeleteWorkspace from './DeleteWorkspaceModal'
+import LeaveWorkspace from './LeaveWorkspaceModal'
 
 export interface WorkspaceSettingsI {
   id: string
@@ -43,11 +44,15 @@ const WorkspaceSettings = ({
   const [isLoading, setIsLoading] = useState(false)
   const [isDeleteWorkspaceOpen, setIsDeleteWorkspaceOpen] =
     useState<boolean>(false)
+  const [isLeaveWorkspaceOpen, setIsLeaveWorkspaceOpen] =
+    useState<boolean>(false)
 
   const menuRef = useRef(null)
+  const menuRef2 = useRef(null)
 
   const closeMenu = () => {
     setIsDeleteWorkspaceOpen(false)
+    setIsLeaveWorkspaceOpen(false)
   }
 
   useEffect(() => {
@@ -59,7 +64,7 @@ const WorkspaceSettings = ({
     }
 
     // Add event listener when the menu is open
-    if (isDeleteWorkspaceOpen) {
+    if (isDeleteWorkspaceOpen || isLeaveWorkspaceOpen) {
       document.addEventListener('mousedown', handleClickOutside)
     } else {
       // Remove event listener when the menu is closed
@@ -70,7 +75,7 @@ const WorkspaceSettings = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isDeleteWorkspaceOpen])
+  }, [isDeleteWorkspaceOpen, isLeaveWorkspaceOpen])
 
   return (
     <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
@@ -90,17 +95,17 @@ const WorkspaceSettings = ({
                     : 'cursor-pointer  hover:bg-[#cc556350]'
                 }  mt-[20px] flex w-fit items-center rounded-[5px] border-[1px]  border-[#cc5563] p-[2px] px-[10px] text-center text-[12px] text-[#cc5563] 2xl:text-[14px] `}
                 onClick={() => {
-                  setIsDeleteWorkspaceOpen(true)
+                  setIsLeaveWorkspaceOpen(true)
                 }}
               >
                 Leave Workspace
               </div>
-              {isDeleteWorkspaceOpen && (
+              {isLeaveWorkspaceOpen && (
                 <div
                   ref={menuRef}
                   className="absolute right-0 top-0 z-50 translate-x-[110%]"
                 >
-                  <DeleteWorkspace workspaceId={id} onUpdateM={onUpdate} />{' '}
+                  <LeaveWorkspace workspaceId={id} onUpdateM={onUpdate} />{' '}
                 </div>
               )}
             </div>

@@ -31,12 +31,12 @@ const DeleteWorkspace = ({ workspaceId, onUpdateM }: MenuI) => {
     try {
       await deleteWorkspace(data, userSessionToken)
       onUpdateM()
+      push('/dashboard')
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
     }
     setIsLoading(false)
-    push('/dashboard')
   }
 
   return (
