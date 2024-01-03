@@ -20,7 +20,13 @@ import { createChannel } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { Switch } from '@chakra-ui/react'
 
-const NewChannelModal = ({ isOpen, onClose, channelType, workspaceId }) => {
+const NewChannelModal = ({
+  isOpen,
+  onClose,
+  onChannelCreated,
+  channelType,
+  workspaceId,
+}) => {
   const [channelName, setChannelName] = useState('')
   const [selectedImage, setSelectedImage] = useState(null)
   const [isPrivate, setIsPrivate] = useState(false)
@@ -68,6 +74,8 @@ const NewChannelModal = ({ isOpen, onClose, channelType, workspaceId }) => {
 
     try {
       await createChannel(final, userSessionToken)
+      onChannelCreated()
+      await new Promise((resolve) => setTimeout(resolve, 1500))
       setIsLoading(false)
       toast.success(`Success`)
       onClose()
