@@ -521,8 +521,8 @@ export async function deleteWorkspace(data: any, userSessionToken: string) {
 
 export async function leaveWorkspace(data: any, userSessionToken: string) {
   const config = {
-    method: 'post' as 'post',
-    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/workspace/functions/leaveWorkspace`,
+    method: 'delete' as 'delete',
+    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/workspace/functions/leaveUserWorkspace`,
     headers: {
       'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
       'X-Parse-Session-Token': userSessionToken,
