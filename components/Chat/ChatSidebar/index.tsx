@@ -21,11 +21,13 @@ import { getUserChannels } from '@/utils/api-chat'
 import { ChannelProps } from '@/types/chat'
 import NewChannelModal from '../Modals/NewChannelModal'
 import { AccountContext } from '@/contexts/AccountContext'
+import { UserWorkspaceProps } from '@/types/workspace'
 
 const ChatSidebar = (id: any) => {
   const [channels, setChannels] = useState<ChannelProps[]>()
   const [isCreatingNewChannel, setIsCreatingNewChannel] = useState(false)
   const [isCreatingNewChannelType, setIsCreatingNewChannelType] = useState('')
+  const [users, setUsers] = useState<UserWorkspaceProps[]>()
   const { workspace, setWorkspace } = useContext(AccountContext)
 
   const [sidebarOption, setSidebarOption] = useState<any>({
@@ -84,6 +86,7 @@ const ChatSidebar = (id: any) => {
       console.log('channels q recebi')
       console.log(dado)
       setChannels(dado)
+      setUsers(dado.generalUsersWorkspace)
     } catch (err) {
       toast.error(`Error: ${err}`)
       await new Promise((resolve) => setTimeout(resolve, 1500))
@@ -102,8 +105,8 @@ const ChatSidebar = (id: any) => {
 
   return (
     <>
-      <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#33323E] px-[20px] pb-16 pt-5 text-[16px] md:pb-20 lg:mt-[100px] lg:pb-28 2xl:pr-[30px] 2xl:text-[18px]">
-        <div className="text-[12px] font-light text-[#C5C4C4] 2xl:text-[14px]">
+      <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#33323E] px-[20px] pb-16 pt-5 text-[16px] text-[#C5C4C4] md:pb-20 lg:mt-[100px] lg:pb-28 2xl:pr-[30px] 2xl:text-[18px]">
+        <div className="text-[12px] font-light  2xl:text-[14px]">
           {channelOption.map((option, index) => (
             <div key={index} className="mb-[30px]">
               <div className={`mb-1 flex min-w-[150px] items-center`}>
@@ -168,6 +171,83 @@ const ChatSidebar = (id: any) => {
                     ))}
                   </div>
                 )}
+            </div>
+          ))}
+        </div>
+        <div className="mt-[30px] grid gap-y-[25px] 2xl:mt-[40px]">
+          {users?.map((workspaceUser, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-x-[10px] text-[15px] font-normal"
+            >
+              <div
+                onMouseEnter={() => setIsUserModalOpen(workspaceUser.id)}
+                onMouseLeave={() => setIsUserModalOpen(null)}
+                className="relative flex items-center gap-x-[10px]"
+              >
+                <img
+                  alt="ethereum avatar"
+                  src={workspaceUser.user.profilePicture}
+                  className="w-[35px] rounded-full"
+                ></img>
+                <div className="w-[350px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                  {workspaceUser.user.email}
+                </div>
+                {isUserModalOpen === workspaceUser.id && (
+                  <div className="absolute -top-[10px] -translate-y-[100%] ">
+                    <UserWorkspaceInfoModal userWorkspace={workspaceUser} />
+                  </div>
+                )}
+              </div>
+              <div>
+                <select
+                  className={`w-[100px] cursor-pointer rounded-md bg-[#060621] ${
+                    isLoading ? 'animate-pulse' : ''
+                  } px-[5px] text-[#C5C4C4]`}
+                  onChange={(option) =>
+                    handleRoleChange(
+                      option.target.value,
+                      workspaceUser.id,
+                      workspaceUser.user.email,
+                    )
+                  }
+                  value={
+                    workspaceUser.role === 'admin'
+                      ? optionsMembers[1].value
+                      : optionsMembers[0].value
+                  }
+                  disabled={!isUserAdmin || isLoading}
+                >
+                  {optionsMembers.map((option) => (
+                    <option key={option.name} value={option.value}>
+                      {option.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {isUserAdmin && (
+                <div className="relative ml-[25px]">
+                  <img
+                    alt="delete"
+                    onClick={() => {
+                      setIsDeleteUserOpen(workspaceUser.id)
+                    }}
+                    src="/images/delete.svg"
+                    className="w-[25px]  cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921]"
+                  ></img>
+                  {isDeleteUserOpen === workspaceUser.id && (
+                    <div
+                      ref={menuRef}
+                      className="absolute right-0 top-0 z-50 translate-x-[100%]"
+                    >
+                      <DeleteUserWorkspaceModal
+                        userWorkspace={workspaceUser}
+                        onUpdateM={onUpdate}
+                      />{' '}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
