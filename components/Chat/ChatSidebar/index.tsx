@@ -102,7 +102,7 @@ const ChatSidebar = (id: any) => {
 
   return (
     <>
-      <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#33323E] px-[20px] pb-16 pt-5 text-[16px] md:pb-20 lg:mt-[100px] lg:pb-28 2xl:text-[18px]">
+      <div className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#33323E] px-[20px] pb-16 pt-5 text-[16px] md:pb-20 lg:mt-[100px] lg:pb-28 2xl:pr-[30px] 2xl:text-[18px]">
         <div className="text-[12px] font-light text-[#C5C4C4] 2xl:text-[14px]">
           {channelOption.map((option, index) => (
             <div key={index} className="mb-[30px]">
@@ -138,7 +138,7 @@ const ChatSidebar = (id: any) => {
               {sidebarOption[option.type] &&
                 channels &&
                 channels?.length > 0 && (
-                  <div>
+                  <div className="grid gap-y-[4px]">
                     {channels?.map((optionChannel, index) => (
                       <div key={index}>
                         {option.type === optionChannel.type && (
@@ -148,7 +148,10 @@ const ChatSidebar = (id: any) => {
                               alt="image"
                               className={`w-[14px] 2xl:w-[16px]`}
                             />
-                            <div> {optionChannel.name} </div>
+                            <div className="hover:text-[#fff]">
+                              {' '}
+                              {optionChannel.name}{' '}
+                            </div>
                           </div>
                         )}
                       </div>
@@ -162,7 +165,9 @@ const ChatSidebar = (id: any) => {
       <NewChannelModal
         isOpen={isCreatingNewChannel}
         onClose={closeModal}
-        onChannelCreated={getData}
+        onChannelCreated={() => {
+          getData(id.id)
+        }}
         channelType={isCreatingNewChannelType}
         workspaceId={id.id}
       />
