@@ -39,10 +39,9 @@ const WorkspaceSettings = ({
   isUserAdmin,
   onUpdate,
 }: WorkspaceSettingsI) => {
-  const [memberEmailToAdd, setMemberEmailToAdd] = useState<string>()
   const [isLoading, setIsLoading] = useState(false)
-  const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
-  const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
+  const [isDeleteWorkspaceOpen, setIsDeleteWorkspaceOpen] =
+    useState<boolean>(false)
 
   const [selected, setSelected] = useState<any>('normal')
 
@@ -145,49 +144,23 @@ const WorkspaceSettings = ({
 
   return (
     <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
-      <div className={`${!isUserAdmin ? 'hidden' : ''}`}>
-        <label htmlFor="workspaceName" className="mb-4 block text-[16px]">
-          Invite member to workspace
-        </label>
-        <div className="flex h-[33px] gap-x-[20px]">
-          <input
-            type="text"
-            id="workspaceName"
-            name="workspaceName"
-            maxLength={100}
-            placeholder="john.doe@gmail.com"
-            value={memberEmailToAdd}
-            onChange={handleInputChange}
-            className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
-          />
-          <select
-            className="w-[100px] cursor-pointer rounded-md bg-[#242B51] px-[5px] text-[#C5C4C4]"
-            onChange={(option) => setSelected(option.target.value)}
-            value={selected}
-          >
-            {optionsMembers.map((option) => (
-              <option key={option.name} value={option.value}>
-                {option.name}
-              </option>
-            ))}
-          </select>
-          <div
-            className={`${
-              isLoading
-                ? 'animate-pulse bg-[#8e68e829]'
-                : 'cursor-pointer  hover:bg-[#8e68e829]'
-            }  ml-[20px] flex items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
-            onClick={() => {
-              handleInviteMember()
-            }}
-          >
-            Invite member
-          </div>
-        </div>
-      </div>
       <div className="mt-[50px] text-[18px] font-medium">
         <div>Delete workspace</div>
-        <div className="mt-[20px]"></div>
+        <div className="mt-[10px] max-w-[600px] rounded-md border-[1px] border-[#cc5563] p-[20px] text-[14px] font-normal text-[#cc5563]">
+          Permanently remove your Team and all of its contents from the Accelar
+          platform. This action is not reversible — please continue with
+          caution.
+        </div>
+        <div
+          className={`${
+            isLoading
+              ? 'animate-pulse bg-[#cc556350]'
+              : 'cursor-pointer  hover:bg-[#cc556350]'
+          }  mt-[20px] flex w-fit items-center rounded-[5px] border-[1px]  border-[#cc5563] p-[2px] px-[10px] text-center text-[12px] text-[#cc5563] 2xl:text-[14px] `}
+          onClick={() => {}}
+        >
+          Delete Workspace
+        </div>
       </div>
     </div>
   )

@@ -26,6 +26,7 @@ import { WorkspaceProps } from '@/types/workspace'
 import EditWorkspaceModal from './EditWorkspaceModal'
 import WorkspaceNavBar from './WorkspaceNavBar'
 import WorkspaceMembers from './WorkspaceMembers'
+import WorkspaceSettings from './WorkspaceSettings'
 
 const WorkspacePage = ({ id }) => {
   const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
@@ -124,7 +125,13 @@ const WorkspacePage = ({ id }) => {
                   onUpdate={getData}
                 />
               )}
-              {workspaceNavBarSelected === 'Settings' && <div></div>}
+              {workspaceNavBarSelected === 'Settings' && (
+                <WorkspaceSettings
+                  id={id}
+                  isUserAdmin={workspace?.isUserAdmin}
+                  onUpdate={getData}
+                />
+              )}
             </div>
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
