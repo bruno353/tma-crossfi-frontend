@@ -142,8 +142,8 @@ const NewChannelModal = ({
             <div className="mb-2 block text-[14px] text-[#C5C4C4]">
               Private channel
             </div>
-            <div className="text-[10px] text-[#C5C4C4]">
-              Only allowed members can interact with this chat
+            <div className="text-[10px] text-[#C5C4C4] 2xl:text-[11px]">
+              Only admins can interact with this chat
             </div>
           </div>
 
