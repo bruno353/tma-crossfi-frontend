@@ -22,6 +22,7 @@ import { ChannelProps } from '@/types/chat'
 import NewChannelModal from '../Modals/NewChannelModal'
 import { AccountContext } from '@/contexts/AccountContext'
 import { UserWorkspaceProps } from '@/types/workspace'
+import UserWorkspaceInfoModal from '@/components/Workspace/UserWorkspaceInfoModal'
 
 const ChatSidebar = (id: any) => {
   const [channels, setChannels] = useState<ChannelProps[]>()
@@ -29,6 +30,7 @@ const ChatSidebar = (id: any) => {
   const [isCreatingNewChannelType, setIsCreatingNewChannelType] = useState('')
   const [users, setUsers] = useState<UserWorkspaceProps[]>()
   const { workspace, setWorkspace } = useContext(AccountContext)
+  const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
 
   const [sidebarOption, setSidebarOption] = useState<any>({
     TEXT: true,
@@ -199,55 +201,6 @@ const ChatSidebar = (id: any) => {
                   </div>
                 )}
               </div>
-              <div>
-                <select
-                  className={`w-[100px] cursor-pointer rounded-md bg-[#060621] ${
-                    isLoading ? 'animate-pulse' : ''
-                  } px-[5px] text-[#C5C4C4]`}
-                  onChange={(option) =>
-                    handleRoleChange(
-                      option.target.value,
-                      workspaceUser.id,
-                      workspaceUser.user.email,
-                    )
-                  }
-                  value={
-                    workspaceUser.role === 'admin'
-                      ? optionsMembers[1].value
-                      : optionsMembers[0].value
-                  }
-                  disabled={!isUserAdmin || isLoading}
-                >
-                  {optionsMembers.map((option) => (
-                    <option key={option.name} value={option.value}>
-                      {option.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {isUserAdmin && (
-                <div className="relative ml-[25px]">
-                  <img
-                    alt="delete"
-                    onClick={() => {
-                      setIsDeleteUserOpen(workspaceUser.id)
-                    }}
-                    src="/images/delete.svg"
-                    className="w-[25px]  cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921]"
-                  ></img>
-                  {isDeleteUserOpen === workspaceUser.id && (
-                    <div
-                      ref={menuRef}
-                      className="absolute right-0 top-0 z-50 translate-x-[100%]"
-                    >
-                      <DeleteUserWorkspaceModal
-                        userWorkspace={workspaceUser}
-                        onUpdateM={onUpdate}
-                      />{' '}
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           ))}
         </div>
