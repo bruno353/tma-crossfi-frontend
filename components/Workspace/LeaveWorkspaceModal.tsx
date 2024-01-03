@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState, useContext } from 'react'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
-import { deleteWorkspace } from '@/utils/api'
+import { deleteWorkspace, leaveWorkspace } from '@/utils/api'
 import { UserProps } from '@/types/user'
 import { UserWorkspaceProps } from '@/types/workspace'
 import { toast } from 'react-toastify'
@@ -29,7 +29,7 @@ const LeaveWorkspace = ({ workspaceId, onUpdateM }: MenuI) => {
     }
 
     try {
-      await deleteWorkspace(data, userSessionToken)
+      await leaveWorkspace(data, userSessionToken)
       onUpdateM()
       push('/dashboard')
     } catch (err) {
