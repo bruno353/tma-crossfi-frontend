@@ -20,6 +20,7 @@ import nookies, { parseCookies, setCookie } from 'nookies'
 import Sidebar from '../Sidebar'
 import ChatSidebar from './ChatSidebar'
 import { getUserChannels } from '@/utils/api-chat'
+import Start from './Start'
 
 const Chat = (id: any) => {
   const { push } = useRouter()
@@ -38,8 +39,13 @@ const Chat = (id: any) => {
   return (
     <>
       <div className="flex">
-        <Sidebar id={id.id} />
-        <ChatSidebar id={id.id} />
+        <div className="flex-shrink-0 ">
+          <Sidebar id={id.id} />
+        </div>
+        <div className="flex-shrink-0 ">
+          <ChatSidebar id={id.id} />
+        </div>
+        <Start />
       </div>
     </>
   )
