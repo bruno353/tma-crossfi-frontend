@@ -192,6 +192,12 @@ const ChatSidebar = (id: any) => {
             </div>
             {workspace?.UserWorkspace?.map((workspaceUser, index) => (
               <div
+                onClick={() => {
+                  const basePath = pathname.split('/')
+                  const newPath = `/${basePath[1]}/${basePath[2]}/${basePath[3]}/dm/${workspaceUser.id}`
+                  console.log(newPath)
+                  push(newPath)
+                }}
                 key={index}
                 className="flex cursor-pointer items-center gap-x-[10px] rounded-md p-[10px] text-[15px] font-normal transition hover:bg-[#24232e63]"
               >
