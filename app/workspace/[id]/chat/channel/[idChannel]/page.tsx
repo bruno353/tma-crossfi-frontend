@@ -19,7 +19,7 @@ export default function Page({ params }) {
       <ScrollUp />
       <div className="flex">
         <Chat id={params.id} />
-        <Channel id={params.id} />
+        <Channel id={params.idChannel} />
       </div>
     </>
   )

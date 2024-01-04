@@ -36,7 +36,7 @@ const Channel = (id: any) => {
   return (
     <>
       <div className="relative z-10 flex h-screen w-fit overflow-hidden  px-[20px] pb-16 pt-5 text-[16px] text-[#C5C4C4] md:pb-20 lg:mt-[100px] lg:pb-28 2xl:pr-[30px] 2xl:text-[18px]">
-        oiiii
+        {id.id}
       </div>
     </>
   )

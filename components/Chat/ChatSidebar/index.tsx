@@ -32,6 +32,9 @@ const ChatSidebar = (id: any) => {
   const { workspace, setWorkspace } = useContext(AccountContext)
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
 
+  const { push } = useRouter()
+  const pathname = usePathname()
+
   const [sidebarOption, setSidebarOption] = useState<any>({
     TEXT: true,
     AUDIO: true,
@@ -155,6 +158,12 @@ const ChatSidebar = (id: any) => {
                                 className={'w-[14px] 2xl:w-[16px]'}
                               />
                               <div
+                                onClick={() => {
+                                  const basePath = pathname.split('/')
+                                  const newPath = `/${basePath[1]}/${basePath[2]}/${basePath[3]}/channel/${optionChannel.id}`
+                                  console.log(newPath)
+                                  push(newPath)
+                                }}
                                 title={optionChannel.name}
                                 className="max-w-[180px] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#fff] 2xl:max-w-[200px]"
                               >
