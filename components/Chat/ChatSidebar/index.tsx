@@ -25,11 +25,11 @@ import { UserWorkspaceProps } from '@/types/workspace'
 import UserWorkspaceInfoModal from '@/components/Workspace/UserWorkspaceInfoModal'
 
 const ChatSidebar = (id: any) => {
-  const [channels, setChannels] = useState<ChannelProps[]>()
   const [isCreatingNewChannel, setIsCreatingNewChannel] = useState(false)
   const [isCreatingNewChannelType, setIsCreatingNewChannelType] = useState('')
   const [users, setUsers] = useState<UserWorkspaceProps[]>()
-  const { workspace, setWorkspace } = useContext(AccountContext)
+  const { workspace, setWorkspace, channels, setChannels } =
+    useContext(AccountContext)
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
 
   const { push } = useRouter()
