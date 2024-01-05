@@ -20,7 +20,7 @@ import nookies, { parseCookies, setCookie } from 'nookies'
 import { getUserChannels } from '@/utils/api-chat'
 import { ChannelProps } from '@/types/chat'
 
-const Channel = (id: any) => {
+const Dm = (id: any) => {
   const { push } = useRouter()
 
   const [channel, setChannel] = useState<ChannelProps>()
@@ -74,4 +74,4 @@ const Channel = (id: any) => {
   )
 }
 
-export default Channel
+export default Dm

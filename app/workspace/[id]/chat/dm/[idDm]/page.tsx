@@ -4,6 +4,7 @@ import ChangePasswordRecovery from '@/components/ChangePasswordRecovery'
 import ChangePasswordRecoveryFinal from '@/components/ChangePasswordRecovery2'
 import Chat from '@/components/Chat'
 import Channel from '@/components/Chat/Channel'
+import Dm from '@/components/Chat/Dm'
 import ScrollUp from '@/components/Common/ScrollUp'
 import Dashboard from '@/components/Dashboard'
 import Workspace from '@/components/Workspace'
@@ -18,8 +19,10 @@ export default function Page({ params }) {
     <>
       <ScrollUp />
       <div className="flex">
-        <Chat id={params.id} />
-        <Channel id={params.idDm} />
+        <div className="flex-shrink-0 ">
+          <Chat id={params.id} />
+        </div>
+        <Dm id={params.idChannel} />
       </div>
     </>
   )
