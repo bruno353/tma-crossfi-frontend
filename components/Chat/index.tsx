@@ -45,7 +45,6 @@ const Chat = (id: any) => {
         <div className="flex-shrink-0 ">
           <ChatSidebar id={id.id} />
         </div>
-        <Start />
       </div>
     </>
   )
