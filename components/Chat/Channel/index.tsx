@@ -62,8 +62,13 @@ const Channel = (id: any) => {
 
   return (
     <>
-      <div className="relative z-10 flex h-screen w-fit overflow-hidden  px-[20px] pb-16 pt-5 text-[16px] text-[#C5C4C4] md:pb-20 lg:mt-[100px] lg:pb-28 2xl:pr-[30px] 2xl:text-[18px]">
-        {id.id}
+      <div className="relative flex h-screen w-full  bg-yellow  pb-16 text-[16px] text-[#C5C4C4] md:pb-20 lg:mt-[100px] lg:pb-28  2xl:text-[18px]">
+        <div className="w-full">
+          <div className="w-full border-b-[1px] border-[#303030] bg-[#1D2144] px-[40px] py-[20px]">
+            {channel?.name}
+          </div>
+          {id.id}
+        </div>
       </div>
     </>
   )

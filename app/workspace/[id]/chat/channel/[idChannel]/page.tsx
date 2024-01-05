@@ -18,7 +18,9 @@ export default function Page({ params }) {
     <>
       <ScrollUp />
       <div className="flex">
-        <Chat id={params.id} />
+        <div className="flex-shrink-0 ">
+          <Chat id={params.id} />
+        </div>
         <Channel id={params.idChannel} />
       </div>
     </>
