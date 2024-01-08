@@ -5,6 +5,7 @@ export interface MessageProps {
   content: string
   fileUrl: string
   userWorkspaceId: boolean
+  userWorkspace: UserWorkspaceProps
   channelId: any
   deleted: boolean
   createdAt: string

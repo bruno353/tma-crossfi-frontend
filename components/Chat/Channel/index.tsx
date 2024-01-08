@@ -83,7 +83,19 @@ const Channel = (id: any) => {
               )}
             </div>
           </div>
-          {id.id}
+          <div className="max-h-[1000px] px-[40px]">
+            {channel?.messages.map((message, index) => (
+              <div key={index}>
+                <div className="flex gap-x-[4px]">
+                  <img
+                    alt="ethereum avatar"
+                    src={message.userWorkspace.user.profilePicture}
+                    className="w-[35px] rounded-full"
+                  ></img>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
