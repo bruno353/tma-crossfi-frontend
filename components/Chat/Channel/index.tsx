@@ -52,6 +52,32 @@ const Channel = (id: any) => {
     return dado
   }
 
+  function formatDate(createdAt) {
+    const date = new Date(createdAt)
+    const now = new Date()
+
+    const isToday =
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear()
+
+    const formattedTime = date.toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+
+    if (isToday) {
+      return `Today ${formattedTime}`
+    } else {
+      const formattedDate = date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })
+      return `${formattedDate} ${formattedTime}`
+    }
+  }
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -95,7 +121,7 @@ const Channel = (id: any) => {
                   <div className="flex h-fit gap-x-[9px]">
                     <div>{message?.userWorkspace?.user?.name} </div>
                     <div className="my-auto text-[10px] text-[#888888] 2xl:text-[12px]">
-                      {message?.createdAt}
+                      {formatDate(message?.createdAt)}
                     </div>
                   </div>
                 </div>
