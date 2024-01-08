@@ -28,7 +28,7 @@ const ChatSidebar = (id: any) => {
   const [isCreatingNewChannel, setIsCreatingNewChannel] = useState(false)
   const [isCreatingNewChannelType, setIsCreatingNewChannelType] = useState('')
   const [users, setUsers] = useState<UserWorkspaceProps[]>()
-  const { workspace, setWorkspace, channels, setChannels } =
+  const { workspace, setWorkspace, channels, setChannels, channel } =
     useContext(AccountContext)
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
 
@@ -120,7 +120,7 @@ const ChatSidebar = (id: any) => {
                     onClick={() => {
                       handleSidebarClick(option.type)
                     }}
-                    className="flex cursor-pointer gap-x-[5px] hover:text-[#fff]"
+                    className={`flex cursor-pointer gap-x-[5px] hover:text-[#fff]`}
                   >
                     <img
                       src="/images/chat/arrow-down.svg"
@@ -165,7 +165,10 @@ const ChatSidebar = (id: any) => {
                                   push(newPath)
                                 }}
                                 title={optionChannel.name}
-                                className="max-w-[180px] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#fff] 2xl:max-w-[200px]"
+                                className={`max-w-[180px] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#fff] 2xl:max-w-[200px]  ${
+                                  channel?.id === optionChannel.id &&
+                                  'text-[#fff]'
+                                }`}
                               >
                                 {' '}
                                 {optionChannel.name}{' '}

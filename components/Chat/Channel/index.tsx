@@ -19,12 +19,13 @@ import { getChannel, getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import { getUserChannels } from '@/utils/api-chat'
 import { ChannelProps } from '@/types/chat'
+import { AccountContext } from '@/contexts/AccountContext'
 
 const Channel = (id: any) => {
   const { push } = useRouter()
 
-  const [channel, setChannel] = useState<ChannelProps>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { channel, setChannel } = useContext(AccountContext)
 
   async function getData(id: any) {
     const { userSessionToken } = parseCookies()
