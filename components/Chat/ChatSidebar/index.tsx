@@ -23,6 +23,7 @@ import NewChannelModal from '../Modals/NewChannelModal'
 import { AccountContext } from '@/contexts/AccountContext'
 import { UserWorkspaceProps } from '@/types/workspace'
 import UserWorkspaceInfoModal from '@/components/Workspace/UserWorkspaceInfoModal'
+import { channelTypeToLogo } from '@/types/consts/chat'
 
 const ChatSidebar = (id: any) => {
   const [isCreatingNewChannel, setIsCreatingNewChannel] = useState(false)
@@ -40,12 +41,6 @@ const ChatSidebar = (id: any) => {
     AUDIO: true,
     VIDEO: true,
   })
-
-  const channelTypeToLogo = {
-    TEXT: '/images/chat/hashtag.svg',
-    AUDIO: '/images/chat/volume.svg',
-    VIDEO: '/images/chat/volume.svg',
-  }
 
   const channelOption = [
     {

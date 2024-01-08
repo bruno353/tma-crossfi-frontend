@@ -20,6 +20,7 @@ import nookies, { parseCookies, setCookie } from 'nookies'
 import { getUserChannels } from '@/utils/api-chat'
 import { ChannelProps } from '@/types/chat'
 import { AccountContext } from '@/contexts/AccountContext'
+import { channelTypeToLogo } from '@/types/consts/chat'
 
 const Channel = (id: any) => {
   const { push } = useRouter()
@@ -66,7 +67,19 @@ const Channel = (id: any) => {
       <div className="relative flex h-screen w-full  bg-[#1D2144]  pb-16 text-[16px] text-[#C5C4C4] md:pb-20 lg:mt-[100px] lg:pb-28  2xl:text-[18px]">
         <div className="w-full">
           <div className="w-full border-b-[1px] border-[#141733] bg-[#1D2144] px-[40px] py-[20px]">
-            {channel?.name}
+            <div className="flex gap-x-[5px]">
+              <img
+                src={channelTypeToLogo[channel?.type]}
+                alt="image"
+                className={'w-[14px] 2xl:w-[18px]'}
+              />
+              <div>{channel?.name}</div>
+              <img
+                src={channelTypeToLogo[channel?.type]}
+                alt="image"
+                className={'w-[14px] 2xl:w-[18px]'}
+              />
+            </div>
           </div>
           {id.id}
         </div>
