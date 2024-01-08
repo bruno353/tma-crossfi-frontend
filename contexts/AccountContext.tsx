@@ -14,6 +14,9 @@ interface CreateUserContextProps {
   channels: ChannelProps[] | undefined
   setChannels: (channels: ChannelProps[] | undefined) => void
 
+  dm: ChannelProps | undefined
+  setDm: (channels: ChannelProps | undefined) => void
+
   channel: ChannelProps | undefined
   setChannel: (channels: ChannelProps | undefined) => void
 
@@ -29,6 +32,7 @@ export default function AccountContextProvider({
   const [user, setUser] = useState<UserProps>()
   const [channels, setChannels] = useState<ChannelProps[]>()
   const [channel, setChannel] = useState<ChannelProps>()
+  const [dm, setDm] = useState<ChannelProps>()
   const [workspace, setWorkspace] = useState<WorkspaceProps>()
 
   return (
@@ -36,6 +40,8 @@ export default function AccountContextProvider({
       value={{
         user,
         setUser,
+        dm,
+        setDm,
         channel,
         setChannel,
         channels,
