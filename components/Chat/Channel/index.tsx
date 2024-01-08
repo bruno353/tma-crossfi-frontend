@@ -71,14 +71,16 @@ const Channel = (id: any) => {
               <img
                 src={channelTypeToLogo[channel?.type]}
                 alt="image"
-                className={'w-[14px] 2xl:w-[18px]'}
+                className={'w-[16px] 2xl:w-[18px]'}
               />
               <div>{channel?.name}</div>
-              <img
-                src={channelTypeToLogo[channel?.type]}
-                alt="image"
-                className={'w-[14px] 2xl:w-[18px]'}
-              />
+              {channel?.isPrivate && (
+                <img
+                  src={'/images/chat/lock.svg'}
+                  alt="image"
+                  className={'ml-[5px] w-[14px] 2xl:w-[16px]'}
+                />
+              )}
             </div>
           </div>
           {id.id}
