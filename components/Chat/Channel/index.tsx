@@ -128,13 +128,20 @@ const Channel = (id: any) => {
                     </div>
                     <div>{message.content}</div>
                   </div>
-                  <img
-                    alt="ethereum avatar"
-                    src="/images/chat/pencil.svg"
-                    className="ml-auto w-[20px] 2xl:w-[25px]"
-                    onMouseEnter={() => setIsEditInfoOpen(message.id)}
-                    onMouseLeave={() => setIsEditInfoOpen(null)}
-                  ></img>
+                  <div className="relative ml-auto">
+                    <img
+                      alt="ethereum avatar"
+                      src="/images/chat/pencil.svg"
+                      className="w-[20px] 2xl:w-[25px]"
+                      onMouseEnter={() => setIsEditInfoOpen(message.id)}
+                      onMouseLeave={() => setIsEditInfoOpen(null)}
+                    ></img>
+                    {isEditInfoOpen === message.id && (
+                      <div className="absolute flex w-fit items-center rounded-[10px] border-[1px] border-[#33323e] bg-[#060621]  px-[10px] py-[5px] text-center">
+                        Edit
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
