@@ -109,10 +109,10 @@ const Channel = (id: any) => {
               )}
             </div>
           </div>
-          <div className="max-h-[1000px] px-[40px] text-[12px] font-light 2xl:text-[14px]">
+          <div className="max-h-[1000px] pt-[50px] text-[12px] font-light 2xl:text-[14px]">
             {channel?.messages?.map((message, index) => (
               <div key={index}>
-                <div className="flex items-start gap-x-[10px] 2xl:gap-x-[15px]">
+                <div className="flex items-start gap-x-[10px] px-[40px]  py-[5px] hover:bg-[#24232e63] 2xl:gap-x-[15px]">
                   <img
                     alt="ethereum avatar"
                     src={message?.userWorkspace?.user?.profilePicture}
