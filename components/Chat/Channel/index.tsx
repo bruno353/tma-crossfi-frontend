@@ -27,6 +27,7 @@ const Channel = (id: any) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { channel, setChannel } = useContext(AccountContext)
+  const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
 
   async function getData(id: any) {
     const { userSessionToken } = parseCookies()
@@ -130,7 +131,9 @@ const Channel = (id: any) => {
                   <img
                     alt="ethereum avatar"
                     src="/images/chat/pencil.svg"
-                    className="ml-auto w-[35px]"
+                    className="ml-auto w-[20px] 2xl:w-[25px]"
+                    onMouseEnter={() => setIsEditInfoOpen(message.id)}
+                    onMouseLeave={() => setIsEditInfoOpen(null)}
                   ></img>
                 </div>
               </div>
