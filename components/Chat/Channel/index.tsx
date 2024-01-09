@@ -28,6 +28,7 @@ const Channel = (id: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { channel, setChannel } = useContext(AccountContext)
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
+  const [isMessageHovered, setIsMessageHovered] = useState<any>()
 
   async function getData(id: any) {
     const { userSessionToken } = parseCookies()
@@ -113,7 +114,11 @@ const Channel = (id: any) => {
           <div className="max-h-[1000px] pt-[50px] text-[12px] font-light 2xl:text-[14px]">
             {channel?.messages?.map((message, index) => (
               <div key={index}>
-                <div className="flex items-start gap-x-[10px] px-[40px]  py-[5px] hover:bg-[#24232e63] 2xl:gap-x-[15px]">
+                <div
+                  onMouseEnter={() => setIsMessageHovered(message.id)}
+                  onMouseLeave={() => setIsMessageHovered(null)}
+                  className="flex items-start gap-x-[10px] px-[40px]  py-[5px] hover:bg-[#24232e63] 2xl:gap-x-[15px]"
+                >
                   <img
                     alt="ethereum avatar"
                     src={message?.userWorkspace?.user?.profilePicture}
@@ -128,20 +133,22 @@ const Channel = (id: any) => {
                     </div>
                     <div>{message.content}</div>
                   </div>
-                  <div className="relative ml-auto">
-                    <img
-                      alt="ethereum avatar"
-                      src="/images/chat/pencil.svg"
-                      className="w-[20px] 2xl:w-[25px]"
-                      onMouseEnter={() => setIsEditInfoOpen(message.id)}
-                      onMouseLeave={() => setIsEditInfoOpen(null)}
-                    ></img>
-                    {isEditInfoOpen === message.id && (
-                      <div className="absolute flex w-fit items-center rounded-[10px] border-[1px] border-[#33323e] bg-[#060621]  px-[10px] py-[5px] text-center">
-                        Edit
-                      </div>
-                    )}
-                  </div>
+                  {isMessageHovered === message.id && (
+                    <div className="relative ml-auto">
+                      {isEditInfoOpen === message.id && (
+                        <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                          Edit
+                        </div>
+                      )}
+                      <img
+                        alt="ethereum avatar"
+                        src="/images/chat/pencil.svg"
+                        className="w-[20px] cursor-pointer 2xl:w-[25px]"
+                        onMouseEnter={() => setIsEditInfoOpen(message.id)}
+                        onMouseLeave={() => setIsEditInfoOpen(null)}
+                      ></img>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
