@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState, useContext } from 'react'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
-import { deleteUserWorkspace, getCurrentUser } from '@/utils/api'
+import { deleteMessage } from '@/utils/api'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -20,11 +20,11 @@ const DeleteMessageModal = ({ messageId, onUpdateM }: MenuI) => {
 
     const { userSessionToken } = parseCookies()
     const data = {
-      id: messageId,
+      messageId,
     }
 
     try {
-      await deleteUserWorkspace(data, userSessionToken)
+      await deleteMessage(data, userSessionToken)
       onUpdateM()
     } catch (err) {
       console.log(err)

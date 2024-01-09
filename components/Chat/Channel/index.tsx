@@ -99,6 +99,15 @@ const Channel = (id: any) => {
     setIsDeleteMessageOpen(false)
   }
 
+  const handleMessageDeleted = (messageId: string) => {
+    const arrayChannel = { ...channel }
+    const finalArrayMessages = channel?.messages.filter(
+      (item) => item.id !== messageId,
+    )
+    arrayChannel.messages = finalArrayMessages
+    setChannel(arrayChannel)
+  }
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -200,7 +209,7 @@ const Channel = (id: any) => {
                             <DeleteMessageModal
                               messageId={message.id}
                               onUpdateM={() => {
-                                console.log('deleted')
+                                handleMessageDeleted(message.id)
                               }}
                             />{' '}
                           </div>
