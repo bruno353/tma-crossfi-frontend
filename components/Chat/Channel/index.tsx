@@ -117,6 +117,10 @@ const Channel = (id: any) => {
     setIsDeleteMessageOpen(false)
   }
 
+  const editSave = () => {
+    console.log('message saved')
+  }
+
   const handleMessageDeleted = (messageId: string) => {
     const arrayChannel = { ...channel }
     const finalArrayMessages = channel?.messages.filter(
@@ -147,6 +151,46 @@ const Channel = (id: any) => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isDeleteMessageOpen])
+
+  const handleKeyPress = (event) => {
+    if (isEditMessageOpen) {
+      if (event.key === 'Enter') {
+        editSave()
+      } else if (event.key === 'Escape') {
+        setIsEditMessageOpen(false)
+      }
+    }
+  }
+
+  const testing = {
+    keyboard: {
+      bindings: {
+        shift_enter: {
+          key: 13,
+          shiftKey: true,
+          handler: (range, ctx) => {
+            console.log(range, ctx) // if you want to see the output of the binding
+          },
+        },
+        enter: {
+          key: 13,
+          handler: () => {
+            // submit form }
+          },
+        },
+      },
+    },
+  }
+
+  useEffect(() => {
+    // Adiciona o event listener
+    document.addEventListener('keydown', handleKeyPress)
+
+    // Remove o event listener quando o componente é desmontado
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [isEditMessageOpen])
 
   return (
     <>
@@ -203,6 +247,10 @@ const Channel = (id: any) => {
                           // maxLength={5000}
                           placeholder="Type here"
                         />
+                        <div className="mt-[10px] text-[10px]">
+                          enter to <span className="text-[#fff]">save</span> -
+                          esc to <span className="text-[#fff]">cancel</span>
+                        </div>
                       </>
                     ) : (
                       <div>{message.content}</div>
