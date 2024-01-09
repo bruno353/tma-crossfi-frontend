@@ -28,6 +28,8 @@ const Channel = (id: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { channel, setChannel } = useContext(AccountContext)
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
+  const [isDeleteInfoOpen, setIsDeleteInfoOpen] = useState<any>()
+  const [isDeleteMessageOpen, setIsDeleteMessageOpen] = useState<any>()
   const [isMessageHovered, setIsMessageHovered] = useState<any>()
 
   async function getData(id: any) {
@@ -134,19 +136,42 @@ const Channel = (id: any) => {
                     <div>{message.content}</div>
                   </div>
                   {isMessageHovered === message.id && (
-                    <div className="relative ml-auto">
-                      {isEditInfoOpen === message.id && (
-                        <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
-                          Edit
-                        </div>
-                      )}
-                      <img
-                        alt="ethereum avatar"
-                        src="/images/chat/pencil.svg"
-                        className="w-[20px] cursor-pointer 2xl:w-[25px]"
-                        onMouseEnter={() => setIsEditInfoOpen(message.id)}
-                        onMouseLeave={() => setIsEditInfoOpen(null)}
-                      ></img>
+                    <div className="relative ml-auto flex items-center gap-x-[10px]">
+                      <div>
+                        {' '}
+                        {isEditInfoOpen === message.id && (
+                          <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                            Edit
+                          </div>
+                        )}
+                        <img
+                          alt="ethereum avatar"
+                          src="/images/chat/pencil.svg"
+                          className="w-[20px] cursor-pointer 2xl:w-[25px]"
+                          onMouseEnter={() => setIsEditInfoOpen(message.id)}
+                          onMouseLeave={() => setIsEditInfoOpen(null)}
+                        ></img>{' '}
+                      </div>
+                      <div>
+                        {' '}
+                        {isDeleteInfoOpen === message.id && (
+                          <div
+                            onClick={() => {
+                              setIsDeleteMessageOpen(message.id)
+                            }}
+                            className="absolute flex w-fit -translate-x-[50%]   -translate-y-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center"
+                          >
+                            Delete
+                          </div>
+                        )}
+                        <img
+                          alt="ethereum avatar"
+                          src="/images/delete.svg"
+                          className="w-[14px] cursor-pointer 2xl:w-[18px]"
+                          onMouseEnter={() => setIsDeleteInfoOpen(message.id)}
+                          onMouseLeave={() => setIsDeleteInfoOpen(null)}
+                        ></img>{' '}
+                      </div>
                     </div>
                   )}
                 </div>
