@@ -112,17 +112,20 @@ const Channel = (id: any) => {
           <div className="max-h-[1000px] px-[40px] text-[12px] font-light 2xl:text-[14px]">
             {channel?.messages?.map((message, index) => (
               <div key={index}>
-                <div className="flex gap-x-[10px] 2xl:gap-x-[15px]">
+                <div className="flex items-start gap-x-[10px] 2xl:gap-x-[15px]">
                   <img
                     alt="ethereum avatar"
                     src={message?.userWorkspace?.user?.profilePicture}
                     className="max-w-[35px] rounded-full"
                   ></img>
-                  <div className="flex h-fit gap-x-[9px]">
-                    <div>{message?.userWorkspace?.user?.name} </div>
-                    <div className="my-auto text-[10px] text-[#888888] 2xl:text-[12px]">
-                      {formatDate(message?.createdAt)}
+                  <div>
+                    <div className="flex h-fit gap-x-[9px]">
+                      <div>{message?.userWorkspace?.user?.name} </div>
+                      <div className="my-auto text-[10px] text-[#888888] 2xl:text-[12px]">
+                        {formatDate(message?.createdAt)}
+                      </div>
                     </div>
+                    <div>{message.content}</div>
                   </div>
                 </div>
               </div>
