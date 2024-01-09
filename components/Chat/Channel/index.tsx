@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
+import './try.css'
 import { getChannel, getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import { getUserChannels } from '@/utils/api-chat'
@@ -22,6 +23,12 @@ import { ChannelProps } from '@/types/chat'
 import { AccountContext } from '@/contexts/AccountContext'
 import { channelTypeToLogo } from '@/types/consts/chat'
 import DeleteMessageModal from './DeleteMessageModal'
+import dynamic from 'next/dynamic'
+
+const QuillNoSSRWrapper = dynamic(import('react-quill'), {
+  ssr: false,
+  loading: () => <p>Loading ...</p>,
+})
 
 const Channel = (id: any) => {
   const { push } = useRouter()
@@ -31,7 +38,18 @@ const Channel = (id: any) => {
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isDeleteInfoOpen, setIsDeleteInfoOpen] = useState<any>()
   const [isDeleteMessageOpen, setIsDeleteMessageOpen] = useState<any>()
+  const [isEditMessageOpen, setIsEditMessageOpen] = useState<any>()
   const [isMessageHovered, setIsMessageHovered] = useState<any>()
+  const [editorHtml, setEditorHtml] = useState('')
+
+  function handleChangeEditor(value) {
+    if (editorHtml.length < 5000) {
+      setEditorHtml(value)
+    }
+
+    // console.log('the value markdown')
+    // console.log(value)
+  }
 
   const menuRef = useRef(null)
 
@@ -175,7 +193,20 @@ const Channel = (id: any) => {
                         {formatDate(message?.createdAt)}
                       </div>
                     </div>
-                    <div>{message.content}</div>
+                    {isEditMessageOpen ? (
+                      <>
+                        <QuillNoSSRWrapper
+                          value={editorHtml}
+                          onChange={handleChangeEditor}
+                          // disabled={isLoading}
+                          className="my-quill mt-2 w-[280px]  rounded-md bg-transparent text-base font-normal text-[#fff] outline-0 lg:w-[900px]"
+                          // maxLength={5000}
+                          placeholder="Type here"
+                        />
+                      </>
+                    ) : (
+                      <div>{message.content}</div>
+                    )}
                   </div>
                   {isMessageHovered === message.id && (
                     <div className="relative ml-auto flex items-center gap-x-[10px]">
@@ -192,6 +223,9 @@ const Channel = (id: any) => {
                           className="w-[20px] cursor-pointer 2xl:w-[25px]"
                           onMouseEnter={() => setIsEditInfoOpen(message.id)}
                           onMouseLeave={() => setIsEditInfoOpen(null)}
+                          onClick={() => {
+                            setIsEditMessageOpen(message.id)
+                          }}
                         ></img>{' '}
                       </div>
                       <div>
