@@ -179,7 +179,7 @@ const Channel = (id: any) => {
                       setIsMessageHovered(null)
                     }
                   }}
-                  className="flex items-start gap-x-[10px] px-[40px]  py-[5px] hover:bg-[#24232e63] 2xl:gap-x-[15px]"
+                  className="flex items-start gap-x-[10px] px-[40px]  py-[20px] hover:bg-[#24232e63] 2xl:gap-x-[15px]"
                 >
                   <img
                     alt="ethereum avatar"
@@ -199,7 +199,7 @@ const Channel = (id: any) => {
                           value={editorHtml}
                           onChange={handleChangeEditor}
                           // disabled={isLoading}
-                          className="my-quill mt-2 w-[280px]  rounded-md bg-transparent text-base font-normal text-[#fff] outline-0 lg:w-[900px]"
+                          className="my-quill mt-2 w-[280px]  rounded-md bg-[#787ca536] text-base font-normal text-[#fff] outline-0 lg:w-[900px]"
                           // maxLength={5000}
                           placeholder="Type here"
                         />

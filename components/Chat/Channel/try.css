@@ -14,18 +14,18 @@
 }
 
 .my-quill .ql-container.ql-snow {
-    border: 1px solid #000; /* Cor da borda */
+    border: 0px solid #000; /* Cor da borda */
     border-radius: 10px; /* Raio da borda arredondada */
 }
 
 .my-quill .ql-toolbar.ql-snow {
-    border: 1px solid #000; /* Cor da borda */
+    border: 0px solid #000; /* Cor da borda */
     border-radius: 10px; /* Raio da borda arredondada */
 }
 
 
 .my-quill .ql-editor::before {
-    color: white; /* Substitua 'white' pela cor desejada */
+    color: #C5C4C4; /* Substitua 'white' pela cor desejada */
     opacity: 1; /* Ajuste a opacidade conforme necessário */
     font-style: normal; /* Isto é para garantir que o estilo do texto esteja normal, não itálico */
 }
