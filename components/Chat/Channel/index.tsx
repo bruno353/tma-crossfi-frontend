@@ -127,6 +127,11 @@ const Channel = (id: any) => {
                     </div>
                     <div>{message.content}</div>
                   </div>
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/chat/pencil.svg"
+                    className="ml-auto w-[35px]"
+                  ></img>
                 </div>
               </div>
             ))}
