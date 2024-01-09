@@ -4,7 +4,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 // import { useState } from 'react'
-import { useEffect, useState, ChangeEvent, FC, useContext } from 'react'
+import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -21,6 +21,7 @@ import { getUserChannels } from '@/utils/api-chat'
 import { ChannelProps } from '@/types/chat'
 import { AccountContext } from '@/contexts/AccountContext'
 import { channelTypeToLogo } from '@/types/consts/chat'
+import DeleteMessageModal from './DeleteMessageModal'
 
 const Channel = (id: any) => {
   const { push } = useRouter()
@@ -31,6 +32,8 @@ const Channel = (id: any) => {
   const [isDeleteInfoOpen, setIsDeleteInfoOpen] = useState<any>()
   const [isDeleteMessageOpen, setIsDeleteMessageOpen] = useState<any>()
   const [isMessageHovered, setIsMessageHovered] = useState<any>()
+
+  const menuRef = useRef(null)
 
   async function getData(id: any) {
     const { userSessionToken } = parseCookies()
@@ -92,6 +95,32 @@ const Channel = (id: any) => {
     }
   }, [id])
 
+  const closeMenu = () => {
+    setIsDeleteMessageOpen(false)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        // Clicked outside of the menu, so close it
+        closeMenu()
+      }
+    }
+
+    // Add event listener when the menu is open
+    if (isDeleteMessageOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      // Remove event listener when the menu is closed
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isDeleteMessageOpen])
+
   return (
     <>
       <div className="relative flex h-screen w-full  bg-[#1D2144]  pb-16 text-[16px] text-[#C5C4C4] md:pb-20 lg:mt-[100px] lg:pb-28  2xl:text-[18px]">
@@ -118,7 +147,11 @@ const Channel = (id: any) => {
               <div key={index}>
                 <div
                   onMouseEnter={() => setIsMessageHovered(message.id)}
-                  onMouseLeave={() => setIsMessageHovered(null)}
+                  onMouseLeave={() => {
+                    if (!isDeleteMessageOpen) {
+                      setIsMessageHovered(null)
+                    }
+                  }}
                   className="flex items-start gap-x-[10px] px-[40px]  py-[5px] hover:bg-[#24232e63] 2xl:gap-x-[15px]"
                 >
                   <img
@@ -155,13 +188,21 @@ const Channel = (id: any) => {
                       <div>
                         {' '}
                         {isDeleteInfoOpen === message.id && (
-                          <div
-                            onClick={() => {
-                              setIsDeleteMessageOpen(message.id)
-                            }}
-                            className="absolute flex w-fit -translate-x-[50%]   -translate-y-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center"
-                          >
+                          <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
                             Delete
+                          </div>
+                        )}
+                        {isDeleteMessageOpen === message.id && (
+                          <div
+                            ref={menuRef}
+                            className="absolute z-50   -translate-x-[100%]  -translate-y-[120%]"
+                          >
+                            <DeleteMessageModal
+                              messageId={message.id}
+                              onUpdateM={() => {
+                                console.log('deleted')
+                              }}
+                            />{' '}
                           </div>
                         )}
                         <img
@@ -170,6 +211,9 @@ const Channel = (id: any) => {
                           className="w-[14px] cursor-pointer 2xl:w-[18px]"
                           onMouseEnter={() => setIsDeleteInfoOpen(message.id)}
                           onMouseLeave={() => setIsDeleteInfoOpen(null)}
+                          onClick={() => {
+                            setIsDeleteMessageOpen(message.id)
+                          }}
                         ></img>{' '}
                       </div>
                     </div>
