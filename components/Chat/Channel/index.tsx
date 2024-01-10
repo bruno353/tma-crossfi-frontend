@@ -174,7 +174,12 @@ const Channel = (id: any) => {
     }
 
     try {
-      await newMessageChannel(data, userSessionToken)
+      const message = await newMessageChannel(data, userSessionToken)
+      const arrayChannel = { ...channel }
+      arrayChannel?.messages.push(
+        message,
+      )
+      setChannel(arrayChannel)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
