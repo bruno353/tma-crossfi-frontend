@@ -24,6 +24,8 @@ import { AccountContext } from '@/contexts/AccountContext'
 import { channelTypeToLogo } from '@/types/consts/chat'
 import DeleteMessageModal from './DeleteMessageModal'
 import dynamic from 'next/dynamic'
+import DOMPurify from 'dompurify'
+import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser'
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false,
@@ -235,6 +237,54 @@ const Channel = (id: any) => {
     }
   }
 
+  function transform(node, index) {
+    if (node.type === 'tag') {
+      switch (node.name) {
+        case 'h1':
+          node.attribs.style = 'font-size: 2rem; font-weight: bold;'
+          break
+        case 'h2':
+          node.attribs.style = 'font-size: 1.5rem; font-weight: bold;'
+          break
+        case 'ul':
+          node.attribs.style = 'list-style: disc; margin-left: 40px;' // Ajuste o valor conforme necessário
+          break
+        case 'ol':
+          node.attribs.style = 'list-style: decimal; margin-left: 40px;' // Ajuste o valor conforme necessário
+          break
+        case 'strong':
+        case 'b':
+          node.attribs.style = 'font-weight: bold;'
+          break
+        case 'em':
+        case 'i':
+          node.attribs.style = 'font-style: italic;'
+          break
+        case 'li':
+          if (
+            node.attribs.class &&
+            node.attribs.class.includes('ql-indent-1')
+          ) {
+            node.attribs.style = 'margin-left: 30px;' // Adicione mais estilos se a classe ql-indent-1 tiver especificidades
+          }
+          break
+        // Adicione mais casos conforme necessário
+      }
+    }
+    return convertNodeToElement(node, index, transform)
+  }
+
+  // inputs an html stringify and returns the text sanitize
+  function getSanitizeText(content: string) {
+    const cleanHtml = DOMPurify.sanitize(content)
+
+    const htmlTransformado = ReactHtmlParser(cleanHtml, {
+      transform,
+    })
+
+    return htmlTransformado
+  }
+
   function isDifferentDay(date1, date2) {
     const d1 = new Date(date1)
     const d2 = new Date(date2)
@@ -336,7 +386,7 @@ const Channel = (id: any) => {
                               </div>
                             </>
                           ) : (
-                            <div>{message.content}</div>
+                            <div>{getSanitizeText(message.content)}</div>
                           )}
                         </div>
                         {isMessageHovered === message.id && (
