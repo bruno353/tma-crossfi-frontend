@@ -290,10 +290,12 @@ const Channel = (id: any) => {
                   return (
                     <div key={message.id}>
                       {showDaySeparator && (
-                        <div className="flex w-full justify-center text-[9px] 2xl:text-[11px]">
-                          <div className="">
+                        <div className="flex w-full items-center justify-center gap-x-[7px] px-[40px] text-[9px]  2xl:text-[11px] ">
+                          <div className="h-[1px] w-full border-b-[1px] border-[#88888831]"></div>
+                          <div className="flex-shrink-0">
                             {formatDateWithoutTime(message?.createdAt)}
                           </div>
+                          <div className="h-[1px] w-full border-b-[1px] border-[#88888831]"></div>
                         </div>
                       )}
                       <div
