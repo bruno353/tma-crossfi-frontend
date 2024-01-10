@@ -109,24 +109,35 @@ const Channel = (id: any) => {
 
   function formatDateWithoutTime(createdAt) {
     const date = new Date(createdAt)
-    const now = new Date()
 
-    const isToday =
-      date.getDate() === now.getDate() &&
-      date.getMonth() === now.getMonth() &&
-      date.getFullYear() === now.getFullYear()
+    // Função auxiliar para obter o sufixo ordinal correto
+    function getOrdinalSuffix(day) {
+      if (day > 3 && day < 21) return 'th'
+      switch (day % 10) {
+        case 1:
+          return 'st'
+        case 2:
+          return 'nd'
+        case 3:
+          return 'rd'
+        default:
+          return 'th'
+      }
+    }
 
-    const formattedTime = date.toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-
-    const formattedDate = date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
+    const day = date.getDate()
+    const formattedDate = date.toLocaleDateString('en-US', {
+      day: '2-digit', // Usar '2-digit' para garantir que o dia sempre terá dois dígitos
+      month: 'long',
       year: 'numeric',
     })
-    return `${formattedDate}`
+
+    // Adicionando o sufixo ordinal ao dia e convertendo o dia para string
+    const ordinalDay = `${day}${getOrdinalSuffix(day)}`
+    const dayString = day.toString().padStart(2, '0') // Converte o dia para string e adiciona um zero à esquerda se necessário
+
+    // Substituindo o dia numérico pelo dia com sufixo ordinal
+    return formattedDate.replace(dayString, ordinalDay)
   }
 
   useEffect(() => {
@@ -279,8 +290,10 @@ const Channel = (id: any) => {
                   return (
                     <div key={message.id}>
                       {showDaySeparator && (
-                        <div className="day-separator">
-                          {formatDateWithoutTime(message?.createdAt)}
+                        <div className="flex w-full justify-center text-[9px] 2xl:text-[11px]">
+                          <div className="">
+                            {formatDateWithoutTime(message?.createdAt)}
+                          </div>
                         </div>
                       )}
                       <div
