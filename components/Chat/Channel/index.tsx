@@ -199,116 +199,123 @@ const Channel = (id: any) => {
               )}
             </div>
           </div>
-          <div className="max-h-[1000px] pt-[50px] text-[12px] font-light 2xl:text-[14px]">
-            {channel?.messages?.map((message, index) => (
-              <div key={index}>
-                <div
-                  onMouseEnter={() => setIsMessageHovered(message.id)}
-                  onMouseLeave={() => {
-                    if (!isDeleteMessageOpen) {
-                      setIsMessageHovered(null)
-                    }
-                  }}
-                  className="flex items-start gap-x-[10px] px-[40px]  py-[20px] hover:bg-[#24232e63] 2xl:gap-x-[15px]"
-                >
-                  <img
-                    alt="ethereum avatar"
-                    src={message?.userWorkspace?.user?.profilePicture}
-                    className="max-w-[35px] rounded-full"
-                  ></img>
-                  <div>
-                    <div className="flex h-fit gap-x-[9px]">
-                      <div>{message?.userWorkspace?.user?.name} </div>
-                      <div className="my-auto text-[10px] text-[#888888] 2xl:text-[12px]">
-                        {formatDate(message?.createdAt)}
-                      </div>
-                    </div>
-                    {isEditMessageOpen ? (
-                      <>
-                        <QuillNoSSRWrapper
-                          value={editorHtml}
-                          onChange={handleChangeEditor}
-                          // disabled={isLoading}
-                          className="my-quill mt-2 w-[280px]  rounded-md bg-[#787ca536] text-base font-normal text-[#fff] outline-0 lg:w-[900px]"
-                          // maxLength={5000}
-                          placeholder="Type here"
-                        />
-                        <div className="mt-[10px] text-[10px]">
-                          enter to <span className="text-[#fff]">save</span> -
-                          esc to <span className="text-[#fff]">cancel</span>
+          <div className="flex h-full w-full items-end">
+            <div className="w-full">
+              <div className="pt-[50px] text-[12px] font-light 2xl:text-[14px]">
+                {channel?.messages?.map((message, index) => (
+                  <div key={index}>
+                    <div
+                      onMouseEnter={() => setIsMessageHovered(message.id)}
+                      onMouseLeave={() => {
+                        if (!isDeleteMessageOpen) {
+                          setIsMessageHovered(null)
+                        }
+                      }}
+                      className="flex items-start gap-x-[10px] px-[40px]  py-[20px] hover:bg-[#24232e63] 2xl:gap-x-[15px]"
+                    >
+                      <img
+                        alt="ethereum avatar"
+                        src={message?.userWorkspace?.user?.profilePicture}
+                        className="max-w-[35px] rounded-full"
+                      ></img>
+                      <div>
+                        <div className="flex h-fit gap-x-[9px]">
+                          <div>{message?.userWorkspace?.user?.name} </div>
+                          <div className="my-auto text-[10px] text-[#888888] 2xl:text-[12px]">
+                            {formatDate(message?.createdAt)}
+                          </div>
                         </div>
-                      </>
-                    ) : (
-                      <div>{message.content}</div>
-                    )}
-                  </div>
-                  {isMessageHovered === message.id && (
-                    <div className="relative ml-auto flex items-center gap-x-[10px]">
-                      <div>
-                        {' '}
-                        {isEditInfoOpen === message.id && (
-                          <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
-                            Edit
-                          </div>
+                        {isEditMessageOpen ? (
+                          <>
+                            <QuillNoSSRWrapper
+                              value={editorHtml}
+                              onChange={handleChangeEditor}
+                              // disabled={isLoading}
+                              className="my-quill mt-2 w-[280px]  rounded-md bg-[#787ca536] text-base font-normal text-[#fff] outline-0 lg:w-[900px]"
+                              // maxLength={5000}
+                              placeholder="Type here"
+                            />
+                            <div className="mt-[10px] text-[10px]">
+                              enter to <span className="text-[#fff]">save</span>{' '}
+                              - esc to{' '}
+                              <span className="text-[#fff]">cancel</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div>{message.content}</div>
                         )}
-                        <img
-                          alt="ethereum avatar"
-                          src="/images/chat/pencil.svg"
-                          className="w-[20px] cursor-pointer 2xl:w-[25px]"
-                          onMouseEnter={() => setIsEditInfoOpen(message.id)}
-                          onMouseLeave={() => setIsEditInfoOpen(null)}
-                          onClick={() => {
-                            setIsEditMessageOpen(message.id)
-                          }}
-                        ></img>{' '}
                       </div>
-                      <div>
-                        {' '}
-                        {isDeleteInfoOpen === message.id && (
-                          <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
-                            Delete
-                          </div>
-                        )}
-                        {isDeleteMessageOpen === message.id && (
-                          <div
-                            ref={menuRef}
-                            className="absolute z-50   -translate-x-[100%]  -translate-y-[120%]"
-                          >
-                            <DeleteMessageModal
-                              messageId={message.id}
-                              onUpdateM={() => {
-                                handleMessageDeleted(message.id)
+                      {isMessageHovered === message.id && (
+                        <div className="relative ml-auto flex items-center gap-x-[10px]">
+                          <div>
+                            {' '}
+                            {isEditInfoOpen === message.id && (
+                              <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                                Edit
+                              </div>
+                            )}
+                            <img
+                              alt="ethereum avatar"
+                              src="/images/chat/pencil.svg"
+                              className="w-[20px] cursor-pointer 2xl:w-[25px]"
+                              onMouseEnter={() => setIsEditInfoOpen(message.id)}
+                              onMouseLeave={() => setIsEditInfoOpen(null)}
+                              onClick={() => {
+                                setIsEditMessageOpen(message.id)
                               }}
-                            />{' '}
+                            ></img>{' '}
                           </div>
-                        )}
-                        <img
-                          alt="ethereum avatar"
-                          src="/images/delete.svg"
-                          className="w-[14px] cursor-pointer 2xl:w-[18px]"
-                          onMouseEnter={() => setIsDeleteInfoOpen(message.id)}
-                          onMouseLeave={() => setIsDeleteInfoOpen(null)}
-                          onClick={() => {
-                            setIsDeleteMessageOpen(message.id)
-                          }}
-                        ></img>{' '}
-                      </div>
+                          <div>
+                            {' '}
+                            {isDeleteInfoOpen === message.id && (
+                              <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                                Delete
+                              </div>
+                            )}
+                            {isDeleteMessageOpen === message.id && (
+                              <div
+                                ref={menuRef}
+                                className="absolute z-50   -translate-x-[100%]  -translate-y-[120%]"
+                              >
+                                <DeleteMessageModal
+                                  messageId={message.id}
+                                  onUpdateM={() => {
+                                    handleMessageDeleted(message.id)
+                                  }}
+                                />{' '}
+                              </div>
+                            )}
+                            <img
+                              alt="ethereum avatar"
+                              src="/images/delete.svg"
+                              className="w-[14px] cursor-pointer 2xl:w-[18px]"
+                              onMouseEnter={() =>
+                                setIsDeleteInfoOpen(message.id)
+                              }
+                              onMouseLeave={() => setIsDeleteInfoOpen(null)}
+                              onClick={() => {
+                                setIsDeleteMessageOpen(message.id)
+                              }}
+                            ></img>{' '}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="absolute bottom-0 mb-20 w-full px-[40px]">
-            {' '}
-            <QuillNoSSRWrapper
-              value={editorHtml}
-              onChange={handleChangeEditor}
-              // disabled={isLoading}
-              className="my-quill mt-2 w-full rounded-md bg-[#787ca536] text-base font-normal text-[#fff] outline-0"
-              // maxLength={5000}
-              placeholder="Type here"
-            />
+              <div className="w-full px-[40px]">
+                {' '}
+                <QuillNoSSRWrapper
+                  value={editorHtml}
+                  onChange={handleChangeEditor}
+                  // disabled={isLoading}
+                  className="my-quill mt-2 w-full rounded-md  bg-[#787ca536] text-base font-normal text-[#fff] outline-0"
+                  // maxLength={5000}
+                  placeholder="Type here"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -29,3 +29,8 @@
     opacity: 1; /* Ajuste a opacidade conforme necessário */
     font-style: normal; /* Isto é para garantir que o estilo do texto esteja normal, não itálico */
 }
+
+.ql-editor{
+    max-height: 250px;
+    overflow: auto;
+  }
