@@ -119,6 +119,7 @@ const Channel = (id: any) => {
 
   const editSave = () => {
     console.log('message saved')
+    setIsEditMessageOpen(false)
   }
 
   const handleMessageDeleted = (messageId: string) => {
@@ -154,32 +155,17 @@ const Channel = (id: any) => {
 
   const handleKeyPress = (event) => {
     if (isEditMessageOpen) {
-      if (event.key === 'Enter') {
+      if (
+        event.key === 'Enter' &&
+        !event.ctrlKey &&
+        !event.shiftKey &&
+        !event.altKey
+      ) {
         editSave()
       } else if (event.key === 'Escape') {
         setIsEditMessageOpen(false)
       }
     }
-  }
-
-  const testing = {
-    keyboard: {
-      bindings: {
-        shift_enter: {
-          key: 13,
-          shiftKey: true,
-          handler: (range, ctx) => {
-            console.log(range, ctx) // if you want to see the output of the binding
-          },
-        },
-        enter: {
-          key: 13,
-          handler: () => {
-            // submit form }
-          },
-        },
-      },
-    },
   }
 
   useEffect(() => {
