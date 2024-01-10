@@ -36,7 +36,7 @@ const Channel = (id: any) => {
   const { push } = useRouter()
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const { channel, setChannel } = useContext(AccountContext)
+  const { channel, setChannel, user } = useContext(AccountContext)
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isDeleteInfoOpen, setIsDeleteInfoOpen] = useState<any>()
   const [isDeleteMessageOpen, setIsDeleteMessageOpen] = useState<any>()
@@ -58,6 +58,8 @@ const Channel = (id: any) => {
   }
 
   const menuRef = useRef(null)
+  const messagesEndRef = useRef(null);
+
 
   async function getData(id: any) {
     const { userSessionToken } = parseCookies()
@@ -81,6 +83,14 @@ const Channel = (id: any) => {
     }
 
     return dado
+  }
+
+  const scrollToBottomInstant = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
+  }
+
+  const scrollToBottomSmooth = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
 
   function formatDate(createdAt) {
@@ -167,24 +177,24 @@ const Channel = (id: any) => {
   }
 
   const handleNewMessage = async (messageContent: string) => {
-    const { userSessionToken } = parseCookies()
+    const { userSessionToken } = parseCookies();
     const data = {
       channelId: id.id,
       message: messageContent,
-    }
-
+    };
+  
     try {
-      const message = await newMessageChannel(data, userSessionToken)
-      const arrayChannel = { ...channel }
-      arrayChannel?.messages.push(
-        message,
-      )
-      setChannel(arrayChannel)
+      setNewMessageHtml('');
+      let newMessage = await newMessageChannel(data, userSessionToken);
+      newMessage = { ...newMessage, newMessageFromUser: true }; // Criar uma nova cópia com a propriedade adicionada
+  
+      const newArrayChannel = { ...channel, messages: [...channel.messages, newMessage] }; // Criar uma nova cópia do array de mensagens
+      setChannel(newArrayChannel);
     } catch (err) {
-      console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
+      console.log(err);
+      toast.error(`Error: ${err.response.data.message}`);
     }
-  }
+  };
 
   const handleMessageDeleted = (messageId: string) => {
     const arrayChannel = { ...channel }
@@ -194,6 +204,20 @@ const Channel = (id: any) => {
     arrayChannel.messages = finalArrayMessages
     setChannel(arrayChannel)
   }
+
+  useEffect(() => {
+    if (channel?.messages?.length > 0) {
+      console.log('the new message: ' + JSON.stringify(channel?.messages[channel?.messages.length - 1]))
+      if(!channel?.messages[channel?.messages.length - 1]?.['newMessageFromOtherUser'] && !channel?.messages[channel?.messages.length - 1]?.['newMessageFromUser'] ) {
+        console.log('scroll instant')
+        scrollToBottomInstant();
+      }
+      else if(channel?.messages[channel?.messages.length - 1]?.['newMessageFromUser'] ) {
+        console.log('scroll smooth')
+        scrollToBottomSmooth();
+      }
+    }
+  }, [channel?.messages]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -280,8 +304,6 @@ const Channel = (id: any) => {
   }
 
   function removeTrailingBrTags(htmlContent) {
-    console.log('o que recebi')
-    console.log(htmlContent)
     // Remove qualquer sequência de tags vazias com <br> ou cursor no final
     // A expressão regular agora considera a presença do cursor
     return htmlContent.replace(/(<[^>]+>)*(\s*<br>\s*|<span class="ql-cursor">﻿<\/span>\s*)+(<\/[^>]+>)*\s*$/gi, '');
@@ -467,6 +489,7 @@ const Channel = (id: any) => {
                     </div>
                   )
                 })}
+                <div ref={messagesEndRef} />
               </div>
               <div className="mt-[30px] w-full px-[40px]">
                 {' '}

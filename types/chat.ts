@@ -3,6 +3,8 @@ import { UserWorkspaceProps } from './workspace'
 export interface MessageProps {
   id: string
   content: string
+  newMessageFromUser: boolean
+  newMessageFromOtherUser: boolean
   fileUrl: string
   userWorkspaceId: boolean
   userWorkspace: UserWorkspaceProps
