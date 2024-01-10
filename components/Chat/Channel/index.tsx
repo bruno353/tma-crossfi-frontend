@@ -274,15 +274,27 @@ const Channel = (id: any) => {
     return convertNodeToElement(node, index, transform)
   }
 
-  // inputs an html stringify and returns the text sanitize
+  function removeTrailingBrTags(htmlContent) {
+    console.log('o que recebi')
+    console.log(htmlContent)
+    // Remove qualquer sequência de tags vazias com <br> ou cursor no final
+    // A expressão regular agora considera a presença do cursor
+    return htmlContent.replace(/(<[^>]+>)*(\s*<br>\s*|<span class="ql-cursor">﻿<\/span>\s*)+(<\/[^>]+>)*\s*$/gi, '');
+  }
+
   function getSanitizeText(content: string) {
-    const cleanHtml = DOMPurify.sanitize(content)
-
-    const htmlTransformado = ReactHtmlParser(cleanHtml, {
+    // Primeiro, sanitizar o conteúdo HTML
+    const cleanHtml = DOMPurify.sanitize(content);
+  
+    // Em seguida, remover os <br> inúteis no final
+    const htmlWithoutTrailingBr = removeTrailingBrTags(cleanHtml);
+  
+    // Finalmente, transformar o HTML e retornar
+    const htmlTransformado = ReactHtmlParser(htmlWithoutTrailingBr, {
       transform,
-    })
-
-    return htmlTransformado
+    });
+  
+    return htmlTransformado;
   }
 
   function isDifferentDay(date1, date2) {
