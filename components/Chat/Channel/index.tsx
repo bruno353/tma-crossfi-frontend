@@ -366,8 +366,8 @@ const Channel = (id: any) => {
             </div>
           </div>
           <div className="flex h-full w-full items-end">
-            <div className="w-full">
-              <div className="max-h-[500px] overflow-auto pt-[50px] text-[12px] font-light 2xl:text-[14px] scrollbar-thin scrollbar-thumb-[#fff] scrollbar-track-yellow scrollbar-thumb-rounded-md scrollbar-track-rounded-md">
+          <div className="w-full">
+              <div className="overflow-auto flex-shrink max-h-[58vh]  mr-[20px] pt-[0px] text-[12px] font-light 2xl:text-[14px] scrollbar-thin scrollbar-thumb-[#0e101f] scrollbar-track-[#11132470] scrollbar-thumb-rounded-md scrollbar-track-rounded-md">
                 {channel?.messages?.map((message, index) => {
                   const showDaySeparator =
                     index === 0 ||
@@ -491,7 +491,7 @@ const Channel = (id: any) => {
                 })}
                 <div ref={messagesEndRef} />
               </div>
-              <div className="mt-[30px] w-full px-[40px]">
+              <div className="flex-grow mt-[30px] w-full px-[40px]">
                 {' '}
                 <QuillNoSSRWrapper
                   value={newMessageHtml}
