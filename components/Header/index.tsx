@@ -68,19 +68,6 @@ const Header = () => {
   const { user, setUser } = useContext(AccountContext)
   const { push } = useRouter()
 
-  // Sticky Navbar
-  const [sticky, setSticky] = useState(false)
-  const handleStickyNavbar = () => {
-    if (window.scrollY >= 80) {
-      setSticky(true)
-    } else {
-      setSticky(false)
-    }
-  }
-  useEffect(() => {
-    window.addEventListener('scroll', handleStickyNavbar)
-  })
-
   // submenu handler
   const [openIndex, setOpenIndex] = useState(-1)
   const handleSubmenu = (index) => {
@@ -170,11 +157,7 @@ const Header = () => {
   return (
     <>
       <header
-        className={`header left-0 top-0 z-40 flex w-full items-center bg-transparent ${
-          !sticky
-            ? '!fixed !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#040015] dark:!bg-opacity-60'
-            : '!fixed !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#040015] dark:!bg-opacity-60'
-        }`}
+        className={`header flex w-full items-center relative !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#040015] dark:!bg-opacity-60`}
       >
         <div className="container">
           <div className="relative -mx-4 flex items-center justify-between">
@@ -184,9 +167,7 @@ const Header = () => {
                   console.log(user)
                 }}
                 href={user ? '/dashboard' : '/'}
-                className={`header-logo block w-full ${
-                  sticky ? 'py-5 lg:py-2' : 'py-8'
-                } `}
+                className={`header-logo block py-8 w-full`}
               >
                 <Image
                   src="/images/logo/logo-icon.svg"
