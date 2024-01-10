@@ -328,7 +328,7 @@ const Channel = (id: any) => {
           </div>
           <div className="flex h-full w-full items-end">
             <div className="w-full">
-              <div className="pt-[50px] text-[12px] font-light 2xl:text-[14px]">
+              <div className="max-h-[500px] overflow-auto pt-[50px] text-[12px] font-light 2xl:text-[14px] scrollbar-thin scrollbar-thumb-[#fff] scrollbar-track-yellow scrollbar-thumb-rounded-md scrollbar-track-rounded-md">
                 {channel?.messages?.map((message, index) => {
                   const showDaySeparator =
                     index === 0 ||
