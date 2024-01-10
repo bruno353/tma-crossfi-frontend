@@ -107,6 +107,28 @@ const Channel = (id: any) => {
     }
   }
 
+  function formatDateWithoutTime(createdAt) {
+    const date = new Date(createdAt)
+    const now = new Date()
+
+    const isToday =
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear()
+
+    const formattedTime = date.toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+
+    const formattedDate = date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })
+    return `${formattedDate}`
+  }
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -258,8 +280,7 @@ const Channel = (id: any) => {
                     <div key={message.id}>
                       {showDaySeparator && (
                         <div className="day-separator">
-                          {/* Você pode formatar essa data como preferir */}
-                          {new Date(message.createdAt).toLocaleDateString()}
+                          {formatDateWithoutTime(message?.createdAt)}
                         </div>
                       )}
                       <div
