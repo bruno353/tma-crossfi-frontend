@@ -18,7 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './try.css'
 import { getChannel, getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
-import { getUserChannels } from '@/utils/api-chat'
+import { getUserChannels, newMessageChannel } from '@/utils/api-chat'
 import { ChannelProps } from '@/types/chat'
 import { AccountContext } from '@/contexts/AccountContext'
 import { channelTypeToLogo } from '@/types/consts/chat'
@@ -128,6 +128,22 @@ const Channel = (id: any) => {
 
   const newMessageSave = () => {
     console.log('new message saved')
+    handleNewMessage(newMessageHtml)
+  }
+
+  const handleNewMessage = async (messageContent: string) => {
+    const { userSessionToken } = parseCookies()
+    const data = {
+      channelId: id.id,
+      message: messageContent,
+    }
+
+    try {
+      await newMessageChannel(data, userSessionToken)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
   }
 
   const handleMessageDeleted = (messageId: string) => {
