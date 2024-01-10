@@ -41,14 +41,18 @@ const Channel = (id: any) => {
   const [isEditMessageOpen, setIsEditMessageOpen] = useState<any>()
   const [isMessageHovered, setIsMessageHovered] = useState<any>()
   const [editorHtml, setEditorHtml] = useState('')
+  const [newMessageHtml, setNewMessageHtml] = useState('')
 
   function handleChangeEditor(value) {
     if (editorHtml.length < 5000) {
       setEditorHtml(value)
     }
+  }
 
-    // console.log('the value markdown')
-    // console.log(value)
+  function handleChangeNewMessage(value) {
+    if (editorHtml.length < 5000) {
+      setNewMessageHtml(value)
+    }
   }
 
   const menuRef = useRef(null)
@@ -122,6 +126,10 @@ const Channel = (id: any) => {
     setIsEditMessageOpen(false)
   }
 
+  const newMessageSave = () => {
+    console.log('new message saved')
+  }
+
   const handleMessageDeleted = (messageId: string) => {
     const arrayChannel = { ...channel }
     const finalArrayMessages = channel?.messages.filter(
@@ -154,6 +162,7 @@ const Channel = (id: any) => {
   }, [isDeleteMessageOpen])
 
   const handleKeyPress = (event) => {
+    console.log('key press called')
     if (isEditMessageOpen) {
       if (
         event.key === 'Enter' &&
@@ -164,6 +173,15 @@ const Channel = (id: any) => {
         editSave()
       } else if (event.key === 'Escape') {
         setIsEditMessageOpen(false)
+      }
+    } else {
+      if (
+        event.key === 'Enter' &&
+        !event.ctrlKey &&
+        !event.shiftKey &&
+        !event.altKey
+      ) {
+        newMessageSave()
       }
     }
   }
@@ -176,7 +194,7 @@ const Channel = (id: any) => {
     return () => {
       document.removeEventListener('keydown', handleKeyPress)
     }
-  }, [isEditMessageOpen])
+  }, [isEditMessageOpen, newMessageHtml])
 
   return (
     <>
@@ -304,14 +322,13 @@ const Channel = (id: any) => {
                   </div>
                 ))}
               </div>
-              <div className="w-full px-[40px]">
+              <div className="mt-[30px] w-full px-[40px]">
                 {' '}
                 <QuillNoSSRWrapper
-                  value={editorHtml}
-                  onChange={handleChangeEditor}
+                  value={newMessageHtml}
+                  onChange={handleChangeNewMessage}
                   // disabled={isLoading}
                   className="my-quill mt-2 w-full rounded-md  bg-[#787ca536] text-base font-normal text-[#fff] outline-0"
-                  // maxLength={5000}
                   placeholder="Type here"
                 />
               </div>
