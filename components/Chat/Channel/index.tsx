@@ -480,7 +480,7 @@ const Channel = (id: any) => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      <div className="text-[#fff]">ewqewq</div>
+      <div className="text-[#fff]">here the input</div>
     </>
   )
 
