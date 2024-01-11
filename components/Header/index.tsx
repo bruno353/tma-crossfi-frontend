@@ -157,7 +157,7 @@ const Header = () => {
   return (
     <>
       <header
-        className={`header flex w-full items-center relative !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#040015] dark:!bg-opacity-60`}
+        className={`header flex w-full h-[10vh] items-center relative !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-[#040015] dark:!bg-opacity-60`}
       >
         <div className="container">
           <div className="relative -mx-4 flex items-center justify-between">

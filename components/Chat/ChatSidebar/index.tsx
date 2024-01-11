@@ -105,7 +105,7 @@ const ChatSidebar = (id: any) => {
 
   return (
     <>
-      <div className="relative z-10 flex h-full w-fit  bg-[#33323E] px-[20px] pb-2 pt-5 text-[16px] text-[#C5C4C4]  lg:pt-[50px] 2xl:pr-[30px] 2xl:text-[18px]">
+      <div className="relative z-10 flex h-[90vh] w-fit  bg-[#33323E] px-[20px] pb-2 pt-5 text-[16px] text-[#C5C4C4]  lg:pt-[50px] 2xl:pr-[30px] 2xl:text-[18px]">
         <div>
           <div className="text-[12px] font-light  2xl:text-[14px]">
             {channelOption.map((option, index) => (
