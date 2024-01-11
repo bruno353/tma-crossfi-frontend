@@ -58,8 +58,7 @@ const Channel = (id: any) => {
   }
 
   const menuRef = useRef(null)
-  const messagesEndRef = useRef(null);
-
+  const messagesEndRef = useRef(null)
 
   async function getData(id: any) {
     const { userSessionToken } = parseCookies()
@@ -86,11 +85,11 @@ const Channel = (id: any) => {
   }
 
   const scrollToBottomInstant = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'instant' })
   }
 
   const scrollToBottomSmooth = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
   function formatDate(createdAt) {
@@ -177,24 +176,27 @@ const Channel = (id: any) => {
   }
 
   const handleNewMessage = async (messageContent: string) => {
-    const { userSessionToken } = parseCookies();
+    const { userSessionToken } = parseCookies()
     const data = {
       channelId: id.id,
       message: messageContent,
-    };
-  
-    try {
-      setNewMessageHtml('');
-      let newMessage = await newMessageChannel(data, userSessionToken);
-      newMessage = { ...newMessage, newMessageFromUser: true }; // Criar uma nova cópia com a propriedade adicionada
-  
-      const newArrayChannel = { ...channel, messages: [...channel.messages, newMessage] }; // Criar uma nova cópia do array de mensagens
-      setChannel(newArrayChannel);
-    } catch (err) {
-      console.log(err);
-      toast.error(`Error: ${err.response.data.message}`);
     }
-  };
+
+    try {
+      setNewMessageHtml('')
+      let newMessage = await newMessageChannel(data, userSessionToken)
+      newMessage = { ...newMessage, newMessageFromUser: true } // Criar uma nova cópia com a propriedade adicionada
+
+      const newArrayChannel = {
+        ...channel,
+        messages: [...channel.messages, newMessage],
+      } // Criar uma nova cópia do array de mensagens
+      setChannel(newArrayChannel)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+  }
 
   const handleMessageDeleted = (messageId: string) => {
     const arrayChannel = { ...channel }
@@ -207,17 +209,26 @@ const Channel = (id: any) => {
 
   useEffect(() => {
     if (channel?.messages?.length > 0) {
-      console.log('the new message: ' + JSON.stringify(channel?.messages[channel?.messages.length - 1]))
-      if(!channel?.messages[channel?.messages.length - 1]?.['newMessageFromOtherUser'] && !channel?.messages[channel?.messages.length - 1]?.['newMessageFromUser'] ) {
+      console.log(
+        'the new message: ' +
+          JSON.stringify(channel?.messages[channel?.messages.length - 1]),
+      )
+      if (
+        !channel?.messages[channel?.messages.length - 1]?.[
+          'newMessageFromOtherUser'
+        ] &&
+        !channel?.messages[channel?.messages.length - 1]?.['newMessageFromUser']
+      ) {
         console.log('scroll instant')
-        scrollToBottomInstant();
-      }
-      else if(channel?.messages[channel?.messages.length - 1]?.['newMessageFromUser'] ) {
+        scrollToBottomInstant()
+      } else if (
+        channel?.messages[channel?.messages.length - 1]?.['newMessageFromUser']
+      ) {
         console.log('scroll smooth')
-        scrollToBottomSmooth();
+        scrollToBottomSmooth()
       }
     }
-  }, [channel?.messages]);
+  }, [channel?.messages])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -306,22 +317,23 @@ const Channel = (id: any) => {
   function removeTrailingBrTags(htmlContent) {
     // Remove qualquer sequência de tags vazias com <br> ou cursor no final
     // A expressão regular agora considera a presença do cursor
+    // eslint-disable-next-line prettier/prettier, no-irregular-whitespace
     return htmlContent.replace(/(<[^>]+>)*(\s*<br>\s*|<span class="ql-cursor">﻿<\/span>\s*)+(<\/[^>]+>)*\s*$/gi, '');
   }
 
   function getSanitizeText(content: string) {
     // Primeiro, sanitizar o conteúdo HTML
-    const cleanHtml = DOMPurify.sanitize(content);
-  
+    const cleanHtml = DOMPurify.sanitize(content)
+
     // Em seguida, remover os <br> inúteis no final
-    const htmlWithoutTrailingBr = removeTrailingBrTags(cleanHtml);
-  
+    const htmlWithoutTrailingBr = removeTrailingBrTags(cleanHtml)
+
     // Finalmente, transformar o HTML e retornar
     const htmlTransformado = ReactHtmlParser(htmlWithoutTrailingBr, {
       transform,
-    });
-  
-    return htmlTransformado;
+    })
+
+    return htmlTransformado
   }
 
   function isDifferentDay(date1, date2) {
@@ -346,8 +358,8 @@ const Channel = (id: any) => {
 
   return (
     <>
-      <div className="relative flex max-h-[90vh] h-[90vh] w-full overflow-y-hidden  bg-[#1D2144]  pb-16 text-[16px] text-[#C5C4C4] md:pb-20  lg:pb-28  2xl:text-[18px]">
-        <div className="w-full h-full">
+      <div className="relative flex h-[90vh] max-h-[90vh] w-full overflow-y-hidden  bg-[#1D2144]  pb-16 text-[16px] text-[#C5C4C4] md:pb-20  lg:pb-28  2xl:text-[18px]">
+        <div className="h-full w-full">
           <div className="w-full border-b-[1px] border-[#141733] bg-[#1D2144] px-[40px] py-[20px]">
             <div className="flex gap-x-[5px]">
               <img
@@ -366,8 +378,8 @@ const Channel = (id: any) => {
             </div>
           </div>
           <div className="flex h-full w-full items-end pb-10">
-          <div className="w-full">
-              <div className="overflow-auto max-h-[60vh]  mr-[20px] text-[12px] font-light 2xl:text-[14px] scrollbar-thin scrollbar-thumb-[#0e101f] scrollbar-track-[#11132470] scrollbar-thumb-rounded-md scrollbar-track-rounded-md">
+            <div className="w-full">
+              <div className="mr-[20px] max-h-[60vh] overflow-auto text-[12px] font-light scrollbar-thin scrollbar-track-[#11132470] scrollbar-thumb-[#0e101f] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:text-[14px]">
                 {channel?.messages?.map((message, index) => {
                   const showDaySeparator =
                     index === 0 ||
@@ -491,7 +503,7 @@ const Channel = (id: any) => {
                 })}
                 <div ref={messagesEndRef} />
               </div>
-              <div className="flex-grow mt-[30px] w-full px-[40px]">
+              <div className="mt-[30px] w-full flex-grow px-[40px]">
                 {' '}
                 <QuillNoSSRWrapper
                   value={newMessageHtml}

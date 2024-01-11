@@ -18,11 +18,11 @@ export default function Page({ params }) {
     <>
       <ScrollUp />
       <div className="flex h-full w-full">
-        <div className="flex-shrink-0 h-full">
+        <div className="h-full flex-shrink-0">
           <Chat id={params.id} />
         </div>
-        <div className="h-full w-full bg-yellow"> 
-        <Channel id={params.idChannel} />
+        <div className="h-full w-full bg-yellow">
+          <Channel id={params.idChannel} />
         </div>
       </div>
     </>
