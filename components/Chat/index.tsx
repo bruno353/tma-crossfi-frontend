@@ -38,11 +38,11 @@ const Chat = (id: any) => {
   //   }, [id])
   return (
     <>
-      <div className="flex">
-        <div className="flex-shrink-0 ">
+      <div className="flex h-full">
+        <div className="flex-shrink-0 h-full">
           <Sidebar id={id.id} />
         </div>
-        <div className="flex-shrink-0 ">
+        <div className="flex-shrink-0 h-full">
           <ChatSidebar id={id.id} />
         </div>
       </div>

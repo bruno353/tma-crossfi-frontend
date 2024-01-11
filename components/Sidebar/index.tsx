@@ -124,7 +124,7 @@ const Sidebar = (id: any) => {
       <div
         onMouseEnter={() => setIsSidebarOpen(true)}
         onMouseLeave={() => setIsSidebarOpen(false)}
-        className="relative z-10 flex h-screen w-fit overflow-hidden bg-[#040015] bg-opacity-60 pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[140px]"
+        className="z-[999] flex  w-fit overflow-hidden bg-transparent bg-opacity-60 pb-16 pt-36 text-[16px] md:pb-20 lg:pb-0 lg:pt-[140px]"
       >
         <div className="text-[#fff]">
           {sidebarOptions.map((option, index) => (

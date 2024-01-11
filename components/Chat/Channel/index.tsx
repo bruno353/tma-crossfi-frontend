@@ -346,7 +346,7 @@ const Channel = (id: any) => {
 
   return (
     <>
-      <div className="relative flex  w-full overflow-y-hidden  bg-[#1D2144]  pb-16 text-[16px] text-[#C5C4C4] md:pb-20 lg:mt-[100px] lg:pb-28  2xl:text-[18px]">
+      <div className="relative flex h-full w-full overflow-y-hidden  bg-[#1D2144]  pb-16 text-[16px] text-[#C5C4C4] md:pb-20  lg:pb-28  2xl:text-[18px]">
         <div className="w-full">
           <div className="w-full border-b-[1px] border-[#141733] bg-[#1D2144] px-[40px] py-[20px]">
             <div className="flex gap-x-[5px]">
@@ -367,7 +367,7 @@ const Channel = (id: any) => {
           </div>
           <div className="flex h-full w-full items-end">
           <div className="w-full">
-              <div className="overflow-auto flex-shrink max-h-[58vh]  mr-[20px] pt-[0px] text-[12px] font-light 2xl:text-[14px] scrollbar-thin scrollbar-thumb-[#0e101f] scrollbar-track-[#11132470] scrollbar-thumb-rounded-md scrollbar-track-rounded-md">
+              <div className="overflow-auto flex-shrink max-h-[59vh] mr-[20px] text-[12px] font-light 2xl:text-[14px] scrollbar-thin scrollbar-thumb-[#0e101f] scrollbar-track-[#11132470] scrollbar-thumb-rounded-md scrollbar-track-rounded-md">
                 {channel?.messages?.map((message, index) => {
                   const showDaySeparator =
                     index === 0 ||

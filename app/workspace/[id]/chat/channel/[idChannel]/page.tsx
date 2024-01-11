@@ -17,11 +17,13 @@ export default function Page({ params }) {
   return (
     <>
       <ScrollUp />
-      <div className="flex">
-        <div className="flex-shrink-0 ">
+      <div className="flex h-full w-full">
+        <div className="flex-shrink-0 h-full">
           <Chat id={params.id} />
         </div>
+        <div className="h-full w-full bg-yellow"> 
         <Channel id={params.idChannel} />
+        </div>
       </div>
     </>
   )

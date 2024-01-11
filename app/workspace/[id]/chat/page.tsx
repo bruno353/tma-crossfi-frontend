@@ -9,14 +9,10 @@ import ScrollUp from '@/components/Common/ScrollUp'
 export default function Page({ params }) {
   console.log(params.id)
   return (
-    <>
-      <ScrollUp />
-      <div className="flex">
-        <div className="flex-shrink-0 ">
+
+      <div className="flex h-full">
           <Chat id={params.id} />
-        </div>
         <Start />
       </div>
-    </>
   )
 }
