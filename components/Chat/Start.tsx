@@ -35,7 +35,7 @@ const Start = () => {
               className="mx-auto mb-6 w-[42px] rounded-full 2xl:w-[52px]"
             />
             <div className="mx-auto text-[16px] 2xl:text-[18px]">
-              Create or select a channel to start the conversation
+              Create or select a channel to start a conversation
             </div>
           </div>
         </div>
