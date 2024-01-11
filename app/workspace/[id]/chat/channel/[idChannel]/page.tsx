@@ -17,7 +17,7 @@ export default function Page({ params }) {
         <div className="h-full flex-shrink-0">
           <Chat id={params.id} />
         </div>
-        <div className="h-full w-full">
+        <div className="h-[calc(100vh-10rem)] w-full">
           <Channel id={params.idChannel} />
         </div>
       </div>
