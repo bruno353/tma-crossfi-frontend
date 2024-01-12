@@ -34,6 +34,7 @@ const Channel = (id: any) => {
   const { channel, setChannel, user } = useContext(AccountContext)
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isDeleteInfoOpen, setIsDeleteInfoOpen] = useState<any>()
+  const [isDeleteChannelInfoOpen, setIsDeleteChannelInfoOpen] = useState<any>()
   const [isDeleteMessageOpen, setIsDeleteMessageOpen] = useState<any>()
   const [isEditMessageOpen, setIsEditMessageOpen] = useState<any>()
   const [isMessageHovered, setIsMessageHovered] = useState<any>()
@@ -491,7 +492,7 @@ const Channel = (id: any) => {
   return (
     <>
       <div className="flex h-full max-h-[calc(100vh-6rem)] flex-1 flex-col justify-between bg-[#1D2144]  pb-16 text-[16px] text-[#C5C4C4] md:pb-20  lg:pb-8  2xl:text-[18px]">
-        <div className="w-full border-b-[1px] border-[#141733] bg-[#1D2144] px-[40px] py-[20px]">
+        <div className="flex w-full justify-between gap-x-[10px] border-b-[1px] border-[#141733] bg-[#1D2144] px-[40px] py-[20px]">
           <div className="flex gap-x-[5px]">
             <img
               src={channelTypeToLogo[channel?.type]}
@@ -506,6 +507,22 @@ const Channel = (id: any) => {
                 className={'ml-[5px] w-[14px] 2xl:w-[16px]'}
               />
             )}
+          </div>
+          <div className="flex gap-x-[10px]">
+            <img
+              src={'/images/chat/config2.svg'}
+              alt="image"
+              className={
+                'w-[24px] cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921] 2xl:w-[27px]'
+              }
+            />
+            <img
+              src={'/images/delete.svg'}
+              alt="image"
+              className={
+                'w-[24px] cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921] 2xl:w-[27px]'
+              }
+            />
           </div>
         </div>
         {renderMessages()}
