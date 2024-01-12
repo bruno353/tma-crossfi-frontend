@@ -480,16 +480,15 @@ const Channel = (id: any) => {
         })}
         <div ref={messagesEndRef} />
       </div>
-      <div className=''>
-      <QuillNoSSRWrapper
-                value={newMessageHtml}
-                onChange={handleChangeNewMessage}
-                // disabled={isLoading}
-                className="my-quill mt-auto  w-full rounded-md  bg-[#787ca536] text-base font-normal text-[#fff] outline-0"
-                placeholder="Type here"
-              />
+      <div className="">
+        <QuillNoSSRWrapper
+          value={newMessageHtml}
+          onChange={handleChangeNewMessage}
+          // disabled={isLoading}
+          className="my-quill mt-auto  w-full rounded-md  bg-[#787ca536] text-base font-normal text-[#fff] outline-0"
+          placeholder="Type here"
+        />
       </div>
-
     </div>
   )
 
