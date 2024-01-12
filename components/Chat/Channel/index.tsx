@@ -34,10 +34,16 @@ const Channel = (id: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { channel, setChannel, user } = useContext(AccountContext)
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
+
   const [isDeleteInfoOpen, setIsDeleteInfoOpen] = useState<any>()
-  const [isDeleteChannelInfoOpen, setIsDeleteChannelInfoOpen] = useState<any>()
   const [isDeleteMessageOpen, setIsDeleteMessageOpen] = useState<any>()
+
+  const [isDeleteChannelInfoOpen, setIsDeleteChannelInfoOpen] = useState<any>()
   const [isDeleteChannelOpen, setIsDeleteChannelOpen] = useState<any>()
+
+  const [isEditChannelInfoOpen, setIsEditChannelInfoOpen] = useState<any>()
+  const [isEditChannelOpen, setIsEditChannelOpen] = useState<any>()
+
   const [isEditMessageOpen, setIsEditMessageOpen] = useState<any>()
   const [isMessageHovered, setIsMessageHovered] = useState<any>()
   const [editorHtml, setEditorHtml] = useState('')
@@ -550,13 +556,26 @@ const Channel = (id: any) => {
             )}
           </div>
           <div className="relative flex gap-x-[10px]">
-            <img
-              src={'/images/chat/config2.svg'}
-              alt="image"
-              className={
-                'w-[24px] cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921] 2xl:w-[27px]'
-              }
-            />
+            <div>
+              {isEditChannelInfoOpen === channel?.id && (
+                <div className="absolute w-fit  min-w-[110px] -translate-x-[80%] translate-y-[120%] rounded-[6px] bg-[#060621] px-[10px]   py-[5px]  text-center  text-[12px]  2xl:min-w-[130px] 2xl:text-[14px]">
+                  Edit Channel
+                </div>
+              )}
+              <img
+                src={'/images/chat/config2.svg'}
+                alt="image"
+                className={
+                  'w-[24px] cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921] 2xl:w-[27px]'
+                }
+                onMouseEnter={() => setIsEditChannelInfoOpen(channel?.id)}
+                onMouseLeave={() => setIsEditChannelInfoOpen(null)}
+                onClick={() => {
+                  setIsEditChannelOpen(channel.id)
+                }}
+              />
+            </div>
+
             <div>
               {' '}
               {isDeleteChannelInfoOpen === channel?.id && (
