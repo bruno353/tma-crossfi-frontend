@@ -13,7 +13,11 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './try.css'
 import { getChannel, getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
-import { getUserChannels, newMessageChannel } from '@/utils/api-chat'
+import {
+  editMessage,
+  getUserChannels,
+  newMessageChannel,
+} from '@/utils/api-chat'
 import { ChannelProps } from '@/types/chat'
 import { AccountContext } from '@/contexts/AccountContext'
 import { channelTypeToLogo } from '@/types/consts/chat'
@@ -28,6 +32,7 @@ import {
   getSanitizeText,
   isDifferentDay,
 } from '@/utils/functions'
+import Messages from './Messages'
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false,
@@ -56,10 +61,12 @@ const Channel = (id: any) => {
   const [newMessageHtml, setNewMessageHtml] = useState('')
 
   function handleChangeEditor(value) {
-    if (editorHtml.length < 5000) {
-      setEditorHtml(value)
-    }
+    setEditorHtml(value)
   }
+
+  // useEffect(() => {
+  //   console.log('editorHtml atualizado:', editorHtml);
+  // }, [editorHtml]);
 
   function handleChangeNewMessage(value) {
     if (editorHtml.length < 5000) {
@@ -122,13 +129,50 @@ const Channel = (id: any) => {
   }
 
   const editSave = () => {
-    console.log('message saved')
-    setIsEditMessageOpen(false)
+    console.log('the html')
+    console.log(editorHtml)
+    return
+    handleSaveMessage(isEditMessageOpen, editorHtml)
   }
 
   const newMessageSave = () => {
     console.log('new message saved')
     handleNewMessage(newMessageHtml)
+  }
+
+  const handleSaveMessage = async (
+    messageId: string,
+    messageContent: string,
+  ) => {
+    const { userSessionToken } = parseCookies()
+    const data = {
+      messageId,
+      message: messageContent,
+    }
+
+    console.log('o data')
+    console.log(messageId)
+    console.log(messageContent)
+
+    try {
+      setEditorHtml('')
+      let updatedMessage = await editMessage(data, userSessionToken)
+      updatedMessage = { ...updatedMessage, newMessageFromUser: true }
+
+      // Encontre a mensagem na lista de mensagens do canal
+      const updatedMessages = channel.messages.map((msg) =>
+        msg.id === updatedMessage.id
+          ? { ...msg, content: updatedMessage.content }
+          : msg,
+      )
+
+      // Atualize o estado do canal com as novas mensagens
+      setChannel({ ...channel, messages: updatedMessages })
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setIsEditMessageOpen(false)
   }
 
   const handleNewMessage = async (messageContent: string) => {
@@ -238,7 +282,6 @@ const Channel = (id: any) => {
   }, [isDeleteChannelOpen])
 
   const handleKeyPress = (event) => {
-    console.log('key press called')
     if (isEditMessageOpen) {
       if (
         event.key === 'Enter' &&
@@ -346,8 +389,8 @@ const Channel = (id: any) => {
                             {formatDate(message?.createdAt)}
                           </div>
                         </div>
-                        {isEditMessageOpen ? (
-                          <>
+                        {isEditMessageOpen === message.id ? (
+                          <div>
                             <QuillNoSSRWrapper
                               value={editorHtml}
                               onChange={handleChangeEditor}
@@ -361,7 +404,7 @@ const Channel = (id: any) => {
                               - esc to{' '}
                               <span className="text-[#fff]">cancel</span>
                             </div>
-                          </>
+                          </div>
                         ) : (
                           <div>{getSanitizeText(message.content)}</div>
                         )}
@@ -544,6 +587,13 @@ const Channel = (id: any) => {
             </div>
           )}
         </div>
+        {/* <Messages
+          channel={channel}
+          isLoading={isLoading}
+          handleMessageDeleted={(e) => {
+            handleMessageDeleted(e)
+          }}
+        /> */}
         {renderMessages()}
         <div className="mt-auto px-[40px]">
           {' '}
