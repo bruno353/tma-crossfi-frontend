@@ -17,11 +17,11 @@ import { getUserChannels, newMessageChannel } from '@/utils/api-chat'
 import { ChannelProps } from '@/types/chat'
 import { AccountContext } from '@/contexts/AccountContext'
 import { channelTypeToLogo } from '@/types/consts/chat'
-import DeleteMessageModal from './DeleteMessageModal'
+import DeleteMessageModal from '../Modals/DeleteMessageModal'
 import dynamic from 'next/dynamic'
 import DOMPurify from 'dompurify'
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser'
-import DeleteChannelModal from './DeleteChannelModal'
+import DeleteChannelModal from '../Modals/DeleteChannelModal'
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false,
