@@ -160,7 +160,7 @@ const ChatSidebar = (id: any) => {
                                   push(newPath)
                                 }}
                                 title={optionChannel.name}
-                                className={`max-w-[180px] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#fff] 2xl:max-w-[200px]  ${
+                                className={`max-w-[120px] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#fff] 2xl:max-w-[150px]  ${
                                   channel?.id === optionChannel.id &&
                                   'text-[#fff]'
                                 }`}
@@ -184,7 +184,7 @@ const ChatSidebar = (id: any) => {
               </div>
             ))}
           </div>
-          <div className="mt-[30px] grid gap-y-[5px] 2xl:mt-[40px]">
+          <div className="mt-[30px] grid gap-y-[10px] 2xl:mt-[40px]">
             <div className="mb-[10px] text-[12px]  font-light 2xl:text-[14px]">
               Members
             </div>
@@ -196,24 +196,22 @@ const ChatSidebar = (id: any) => {
                   console.log(newPath)
                   push(newPath)
                 }}
+                onMouseEnter={() => setIsUserModalOpen(workspaceUser.id)}
+                onMouseLeave={() => setIsUserModalOpen(null)}
                 key={index}
-                className="flex cursor-pointer items-center gap-x-[10px] rounded-md p-[10px] text-[15px] font-normal transition hover:bg-[#24232e63]"
+                className="flex cursor-pointer items-center gap-x-[10px] rounded-md p-[10px] text-[14px] font-normal transition hover:bg-[#24232e63]"
               >
-                <div
-                  onMouseEnter={() => setIsUserModalOpen(workspaceUser.id)}
-                  onMouseLeave={() => setIsUserModalOpen(null)}
-                  className="relative flex items-center gap-x-[10px]"
-                >
+                <div className="relative flex items-center gap-x-[10px]">
                   <img
                     alt="ethereum avatar"
                     src={workspaceUser.user.profilePicture}
-                    className="w-[35px] rounded-full"
+                    className="w-[30px] rounded-full"
                   ></img>
-                  <div className="w-[250px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                    {workspaceUser.user.email}
+                  <div className="max-w-[120px] overflow-hidden  truncate text-ellipsis whitespace-nowrap 2xl:max-w-[180px]">
+                    {workspaceUser.user.name}
                   </div>
                   {isUserModalOpen === workspaceUser.id && (
-                    <div className="absolute -top-[10px] -translate-y-[100%] ">
+                    <div className="absolute -top-[10px] -translate-y-[100%] translate-x-[50%]">
                       <UserWorkspaceInfoModal userWorkspace={workspaceUser} />
                     </div>
                   )}
