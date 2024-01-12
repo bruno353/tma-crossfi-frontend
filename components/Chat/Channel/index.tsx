@@ -32,7 +32,7 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
 const Channel = (id: any) => {
   const { push } = useRouter()
 
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const { channel, setChannel, user } = useContext(AccountContext)
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
 
