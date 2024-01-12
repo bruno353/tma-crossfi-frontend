@@ -558,7 +558,7 @@ const Channel = (id: any) => {
           </div>
           <div className="relative flex gap-x-[10px]">
             <div>
-              {isEditChannelInfoOpen === channel?.id && (
+              {channel?.id && isEditChannelInfoOpen === channel?.id && (
                 <div className="absolute w-fit  min-w-[110px] -translate-x-[80%] translate-y-[120%] rounded-[6px] bg-[#060621] px-[10px]   py-[5px]  text-center  text-[12px]  2xl:min-w-[130px] 2xl:text-[14px]">
                   Edit Channel
                 </div>
@@ -573,10 +573,10 @@ const Channel = (id: any) => {
                     onChannelUpdate={() => {
                       window.location.reload()
                     }}
-                    isPreviousPrivate={channel.isPrivate}
-                    previousName={channel.name}
-                    channelType={channel.type}
-                    channelId={channel.id}
+                    isPreviousPrivate={channel?.isPrivate}
+                    previousName={channel?.name}
+                    channelType={channel?.type}
+                    channelId={channel?.id}
                   />{' '}
                 </div>
               )}
@@ -596,12 +596,12 @@ const Channel = (id: any) => {
 
             <div>
               {' '}
-              {isDeleteChannelInfoOpen === channel?.id && (
+              {channel?.id && isDeleteChannelInfoOpen === channel?.id && (
                 <div className="absolute w-fit  min-w-[110px] -translate-x-[80%] translate-y-[120%] rounded-[6px] bg-[#060621] px-[10px]   py-[5px]  text-center  text-[12px]  2xl:min-w-[130px] 2xl:text-[14px]">
                   Delete Channel
                 </div>
               )}
-              {isDeleteChannelOpen === channel?.id && (
+              {channel?.id && isDeleteChannelOpen === channel?.id && (
                 <div
                   ref={deleteChannelRef}
                   className="absolute z-50   -translate-x-[100%]  translate-y-[50%]"
