@@ -22,6 +22,7 @@ import dynamic from 'next/dynamic'
 import DOMPurify from 'dompurify'
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser'
 import DeleteChannelModal from '../Modals/DeleteChannelModal'
+import EditChannelModal from '../Modals/EditChannelModal'
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false,
@@ -560,6 +561,23 @@ const Channel = (id: any) => {
               {isEditChannelInfoOpen === channel?.id && (
                 <div className="absolute w-fit  min-w-[110px] -translate-x-[80%] translate-y-[120%] rounded-[6px] bg-[#060621] px-[10px]   py-[5px]  text-center  text-[12px]  2xl:min-w-[130px] 2xl:text-[14px]">
                   Edit Channel
+                </div>
+              )}
+              {isEditChannelOpen === channel?.id && (
+                <div>
+                  <EditChannelModal
+                    isOpen={isEditChannelOpen}
+                    onClose={() => {
+                      setIsEditChannelOpen(false)
+                    }}
+                    onChannelUpdate={() => {
+                      window.location.reload()
+                    }}
+                    isPreviousPrivate={channel.isPrivate}
+                    previousName={channel.name}
+                    channelType={channel.type}
+                    workspaceId={channel.workspaceId}
+                  />{' '}
                 </div>
               )}
               <img

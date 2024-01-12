@@ -16,7 +16,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
-import { createChannel } from '@/utils/api'
+import { editChannel } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { Switch } from '@chakra-ui/react'
 
@@ -62,7 +62,7 @@ const EditChannelModal = ({
     e.stopPropagation()
   }
 
-  const handleCreateChannel = async () => {
+  const handleUpdateChannel = async () => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
@@ -75,7 +75,7 @@ const EditChannelModal = ({
     }
 
     try {
-      await createChannel(final, userSessionToken)
+      await editChannel(final, userSessionToken)
       onChannelUpdate()
       await new Promise((resolve) => setTimeout(resolve, 1500))
       setIsLoading(false)
@@ -170,7 +170,7 @@ const EditChannelModal = ({
               }  rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] `}
               onClick={() => {
                 if (!isLoading) {
-                  handleCreateChannel()
+                  handleUpdateChannel()
                 }
               }}
             >
