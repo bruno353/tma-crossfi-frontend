@@ -18,6 +18,7 @@ export interface ChannelProps {
   id: string
   name: string
   type: string
+  workspaceId: string
   isPrivate: boolean
   messages: MessageProps[]
   generalUsersWorkspace: UserWorkspaceProps[]
