@@ -341,6 +341,143 @@ const Channel = (id: any) => {
     )
   }
 
+  function renderMessages() {
+    return (
+      <div className="mr-[20px] flex h-full flex-1 flex-col overflow-y-auto pt-5 text-[12px] font-light scrollbar-thin scrollbar-track-[#11132470] scrollbar-thumb-[#0e101f] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:text-[14px]">
+        <div className="mt-auto px-[40px] pb-[50px]">
+          <div className="flex gap-x-[7px] text-[21px] font-medium text-[#fff] 2xl:gap-x-[10px] 2xl:text-[25px]">
+            <div> Start in #{channel?.name}</div>
+            {channel?.isPrivate && (
+              <img
+                src={'/images/chat/lock.svg'}
+                alt="image"
+                className={'ml-[5px] w-[14px] 2xl:w-[16px]'}
+              />
+            )}
+          </div>
+          <div className="">Send a message to start your conversation</div>
+        </div>
+        {channel?.messages?.map((message, index) => {
+          const showDaySeparator =
+            index === 0 ||
+            isDifferentDay(
+              message.createdAt,
+              channel.messages[index - 1].createdAt,
+            )
+
+          return (
+            <div key={message.id}>
+              {showDaySeparator && (
+                <div className="flex w-full items-center justify-center gap-x-[7px] px-[40px] text-[9px]  2xl:text-[11px] ">
+                  <div className="h-[1px] w-full border-b-[1px] border-[#88888831]"></div>
+                  <div className="flex-shrink-0">
+                    {formatDateWithoutTime(message?.createdAt)}
+                  </div>
+                  <div className="h-[1px] w-full border-b-[1px] border-[#88888831]"></div>
+                </div>
+              )}
+              <div
+                onMouseEnter={() => setIsMessageHovered(message.id)}
+                onMouseLeave={() => {
+                  if (!isDeleteMessageOpen) {
+                    setIsMessageHovered(null)
+                  }
+                }}
+                className="flex items-start gap-x-[10px] px-[40px]  py-[20px] hover:bg-[#24232e63] 2xl:gap-x-[15px]"
+              >
+                <img
+                  alt="ethereum avatar"
+                  src={message?.userWorkspace?.user?.profilePicture}
+                  className="max-w-[35px] rounded-full"
+                ></img>
+                <div>
+                  <div className="flex h-fit gap-x-[9px]">
+                    <div>{message?.userWorkspace?.user?.name} </div>
+                    <div className="my-auto text-[10px] text-[#888888] 2xl:text-[12px]">
+                      {formatDate(message?.createdAt)}
+                    </div>
+                  </div>
+                  {isEditMessageOpen ? (
+                    <>
+                      <QuillNoSSRWrapper
+                        value={editorHtml}
+                        onChange={handleChangeEditor}
+                        // disabled={isLoading}
+                        className="my-quill mt-2 w-[280px]  rounded-md bg-[#787ca536] text-base font-normal text-[#fff] outline-0 lg:w-[900px]"
+                        // maxLength={5000}
+                        placeholder="Type here"
+                      />
+                      <div className="mt-[10px] text-[10px]">
+                        enter to <span className="text-[#fff]">save</span> - esc
+                        to <span className="text-[#fff]">cancel</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div>{getSanitizeText(message.content)}</div>
+                  )}
+                </div>
+                {isMessageHovered === message.id && (
+                  <div className="relative ml-auto flex items-center gap-x-[10px]">
+                    <div>
+                      {' '}
+                      {isEditInfoOpen === message.id && (
+                        <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                          Edit
+                        </div>
+                      )}
+                      <img
+                        alt="ethereum avatar"
+                        src="/images/chat/pencil.svg"
+                        className="w-[20px] cursor-pointer 2xl:w-[25px]"
+                        onMouseEnter={() => setIsEditInfoOpen(message.id)}
+                        onMouseLeave={() => setIsEditInfoOpen(null)}
+                        onClick={() => {
+                          setIsEditMessageOpen(message.id)
+                        }}
+                      ></img>{' '}
+                    </div>
+                    <div>
+                      {' '}
+                      {isDeleteInfoOpen === message.id && (
+                        <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                          Delete
+                        </div>
+                      )}
+                      {isDeleteMessageOpen === message.id && (
+                        <div
+                          ref={menuRef}
+                          className="absolute z-50   -translate-x-[100%]  -translate-y-[120%]"
+                        >
+                          <DeleteMessageModal
+                            messageId={message.id}
+                            onUpdateM={() => {
+                              handleMessageDeleted(message.id)
+                            }}
+                          />{' '}
+                        </div>
+                      )}
+                      <img
+                        alt="ethereum avatar"
+                        src="/images/delete.svg"
+                        className="w-[14px] cursor-pointer 2xl:w-[18px]"
+                        onMouseEnter={() => setIsDeleteInfoOpen(message.id)}
+                        onMouseLeave={() => setIsDeleteInfoOpen(null)}
+                        onClick={() => {
+                          setIsDeleteMessageOpen(message.id)
+                        }}
+                      ></img>{' '}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })}
+        <div ref={messagesEndRef} />
+      </div>
+    )
+  }
+
   useEffect(() => {
     // Adiciona o event listener
     document.addEventListener('keydown', handleKeyPress)
@@ -371,125 +508,7 @@ const Channel = (id: any) => {
             )}
           </div>
         </div>
-        <div className="mr-[20px] flex h-full flex-1 flex-col overflow-y-auto pt-5 text-[12px] font-light scrollbar-thin scrollbar-track-[#11132470] scrollbar-thumb-[#0e101f] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:text-[14px]">
-          {channel?.messages?.map((message, index) => {
-            const showDaySeparator =
-              index === 0 ||
-              isDifferentDay(
-                message.createdAt,
-                channel.messages[index - 1].createdAt,
-              )
-
-            return (
-              <div key={message.id}>
-                {showDaySeparator && (
-                  <div className="flex w-full items-center justify-center gap-x-[7px] px-[40px] text-[9px]  2xl:text-[11px] ">
-                    <div className="h-[1px] w-full border-b-[1px] border-[#88888831]"></div>
-                    <div className="flex-shrink-0">
-                      {formatDateWithoutTime(message?.createdAt)}
-                    </div>
-                    <div className="h-[1px] w-full border-b-[1px] border-[#88888831]"></div>
-                  </div>
-                )}
-                <div
-                  onMouseEnter={() => setIsMessageHovered(message.id)}
-                  onMouseLeave={() => {
-                    if (!isDeleteMessageOpen) {
-                      setIsMessageHovered(null)
-                    }
-                  }}
-                  className="flex items-start gap-x-[10px] px-[40px]  py-[20px] hover:bg-[#24232e63] 2xl:gap-x-[15px]"
-                >
-                  <img
-                    alt="ethereum avatar"
-                    src={message?.userWorkspace?.user?.profilePicture}
-                    className="max-w-[35px] rounded-full"
-                  ></img>
-                  <div>
-                    <div className="flex h-fit gap-x-[9px]">
-                      <div>{message?.userWorkspace?.user?.name} </div>
-                      <div className="my-auto text-[10px] text-[#888888] 2xl:text-[12px]">
-                        {formatDate(message?.createdAt)}
-                      </div>
-                    </div>
-                    {isEditMessageOpen ? (
-                      <>
-                        <QuillNoSSRWrapper
-                          value={editorHtml}
-                          onChange={handleChangeEditor}
-                          // disabled={isLoading}
-                          className="my-quill mt-2 w-[280px]  rounded-md bg-[#787ca536] text-base font-normal text-[#fff] outline-0 lg:w-[900px]"
-                          // maxLength={5000}
-                          placeholder="Type here"
-                        />
-                        <div className="mt-[10px] text-[10px]">
-                          enter to <span className="text-[#fff]">save</span> -
-                          esc to <span className="text-[#fff]">cancel</span>
-                        </div>
-                      </>
-                    ) : (
-                      <div>{getSanitizeText(message.content)}</div>
-                    )}
-                  </div>
-                  {isMessageHovered === message.id && (
-                    <div className="relative ml-auto flex items-center gap-x-[10px]">
-                      <div>
-                        {' '}
-                        {isEditInfoOpen === message.id && (
-                          <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
-                            Edit
-                          </div>
-                        )}
-                        <img
-                          alt="ethereum avatar"
-                          src="/images/chat/pencil.svg"
-                          className="w-[20px] cursor-pointer 2xl:w-[25px]"
-                          onMouseEnter={() => setIsEditInfoOpen(message.id)}
-                          onMouseLeave={() => setIsEditInfoOpen(null)}
-                          onClick={() => {
-                            setIsEditMessageOpen(message.id)
-                          }}
-                        ></img>{' '}
-                      </div>
-                      <div>
-                        {' '}
-                        {isDeleteInfoOpen === message.id && (
-                          <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
-                            Delete
-                          </div>
-                        )}
-                        {isDeleteMessageOpen === message.id && (
-                          <div
-                            ref={menuRef}
-                            className="absolute z-50   -translate-x-[100%]  -translate-y-[120%]"
-                          >
-                            <DeleteMessageModal
-                              messageId={message.id}
-                              onUpdateM={() => {
-                                handleMessageDeleted(message.id)
-                              }}
-                            />{' '}
-                          </div>
-                        )}
-                        <img
-                          alt="ethereum avatar"
-                          src="/images/delete.svg"
-                          className="w-[14px] cursor-pointer 2xl:w-[18px]"
-                          onMouseEnter={() => setIsDeleteInfoOpen(message.id)}
-                          onMouseLeave={() => setIsDeleteInfoOpen(null)}
-                          onClick={() => {
-                            setIsDeleteMessageOpen(message.id)
-                          }}
-                        ></img>{' '}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-          <div ref={messagesEndRef} />
-        </div>
+        {renderMessages()}
         <div className="mt-auto px-[40px]">
           {' '}
           <QuillNoSSRWrapper
