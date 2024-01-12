@@ -576,7 +576,7 @@ const Channel = (id: any) => {
                     isPreviousPrivate={channel.isPrivate}
                     previousName={channel.name}
                     channelType={channel.type}
-                    workspaceId={channel.workspaceId}
+                    channelId={channel.id}
                   />{' '}
                 </div>
               )}

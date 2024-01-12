@@ -27,7 +27,7 @@ const EditChannelModal = ({
   isPreviousPrivate,
   previousName,
   channelType,
-  workspaceId,
+  channelId,
 }) => {
   const [channelName, setChannelName] = useState(previousName)
   const [isPrivate, setIsPrivate] = useState(isPreviousPrivate)
@@ -68,10 +68,9 @@ const EditChannelModal = ({
     const { userSessionToken } = parseCookies()
 
     const final = {
-      workspaceId,
+      channelId,
       name: channelName,
       isPrivate,
-      type: channelType,
     }
 
     try {
