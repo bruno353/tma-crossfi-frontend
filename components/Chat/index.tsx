@@ -39,10 +39,10 @@ const Chat = (id: any) => {
   return (
     <>
       <div className="flex h-full">
-        <div className="flex-shrink-0 h-full">
+        <div className="h-full flex-shrink-0">
           <Sidebar id={id.id} />
         </div>
-        <div className="flex-shrink-0 h-full">
+        <div className="h-full flex-shrink-0">
           <ChatSidebar id={id.id} />
         </div>
       </div>
