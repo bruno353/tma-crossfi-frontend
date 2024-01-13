@@ -18,7 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import { getUserChannels } from '@/utils/api-chat'
-import { ChannelProps } from '@/types/chat'
+import { ChannelProps, NewChannelMessageProps } from '@/types/chat'
 import NewChannelModal from '../Modals/NewChannelModal'
 import { AccountContext } from '@/contexts/AccountContext'
 import { UserWorkspaceProps } from '@/types/workspace'
@@ -37,11 +37,18 @@ const ChatSidebar = (id: any) => {
   const { push } = useRouter()
   const pathname = usePathname()
 
-  
   function handleNewChannelMessageTreatment(message: NewChannelMessageProps) {
     console.log(message)
-    
+    const newChannels = [...channels]
 
+    newChannels.find((channel) => {
+      if (channel.id === message.channelId) {
+        channel.hasNewMessages = true
+        return true
+      }
+      return false
+    })
+    setChannels(newChannels)
   }
 
   const [sidebarOption, setSidebarOption] = useState<any>({
