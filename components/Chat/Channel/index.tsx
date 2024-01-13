@@ -36,6 +36,7 @@ import {
 } from '@/utils/functions'
 
 import io from 'socket.io-client'
+import WebsocketComponent from '../Websocket/WebsocketChat'
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false,
@@ -63,49 +64,6 @@ const Channel = (id: any) => {
   const [editorHtml, setEditorHtml] = useState('')
   const [newMessageHtml, setNewMessageHtml] = useState('')
   const editorHtmlRef = useRef('')
-
-  useEffect(() => {
-    console.log('trying connect with websocket')
-    const workspaceId = '161afd31-dd93-4d27-8264-685430b44791'
-    const applicationId =
-      'as90qw90uj3j9201fj90fj90dwinmfwei98f98ew0-o0c1m221dds222143332-21wddwqd@@@123'
-    const { userSessionToken } = parseCookies()
-
-    const socket = io('https://api.accelar.io', {
-      query: {
-        workspaceId,
-      },
-      extraHeaders: {
-        'X-Parse-Application-Id': applicationId,
-        'X-Parse-Session-Token': userSessionToken,
-      },
-    })
-
-    socket.on('connect', () => {
-      console.log('Conectado ao WebSocket')
-
-      // // Envie um evento personalizado após a conexão, se necessário
-      // socket.emit('customEvent', { applicationId, sessionToken })
-    })
-
-    socket.on('personalMessage', (message) => {
-      console.log('Mensagem pessoal recebida:', message)
-    })
-
-    socket.on('channelMessage', (message) => {
-      console.log('Mensagem do canal recebida:', message)
-    })
-
-    socket.on('disconnect', () => {
-      console.log('Desconectado do WebSocket')
-    })
-
-    return () => {
-      socket.off('personalMessage')
-      socket.off('channelMessage')
-      socket.disconnect()
-    }
-  }, [])
 
   function handleChangeEditor(value) {
     if (editorHtmlRef.current.length < 5000) {
@@ -681,6 +639,13 @@ const Channel = (id: any) => {
           />
         </div>
       </div>
+      <WebsocketComponent
+        workspaceId={channel?.workspaceId}
+        handleNewChannelMessage={(message) => {
+          console.log('websocket funcionando show')
+          console.log(message)
+        }}
+      />
     </>
   )
 }
