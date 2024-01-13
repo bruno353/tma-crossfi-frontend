@@ -29,9 +29,6 @@ const WebsocketComponent = ({
 
       socket.on('connect', () => {
         console.log('Conectado ao WebSocket')
-
-        // // Envie um evento personalizado após a conexão, se necessário
-        // socket.emit('customEvent', { applicationId, sessionToken })
       })
 
       socket.on('personalMessage', (message) => {

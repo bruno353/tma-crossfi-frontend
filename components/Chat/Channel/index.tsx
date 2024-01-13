@@ -18,7 +18,7 @@ import {
   getUserChannels,
   newMessageChannel,
 } from '@/utils/api-chat'
-import { ChannelProps } from '@/types/chat'
+import { ChannelProps, NewChannelMessageProps } from '@/types/chat'
 import { AccountContext } from '@/contexts/AccountContext'
 import { channelTypeToLogo } from '@/types/consts/chat'
 import DeleteMessageModal from '../Modals/DeleteMessageModal'
@@ -47,7 +47,8 @@ const Channel = (id: any) => {
   const { push } = useRouter()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const { channel, setChannel, user, workspace } = useContext(AccountContext)
+  const { channel, setChannel, user, workspace, channels, setChannels } =
+    useContext(AccountContext)
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
 
   const [isDeleteInfoOpen, setIsDeleteInfoOpen] = useState<any>()
@@ -64,6 +65,33 @@ const Channel = (id: any) => {
   const [editorHtml, setEditorHtml] = useState('')
   const [newMessageHtml, setNewMessageHtml] = useState('')
   const editorHtmlRef = useRef('')
+
+  function handleNewChannelMessageTreatment(message: NewChannelMessageProps) {
+    if (message.channelId === id.id) {
+      console.log('123 passei')
+      const messageExist = channel.messages.find(
+        (mess) => mess.id === message.message.id,
+      )
+      if (!messageExist) {
+        console.log('123 passei 2')
+        const newArrayChannel = {
+          ...channel,
+          messages: [...channel.messages, message.message],
+        }
+        setChannel(newArrayChannel)
+      }
+
+      const newChannels = [...channels]
+      newChannels.find((channel) => {
+        if (channel.id === message.channelId) {
+          channel.hasNewMessages = false
+          return true
+        }
+        return false
+      })
+      setChannels(newChannels)
+    }
+  }
 
   function handleChangeEditor(value) {
     if (editorHtmlRef.current.length < 5000) {
@@ -185,7 +213,7 @@ const Channel = (id: any) => {
     try {
       setNewMessageHtml('')
       let newMessage = await newMessageChannel(data, userSessionToken)
-      newMessage = { ...newMessage, newMessageFromUser: true } // Criar uma nova cópia com a propriedade adicionada
+      newMessage = { ...newMessage, newMessageFromUser: true }
 
       const newArrayChannel = {
         ...channel,
@@ -639,6 +667,15 @@ const Channel = (id: any) => {
           />
         </div>
       </div>
+      {channel && (
+        <WebsocketComponent
+          workspaceId={channel.workspaceId}
+          handleNewChannelMessage={(message) => {
+            console.log('websocket funcionando show')
+            handleNewChannelMessageTreatment(message)
+          }}
+        />
+      )}
     </>
   )
 }

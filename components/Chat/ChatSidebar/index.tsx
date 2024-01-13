@@ -39,16 +39,18 @@ const ChatSidebar = (id: any) => {
 
   function handleNewChannelMessageTreatment(message: NewChannelMessageProps) {
     console.log(message)
-    const newChannels = [...channels]
+    if (channels.length > 0) {
+      const newChannels = [...channels]
 
-    newChannels.find((channel) => {
-      if (channel.id === message.channelId) {
-        channel.hasNewMessages = true
-        return true
-      }
-      return false
-    })
-    setChannels(newChannels)
+      newChannels.find((channel) => {
+        if (channel.id === message.channelId) {
+          channel.hasNewMessages = true
+          return true
+        }
+        return false
+      })
+      setChannels(newChannels)
+    }
   }
 
   const [sidebarOption, setSidebarOption] = useState<any>({
@@ -248,13 +250,13 @@ const ChatSidebar = (id: any) => {
         channelType={isCreatingNewChannelType}
         workspaceId={id.id}
       />
-      <WebsocketComponent
+      {/* <WebsocketComponent
         workspaceId={id.id}
         handleNewChannelMessage={(message) => {
           console.log('websocket funcionando show')
           handleNewChannelMessageTreatment(message)
         }}
-      />
+      /> */}
     </>
   )
 }
