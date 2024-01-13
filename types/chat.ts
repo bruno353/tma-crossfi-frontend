@@ -12,6 +12,7 @@ export interface MessageProps {
   deleted: boolean
   createdAt: string
   updatedAt: string
+  hasNewMessages: boolean // IF THE USER HAS NEW MESSAGES UNREAD
 }
 
 export interface ChannelProps {
