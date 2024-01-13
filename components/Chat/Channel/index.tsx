@@ -391,10 +391,12 @@ const Channel = (id: any) => {
                           className="max-w-[35px] rounded-full"
                         ></img>
                       ) : (
-                        <div className="max-w-[35px]">
+                        <div className="my-auto flex w-[35px] items-center">
                           {' '}
                           {isMessageHovered === message.id && (
-                            <div>{formatHours(message?.createdAt)} </div>
+                            <div className="text-[10px] text-[#888888] 2xl:text-[12px]">
+                              {formatHours(message?.createdAt)}{' '}
+                            </div>
                           )}
                         </div>
                       )}
