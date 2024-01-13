@@ -44,6 +44,18 @@ export function formatDate(createdAt) {
   }
 }
 
+export function formatHours(createdAt) {
+  if (!createdAt) {
+    return ''
+  }
+  const date = new Date(createdAt)
+  return date.toLocaleTimeString('pt-BR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false, // Altere para true se preferir formato 12 horas
+  })
+}
+
 export function formatDateWithoutTime(createdAt) {
   const date = new Date(createdAt)
 
@@ -141,4 +153,13 @@ export function isDifferentDay(date1, date2) {
     d1.getMonth() !== d2.getMonth() ||
     d1.getFullYear() !== d2.getFullYear()
   )
+}
+
+export function getDifferenceInSeconds(date1, date2): number {
+  const d1 = new Date(date1)
+  const d2 = new Date(date2)
+  const timestamp1 = d1.getTime()
+  const timestamp2 = d2.getTime()
+  const difference = Math.abs(timestamp1 - timestamp2)
+  return Math.floor(difference / 1000)
 }

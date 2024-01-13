@@ -29,6 +29,8 @@ import EditChannelModal from '../Modals/EditChannelModal'
 import {
   formatDate,
   formatDateWithoutTime,
+  formatHours,
+  getDifferenceInSeconds,
   getSanitizeText,
   isDifferentDay,
 } from '@/utils/functions'
@@ -303,7 +305,7 @@ const Channel = (id: any) => {
 
   function renderMessages() {
     return (
-      <div className="mr-[20px] flex h-full flex-1 flex-col overflow-y-auto pt-5 text-[12px] font-light scrollbar-thin scrollbar-track-[#11132470] scrollbar-thumb-[#0e101f] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:text-[14px]">
+      <div className="mr-[20px] flex h-full flex-1 flex-col overflow-y-auto pb-[20px] pt-5 text-[12px] font-light scrollbar-thin scrollbar-track-[#11132470] scrollbar-thumb-[#0e101f] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:text-[14px]">
         {isLoading ? (
           <div className="mt-auto grid gap-y-[40px]  px-[40px] pb-[20px]">
             <div className="flex animate-pulse gap-x-[10px]   2xl:gap-x-[15px]">
@@ -352,7 +354,14 @@ const Channel = (id: any) => {
                     message.createdAt,
                     channel.messages[index - 1].createdAt,
                   )
-
+                const differenceInSecods =
+                  index === 0 ||
+                  getDifferenceInSeconds(
+                    message.createdAt,
+                    channel.messages[index - 1].createdAt,
+                  )
+                // eslint-disable-next-line prettier/prettier
+                const sameUser = (differenceInSecods !== true && differenceInSecods < 360) && (!showDaySeparator)
                 return (
                   <div key={message.id}>
                     {showDaySeparator && (
@@ -371,20 +380,34 @@ const Channel = (id: any) => {
                           setIsMessageHovered(null)
                         }
                       }}
-                      className="flex items-start gap-x-[10px] px-[40px]  py-[20px] hover:bg-[#24232e63] 2xl:gap-x-[15px]"
+                      className={`flex h-fit items-start gap-x-[10px] px-[40px]  py-[2px] hover:bg-[#24232e63] 2xl:gap-x-[15px] ${
+                        !sameUser && 'mt-[20px]'
+                      }`}
                     >
-                      <img
-                        alt="ethereum avatar"
-                        src={message?.userWorkspace?.user?.profilePicture}
-                        className="max-w-[35px] rounded-full"
-                      ></img>
-                      <div>
-                        <div className="flex h-fit gap-x-[9px]">
-                          <div>{message?.userWorkspace?.user?.name} </div>
-                          <div className="my-auto text-[10px] text-[#888888] 2xl:text-[12px]">
-                            {formatDate(message?.createdAt)}
-                          </div>
+                      {!sameUser ? (
+                        <img
+                          alt="ethereum avatar"
+                          src={message?.userWorkspace?.user?.profilePicture}
+                          className="max-w-[35px] rounded-full"
+                        ></img>
+                      ) : (
+                        <div className="max-w-[35px]">
+                          {' '}
+                          {isMessageHovered === message.id && (
+                            <div>{formatHours(message?.createdAt)} </div>
+                          )}
                         </div>
+                      )}
+                      <div>
+                        {!sameUser && (
+                          <div className="flex h-fit gap-x-[9px]">
+                            <div>{message?.userWorkspace?.user?.name} </div>
+                            <div className="my-auto text-[10px] text-[#888888] 2xl:text-[12px]">
+                              {formatDate(message?.createdAt)}
+                            </div>
+                          </div>
+                        )}
+
                         {isEditMessageOpen === message.id ? (
                           <div>
                             <QuillNoSSRWrapper
@@ -417,7 +440,7 @@ const Channel = (id: any) => {
                             <img
                               alt="ethereum avatar"
                               src="/images/chat/pencil.svg"
-                              className="w-[20px] cursor-pointer 2xl:w-[25px]"
+                              className="w-[15px] cursor-pointer 2xl:w-[20px]"
                               onMouseEnter={() => setIsEditInfoOpen(message.id)}
                               onMouseLeave={() => setIsEditInfoOpen(null)}
                               onClick={() => {
@@ -449,7 +472,7 @@ const Channel = (id: any) => {
                             <img
                               alt="ethereum avatar"
                               src="/images/delete.svg"
-                              className="w-[14px] cursor-pointer 2xl:w-[18px]"
+                              className="w-[12px] cursor-pointer 2xl:w-[15px]"
                               onMouseEnter={() =>
                                 setIsDeleteInfoOpen(message.id)
                               }

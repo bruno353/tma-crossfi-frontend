@@ -25,6 +25,7 @@ import EditChannelModal from '../Modals/EditChannelModal'
 import {
   formatDate,
   formatDateWithoutTime,
+  getDifferenceInSeconds,
   getSanitizeText,
   isDifferentDay,
 } from '@/utils/functions'
@@ -226,7 +227,14 @@ const Messages = ({ channel, isLoading, handleMessageDeleted }: MessagesI) => {
                   message.createdAt,
                   channel.messages[index - 1].createdAt,
                 )
-
+              const differenceInSecods =
+                index === 0 ||
+                getDifferenceInSeconds(
+                  message.createdAt,
+                  channel.messages[index - 1].createdAt,
+                )
+              // eslint-disable-next-line prettier/prettier
+              const sameUser = (differenceInSecods !== true && differenceInSecods < 360) && (!showDaySeparator)
               return (
                 <div key={message.id}>
                   {showDaySeparator && (
@@ -247,11 +255,14 @@ const Messages = ({ channel, isLoading, handleMessageDeleted }: MessagesI) => {
                     }}
                     className="flex items-start gap-x-[10px] px-[40px]  py-[20px] hover:bg-[#24232e63] 2xl:gap-x-[15px]"
                   >
-                    <img
-                      alt="ethereum avatar"
-                      src={message?.userWorkspace?.user?.profilePicture}
-                      className="max-w-[35px] rounded-full"
-                    ></img>
+                    {sameUser && (
+                      <img
+                        alt="ethereum avatar"
+                        src={message?.userWorkspace?.user?.profilePicture}
+                        className="max-w-[35px] rounded-full"
+                      ></img>
+                    )}
+
                     <div>
                       <div className="flex h-fit gap-x-[9px]">
                         <div>{message?.userWorkspace?.user?.name} </div>
