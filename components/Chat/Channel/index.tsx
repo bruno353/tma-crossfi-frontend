@@ -388,7 +388,7 @@ const Channel = (id: any) => {
                         {isEditMessageOpen === message.id ? (
                           <div>
                             <QuillNoSSRWrapper
-                              value={editorHtml}
+                              value={editorHtmlRef.current}
                               onChange={handleChangeEditor}
                               // disabled={isLoading}
                               className="my-quill mt-2 w-[280px]  rounded-md bg-[#787ca536] text-base font-normal text-[#fff] outline-0 lg:w-[900px]"
@@ -421,6 +421,7 @@ const Channel = (id: any) => {
                               onMouseEnter={() => setIsEditInfoOpen(message.id)}
                               onMouseLeave={() => setIsEditInfoOpen(null)}
                               onClick={() => {
+                                editorHtmlRef.current = message.content
                                 setIsEditMessageOpen(message.id)
                               }}
                             ></img>{' '}
