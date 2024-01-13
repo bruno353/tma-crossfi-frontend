@@ -34,7 +34,6 @@ import {
   getSanitizeText,
   isDifferentDay,
 } from '@/utils/functions'
-import Messages from './Messages'
 
 const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   ssr: false,
@@ -45,7 +44,7 @@ const Channel = (id: any) => {
   const { push } = useRouter()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const { channel, setChannel, user } = useContext(AccountContext)
+  const { channel, setChannel, user, workspace } = useContext(AccountContext)
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
 
   const [isDeleteInfoOpen, setIsDeleteInfoOpen] = useState<any>()
@@ -437,62 +436,65 @@ const Channel = (id: any) => {
                           <div>{mss}</div>
                         )}
                       </div>
-                      {isMessageHovered === message.id && (
-                        <div className="relative ml-auto flex items-center gap-x-[10px]">
-                          <div>
-                            {' '}
-                            {isEditInfoOpen === message.id && (
-                              <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
-                                Edit
-                              </div>
-                            )}
-                            <img
-                              alt="ethereum avatar"
-                              src="/images/chat/pencil.svg"
-                              className="w-[15px] cursor-pointer 2xl:w-[20px]"
-                              onMouseEnter={() => setIsEditInfoOpen(message.id)}
-                              onMouseLeave={() => setIsEditInfoOpen(null)}
-                              onClick={() => {
-                                editorHtmlRef.current = message.content
-                                setIsEditMessageOpen(message.id)
-                              }}
-                            ></img>{' '}
+                      {isMessageHovered === message.id &&
+                        message.userWorkspace.userId === user.id && (
+                          <div className="relative ml-auto flex items-center gap-x-[10px]">
+                            <div>
+                              {' '}
+                              {isEditInfoOpen === message.id && (
+                                <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                                  Edit
+                                </div>
+                              )}
+                              <img
+                                alt="ethereum avatar"
+                                src="/images/chat/pencil.svg"
+                                className="w-[15px] cursor-pointer 2xl:w-[20px]"
+                                onMouseEnter={() =>
+                                  setIsEditInfoOpen(message.id)
+                                }
+                                onMouseLeave={() => setIsEditInfoOpen(null)}
+                                onClick={() => {
+                                  editorHtmlRef.current = message.content
+                                  setIsEditMessageOpen(message.id)
+                                }}
+                              ></img>{' '}
+                            </div>
+                            <div>
+                              {' '}
+                              {isDeleteInfoOpen === message.id && (
+                                <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                                  Delete
+                                </div>
+                              )}
+                              {isDeleteMessageOpen === message.id && (
+                                <div
+                                  ref={menuRef}
+                                  className="absolute z-50   -translate-x-[100%]  -translate-y-[120%]"
+                                >
+                                  <DeleteMessageModal
+                                    messageId={message.id}
+                                    onUpdateM={() => {
+                                      handleMessageDeleted(message.id)
+                                    }}
+                                  />{' '}
+                                </div>
+                              )}
+                              <img
+                                alt="ethereum avatar"
+                                src="/images/delete.svg"
+                                className="w-[12px] cursor-pointer 2xl:w-[15px]"
+                                onMouseEnter={() =>
+                                  setIsDeleteInfoOpen(message.id)
+                                }
+                                onMouseLeave={() => setIsDeleteInfoOpen(null)}
+                                onClick={() => {
+                                  setIsDeleteMessageOpen(message.id)
+                                }}
+                              ></img>{' '}
+                            </div>
                           </div>
-                          <div>
-                            {' '}
-                            {isDeleteInfoOpen === message.id && (
-                              <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
-                                Delete
-                              </div>
-                            )}
-                            {isDeleteMessageOpen === message.id && (
-                              <div
-                                ref={menuRef}
-                                className="absolute z-50   -translate-x-[100%]  -translate-y-[120%]"
-                              >
-                                <DeleteMessageModal
-                                  messageId={message.id}
-                                  onUpdateM={() => {
-                                    handleMessageDeleted(message.id)
-                                  }}
-                                />{' '}
-                              </div>
-                            )}
-                            <img
-                              alt="ethereum avatar"
-                              src="/images/delete.svg"
-                              className="w-[12px] cursor-pointer 2xl:w-[15px]"
-                              onMouseEnter={() =>
-                                setIsDeleteInfoOpen(message.id)
-                              }
-                              onMouseLeave={() => setIsDeleteInfoOpen(null)}
-                              onClick={() => {
-                                setIsDeleteMessageOpen(message.id)
-                              }}
-                            ></img>{' '}
-                          </div>
-                        </div>
-                      )}
+                        )}
                     </div>
                   </div>
                 )
@@ -540,7 +542,7 @@ const Channel = (id: any) => {
               </>
             )}
           </div>
-          {!isLoading && (
+          {!isLoading && workspace.isUserAdmin && (
             <div className="relative flex gap-x-[10px]">
               <div>
                 {channel?.id && isEditChannelInfoOpen === channel?.id && (
