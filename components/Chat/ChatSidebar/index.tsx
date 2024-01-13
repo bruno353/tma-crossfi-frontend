@@ -250,13 +250,13 @@ const ChatSidebar = (id: any) => {
         channelType={isCreatingNewChannelType}
         workspaceId={id.id}
       />
-      {/* <WebsocketComponent
+      <WebsocketComponent
         workspaceId={id.id}
         handleNewChannelMessage={(message) => {
           console.log('websocket funcionando show')
           handleNewChannelMessageTreatment(message)
         }}
-      /> */}
+      />
     </>
   )
 }
