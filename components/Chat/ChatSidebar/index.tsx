@@ -24,6 +24,7 @@ import { AccountContext } from '@/contexts/AccountContext'
 import { UserWorkspaceProps } from '@/types/workspace'
 import UserWorkspaceInfoModal from '@/components/Workspace/UserWorkspaceInfoModal'
 import { channelTypeToLogo } from '@/types/consts/chat'
+import WebsocketComponent from '../Websocket/WebsocketChat'
 
 const ChatSidebar = (id: any) => {
   const [isCreatingNewChannel, setIsCreatingNewChannel] = useState(false)
@@ -35,6 +36,13 @@ const ChatSidebar = (id: any) => {
 
   const { push } = useRouter()
   const pathname = usePathname()
+
+  
+  function handleNewChannelMessageTreatment(message: NewChannelMessageProps) {
+    console.log(message)
+    
+
+  }
 
   const [sidebarOption, setSidebarOption] = useState<any>({
     TEXT: true,
@@ -175,6 +183,9 @@ const ChatSidebar = (id: any) => {
                                   className={'w-[12px] 2xl:w-[14px]'}
                                 />
                               )}
+                              {optionChannel.hasNewMessages && (
+                                <div className="h-[6px] w-[6px] rounded-full bg-[#fff]  2xl:h-[8px] 2xl:w-[8px]"></div>
+                              )}
                             </div>
                           )}
                         </div>
@@ -229,6 +240,13 @@ const ChatSidebar = (id: any) => {
         }}
         channelType={isCreatingNewChannelType}
         workspaceId={id.id}
+      />
+      <WebsocketComponent
+        workspaceId={id.id}
+        handleNewChannelMessage={(message) => {
+          console.log('websocket funcionando show')
+          handleNewChannelMessageTreatment(message)
+        }}
       />
     </>
   )

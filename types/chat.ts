@@ -14,6 +14,13 @@ export interface MessageProps {
   updatedAt: string
 }
 
+export interface NewChannelMessageProps {
+  workspaceId: string
+  channelId: string
+  message: MessageProps // Message type
+  isPrivate: boolean
+}
+
 export interface ChannelProps {
   id: string
   name: string

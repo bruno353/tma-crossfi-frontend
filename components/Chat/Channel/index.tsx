@@ -639,13 +639,6 @@ const Channel = (id: any) => {
           />
         </div>
       </div>
-      <WebsocketComponent
-        workspaceId={channel?.workspaceId}
-        handleNewChannelMessage={(message) => {
-          console.log('websocket funcionando show')
-          console.log(message)
-        }}
-      />
     </>
   )
 }

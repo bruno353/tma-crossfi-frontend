@@ -15,6 +15,8 @@ import Sidebar from '../Sidebar'
 import ChatSidebar from './ChatSidebar'
 import { getUserChannels } from '@/utils/api-chat'
 import Start from './Start'
+import WebsocketComponent from './Websocket/WebsocketChat'
+import { NewChannelMessageProps } from '@/types/chat'
 
 const Chat = (id: any) => {
   const { push } = useRouter()

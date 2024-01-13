@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import io from 'socket.io-client'
 import nookies, { parseCookies, setCookie } from 'nookies'
+import { NewChannelMessageProps } from '@/types/chat'
 
 export interface WebsocketI {
   workspaceId: string
-  handleNewChannelMessage(any): void
+  handleNewChannelMessage(message: NewChannelMessageProps): void
 }
 
 const WebsocketComponent = ({
