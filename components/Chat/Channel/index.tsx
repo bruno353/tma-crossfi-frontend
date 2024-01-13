@@ -362,6 +362,13 @@ const Channel = (id: any) => {
                   )
                 // eslint-disable-next-line prettier/prettier
                 const sameUser = (differenceInSecods !== true && differenceInSecods < 360) && (!showDaySeparator)
+
+                const mss = getSanitizeText(message.content)
+
+                if (mss.length === 0) {
+                  // eslint-disable-next-line array-callback-return
+                  return
+                }
                 return (
                   <div key={message.id}>
                     {showDaySeparator && (
@@ -427,7 +434,7 @@ const Channel = (id: any) => {
                             </div>
                           </div>
                         ) : (
-                          <div>{getSanitizeText(message.content)}</div>
+                          <div>{mss}</div>
                         )}
                       </div>
                       {isMessageHovered === message.id && (
