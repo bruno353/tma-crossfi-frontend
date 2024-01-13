@@ -59,14 +59,13 @@ const Channel = (id: any) => {
   const [isMessageHovered, setIsMessageHovered] = useState<any>()
   const [editorHtml, setEditorHtml] = useState('')
   const [newMessageHtml, setNewMessageHtml] = useState('')
+  const editorHtmlRef = useRef('')
 
   function handleChangeEditor(value) {
-    setEditorHtml(value)
+    if (editorHtmlRef.current.length < 5000) {
+      editorHtmlRef.current = value
+    }
   }
-
-  // useEffect(() => {
-  //   console.log('editorHtml atualizado:', editorHtml);
-  // }, [editorHtml]);
 
   function handleChangeNewMessage(value) {
     if (editorHtml.length < 5000) {
@@ -129,10 +128,7 @@ const Channel = (id: any) => {
   }
 
   const editSave = () => {
-    console.log('the html')
-    console.log(editorHtml)
-    return
-    handleSaveMessage(isEditMessageOpen, editorHtml)
+    handleSaveMessage(isEditMessageOpen, editorHtmlRef.current)
   }
 
   const newMessageSave = () => {
@@ -144,6 +140,7 @@ const Channel = (id: any) => {
     messageId: string,
     messageContent: string,
   ) => {
+    setIsEditMessageOpen(false)
     const { userSessionToken } = parseCookies()
     const data = {
       messageId,
@@ -172,7 +169,6 @@ const Channel = (id: any) => {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
     }
-    setIsEditMessageOpen(false)
   }
 
   const handleNewMessage = async (messageContent: string) => {
@@ -469,7 +465,6 @@ const Channel = (id: any) => {
                 )
               })}
             </div>
-
             <div ref={messagesEndRef} />
           </>
         )}
