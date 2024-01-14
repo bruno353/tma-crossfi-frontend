@@ -100,15 +100,15 @@ const Dm = (id: any) => {
           setConversation(newArrayChannel)
         }
 
-        const newChannels = [...channels]
-        newChannels.find((channel) => {
-          if (channel.id === message.channelId) {
-            channel.hasNewMessages = false
+        const newConversations = [...conversations]
+        conversations?.find((conversation) => {
+          if (conversation.id === message.message.conversationId) {
+            conversation.hasNewMessages = false
             return true
           }
           return false
         })
-        setChannels(newChannels)
+        setConversations(newConversations)
       }
     }
   }

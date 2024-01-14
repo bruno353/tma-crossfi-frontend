@@ -18,7 +18,11 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import { getUserChannels } from '@/utils/api-chat'
-import { ChannelProps, NewChannelMessageProps } from '@/types/chat'
+import {
+  ChannelProps,
+  NewChannelMessageProps,
+  NewConversationMessageProps,
+} from '@/types/chat'
 import NewChannelModal from '../Modals/NewChannelModal'
 import { AccountContext } from '@/contexts/AccountContext'
 import { UserWorkspaceProps } from '@/types/workspace'
@@ -58,6 +62,24 @@ const ChatSidebar = (id: any) => {
         return false
       })
       setChannels(newChannels)
+    }
+  }
+
+  function handleNewConversationMessageTreatment(
+    message: NewConversationMessageProps,
+  ) {
+    console.log(message)
+    if (conversations?.length > 0) {
+      const newConversations = [...conversations]
+
+      newConversations.find((conv) => {
+        if (conv.id === message.message.conversationId) {
+          conv.hasNewMessages = true
+          return true
+        }
+        return false
+      })
+      setConversations(newConversations)
     }
   }
 
@@ -266,6 +288,10 @@ const ChatSidebar = (id: any) => {
         handleNewChannelMessage={(message) => {
           console.log('websocket funcionando show')
           handleNewChannelMessageTreatment(message)
+        }}
+        handleNewConversationMessage={(message) => {
+          console.log('websocket funcionando show')
+          handleNewConversationMessageTreatment(message)
         }}
       />
     </>

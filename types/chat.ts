@@ -18,6 +18,7 @@ export interface DirectMessageProps {
   id: string
   content: string
   newMessageFromUser: boolean
+  conversationId: string
   newMessageFromOtherUser: boolean
   userWorkspaceId: string
   userWorkspace: UserWorkspaceProps
