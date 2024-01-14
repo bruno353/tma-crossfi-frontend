@@ -43,6 +43,7 @@ const ChatSidebar = (id: any) => {
     channel,
     setConversations,
     conversations,
+    user,
   } = useContext(AccountContext)
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
 
@@ -237,38 +238,43 @@ const ChatSidebar = (id: any) => {
               </div>
             ))}
           </div>
-          <div className="mt-[30px] grid gap-y-[10px] 2xl:mt-[40px]">
+          <div className="mt-[30px] grid min-w-[250px] gap-y-[10px] 2xl:mt-[40px]">
             <div className="mb-[10px] text-[12px]  font-light 2xl:text-[14px]">
               Members
             </div>
             {workspace?.UserWorkspace?.map((workspaceUser, index) => (
-              <div
-                onClick={() => {
-                  const basePath = pathname.split('/')
-                  const newPath = `/${basePath[1]}/${basePath[2]}/${basePath[3]}/dm/${workspaceUser.id}`
-                  console.log(newPath)
-                  push(newPath)
-                }}
-                onMouseEnter={() => setIsUserModalOpen(workspaceUser.id)}
-                onMouseLeave={() => setIsUserModalOpen(null)}
-                key={index}
-                className="flex cursor-pointer items-center gap-x-[10px] rounded-md p-[10px] text-[14px] font-normal transition hover:bg-[#24232e63]"
-              >
-                <div className="relative flex items-center gap-x-[10px]">
-                  <img
-                    alt="ethereum avatar"
-                    src={workspaceUser.user.profilePicture}
-                    className="w-[30px] rounded-full"
-                  ></img>
-                  <div className="max-w-[120px] overflow-hidden  truncate text-ellipsis whitespace-nowrap 2xl:max-w-[180px]">
-                    {workspaceUser.user.name}
-                  </div>
-                  {isUserModalOpen === workspaceUser.id && (
-                    <div className="absolute -top-[10px] -translate-y-[100%] translate-x-[50%]">
-                      <UserWorkspaceInfoModal userWorkspace={workspaceUser} />
+              <div key={index}>
+                {workspaceUser.userId !== user.id && (
+                  <div
+                    onClick={() => {
+                      const basePath = pathname.split('/')
+                      const newPath = `/${basePath[1]}/${basePath[2]}/${basePath[3]}/dm/${workspaceUser.id}`
+                      console.log(newPath)
+                      push(newPath)
+                    }}
+                    onMouseEnter={() => setIsUserModalOpen(workspaceUser.id)}
+                    onMouseLeave={() => setIsUserModalOpen(null)}
+                    className="flex cursor-pointer items-center gap-x-[10px] rounded-md p-[10px] text-[14px] font-normal transition hover:bg-[#24232e63]"
+                  >
+                    <div className="relative flex items-center gap-x-[10px]">
+                      <img
+                        alt="ethereum avatar"
+                        src={workspaceUser.user.profilePicture}
+                        className="w-[30px] rounded-full"
+                      ></img>
+                      <div className="max-w-[120px] overflow-hidden  truncate text-ellipsis whitespace-nowrap 2xl:max-w-[180px]">
+                        {workspaceUser.user.name}
+                      </div>
+                      {isUserModalOpen === workspaceUser.id && (
+                        <div className="absolute -top-[10px] -translate-y-[100%] translate-x-[50%]">
+                          <UserWorkspaceInfoModal
+                            userWorkspace={workspaceUser}
+                          />
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
