@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable dot-notation */
@@ -19,8 +20,13 @@ import {
   getUserChannels,
   newMessageChannel,
   readChannel,
+  readConversation,
 } from '@/utils/api-chat'
-import { ChannelProps, NewChannelMessageProps, NewConversationMessageProps } from '@/types/chat'
+import {
+  ChannelProps,
+  NewChannelMessageProps,
+  NewConversationMessageProps,
+} from '@/types/chat'
 import { AccountContext } from '@/contexts/AccountContext'
 import { channelTypeToLogo } from '@/types/consts/chat'
 import DeleteMessageModal from '../Modals/DeleteMessageModal'
@@ -48,8 +54,14 @@ const Dm = (id: any) => {
   const { push } = useRouter()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const { user, workspace, conversation, setConversations } =
-    useContext(AccountContext)
+  const {
+    user,
+    workspace,
+    conversation,
+    setConversations,
+    conversations,
+    setConversation,
+  } = useContext(AccountContext)
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
 
   const [isDeleteInfoOpen, setIsDeleteInfoOpen] = useState<any>()
@@ -241,36 +253,45 @@ const Dm = (id: any) => {
   }
 
   useEffect(() => {
-    if (channel?.messages?.length > 0) {
+    if (conversation?.directMessages?.length > 0) {
       console.log(
         'the new message: ' +
-          JSON.stringify(channel?.messages[channel?.messages.length - 1]),
+          JSON.stringify(
+            conversation?.directMessages[
+              conversation?.directMessages.length - 1
+            ],
+          ),
       )
       if (
-        !channel?.messages[channel?.messages.length - 1]?.[
-          'newMessageFromOtherUser'
-        ] &&
-        !channel?.messages[channel?.messages.length - 1]?.['newMessageFromUser']
+        !conversation?.directMessages[
+          conversation?.directMessages.length - 1
+        ]?.['newMessageFromOtherUser'] &&
+        !conversation?.directMessages[
+          conversation?.directMessages.length - 1
+        ]?.['newMessageFromUser']
       ) {
         console.log('scroll instant')
         scrollToBottomInstant()
       } else if (
-        channel?.messages[channel?.messages.length - 1]?.['newMessageFromUser']
+        conversation?.directMessages[conversation?.directMessages.length - 1]?.[
+          'newMessageFromUser'
+        ]
       ) {
         console.log('scroll smooth')
         scrollToBottomSmooth()
       }
     }
-  }, [channel?.messages])
+  }, [conversation?.directMessages])
 
-  async function setReadChannelMessages(channelId: string) {
+  async function setReadConversationMessages(member2Id: string) {
     const { userSessionToken } = parseCookies()
     const data = {
-      id: channelId,
+      member2Id,
+      workspaceId: workspace?.id,
     }
 
     try {
-      await readChannel(data, userSessionToken)
+      await readConversation(data, userSessionToken)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -278,20 +299,23 @@ const Dm = (id: any) => {
   }
 
   useEffect(() => {
-    if (channel) {
-      setReadChannelMessages(channel?.id)
+    if (conversation) {
+      setReadConversationMessages(id.id)
 
-      const newChannels = [...channels]
-      newChannels.find((channelObj) => {
-        if (channelObj.id === channel.id) {
-          channelObj.hasNewMessages = false
+      const newConversations = [...conversations]
+      newConversations.find((conObj) => {
+        if (
+          conObj.userWorkspaceOneId === id.id ||
+          conObj.userWorkspaceTwoId === id.id
+        ) {
+          conObj.hasNewMessages = false
           return true
         }
         return false
       })
-      setChannels(newChannels)
+      setConversations(newConversations)
     }
-  }, [channel])
+  }, [conversation])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -698,12 +722,12 @@ const Dm = (id: any) => {
           />
         </div>
       </div>
-      {channel && (
+      {workspace && (
         <WebsocketComponent
-          workspaceId={channel.workspaceId}
-          handleNewChannelMessage={(message) => {
-            console.log('websocket funcionando show')
-            handleNewChannelMessageTreatment(message)
+          workspaceId={workspace.id}
+          handleNewChannelMessage={(message) => {}}
+          handleNewConversationMessage={(message) => {
+            handleNewConversationMessageTreatment(message)
           }}
         />
       )}

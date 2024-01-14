@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable dot-notation */
 /* eslint-disable react/no-unescaped-entities */
@@ -702,9 +703,9 @@ const Channel = (id: any) => {
         <WebsocketComponent
           workspaceId={channel.workspaceId}
           handleNewChannelMessage={(message) => {
-            console.log('websocket funcionando show')
             handleNewChannelMessageTreatment(message)
           }}
+          handleNewConversationMessage={(message) => {}}
         />
       )}
     </>
