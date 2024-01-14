@@ -233,7 +233,7 @@ const Dm = (id: any) => {
       const newArrayChannel = {
         ...conversation,
         messages: [...conversation.directMessages, newMessage],
-      } // Criar uma nova cópia do array de mensagens
+      }
       setConversation(newArrayChannel)
     } catch (err) {
       console.log(err)
