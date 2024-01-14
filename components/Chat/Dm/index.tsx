@@ -16,7 +16,9 @@ import './react-quill.css'
 import { getChannel, getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import {
+  editDirectMessage,
   editMessage,
+  getConversation,
   getUserChannels,
   newMessageChannel,
   newMessageConversation,
@@ -136,8 +138,10 @@ const Dm = (id: any) => {
 
     let dado
     try {
-      dado = await getChannel(data, userSessionToken)
-      setChannel(dado)
+      dado = await getConversation(data, userSessionToken)
+      if (dado) {
+        setConversation(dado)
+      }
       setIsLoading(false)
     } catch (err) {
       toast.error(`Error: ${err}`)
@@ -199,18 +203,17 @@ const Dm = (id: any) => {
 
     try {
       setEditorHtml('')
-      let updatedMessage = await editMessage(data, userSessionToken)
+      let updatedMessage = await editDirectMessage(data, userSessionToken)
       updatedMessage = { ...updatedMessage, newMessageFromUser: true }
 
       // Encontre a mensagem na lista de mensagens do canal
-      const updatedMessages = channel.messages.map((msg) =>
+      const updatedMessages = conversation?.directMessages.map((msg) =>
         msg.id === updatedMessage.id
           ? { ...msg, content: updatedMessage.content }
           : msg,
       )
 
-      // Atualize o estado do canal com as novas mensagens
-      setChannel({ ...channel, messages: updatedMessages })
+      setConversation({ ...conversation, directMessages: updatedMessages })
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -227,14 +230,38 @@ const Dm = (id: any) => {
 
     try {
       setNewMessageHtml('')
-      let newMessage = await newMessageConversation(data, userSessionToken)
-      newMessage = { ...newMessage, newMessageFromUser: true }
+      const newConversation = await newMessageConversation(
+        data,
+        userSessionToken,
+      )
 
-      const newArrayChannel = {
-        ...conversation,
-        messages: [...conversation.directMessages, newMessage],
+      if (!conversation) {
+        const newMessage = {
+          ...newConversation?.directMessages[
+            newConversation.directMessages.length - 1
+          ],
+          newMessageFromUser: true,
+        }
+
+        const newArrayChannel = {
+          ...newConversation,
+          messages: [...newConversation?.directMessages, newMessage],
+        }
+        setConversation(newArrayChannel)
+      } else {
+        const newMessage = {
+          ...newConversation?.directMessages[
+            newConversation.directMessages.length - 1
+          ],
+          newMessageFromUser: true,
+        }
+
+        const newArrayChannel = {
+          ...conversation,
+          messages: [...conversation.directMessages, newMessage],
+        }
+        setConversation(newArrayChannel)
       }
-      setConversation(newArrayChannel)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -422,17 +449,17 @@ const Dm = (id: any) => {
           </div>
         ) : (
           <>
-            {channel?.messages?.length === 0 && (
+            {conversation?.directMessages?.length === 0 && (
               <div className="mt-auto px-[40px] pb-[50px]">
                 <div className="flex gap-x-[7px] text-[21px] font-medium text-[#fff] 2xl:gap-x-[10px] 2xl:text-[25px]">
-                  <div> Start in #{channel?.name}</div>
-                  {channel?.isPrivate && (
-                    <img
-                      src={'/images/chat/lock.svg'}
-                      alt="image"
-                      className={'ml-[5px] w-[14px] 2xl:w-[16px]'}
-                    />
-                  )}
+                  <div>
+                    {' '}
+                    Start with{' '}
+                    {
+                      workspace?.UserWorkspace.find((obj) => obj.id === id.id)
+                        .user.name
+                    }
+                  </div>
                 </div>
                 <div className="">
                   Send a message to start your conversation
@@ -440,21 +467,21 @@ const Dm = (id: any) => {
               </div>
             )}
             <div className="mt-auto">
-              {channel?.messages?.map((message, index) => {
+              {conversation?.directMessages?.map((message, index) => {
                 const showDaySeparator =
                   index === 0 ||
                   isDifferentDay(
                     message.createdAt,
-                    channel.messages[index - 1].createdAt,
+                    conversation.directMessages[index - 1].createdAt,
                   )
                 const differenceInSecods =
                   index === 0 ||
                   getDifferenceInSeconds(
                     message.createdAt,
-                    channel.messages[index - 1].createdAt,
+                    conversation.directMessages[index - 1].createdAt,
                   )
                 // eslint-disable-next-line prettier/prettier
-                const sameUser = (differenceInSecods !== true && differenceInSecods < 360) && (!showDaySeparator) && (message.userWorkspaceId === channel.messages[index - 1].userWorkspaceId)
+                const sameUser = (differenceInSecods !== true && differenceInSecods < 360) && (!showDaySeparator) && (message.userWorkspaceId === conversation.directMessages[index - 1].userWorkspaceId)
 
                 const mss = getSanitizeText(message.content)
 
@@ -611,95 +638,22 @@ const Dm = (id: any) => {
             ) : (
               <>
                 <img
-                  src={channelTypeToLogo[channel?.type]}
-                  alt="image"
-                  className={'w-[16px] 2xl:w-[18px]'}
-                />
-                <div>{channel?.name}</div>
-                {channel?.isPrivate && (
-                  <img
-                    src={'/images/chat/lock.svg'}
-                    alt="image"
-                    className={'ml-[5px] w-[14px] 2xl:w-[16px]'}
-                  />
-                )}
+                  alt="ethereum avatar"
+                  src={
+                    workspace?.UserWorkspace.find((obj) => obj.id === id.id)
+                      .user.profilePicture
+                  }
+                  className="w-[30px] rounded-full"
+                ></img>
+                <div>
+                  {
+                    workspace?.UserWorkspace.find((obj) => obj.id === id.id)
+                      .user.name
+                  }
+                </div>
               </>
             )}
           </div>
-          {!isLoading && workspace?.isUserAdmin && (
-            <div className="relative flex gap-x-[10px]">
-              <div>
-                {channel?.id && isEditChannelInfoOpen === channel?.id && (
-                  <div className="absolute w-fit  min-w-[110px] -translate-x-[80%] translate-y-[120%] rounded-[6px] bg-[#060621] px-[10px]   py-[5px]  text-center  text-[12px]  2xl:min-w-[130px] 2xl:text-[14px]">
-                    Edit Channel
-                  </div>
-                )}
-                {isEditChannelOpen === channel?.id && (
-                  <div>
-                    <EditChannelModal
-                      isOpen={isEditChannelOpen}
-                      onClose={() => {
-                        setIsEditChannelOpen(false)
-                      }}
-                      onChannelUpdate={() => {
-                        window.location.reload()
-                      }}
-                      isPreviousPrivate={channel?.isPrivate}
-                      previousName={channel?.name}
-                      channelType={channel?.type}
-                      channelId={channel?.id}
-                    />{' '}
-                  </div>
-                )}
-                <img
-                  src={'/images/chat/config2.svg'}
-                  alt="image"
-                  className={
-                    'w-[24px] cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921] 2xl:w-[27px]'
-                  }
-                  onMouseEnter={() => setIsEditChannelInfoOpen(channel?.id)}
-                  onMouseLeave={() => setIsEditChannelInfoOpen(null)}
-                  onClick={() => {
-                    setIsEditChannelOpen(channel.id)
-                  }}
-                />
-              </div>
-
-              <div>
-                {' '}
-                {channel?.id && isDeleteChannelInfoOpen === channel?.id && (
-                  <div className="absolute w-fit  min-w-[110px] -translate-x-[80%] translate-y-[120%] rounded-[6px] bg-[#060621] px-[10px]   py-[5px]  text-center  text-[12px]  2xl:min-w-[130px] 2xl:text-[14px]">
-                    Delete Channel
-                  </div>
-                )}
-                {channel?.id && isDeleteChannelOpen === channel?.id && (
-                  <div
-                    ref={deleteChannelRef}
-                    className="absolute z-50   -translate-x-[100%]  translate-y-[50%]"
-                  >
-                    <DeleteChannelModal
-                      id={channel?.id}
-                      onUpdateM={() => {
-                        handleChannelDeleted()
-                      }}
-                    />{' '}
-                  </div>
-                )}
-                <img
-                  src={'/images/delete.svg'}
-                  alt="image"
-                  className={
-                    'w-[24px] cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921] 2xl:w-[27px]'
-                  }
-                  onMouseEnter={() => setIsDeleteChannelInfoOpen(channel?.id)}
-                  onMouseLeave={() => setIsDeleteChannelInfoOpen(null)}
-                  onClick={() => {
-                    setIsDeleteChannelOpen(channel.id)
-                  }}
-                />
-              </div>
-            </div>
-          )}
         </div>
         {/* <Messages
           channel={channel}
