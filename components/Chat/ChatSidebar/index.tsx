@@ -154,7 +154,10 @@ const ChatSidebar = (id: any) => {
 
   return (
     <>
-      <div className="relative z-10 flex h-[90vh] w-fit border-r-[1px] border-[#141733] bg-[#1D2144] px-[20px] pb-2 pt-5 text-[16px] text-[#C5C4C4]  lg:pt-[50px] 2xl:pr-[30px] 2xl:text-[18px]">
+      <div
+        onClick={() => console.log(conversations)}
+        className="relative z-10 flex h-[90vh] w-fit border-r-[1px] border-[#141733] bg-[#1D2144] px-[20px] pb-2 pt-5 text-[16px] text-[#C5C4C4]  lg:pt-[50px] 2xl:pr-[30px] 2xl:text-[18px]"
+      >
         <div>
           <div className="text-[12px] font-light  2xl:text-[14px]">
             {channelOption.map((option, index) => (
@@ -271,6 +274,14 @@ const ChatSidebar = (id: any) => {
                             userWorkspace={workspaceUser}
                           />
                         </div>
+                      )}
+                      {conversations?.find(
+                        (conv) =>
+                          (conv.userWorkspaceOneId === workspaceUser.id ||
+                            conv.userWorkspaceTwoId === workspaceUser.id) &&
+                          conv.hasNewMessages,
+                      ) && (
+                        <div className="h-[6px] w-[6px] rounded-full bg-[#fff]  2xl:h-[8px] 2xl:w-[8px]"></div>
                       )}
                     </div>
                   </div>
