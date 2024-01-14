@@ -17,12 +17,13 @@ export interface MessageProps {
 export interface DirectMessageProps {
   id: string
   content: string
+  newMessageFromUser: boolean
+  newMessageFromOtherUser: boolean
   userWorkspaceId: string
   userWorkspace: UserWorkspaceProps
   deleted: boolean
   createdAt: string
   updatedAt: string
-  hasNewMessages: boolean // IF THE USER HAS NEW MESSAGES UNREAD
 }
 
 export interface NewChannelMessageProps {
@@ -30,6 +31,13 @@ export interface NewChannelMessageProps {
   channelId: string
   message: MessageProps // Message type
   isPrivate: boolean
+}
+
+export interface NewConversationMessageProps {
+  workspaceId: string
+  directMessageId: string
+  secondMemberUserWorkspaceId: string
+  message: DirectMessageProps // Message type
 }
 
 export interface ChannelProps {

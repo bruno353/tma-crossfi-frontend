@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable dot-notation */
 /* eslint-disable react/no-unescaped-entities */
@@ -19,7 +20,7 @@ import {
   newMessageChannel,
   readChannel,
 } from '@/utils/api-chat'
-import { ChannelProps, NewChannelMessageProps } from '@/types/chat'
+import { ChannelProps, NewChannelMessageProps, NewConversationMessageProps } from '@/types/chat'
 import { AccountContext } from '@/contexts/AccountContext'
 import { channelTypeToLogo } from '@/types/consts/chat'
 import DeleteMessageModal from '../Modals/DeleteMessageModal'
@@ -47,7 +48,7 @@ const Dm = (id: any) => {
   const { push } = useRouter()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const { channel, setChannel, user, workspace, channels, setChannels } =
+  const { user, workspace, conversation, setConversations } =
     useContext(AccountContext)
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
 
@@ -66,14 +67,14 @@ const Dm = (id: any) => {
   const [newMessageHtml, setNewMessageHtml] = useState('')
   const editorHtmlRef = useRef('')
 
-  function handleNewChannelMessageTreatment(message: NewChannelMessageProps) {
-    if (message.channelId === id.id) {
-      console.log('123 passei')
+  function handleNewConversationMessageTreatment(
+    message: NewConversationMessageProps,
+  ) {
+    if (message.secondMemberUserWorkspaceId === id.id) {
       const messageExist = channel.messages.find(
         (mess) => mess.id === message.message.id,
       )
       if (!messageExist) {
-        console.log('123 passei 2')
         const newArrayChannel = {
           ...channel,
           messages: [...channel.messages, message.message],

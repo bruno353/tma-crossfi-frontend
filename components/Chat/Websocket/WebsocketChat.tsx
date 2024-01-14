@@ -1,16 +1,21 @@
 import { useEffect } from 'react'
 import io from 'socket.io-client'
 import nookies, { parseCookies, setCookie } from 'nookies'
-import { NewChannelMessageProps } from '@/types/chat'
+import {
+  NewChannelMessageProps,
+  NewConversationMessageProps,
+} from '@/types/chat'
 
 export interface WebsocketI {
   workspaceId: string
   handleNewChannelMessage(message: NewChannelMessageProps): void
+  handleNewConversationMessage(message: NewConversationMessageProps): void
 }
 
 const WebsocketComponent = ({
   workspaceId,
   handleNewChannelMessage,
+  handleNewConversationMessage,
 }: WebsocketI) => {
   useEffect(() => {
     if (workspaceId) {
@@ -33,6 +38,7 @@ const WebsocketComponent = ({
 
       socket.on('personalMessage', (message) => {
         console.log('Mensagem pessoal recebida:', message)
+        handleNewConversationMessage(message)
       })
 
       socket.on('channelMessage', (message) => {
