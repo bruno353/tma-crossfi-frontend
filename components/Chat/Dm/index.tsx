@@ -19,6 +19,7 @@ import {
   editMessage,
   getUserChannels,
   newMessageChannel,
+  newMessageConversation,
   readChannel,
   readConversation,
 } from '@/utils/api-chat'
@@ -219,20 +220,21 @@ const Dm = (id: any) => {
   const handleNewMessage = async (messageContent: string) => {
     const { userSessionToken } = parseCookies()
     const data = {
-      channelId: id.id,
+      member2Id: id.id,
       message: messageContent,
+      workspaceId: workspace?.id,
     }
 
     try {
       setNewMessageHtml('')
-      let newMessage = await newMessageChannel(data, userSessionToken)
+      let newMessage = await newMessageConversation(data, userSessionToken)
       newMessage = { ...newMessage, newMessageFromUser: true }
 
       const newArrayChannel = {
-        ...channel,
-        messages: [...channel.messages, newMessage],
+        ...conversation,
+        messages: [...conversation.directMessages, newMessage],
       } // Criar uma nova cópia do array de mensagens
-      setChannel(newArrayChannel)
+      setConversation(newArrayChannel)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -240,16 +242,12 @@ const Dm = (id: any) => {
   }
 
   const handleMessageDeleted = (messageId: string) => {
-    const arrayChannel = { ...channel }
-    const finalArrayMessages = channel?.messages.filter(
+    const arrayChannel = { ...conversation }
+    const finalArrayMessages = conversation?.directMessages.filter(
       (item) => item.id !== messageId,
     )
-    arrayChannel.messages = finalArrayMessages
-    setChannel(arrayChannel)
-  }
-
-  const handleChannelDeleted = () => {
-    push(`/workspace/${channel.workspaceId}/chat`)
+    arrayChannel.directMessages = finalArrayMessages
+    setConversation(arrayChannel)
   }
 
   useEffect(() => {
