@@ -39,7 +39,7 @@ const ChatSidebar = (id: any) => {
 
   function handleNewChannelMessageTreatment(message: NewChannelMessageProps) {
     console.log(message)
-    if (channels.length > 0) {
+    if (channels?.length > 0) {
       const newChannels = [...channels]
 
       newChannels.find((channel) => {

@@ -263,6 +263,20 @@ const Channel = (id: any) => {
   }, [channel?.messages])
 
   useEffect(() => {
+    if (channel) {
+      const newChannels = [...channels]
+      newChannels.find((channelObj) => {
+        if (channelObj.id === channel.id) {
+          channelObj.hasNewMessages = false
+          return true
+        }
+        return false
+      })
+      setChannels(newChannels)
+    }
+  }, [channel])
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         // Clicked outside of the menu, so close it
@@ -391,7 +405,7 @@ const Channel = (id: any) => {
                     channel.messages[index - 1].createdAt,
                   )
                 // eslint-disable-next-line prettier/prettier
-                const sameUser = (differenceInSecods !== true && differenceInSecods < 360) && (!showDaySeparator)
+                const sameUser = (differenceInSecods !== true && differenceInSecods < 360) && (!showDaySeparator) && (message.userWorkspaceId === channel.messages[index - 1].userWorkspaceId)
 
                 const mss = getSanitizeText(message.content)
 
@@ -573,7 +587,7 @@ const Channel = (id: any) => {
               </>
             )}
           </div>
-          {!isLoading && workspace.isUserAdmin && (
+          {!isLoading && workspace?.isUserAdmin && (
             <div className="relative flex gap-x-[10px]">
               <div>
                 {channel?.id && isEditChannelInfoOpen === channel?.id && (
