@@ -3,7 +3,6 @@
 import ChangePasswordRecovery from '@/components/ChangePasswordRecovery'
 import ChangePasswordRecoveryFinal from '@/components/ChangePasswordRecovery2'
 import Chat from '@/components/Chat'
-import Channel from '@/components/Chat/Channel'
 import Dm from '@/components/Chat/Dm'
 import ScrollUp from '@/components/Common/ScrollUp'
 import Dashboard from '@/components/Dashboard'

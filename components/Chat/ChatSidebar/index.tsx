@@ -163,19 +163,21 @@ const ChatSidebar = (id: any) => {
                       {channels?.map((optionChannel, index) => (
                         <div key={index}>
                           {option.type === optionChannel.type && (
-                            <div className="mb-[7px] flex cursor-pointer gap-x-[3px] 2xl:gap-x-[3px]">
+                            <div
+                              onClick={() => {
+                                const basePath = pathname.split('/')
+                                const newPath = `/${basePath[1]}/${basePath[2]}/${basePath[3]}/channel/${optionChannel.id}`
+                                console.log(newPath)
+                                push(newPath)
+                              }}
+                              className="mb-[7px] flex cursor-pointer gap-x-[3px] 2xl:gap-x-[3px]"
+                            >
                               <img
                                 src={channelTypeToLogo[option.type]}
                                 alt="image"
                                 className={'w-[14px] 2xl:w-[16px]'}
                               />
                               <div
-                                onClick={() => {
-                                  const basePath = pathname.split('/')
-                                  const newPath = `/${basePath[1]}/${basePath[2]}/${basePath[3]}/channel/${optionChannel.id}`
-                                  console.log(newPath)
-                                  push(newPath)
-                                }}
                                 title={optionChannel.name}
                                 className={`max-w-[120px] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#fff] 2xl:max-w-[150px]  ${
                                   channel?.id === optionChannel.id &&

@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
-import './try.css'
+import './react-quill.css'
 import { getChannel, getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import {
@@ -364,6 +364,16 @@ const Channel = (id: any) => {
     }
   }
 
+  useEffect(() => {
+    // Adiciona o event listener
+    document.addEventListener('keydown', handleKeyPress)
+
+    // Remove o event listener quando o componente é desmontado
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [isEditMessageOpen, newMessageHtml])
+
   function renderMessages() {
     return (
       <div className="mr-[20px] flex h-full flex-1 flex-col overflow-y-auto pb-[20px] pt-5 text-[12px] font-light scrollbar-thin scrollbar-track-[#11132470] scrollbar-thumb-[#0e101f] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:text-[14px]">
@@ -568,16 +578,6 @@ const Channel = (id: any) => {
       </div>
     )
   }
-
-  useEffect(() => {
-    // Adiciona o event listener
-    document.addEventListener('keydown', handleKeyPress)
-
-    // Remove o event listener quando o componente é desmontado
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress)
-    }
-  }, [isEditMessageOpen, newMessageHtml])
 
   return (
     <>
