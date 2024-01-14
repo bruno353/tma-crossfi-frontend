@@ -14,6 +14,17 @@ export interface MessageProps {
   updatedAt: string
 }
 
+export interface DirectMessageProps {
+  id: string
+  content: string
+  userWorkspaceId: string
+  userWorkspace: UserWorkspaceProps
+  deleted: boolean
+  createdAt: string
+  updatedAt: string
+  hasNewMessages: boolean // IF THE USER HAS NEW MESSAGES UNREAD
+}
+
 export interface NewChannelMessageProps {
   workspaceId: string
   channelId: string
@@ -29,6 +40,18 @@ export interface ChannelProps {
   isPrivate: boolean
   messages: MessageProps[]
   generalUsersWorkspace: UserWorkspaceProps[]
+  createdAt: string
+  updatedAt: string
+  hasNewMessages: boolean // IF THE USER HAS NEW MESSAGES UNREAD
+}
+
+export interface ConversationProps {
+  id: string
+  userWorkspaceOneId: string
+  userWorkspaceOne: UserWorkspaceProps
+  userWorkspaceTwoId: string
+  userWorkspaceTwo: UserWorkspaceProps
+  directMessages: DirectMessageProps[]
   createdAt: string
   updatedAt: string
   hasNewMessages: boolean // IF THE USER HAS NEW MESSAGES UNREAD

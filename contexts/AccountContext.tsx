@@ -1,4 +1,4 @@
-import { ChannelProps } from '@/types/chat'
+import { ChannelProps, ConversationProps } from '@/types/chat'
 import { UserProps } from '@/types/user'
 import { WorkspaceProps } from '@/types/workspace'
 import React, { createContext, useState } from 'react'
@@ -20,6 +20,12 @@ interface CreateUserContextProps {
   channel: ChannelProps | undefined
   setChannel: (channels: ChannelProps | undefined) => void
 
+  conversation: ConversationProps | undefined
+  setConversation: (conversation: ConversationProps | undefined) => void
+
+  conversations: ConversationProps[] | undefined
+  setConversations: (conversations: ConversationProps[] | undefined) => void
+
   workspace: WorkspaceProps | undefined
   setWorkspace: (workspace: WorkspaceProps | undefined) => void
 }
@@ -32,6 +38,9 @@ export default function AccountContextProvider({
   const [user, setUser] = useState<UserProps>()
   const [channels, setChannels] = useState<ChannelProps[]>()
   const [channel, setChannel] = useState<ChannelProps>()
+  const [conversation, setConversation] = useState<ConversationProps>()
+  const [conversations, setConversations] = useState<ConversationProps[]>()
+
   const [dm, setDm] = useState<ChannelProps>()
   const [workspace, setWorkspace] = useState<WorkspaceProps>()
 
@@ -46,6 +55,10 @@ export default function AccountContextProvider({
         setChannel,
         channels,
         setChannels,
+        conversation,
+        setConversation,
+        conversations,
+        setConversations,
         workspace,
         setWorkspace,
       }}

@@ -30,8 +30,16 @@ const ChatSidebar = (id: any) => {
   const [isCreatingNewChannel, setIsCreatingNewChannel] = useState(false)
   const [isCreatingNewChannelType, setIsCreatingNewChannelType] = useState('')
   const [users, setUsers] = useState<UserWorkspaceProps[]>()
-  const { workspace, setWorkspace, channels, setChannels, channel } =
-    useContext(AccountContext)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const {
+    workspace,
+    setWorkspace,
+    channels,
+    setChannels,
+    channel,
+    setConversations,
+    conversations,
+  } = useContext(AccountContext)
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
 
   const { push } = useRouter()
@@ -102,8 +110,9 @@ const ChatSidebar = (id: any) => {
       dado = await getUserChannels(data, userSessionToken)
       console.log('channels q recebi')
       console.log(dado)
-      setChannels(dado)
-      setUsers(dado.generalUsersWorkspace)
+      setChannels(dado?.channels)
+      setUsers(dado?.channels.generalUsersWorkspace)
+      setConversations(dado?.conversations)
     } catch (err) {
       toast.error(`Error: ${err}`)
       await new Promise((resolve) => setTimeout(resolve, 1500))
