@@ -38,6 +38,7 @@ const ChatSidebar = (id: any) => {
   const {
     workspace,
     setWorkspace,
+    conversation,
     channels,
     setChannels,
     channel,
@@ -257,7 +258,12 @@ const ChatSidebar = (id: any) => {
                     }}
                     onMouseEnter={() => setIsUserModalOpen(workspaceUser.id)}
                     onMouseLeave={() => setIsUserModalOpen(null)}
-                    className="flex cursor-pointer items-center gap-x-[10px] rounded-md p-[10px] text-[14px] font-normal transition hover:bg-[#24232e63]"
+                    className={`flex cursor-pointer items-center gap-x-[10px] rounded-md p-[10px] text-[14px] font-normal transition hover:bg-[#282e637c] ${
+                      conversation &&
+                      (conversation.userWorkspaceOneId === workspaceUser.id ||
+                        conversation.userWorkspaceTwoId === workspaceUser.id) &&
+                      'bg-[#282e637c]'
+                    }`}
                   >
                     <div className="relative flex items-center gap-x-[10px]">
                       <img
