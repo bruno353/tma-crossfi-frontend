@@ -21,7 +21,7 @@ import Workspace from '@/components/Workspace'
 import { AccountContext } from '../../contexts/AccountContext'
 
 const Sidebar = (id: any) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true)
   const [sidebarOption, setSidebarOption] = useState<string>('')
   const { workspace, setWorkspace } = useContext(AccountContext)
 
@@ -122,8 +122,8 @@ const Sidebar = (id: any) => {
   return (
     <>
       <div
-        onMouseEnter={() => setIsSidebarOpen(true)}
-        onMouseLeave={() => setIsSidebarOpen(false)}
+        // onMouseEnter={() => setIsSidebarOpen(true)}
+        // onMouseLeave={() => setIsSidebarOpen(false)}
         className="z-[999] flex  w-fit overflow-hidden bg-transparent bg-opacity-60 pb-16 pt-36 text-[16px] md:pb-20 lg:pb-0 lg:pt-[140px]"
       >
         <div className="text-[#fff]">
