@@ -206,7 +206,7 @@ export async function readChannel(data: any, userSessionToken: string) {
 export async function getConversation(data: any, userSessionToken: string) {
   const config = {
     method: 'post' as 'post',
-    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/chat/functions/getChannel`,
+    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/chat/functions/getConversation`,
     headers: {
       'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
       'X-Parse-Session-Token': userSessionToken,
