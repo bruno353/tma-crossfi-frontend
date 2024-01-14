@@ -52,9 +52,7 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
   loading: () => <p>Loading ...</p>,
 })
 
-const Dm = (id: any) => {
-  const { push } = useRouter()
-
+const Dm = (id: any, workspaceId: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const {
     user,
@@ -84,8 +82,11 @@ const Dm = (id: any) => {
   function handleNewConversationMessageTreatment(
     message: NewConversationMessageProps,
   ) {
-    if (message.secondMemberUserWorkspaceId === id.id) {
+    if (message.message.userWorkspaceId === id.id) {
+      console.log('the conversation here q queremosssss')
+      console.log(conversation)
       if (!conversation) {
+        console.log('nao possui conversation irmao')
         getData(id.id)
       } else {
         const messageExist = conversation.directMessages.find(
@@ -129,6 +130,7 @@ const Dm = (id: any) => {
   const deleteChannelRef = useRef(null)
 
   async function getData(id: any) {
+    console.log('get data chamado sim')
     const { userSessionToken } = parseCookies()
     setIsLoading(true)
     console.log('getting channels')
@@ -144,8 +146,11 @@ const Dm = (id: any) => {
     try {
       dado = await getConversation(data, userSessionToken)
       if (dado) {
+        console.log('yep it returned a data')
         setConversation(dado)
       }
+      console.log('response i got form get conversation')
+      console.log(dado)
       setIsLoading(false)
     } catch (err) {
       toast.error(`Error: ${err}`)
@@ -168,10 +173,13 @@ const Dm = (id: any) => {
       top: 0,
       behavior: 'smooth',
     })
-    if (id) {
+    if (id && workspace) {
+      console.log('id mudou e por isso chamo de novo')
+      console.log('o id que estou recebendo')
+      console.log(id)
       getData(id.id)
     }
-  }, [id])
+  }, [workspace])
 
   const closeMenu = () => {
     setIsDeleteMessageOpen(false)
@@ -240,6 +248,7 @@ const Dm = (id: any) => {
       )
 
       if (!conversation) {
+        console.log('nao tem conversation tu sabes')
         const newMessage = {
           ...newConversation?.directMessages[
             newConversation.directMessages.length - 1
@@ -253,6 +262,7 @@ const Dm = (id: any) => {
         }
         setConversation(newArrayChannel)
       } else {
+        console.log('tem sim conversation tu sabes')
         const newMessage = {
           ...newConversation?.directMessages[
             newConversation.directMessages.length - 1
@@ -262,8 +272,10 @@ const Dm = (id: any) => {
 
         const newArrayChannel = {
           ...conversation,
-          messages: [...conversation.directMessages, newMessage],
+          directMessages: [...conversation.directMessages, newMessage],
         }
+        console.log('vou setar essa conversation:')
+        console.log(newArrayChannel)
         setConversation(newArrayChannel)
       }
     } catch (err) {
@@ -520,11 +532,14 @@ const Dm = (id: any) => {
                           alt="ethereum avatar"
                           src={message?.userWorkspace?.user?.profilePicture}
                           className="max-w-[35px] rounded-full"
+                          onClick={() => {
+                            console.log(conversation)
+                          }}
                         ></img>
                       ) : (
                         <div className="my-auto flex w-[35px] items-center">
                           {' '}
-                          {isMessageHovered === message.id && (
+                          {isMessageHovered === message?.id && (
                             <div className="text-[10px] text-[#888888] 2xl:text-[12px]">
                               {formatHours(message?.createdAt)}{' '}
                             </div>
@@ -561,8 +576,8 @@ const Dm = (id: any) => {
                           <div>{mss}</div>
                         )}
                       </div>
-                      {isMessageHovered === message.id &&
-                        message.userWorkspace.userId === user.id && (
+                      {isMessageHovered === message?.id &&
+                        message?.userWorkspace?.userId === user?.id && (
                           <div className="relative ml-auto flex items-center gap-x-[10px]">
                             <div>
                               {' '}
@@ -680,9 +695,10 @@ const Dm = (id: any) => {
       </div>
       {workspace && (
         <WebsocketComponent
-          workspaceId={workspace.id}
+          workspaceId={workspace?.id}
           handleNewChannelMessage={(message) => {}}
           handleNewConversationMessage={(message) => {
+            console.log('recebi no componente a msg pessoal')
             handleNewConversationMessageTreatment(message)
           }}
         />

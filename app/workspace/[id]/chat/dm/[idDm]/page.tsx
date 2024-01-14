@@ -13,7 +13,7 @@ import { Inter } from '@next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Page({ params }) {
-  console.log(params.idChannel)
+  console.log(params.idDm)
   return (
     <>
       <ScrollUp />
@@ -22,7 +22,7 @@ export default function Page({ params }) {
           <Chat id={params.id} />
         </div>
         <div className="h-[calc(100vh-6rem)] w-full">
-          <Dm id={params.idChannel} />
+          <Dm id={params.idDm} workspaceId={params.id} />
         </div>
       </div>
     </>
