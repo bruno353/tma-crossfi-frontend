@@ -17,6 +17,7 @@ import {
   editMessage,
   getUserChannels,
   newMessageChannel,
+  readChannel,
 } from '@/utils/api-chat'
 import { ChannelProps, NewChannelMessageProps } from '@/types/chat'
 import { AccountContext } from '@/contexts/AccountContext'
@@ -262,8 +263,24 @@ const Channel = (id: any) => {
     }
   }, [channel?.messages])
 
+  async function setReadChannelMessages(channelId: string) {
+    const { userSessionToken } = parseCookies()
+    const data = {
+      id: channelId,
+    }
+
+    try {
+      await readChannel(data, userSessionToken)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+  }
+
   useEffect(() => {
     if (channel) {
+      setReadChannelMessages(channel?.id)
+
       const newChannels = [...channels]
       newChannels.find((channelObj) => {
         if (channelObj.id === channel.id) {
