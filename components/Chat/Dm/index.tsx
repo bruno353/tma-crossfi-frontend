@@ -86,26 +86,30 @@ const Dm = (id: any) => {
     message: NewConversationMessageProps,
   ) {
     if (message.secondMemberUserWorkspaceId === id.id) {
-      const messageExist = channel.messages.find(
-        (mess) => mess.id === message.message.id,
-      )
-      if (!messageExist) {
-        const newArrayChannel = {
-          ...channel,
-          messages: [...channel.messages, message.message],
+      if (!conversation) {
+        getData(id.id)
+      } else {
+        const messageExist = conversation.directMessages.find(
+          (mess) => mess.id === message.message.id,
+        )
+        if (!messageExist) {
+          const newArrayChannel = {
+            ...conversation,
+            messages: [...conversation.directMessages, message.message],
+          }
+          setConversation(newArrayChannel)
         }
-        setChannel(newArrayChannel)
-      }
 
-      const newChannels = [...channels]
-      newChannels.find((channel) => {
-        if (channel.id === message.channelId) {
-          channel.hasNewMessages = false
-          return true
-        }
-        return false
-      })
-      setChannels(newChannels)
+        const newChannels = [...channels]
+        newChannels.find((channel) => {
+          if (channel.id === message.channelId) {
+            channel.hasNewMessages = false
+            return true
+          }
+          return false
+        })
+        setChannels(newChannels)
+      }
     }
   }
 
@@ -133,7 +137,8 @@ const Dm = (id: any) => {
     console.log(userSessionToken)
 
     const data = {
-      id,
+      member2Id: id,
+      workspaceId: workspace?.id,
     }
 
     let dado
