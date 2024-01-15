@@ -55,7 +55,9 @@ const ChatSidebar = (id: any) => {
 
   const isbasePathToCheckDm = basePathToCheck[4] === 'dm' && basePathToCheck[5]
   const isbasePathToCheckChannel =
-    basePathToCheck[4] === 'channel' && basePathToCheck[5]
+    (basePathToCheck[4] === 'channel' ||
+      basePathToCheck[4] === 'video-channel') &&
+    basePathToCheck[5]
 
   function handleNewChannelMessageTreatment(message: NewChannelMessageProps) {
     console.log(message)

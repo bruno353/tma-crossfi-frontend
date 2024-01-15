@@ -155,7 +155,7 @@ const VideoChannel = (id: any) => {
   return (
     <>
       <div className="flex h-full max-h-[calc(100vh-6rem)] flex-1 flex-col justify-between bg-[#1D2144]  pb-16 text-[16px] text-[#C5C4C4] md:pb-20  lg:pb-8  2xl:text-[18px]">
-        <div className="flex w-full justify-between gap-x-[10px] border-b-[1px] border-[#141733] bg-[#1D2144] px-[40px] py-[20px]">
+        <div className="z-[999] flex w-full justify-between gap-x-[10px] border-b-[1px] border-[#141733] bg-[#1D2144] px-[40px] py-[20px]">
           <div className="flex gap-x-[5px]">
             {isLoading ? (
               <div className="h-[25px] w-[300px] animate-pulse rounded-[3px] bg-[#dfdfdf]"></div>
