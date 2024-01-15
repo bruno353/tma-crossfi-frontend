@@ -52,6 +52,7 @@ export interface ChannelProps {
   createdAt: string
   updatedAt: string
   hasNewMessages: boolean // IF THE USER HAS NEW MESSAGES UNREAD
+  tokenLiveKit?: string // Only for video or audio channels - tokenLiveKit
 }
 
 export interface ConversationProps {

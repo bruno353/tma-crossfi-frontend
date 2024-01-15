@@ -17,6 +17,7 @@ import nookies, { parseCookies, setCookie } from 'nookies'
 import {
   editMessage,
   getUserChannels,
+  joinVideoAudioChannel,
   newMessageChannel,
   readChannel,
 } from '@/utils/api-chat'
@@ -25,6 +26,9 @@ import { AccountContext } from '@/contexts/AccountContext'
 import { channelTypeToLogo } from '@/types/consts/chat'
 import DeleteMessageModal from '../Modals/DeleteMessageModal'
 import dynamic from 'next/dynamic'
+
+import { LiveKitRoom, VideoConference } from '@livekit/components-react'
+import '@livekit/components-styles'
 
 import DeleteChannelModal from '../Modals/DeleteChannelModal'
 import EditChannelModal from '../Modals/EditChannelModal'
@@ -37,23 +41,13 @@ import {
   isDifferentDay,
 } from '@/utils/functions'
 
-import io from 'socket.io-client'
-import WebsocketComponent from '../Websocket/WebsocketChat'
-
-const QuillNoSSRWrapper = dynamic(import('react-quill'), {
-  ssr: false,
-  loading: () => <p>Loading ...</p>,
-})
-
-const Channel = (id: any) => {
+const VideoChannel = (id: any) => {
   const { push } = useRouter()
 
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { channel, setChannel, user, workspace, channels, setChannels } =
     useContext(AccountContext)
-  const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
 
-  const [isDeleteInfoOpen, setIsDeleteInfoOpen] = useState<any>()
   const [isDeleteMessageOpen, setIsDeleteMessageOpen] = useState<any>()
 
   const [isDeleteChannelInfoOpen, setIsDeleteChannelInfoOpen] = useState<any>()
@@ -62,53 +56,7 @@ const Channel = (id: any) => {
   const [isEditChannelInfoOpen, setIsEditChannelInfoOpen] = useState<any>()
   const [isEditChannelOpen, setIsEditChannelOpen] = useState<any>()
 
-  const [isEditMessageOpen, setIsEditMessageOpen] = useState<any>()
-  const [isMessageHovered, setIsMessageHovered] = useState<any>()
-  const [editorHtml, setEditorHtml] = useState('')
-  const [newMessageHtml, setNewMessageHtml] = useState('')
-  const editorHtmlRef = useRef('')
-
-  function handleNewChannelMessageTreatment(message: NewChannelMessageProps) {
-    if (message.channelId === id.id) {
-      console.log('123 passei')
-      const messageExist = channel.messages.find(
-        (mess) => mess.id === message.message.id,
-      )
-      if (!messageExist) {
-        console.log('123 passei 2')
-        const newArrayChannel = {
-          ...channel,
-          messages: [...channel.messages, message.message],
-        }
-        setChannel(newArrayChannel)
-      }
-
-      const newChannels = [...channels]
-      newChannels.find((channel) => {
-        if (channel.id === message.channelId) {
-          channel.hasNewMessages = false
-          return true
-        }
-        return false
-      })
-      setChannels(newChannels)
-    }
-  }
-
-  function handleChangeEditor(value) {
-    if (editorHtmlRef.current.length < 5000) {
-      editorHtmlRef.current = value
-    }
-  }
-
-  function handleChangeNewMessage(value) {
-    if (editorHtml.length < 5000) {
-      setNewMessageHtml(value)
-    }
-  }
-
   const menuRef = useRef(null)
-  const messagesEndRef = useRef(null)
   const deleteChannelRef = useRef(null)
 
   async function getData(id: any) {
@@ -124,7 +72,7 @@ const Channel = (id: any) => {
 
     let dado
     try {
-      dado = await getChannel(data, userSessionToken)
+      dado = await joinVideoAudioChannel(data, userSessionToken)
       setChannel(dado)
       setIsLoading(false)
     } catch (err) {
@@ -133,14 +81,6 @@ const Channel = (id: any) => {
     }
 
     return dado
-  }
-
-  const scrollToBottomInstant = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'instant' })
-  }
-
-  const scrollToBottomSmooth = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
   useEffect(() => {
@@ -161,121 +101,8 @@ const Channel = (id: any) => {
     setIsDeleteChannelOpen(false)
   }
 
-  const editSave = () => {
-    handleSaveMessage(isEditMessageOpen, editorHtmlRef.current)
-  }
-
-  const newMessageSave = () => {
-    console.log('new message saved')
-    handleNewMessage(newMessageHtml)
-  }
-
-  const handleSaveMessage = async (
-    messageId: string,
-    messageContent: string,
-  ) => {
-    setIsEditMessageOpen(false)
-    const { userSessionToken } = parseCookies()
-    const data = {
-      messageId,
-      message: messageContent,
-    }
-
-    console.log('o data')
-    console.log(messageId)
-    console.log(messageContent)
-
-    try {
-      setEditorHtml('')
-      let updatedMessage = await editMessage(data, userSessionToken)
-      updatedMessage = { ...updatedMessage, newMessageFromUser: true }
-
-      // Encontre a mensagem na lista de mensagens do canal
-      const updatedMessages = channel.messages.map((msg) =>
-        msg.id === updatedMessage.id
-          ? { ...msg, content: updatedMessage.content }
-          : msg,
-      )
-
-      // Atualize o estado do canal com as novas mensagens
-      setChannel({ ...channel, messages: updatedMessages })
-    } catch (err) {
-      console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
-    }
-  }
-
-  const handleNewMessage = async (messageContent: string) => {
-    const { userSessionToken } = parseCookies()
-    const data = {
-      channelId: id.id,
-      message: messageContent,
-    }
-
-    try {
-      setNewMessageHtml('')
-      let newMessage = await newMessageChannel(data, userSessionToken)
-      newMessage = { ...newMessage, newMessageFromUser: true }
-
-      const newArrayChannel = {
-        ...channel,
-        messages: [...channel.messages, newMessage],
-      } // Criar uma nova cópia do array de mensagens
-      setChannel(newArrayChannel)
-    } catch (err) {
-      console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
-    }
-  }
-
-  const handleMessageDeleted = (messageId: string) => {
-    const arrayChannel = { ...channel }
-    const finalArrayMessages = channel?.messages.filter(
-      (item) => item.id !== messageId,
-    )
-    arrayChannel.messages = finalArrayMessages
-    setChannel(arrayChannel)
-  }
-
   const handleChannelDeleted = () => {
     push(`/workspace/${channel.workspaceId}/chat`)
-  }
-
-  useEffect(() => {
-    if (channel?.messages?.length > 0) {
-      console.log(
-        'the new message: ' +
-          JSON.stringify(channel?.messages[channel?.messages.length - 1]),
-      )
-      if (
-        !channel?.messages[channel?.messages.length - 1]?.[
-          'newMessageFromOtherUser'
-        ] &&
-        !channel?.messages[channel?.messages.length - 1]?.['newMessageFromUser']
-      ) {
-        console.log('scroll instant')
-        scrollToBottomInstant()
-      } else if (
-        channel?.messages[channel?.messages.length - 1]?.['newMessageFromUser']
-      ) {
-        console.log('scroll smooth')
-        scrollToBottomSmooth()
-      }
-    }
-  }, [channel?.messages])
-
-  async function setReadChannelMessages(channelId: string) {
-    const { userSessionToken } = parseCookies()
-    const data = {
-      id: channelId,
-    }
-
-    try {
-      await readChannel(data, userSessionToken)
-    } catch (err) {
-      console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
-    }
   }
 
   useEffect(() => {
@@ -425,9 +252,21 @@ const Channel = (id: any) => {
             </div>
           )}
         </div>
+        {channel && (channel.type === 'AUDIO' || channel.type === 'VIDEO') && (
+          <LiveKitRoom
+            data-lk-theme="default"
+            serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+            token={channel?.tokenLiveKit}
+            connect={true}
+            video={channel.type === 'VIDEO'}
+            audio={true}
+          >
+            <VideoConference />
+          </LiveKitRoom>
+        )}
       </div>
     </>
   )
 }
 
-export default Channel
+export default VideoChannel
