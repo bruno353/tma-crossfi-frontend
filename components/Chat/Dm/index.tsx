@@ -465,12 +465,12 @@ const Dm = (id: any, workspaceId: any) => {
           </div>
         ) : (
           <>
-            {conversation?.directMessages?.length === 0 && (
+            {(conversation?.directMessages?.length === 0 || !conversation) && (
               <div className="mt-auto px-[40px] pb-[50px]">
                 <div className="flex gap-x-[7px] text-[21px] font-medium text-[#fff] 2xl:gap-x-[10px] 2xl:text-[25px]">
                   <div>
                     {' '}
-                    Start with{' '}
+                    Interact with{' '}
                     {
                       workspace?.UserWorkspace.find((obj) => obj.id === id.id)
                         .user.name
