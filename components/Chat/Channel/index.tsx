@@ -282,15 +282,17 @@ const Channel = (id: any) => {
     if (channel) {
       setReadChannelMessages(channel?.id)
 
-      const newChannels = [...channels]
-      newChannels.find((channelObj) => {
-        if (channelObj.id === channel.id) {
-          channelObj.hasNewMessages = false
-          return true
-        }
-        return false
-      })
-      setChannels(newChannels)
+      if (channels && channels.length > 0) {
+        const newChannels = [...channels]
+        newChannels.find((channelObj) => {
+          if (channelObj.id === channel.id) {
+            channelObj.hasNewMessages = false
+            return true
+          }
+          return false
+        })
+        setChannels(newChannels)
+      }
     }
   }, [channel])
 

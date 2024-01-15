@@ -51,6 +51,12 @@ const ChatSidebar = (id: any) => {
   const { push } = useRouter()
   const pathname = usePathname()
 
+  const basePathToCheck = pathname.split('/') // bassically to check where the user is, so if we get basePathToCheck[4] as dm and basePathToCheck[5] exists, it means its selected in a dm user.
+
+  const isbasePathToCheckDm = basePathToCheck[4] === 'dm' && basePathToCheck[5]
+  const isbasePathToCheckChannel =
+    basePathToCheck[4] === 'channel' && basePathToCheck[5]
+
   function handleNewChannelMessageTreatment(message: NewChannelMessageProps) {
     console.log(message)
     if (channels?.length > 0) {
@@ -216,7 +222,9 @@ const ChatSidebar = (id: any) => {
                               <div
                                 title={optionChannel.name}
                                 className={`max-w-[120px] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#fff] 2xl:max-w-[150px]  ${
-                                  channel?.id === optionChannel.id &&
+                                  isbasePathToCheckChannel &&
+                                  isbasePathToCheckChannel[5] ===
+                                    optionChannel.id &&
                                   'text-[#fff]'
                                 }`}
                               >
@@ -259,9 +267,9 @@ const ChatSidebar = (id: any) => {
                     onMouseEnter={() => setIsUserModalOpen(workspaceUser.id)}
                     onMouseLeave={() => setIsUserModalOpen(null)}
                     className={`flex cursor-pointer items-center gap-x-[10px] rounded-md p-[10px] text-[14px] font-normal transition hover:bg-[#282e637c] ${
-                      conversation &&
-                      (conversation.userWorkspaceOneId === workspaceUser.id ||
-                        conversation.userWorkspaceTwoId === workspaceUser.id) &&
+                      isbasePathToCheckDm &&
+                      (basePathToCheck[5] === workspaceUser.id ||
+                        basePathToCheck[5] === workspaceUser.id) &&
                       'bg-[#282e637c]'
                     }`}
                   >
