@@ -207,10 +207,17 @@ const ChatSidebar = (id: any) => {
                           {option.type === optionChannel.type && (
                             <div
                               onClick={() => {
-                                const basePath = pathname.split('/')
-                                const newPath = `/${basePath[1]}/${basePath[2]}/${basePath[3]}/channel/${optionChannel.id}`
-                                console.log(newPath)
-                                push(newPath)
+                                if (optionChannel.type === 'TEXT') {
+                                  const basePath = pathname.split('/')
+                                  const newPath = `/${basePath[1]}/${basePath[2]}/${basePath[3]}/channel/${optionChannel.id}`
+                                  console.log(newPath)
+                                  push(newPath)
+                                } else {
+                                  const basePath = pathname.split('/')
+                                  const newPath = `/${basePath[1]}/${basePath[2]}/${basePath[3]}/video-channel/${optionChannel.id}`
+                                  console.log(newPath)
+                                  push(newPath)
+                                }
                               }}
                               className="mb-[7px] flex cursor-pointer gap-x-[3px] 2xl:gap-x-[3px]"
                             >
