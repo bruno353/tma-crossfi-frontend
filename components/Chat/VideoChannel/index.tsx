@@ -255,7 +255,7 @@ const VideoChannel = (id: any) => {
         {channel && (channel.type === 'AUDIO' || channel.type === 'VIDEO') && (
           <LiveKitRoom
             data-lk-theme="default"
-            serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+            serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_WEBSOCKET_URL}
             token={channel?.tokenLiveKit}
             connect={true}
             video={channel.type === 'VIDEO'}
