@@ -223,8 +223,7 @@ const ChatSidebar = (id: any) => {
                                 title={optionChannel.name}
                                 className={`max-w-[120px] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#fff] 2xl:max-w-[150px]  ${
                                   isbasePathToCheckChannel &&
-                                  isbasePathToCheckChannel[5] ===
-                                    optionChannel.id &&
+                                  basePathToCheck[5] === optionChannel.id &&
                                   'text-[#fff]'
                                 }`}
                               >
