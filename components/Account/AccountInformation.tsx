@@ -27,6 +27,7 @@ import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
 import { AccountContext } from '../../contexts/AccountContext'
 import { editUser } from '@/utils/api-user'
+import EditPasswordModal from './EditPasswordModal'
 
 export interface AccountInformationI {
   onUpdate(): void
@@ -36,6 +37,7 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
   const { user, setUser } = useContext(AccountContext)
 
   const [isLoading, setIsLoading] = useState(false)
+  const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [hasChange, setHasChange] = useState(false)
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
@@ -50,6 +52,14 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
       setHasChange(true)
       setNewNameUser(e.target.value)
     }
+  }
+
+  const openModal = () => {
+    setIsChangingPassword(true)
+  }
+
+  const closeModal = () => {
+    setIsChangingPassword(false)
   }
 
   const handleUpdateUser = async () => {
@@ -155,14 +165,19 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
             isLoading
               ? 'animate-pulse bg-[#8e68e829]'
               : 'cursor-pointer  hover:bg-[#8e68e829]'
-          } w-fit h-fit  items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
+          } h-fit w-fit  items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
           onClick={() => {
-            handleUpdateUser()
+            openModal()
           }}
         >
           Change password
         </div>
       </div>
+      <EditPasswordModal
+        isOpen={isChangingPassword}
+        onClose={closeModal}
+        onUpdate={closeModal}
+      />
     </div>
   )
 }

@@ -24,7 +24,7 @@ import {
 import nookies, { parseCookies } from 'nookies'
 import { changePassword } from '@/utils/api-user'
 
-const EditWorkspaceModal = ({ isOpen, onClose, onUpdate }) => {
+const EditPasswordModal = ({ isOpen, onClose, onUpdate }) => {
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
@@ -108,7 +108,7 @@ const EditWorkspaceModal = ({ isOpen, onClose, onUpdate }) => {
             className="w-full rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-4 mt-12">
           <label
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
@@ -168,4 +168,4 @@ const EditWorkspaceModal = ({ isOpen, onClose, onUpdate }) => {
   )
 }
 
-export default EditWorkspaceModal
+export default EditPasswordModal
