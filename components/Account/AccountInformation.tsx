@@ -32,22 +32,24 @@ export interface AccountInformationI {
 }
 
 const AccountInfo = ({ onUpdate }: AccountInformationI) => {
+  const { user } = useContext(AccountContext)
+
   const [isLoading, setIsLoading] = useState(false)
   const [hasChange, setHasChange] = useState(false)
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
-
-  const { user } = useContext(AccountContext)
+  const [newNameUser, setNewNameUser] = useState<any>(user?.name)
 
   const [selected, setSelected] = useState<any>('normal')
 
   const menuRef = useRef(null)
 
-  //   const handleInputChange = (e) => {
-  //     if (!isLoading) {
-  //       setMemberEmailToAdd(e.target.value)
-  //     }
-  //   }
+  const handleInputChange = (e) => {
+    if (!isLoading) {
+      setHasChange(true)
+      setNewNameUser(e.target.value)
+    }
+  }
 
   //   const handleInviteMember = async () => {
   //     setIsLoading(true)
@@ -104,7 +106,7 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
         <label htmlFor="workspaceName" className="mb-4 block text-[16px]">
           Account information
         </label>
-        <div className="mt-[50px] flex  gap-x-[20px]">
+        <div className="mt-[30px]  gap-x-[20px]">
           <label htmlFor="workspaceName" className="mb-4 block text-[12px]">
             Email
           </label>
@@ -113,11 +115,39 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
             disabled={true}
             id="workspaceName"
             name="workspaceName"
-            maxLength={100}
-            value={user?.name}
+            maxLength={200}
+            value={user?.email}
             className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
           />
         </div>
+        <div className="mt-[20px]  gap-x-[20px]">
+          <label htmlFor="workspaceName" className="mb-4 block text-[12px]">
+            Name
+          </label>
+          <input
+            type="text"
+            id="workspaceName"
+            name="workspaceName"
+            maxLength={200}
+            value={newNameUser}
+            onChange={handleInputChange}
+            className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
+          />
+        </div>
+        {hasChange && newNameUser?.length > 0 && (
+          <div
+            className={`${
+              isLoading
+                ? 'animate-pulse bg-[#8e68e829]'
+                : 'cursor-pointer  hover:bg-[#8e68e829]'
+            } mt-[35px] w-fit  items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
+            onClick={() => {
+              // handleInviteMember()
+            }}
+          >
+            Update profile
+          </div>
+        )}
       </div>
     </div>
   )

@@ -98,7 +98,7 @@ const Account = () => {
                   setSubNavBarSelected(value)
                 }}
                 selected={subNavBarSelected}
-                itensList={['General', 'Bills']}
+                itensList={['General', 'Plans']}
               />
               <div className="mt-[50px]">
                 {subNavBarSelected === 'General' && (
