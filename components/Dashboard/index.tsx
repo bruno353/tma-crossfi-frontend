@@ -67,7 +67,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <section className="relative z-10 overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[180px]">
+      <section className="relative z-10 overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[90px]">
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
             <div>Dashboard</div>
@@ -81,7 +81,7 @@ const Dashboard = () => {
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]">
             {workspaces.map((workspace, index) => (
               <a key={index} href={`/workspace/${workspace.id}`}>
-                <div className="grid h-40 w-full cursor-pointer rounded-[5px]  border-[0.6px] border-[#c5c4c495] bg-transparent  p-[20px] text-[#fff] hover:bg-[#8e68e829]">
+                <div className="grid h-40 w-full cursor-pointer rounded-[5px]  border-[0.6px] border-[#c5c4c45e] bg-transparent  p-[20px] text-[#fff] hover:bg-[#13132c]">
                   <div className="flex items-start gap-x-[20px] overflow-hidden ">
                     <img
                       src={
