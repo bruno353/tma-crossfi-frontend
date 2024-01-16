@@ -26,13 +26,14 @@ import {
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
 import { AccountContext } from '../../contexts/AccountContext'
+import { editUser } from '@/utils/api-user'
 
 export interface AccountInformationI {
   onUpdate(): void
 }
 
 const AccountInfo = ({ onUpdate }: AccountInformationI) => {
-  const { user } = useContext(AccountContext)
+  const { user, setUser } = useContext(AccountContext)
 
   const [isLoading, setIsLoading] = useState(false)
   const [hasChange, setHasChange] = useState(false)
@@ -51,28 +52,26 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
     }
   }
 
-  //   const handleInviteMember = async () => {
-  //     setIsLoading(true)
+  const handleUpdateUser = async () => {
+    setIsLoading(true)
 
-  //     const { userSessionToken } = parseCookies()
-  //     if (memberEmailToAdd.length > 0) {
-  //       const data = {
-  //         role: selected,
-  //         userEmail: memberEmailToAdd,
-  //         id,
-  //       }
+    const { userSessionToken } = parseCookies()
 
-  //       try {
-  //         await inviteUserToWorkspace(data, userSessionToken)
-  //         toast.success(`Success`)
-  //         setMemberEmailToAdd('')
-  //       } catch (err) {
-  //         console.log(err)
-  //         toast.error(`Error: ${err.response.data.message}`)
-  //       }
-  //     }
-  //     setIsLoading(false)
-  //   }
+    const data = {
+      name: newNameUser,
+    }
+
+    try {
+      await editUser(data, userSessionToken)
+      const newUser = { ...user }
+      newUser.name = newNameUser
+      setUser(newUser)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setIsLoading(false)
+  }
 
   const closeMenu = () => {
     setIsDeleteUserOpen(false)
@@ -142,7 +141,7 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
                 : 'cursor-pointer  hover:bg-[#8e68e829]'
             } mt-[35px] w-fit  items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
             onClick={() => {
-              // handleInviteMember()
+              handleUpdateUser()
             }}
           >
             Update profile
