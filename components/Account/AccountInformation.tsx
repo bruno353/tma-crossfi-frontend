@@ -66,6 +66,7 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
       const newUser = { ...user }
       newUser.name = newNameUser
       setUser(newUser)
+      setHasChange(false)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -101,52 +102,66 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
 
   return (
     <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
-      <div>
-        <label htmlFor="workspaceName" className="mb-4 block text-[16px]">
-          Account information
-        </label>
-        <div className="mt-[30px]  gap-x-[20px]">
-          <label htmlFor="workspaceName" className="mb-4 block text-[12px]">
-            Email
+      <div className="flex gap-x-[50px]">
+        <div>
+          <label htmlFor="workspaceName" className="mb-4 block text-[16px]">
+            Account information
           </label>
-          <input
-            type="text"
-            disabled={true}
-            id="workspaceName"
-            name="workspaceName"
-            maxLength={200}
-            value={user?.email}
-            className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
-          />
-        </div>
-        <div className="mt-[20px]  gap-x-[20px]">
-          <label htmlFor="workspaceName" className="mb-4 block text-[12px]">
-            Name
-          </label>
-          <input
-            type="text"
-            id="workspaceName"
-            name="workspaceName"
-            maxLength={200}
-            value={newNameUser}
-            onChange={handleInputChange}
-            className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
-          />
-        </div>
-        {hasChange && newNameUser?.length > 0 && (
-          <div
-            className={`${
-              isLoading
-                ? 'animate-pulse bg-[#8e68e829]'
-                : 'cursor-pointer  hover:bg-[#8e68e829]'
-            } mt-[35px] w-fit  items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
-            onClick={() => {
-              handleUpdateUser()
-            }}
-          >
-            Update profile
+          <div className="mt-[30px]  gap-x-[20px]">
+            <label htmlFor="workspaceName" className="mb-4 block text-[12px]">
+              Email
+            </label>
+            <input
+              type="text"
+              disabled={true}
+              id="workspaceName"
+              name="workspaceName"
+              maxLength={200}
+              value={user?.email}
+              className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
+            />
           </div>
-        )}
+          <div className="mt-[20px]  gap-x-[20px]">
+            <label htmlFor="workspaceName" className="mb-4 block text-[12px]">
+              Name
+            </label>
+            <input
+              type="text"
+              id="workspaceName"
+              name="workspaceName"
+              maxLength={200}
+              value={newNameUser}
+              onChange={handleInputChange}
+              className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
+            />
+          </div>
+          {hasChange && newNameUser?.length > 0 && (
+            <div
+              className={`${
+                isLoading
+                  ? 'animate-pulse bg-[#8e68e829]'
+                  : 'cursor-pointer  hover:bg-[#8e68e829]'
+              } mt-[35px] w-fit  items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
+              onClick={() => {
+                handleUpdateUser()
+              }}
+            >
+              Update profile
+            </div>
+          )}
+        </div>
+        <div
+          className={`${
+            isLoading
+              ? 'animate-pulse bg-[#8e68e829]'
+              : 'cursor-pointer  hover:bg-[#8e68e829]'
+          } w-fit h-fit  items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
+          onClick={() => {
+            handleUpdateUser()
+          }}
+        >
+          Change password
+        </div>
       </div>
     </div>
   )
