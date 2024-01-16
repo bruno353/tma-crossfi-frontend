@@ -24,9 +24,9 @@ import Link from 'next/link'
 import { getUserWorkspace, getWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
 import EditWorkspaceModal from './EditWorkspaceModal'
-import WorkspaceNavBar from './WorkspaceNavBar'
 import WorkspaceMembers from './WorkspaceMembers'
 import WorkspaceSettings from './WorkspaceSettings'
+import SubNavBar from './WorkspaceNavBar'
 
 const WorkspacePage = ({ id }) => {
   const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
@@ -105,16 +105,12 @@ const WorkspacePage = ({ id }) => {
             )}
           </div>
           <div className="mt-[45px]">
-            <WorkspaceNavBar
-              onChangeSettings={() => {
-                console.log('settings selected')
-                setWorkspaceNavBarSelected('Settings')
-              }}
-              onChangeMembers={() => {
-                console.log('members selected')
-                setWorkspaceNavBarSelected('Members')
+            <SubNavBar
+              onChange={(value) => {
+                setWorkspaceNavBarSelected(value)
               }}
               selected={workspaceNavBarSelected}
+              itensList={['Members', 'Settings']}
             />
             <div className="mt-[50px]">
               {workspaceNavBarSelected === 'Members' && (

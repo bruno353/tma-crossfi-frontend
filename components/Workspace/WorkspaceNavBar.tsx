@@ -23,31 +23,33 @@ import {
 } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 
-const WorkspaceNavBar = ({ onChangeMembers, onChangeSettings, selected }) => {
+export interface SubNavBarI {
+  selected: string
+  itensList: string[]
+  onChange(string): void
+}
+
+const SubNavBar = ({ onChange, selected, itensList }: SubNavBarI) => {
   return (
     <div className="flex w-fit cursor-pointer  px-[15px] text-[#C5C4C4]">
-      <div
-        onClick={onChangeMembers}
-        className={`border-b-[1.2px]  px-[15px] pb-[5px] hover:border-[#642EE7] ${
-          selected === 'Members'
-            ? 'border-[#642EE7] text-[#642EE7]'
-            : 'border-[#908f8f]'
-        }`}
-      >
-        Members
-      </div>
-      <div
-        onClick={onChangeSettings}
-        className={`border-b-[1.2px]  px-[15px] pb-[5px] hover:border-[#642EE7] ${
-          selected === 'Settings'
-            ? 'border-[#642EE7] text-[#642EE7]'
-            : 'border-[#908f8f]'
-        }`}
-      >
-        Settings
-      </div>
+      {itensList?.length > 0 &&
+        itensList?.map((item, index) => (
+          <div
+            key={index}
+            onClick={() => {
+              onChange(item)
+            }}
+            className={`border-b-[1.2px]  px-[15px] pb-[5px] hover:border-[#642EE7] ${
+              selected === item
+                ? 'border-[#642EE7] text-[#642EE7]'
+                : 'border-[#908f8f]'
+            }`}
+          >
+            {item}
+          </div>
+        ))}
     </div>
   )
 }
 
-export default WorkspaceNavBar
+export default SubNavBar
