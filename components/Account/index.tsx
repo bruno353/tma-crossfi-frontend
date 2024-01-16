@@ -22,12 +22,13 @@ import { AccountContext } from '../../contexts/AccountContext'
 import Link from 'next/link'
 import { getUserWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
+import SubNavBar from '../Modals/SubNavBar'
+import AccountInfo from './AccountInformation'
 
 const Account = () => {
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [settingsNavBarSelected, setSettingsNavBarSelected] =
-    useState('General')
+  const [subNavBarSelected, setSubNavBarSelected] = useState('General')
   const { user } = useContext(AccountContext)
 
   const openModal = () => {
@@ -92,46 +93,41 @@ const Account = () => {
               )} */}
             </div>
             <div className="mt-[45px]">
-              <WorkspaceNavBar
-                onChangeSettings={() => {
-                  console.log('settings selected')
-                  setWorkspaceNavBarSelected('Settings')
+              <SubNavBar
+                onChange={(value) => {
+                  setSubNavBarSelected(value)
                 }}
-                onChangeMembers={() => {
-                  console.log('members selected')
-                  setWorkspaceNavBarSelected('Members')
-                }}
-                selected={workspaceNavBarSelected}
+                selected={subNavBarSelected}
+                itensList={['General', 'Bills']}
               />
               <div className="mt-[50px]">
-                {workspaceNavBarSelected === 'Members' && (
-                  <WorkspaceMembers
-                    users={workspace?.UserWorkspace}
-                    id={id}
-                    isUserAdmin={workspace?.isUserAdmin}
-                    onUpdate={getData}
+                {subNavBarSelected === 'General' && (
+                  <AccountInfo
+                    onUpdate={() => {
+                      console.log('')
+                    }}
                   />
                 )}
-                {workspaceNavBarSelected === 'Settings' && (
+                {/* {subNavBarSelected === 'Bills' && (
                   <WorkspaceSettings
                     id={id}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
                   />
-                )}
+                )} */}
               </div>
             </div>
             <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
           </div>
         </section>
-        <EditWorkspaceModal
+        {/* <EditWorkspaceModal
           isOpen={isEditingWorkspace}
           onClose={closeModal}
           onUpdate={getData}
           previousWorkspaceName={workspace?.name}
           previouslogoURL={workspace?.finalURL}
           workspaceId={workspace?.id}
-        />
+        /> */}
       </>
     )
   }

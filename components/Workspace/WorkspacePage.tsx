@@ -26,7 +26,7 @@ import { WorkspaceProps } from '@/types/workspace'
 import EditWorkspaceModal from './EditWorkspaceModal'
 import WorkspaceMembers from './WorkspaceMembers'
 import WorkspaceSettings from './WorkspaceSettings'
-import SubNavBar from './WorkspaceNavBar'
+import SubNavBar from '../Modals/SubNavBar'
 
 const WorkspacePage = ({ id }) => {
   const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
