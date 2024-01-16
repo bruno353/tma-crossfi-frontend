@@ -28,7 +28,7 @@ const Menu = ({ user, onSignOut }: MenuI) => {
           <div>{user.name}</div>
         </div>
         <div className="my-[20px] h-[1px] w-full bg-[#33323e]"></div>
-        <Link href={'/settings'}>
+        <Link href={'/dashboard'}>
           <div className="flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] hover:bg-[#c5c5c510]">
             <img
               alt="ethereum avatar"
