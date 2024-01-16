@@ -32,14 +32,14 @@ const Menu = ({ user, onSignOut }: MenuI) => {
           <div className="flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] hover:bg-[#c5c5c510]">
             <img
               alt="ethereum avatar"
-              src="/images/header/settings.svg"
-              className="w-[16px] rounded-full"
+              src="/images/header/home.svg"
+              className="w-[17px] rounded-full"
             ></img>
             <div className="text-[#c5c4c4]">Dashboard</div>
           </div>
         </Link>
         <Link href={'/settings'}>
-          <div className="flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] hover:bg-[#c5c5c510]">
+          <div className="mt-[10px] flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] hover:bg-[#c5c5c510]">
             <img
               alt="ethereum avatar"
               src="/images/header/settings.svg"
