@@ -29,6 +29,7 @@ const EditPasswordModal = ({ isOpen, onClose, onUpdate }) => {
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [isLoading, setIsLoading] = useState(null)
+  const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
 
   const handleOverlayClick = () => {
     onClose()
@@ -91,14 +92,31 @@ const EditPasswordModal = ({ isOpen, onClose, onUpdate }) => {
         </div>
         <h2 className="mb-6 text-xl">Change Password</h2>
         <div className="mb-4">
-          <label
-            htmlFor="workspaceName"
-            className="mb-2 block text-[14px] text-[#C5C4C4]"
-          >
-            Current password
-          </label>
+          <div className="mb-2 flex gap-x-[20px]">
+            <label
+              htmlFor="workspaceName"
+              className="block text-[14px] text-[#C5C4C4]"
+            >
+              Current password
+            </label>
+            {passwordVisibility ? (
+              <div
+                onClick={() => setPasswordVisibility(false)}
+                className="flex cursor-pointer items-center text-center"
+              >
+                <EyeSlash className="cursor-pointer text-[#C5C4C4]" />
+              </div>
+            ) : (
+              <div
+                onClick={() => setPasswordVisibility(true)}
+                className="flex cursor-pointer items-center text-center"
+              >
+                <Eye className="cursor-pointer text-[#C5C4C4]" />
+              </div>
+            )}
+          </div>
           <input
-            type="text"
+            type={passwordVisibility ? 'password' : 'text'}
             id="workspaceName"
             name="workspaceName"
             value={currentPassword}
@@ -108,15 +126,18 @@ const EditPasswordModal = ({ isOpen, onClose, onUpdate }) => {
             className="w-full rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
           />
         </div>
-        <div className="mb-4 mt-12">
-          <label
-            htmlFor="workspaceName"
-            className="mb-2 block text-[14px] text-[#C5C4C4]"
-          >
-            New password
-          </label>
+        <div className="mb-4 mt-8">
+          <div className="mb-2 flex gap-x-[20px]">
+            <label
+              htmlFor="workspaceName"
+              className="block text-[14px] text-[#C5C4C4]"
+            >
+              New password
+            </label>
+          </div>
+
           <input
-            type="text"
+            type={passwordVisibility ? 'password' : 'text'}
             id="workspaceName"
             name="workspaceName"
             value={newPassword}
@@ -134,7 +155,7 @@ const EditPasswordModal = ({ isOpen, onClose, onUpdate }) => {
             Confirm new password
           </label>
           <input
-            type="text"
+            type={passwordVisibility ? 'password' : 'text'}
             id="workspaceName"
             name="workspaceName"
             value={confirmNewPassword}
