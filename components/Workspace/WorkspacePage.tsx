@@ -27,6 +27,7 @@ import EditWorkspaceModal from './EditWorkspaceModal'
 import WorkspaceMembers from './WorkspaceMembers'
 import WorkspaceSettings from './WorkspaceSettings'
 import SubNavBar from '../Modals/SubNavBar'
+import WorkspaceAnalytics from './WorkspaceAnalytics'
 
 const WorkspacePage = ({ id }) => {
   const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
@@ -113,6 +114,13 @@ const WorkspacePage = ({ id }) => {
               itensList={['Analytics', 'Members', 'Settings']}
             />
             <div className="mt-[50px]">
+              {workspaceNavBarSelected === 'Analytics' && (
+                <WorkspaceAnalytics
+                  workspace={workspace}
+                  isUserAdmin={workspace?.isUserAdmin}
+                  onUpdate={getData}
+                />
+              )}
               {workspaceNavBarSelected === 'Members' && (
                 <WorkspaceMembers
                   users={workspace?.UserWorkspace}
