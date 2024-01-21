@@ -61,8 +61,8 @@ const WorkspaceAnalytics = ({
             >
               <img
                 alt="ethereum avatar"
-                src="images/workspace/icp.png"
-                className="w-[35px] rounded-full"
+                src="/images/workspace/icp.png"
+                className="w-[35px] cursor-pointer rounded-full"
               ></img>
               <div className="w-[350px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                 {workspace.icpWalletPubKId}
