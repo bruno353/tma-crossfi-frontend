@@ -72,7 +72,7 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
     try {
       const res = await createWorkspace(formData, userSessionToken)
       setIsLoading(false)
-      push(`/workspace/${res.id}`)
+      push(`/workspace/${res?.id}`)
       onClose()
     } catch (err) {
       console.log(err)
