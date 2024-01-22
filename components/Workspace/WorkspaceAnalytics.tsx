@@ -28,6 +28,7 @@ import { UserWorkspaceProps, WorkspaceProps } from '@/types/workspace'
 import UserWorkspaceInfoModal from './UserWorkspaceInfoModal'
 import DeleteUserWorkspaceModal from './DeleteUserWorkspaceModal'
 import ICPInfoModal from './ICPInfoModal'
+import { transformString } from '@/utils/functions'
 
 export interface WorkspaceMembersI {
   workspace: WorkspaceProps
@@ -55,18 +56,23 @@ const WorkspaceAnalytics = ({
         <div>My blockchain wallets</div>
         <div className="mt-[20px] grid gap-y-[25px]">
           <div className="flex items-center gap-x-[10px] text-[15px] font-normal">
-            <div
-              onMouseEnter={() => setIsUserModalOpen(workspace.icpWalletPubKId)}
-              onMouseLeave={() => setIsUserModalOpen(null)}
-              className="relative flex items-center gap-x-[10px]"
-            >
+            <div className="relative flex items-center gap-x-[10px]">
               <img
                 alt="ethereum avatar"
                 src="/images/workspace/icp.png"
                 className="w-[35px] cursor-pointer rounded-full"
+                onMouseEnter={() =>
+                  setIsUserModalOpen(workspace.icpWalletPubKId)
+                }
+                onMouseLeave={() => setIsUserModalOpen(null)}
               ></img>
-              <div className="w-[350px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                {workspace.icpWalletPubKId}
+              <div className="flex w-[250px] gap-x-[15px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                {transformString(workspace.icpWalletPubKId)}
+                <img
+                  alt="ethereum avatar"
+                  src="/images/workspace/copy.svg"
+                  className="w-[20px] cursor-pointer rounded-full"
+                ></img>
               </div>
               {isUserModalOpen === workspace.icpWalletPubKId && (
                 <div className="absolute -top-[10px] -translate-y-[100%] ">
