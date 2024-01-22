@@ -27,6 +27,7 @@ import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps, WorkspaceProps } from '@/types/workspace'
 import UserWorkspaceInfoModal from './UserWorkspaceInfoModal'
 import DeleteUserWorkspaceModal from './DeleteUserWorkspaceModal'
+import ICPInfoModal from './ICPInfoModal'
 
 export interface WorkspaceMembersI {
   workspace: WorkspaceProps
@@ -69,7 +70,7 @@ const WorkspaceAnalytics = ({
               </div>
               {isUserModalOpen === workspace.icpWalletPubKId && (
                 <div className="absolute -top-[10px] -translate-y-[100%] ">
-                  {/* <UserWorkspaceInfoModal userWorkspace={workspaceUser} /> */}
+                  <ICPInfoModal workspace={workspace} />
                 </div>
               )}
             </div>
