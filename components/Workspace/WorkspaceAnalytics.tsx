@@ -54,7 +54,7 @@ const WorkspaceAnalytics = ({
     <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
       <div className="mt-[50px] text-[18px] font-medium">
         <div>My blockchain wallets</div>
-        <div className="mt-[20px] grid gap-y-[25px]">
+        <div className="mt-[30px] grid gap-y-[25px]">
           <div className="flex items-center gap-x-[10px] text-[15px] font-normal">
             <div className="relative flex items-center gap-x-[10px]">
               <img
@@ -66,12 +66,15 @@ const WorkspaceAnalytics = ({
                 }
                 onMouseLeave={() => setIsUserModalOpen(null)}
               ></img>
-              <div className="flex w-[250px] gap-x-[15px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+              <div className="flex w-[250px] gap-x-[12px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                 {transformString(workspace.icpWalletPubKId)}
                 <img
                   alt="ethereum avatar"
                   src="/images/workspace/copy.svg"
                   className="w-[20px] cursor-pointer rounded-full"
+                  onClick={() => {
+                    navigator.clipboard.writeText(workspace.icpWalletPubKId)
+                  }}
                 ></img>
               </div>
               {isUserModalOpen === workspace.icpWalletPubKId && (
