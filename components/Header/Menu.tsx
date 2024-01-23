@@ -25,7 +25,7 @@ const Menu = ({ user, onSignOut }: MenuI) => {
             src={user.profilePicture}
             className="w-[40px] rounded-full"
           ></img>
-          <div>{user.name}</div>
+          <div>{user.name || user.email}</div>
         </div>
         <div className="my-[20px] h-[1px] w-full bg-[#33323e]"></div>
         <Link href={'/dashboard'}>

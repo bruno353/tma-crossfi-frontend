@@ -288,7 +288,7 @@ const ChatSidebar = (id: any) => {
                         className="w-[30px] rounded-full"
                       ></img>
                       <div className="max-w-[120px] overflow-hidden  truncate text-ellipsis whitespace-nowrap 2xl:max-w-[180px]">
-                        {workspaceUser.user.name}
+                        {workspaceUser.user.name || workspaceUser.user.email}
                       </div>
                       {isUserModalOpen === workspaceUser.id && (
                         <div className="absolute -top-[10px] -translate-y-[100%] translate-x-[50%]">

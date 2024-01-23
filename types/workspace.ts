@@ -19,6 +19,7 @@ export interface WorkspaceProps {
   updatedAt: string
   icpWalletPubKPrincipal: string
   icpWalletPubKId: string
+  icpAccountBalance: string
   UserWorkspace: UserWorkspaceProps[]
   isUserAdmin: boolean
 }

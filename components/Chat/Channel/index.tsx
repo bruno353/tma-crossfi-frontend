@@ -484,7 +484,10 @@ const Channel = (id: any) => {
                       <div>
                         {!sameUser && (
                           <div className="flex h-fit gap-x-[9px]">
-                            <div>{message?.userWorkspace?.user?.name} </div>
+                            <div>
+                              {message?.userWorkspace?.user?.name ||
+                                message?.userWorkspace?.user?.email}{' '}
+                            </div>
                             <div className="my-auto text-[10px] text-[#888888] 2xl:text-[12px]">
                               {formatDate(message?.createdAt)}
                             </div>

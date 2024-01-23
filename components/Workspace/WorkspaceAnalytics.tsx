@@ -83,7 +83,7 @@ const WorkspaceAnalytics = ({
                 </div>
               )}
             </div>
-            <div>Balance: 0 ICP</div>
+            <div>Balance: {workspace?.icpAccountBalance} ICP</div>
           </div>
         </div>
       </div>
