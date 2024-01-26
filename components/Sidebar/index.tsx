@@ -124,34 +124,56 @@ const Sidebar = (id: any) => {
       <div
         // onMouseEnter={() => setIsSidebarOpen(true)}
         // onMouseLeave={() => setIsSidebarOpen(false)}
-        className="z-[999] ml-[15px]  mt-[40px]  flex w-fit overflow-hidden rounded-[10px] bg-[#1D2144] px-[10px]  py-36 text-[16px] lg:py-[60px]"
+        className="z-[999] ml-[15px]  mt-[40px]  flex w-[180px] overflow-hidden rounded-[10px] bg-[#1D2144] px-[10px]  py-36 text-[16px] lg:py-[60px]"
       >
-        <div className="text-[#fff]">
-          {sidebarOptions.map((option, index) => (
+        <div className="w-full">
+          {workspace && (
             <div
-              onClick={() => {
-                handleSidebarClick(option.name, option.option)
-              }}
-              key={index}
+              className={`mb-[5px] flex w-full cursor-pointer items-center  gap-x-[10px] rounded-[7px] px-[10px] py-[5px] text-[#fff] hover:bg-[#dbdbdb1e]`}
             >
-              <div
-                className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[5px] hover:bg-[#dbdbdb1e] ${
-                  sidebarOption === option.name && 'bg-[#dbdbdb1e]'
-                }`}
-              >
-                <img
-                  src={option.imgSource}
-                  alt="image"
-                  className="mx-auto w-[20px] rounded-full"
-                />
-                {isSidebarOpen && (
-                  <div className="text-center text-[13px] font-light">
-                    {option.name}
-                  </div>
-                )}
-              </div>
+              <img
+                src={
+                  workspace?.finalURL
+                    ? workspace?.finalURL
+                    : '/images/dashboard/work.webp'
+                }
+                alt="image"
+                className="mx-auto w-[20px] rounded-full"
+              />
+              {isSidebarOpen && (
+                <div className="w-full text-[13px] font-light">
+                  {workspace.name}
+                </div>
+              )}
             </div>
-          ))}
+          )}
+          <div className="text-[#fff]">
+            {sidebarOptions.map((option, index) => (
+              <div
+                onClick={() => {
+                  handleSidebarClick(option.name, option.option)
+                }}
+                key={index}
+              >
+                <div
+                  className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[5px] hover:bg-[#dbdbdb1e] ${
+                    sidebarOption === option.name && 'bg-[#dbdbdb1e]'
+                  }`}
+                >
+                  <img
+                    src={option.imgSource}
+                    alt="image"
+                    className="w-[20px] rounded-full"
+                  />
+                  {isSidebarOpen && (
+                    <div className="text-center text-[13px] font-light">
+                      {option.name}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>

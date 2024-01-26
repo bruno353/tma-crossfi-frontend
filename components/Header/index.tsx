@@ -265,7 +265,7 @@ const Header = () => {
                       className="w-[40px] rounded-full"
                     ></img>
                     <img
-                      alt="ethereum avatar"
+                      alt="arrow"
                       src="/images/header/arrow.svg"
                       className="w-[15px] rounded-full"
                     ></img>
