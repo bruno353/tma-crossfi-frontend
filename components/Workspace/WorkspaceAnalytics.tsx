@@ -62,22 +62,22 @@ const WorkspaceAnalytics = ({
                 src="/images/workspace/icp.png"
                 className="w-[35px] cursor-pointer rounded-full"
                 onMouseEnter={() =>
-                  setIsUserModalOpen(workspace.icpWalletPubKId)
+                  setIsUserModalOpen(workspace?.icpWalletPubKId)
                 }
                 onMouseLeave={() => setIsUserModalOpen(null)}
               ></img>
               <div className="flex w-[250px] gap-x-[12px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                {transformString(workspace.icpWalletPubKId)}
+                {transformString(workspace?.icpWalletPubKId)}
                 <img
                   alt="ethereum avatar"
                   src="/images/workspace/copy.svg"
                   className="w-[20px] cursor-pointer rounded-full"
                   onClick={() => {
-                    navigator.clipboard.writeText(workspace.icpWalletPubKId)
+                    navigator.clipboard.writeText(workspace?.icpWalletPubKId)
                   }}
                 ></img>
               </div>
-              {isUserModalOpen === workspace.icpWalletPubKId && (
+              {isUserModalOpen === workspace?.icpWalletPubKId && (
                 <div className="absolute -top-[10px] -translate-y-[100%] ">
                   <ICPInfoModal workspace={workspace} />
                 </div>
