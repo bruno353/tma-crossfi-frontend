@@ -26,8 +26,8 @@ const ICPInfoModal = ({ workspace }: MenuI) => {
             ></img>
             <div>Internet Computer Protocol</div>
           </div>
-          <div>{workspace.icpWalletPubKId}</div>
-          <div>{workspace.icpWalletPubKPrincipal}</div>
+          <div>{workspace?.icpWalletPubKId}</div>
+          <div>{workspace?.icpWalletPubKPrincipal}</div>
           <div>Balance: 0 ICP</div>
         </div>
       </div>

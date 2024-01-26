@@ -83,10 +83,8 @@ const Dm = (id: any, workspaceId: any) => {
     message: NewConversationMessageProps,
   ) {
     if (message.message.userWorkspaceId === id.id) {
-      console.log('the conversation here q queremosssss')
       console.log(conversation)
       if (!conversation) {
-        console.log('nao possui conversation irmao')
         getData(id.id)
       } else {
         const messageExist = conversation.directMessages.find(
@@ -701,7 +699,6 @@ const Dm = (id: any, workspaceId: any) => {
           workspaceId={workspace?.id}
           handleNewChannelMessage={(message) => {}}
           handleNewConversationMessage={(message) => {
-            console.log('recebi no componente a msg pessoal')
             handleNewConversationMessageTreatment(message)
           }}
         />

@@ -70,12 +70,10 @@ const Channel = (id: any) => {
 
   function handleNewChannelMessageTreatment(message: NewChannelMessageProps) {
     if (message.channelId === id.id) {
-      console.log('123 passei')
       const messageExist = channel.messages.find(
         (mess) => mess.id === message.message.id,
       )
       if (!messageExist) {
-        console.log('123 passei 2')
         const newArrayChannel = {
           ...channel,
           messages: [...channel.messages, message.message],
