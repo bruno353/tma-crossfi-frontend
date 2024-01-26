@@ -17,7 +17,6 @@ const Header = () => {
   const [notificationOpen, setNotificationOpen] = useState(false)
 
   const navbarToggleHandler = () => {
-    console.log(user)
     setNavbarOpen(!navbarOpen)
     setMenuOpen(!menuOpen)
     setNotificationOpen(false)
@@ -67,16 +66,6 @@ const Header = () => {
 
   const { user, setUser } = useContext(AccountContext)
   const { push } = useRouter()
-
-  // submenu handler
-  const [openIndex, setOpenIndex] = useState(-1)
-  const handleSubmenu = (index) => {
-    if (openIndex === index) {
-      setOpenIndex(-1)
-    } else {
-      setOpenIndex(index)
-    }
-  }
 
   function cleanData() {
     destroyCookie(undefined, 'userSessionToken')

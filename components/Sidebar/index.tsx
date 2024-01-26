@@ -4,12 +4,8 @@
 /* eslint-disable no-unused-vars */
 'use client'
 // import { useState } from 'react'
-import { useEffect, useState, ChangeEvent, FC, useContext } from 'react'
+import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Eye, EyeSlash } from 'phosphor-react'
-import * as Yup from 'yup'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -19,11 +15,42 @@ import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import Workspace from '@/components/Workspace'
 import { AccountContext } from '../../contexts/AccountContext'
+import WorkspaceSelector from './WorkspaceSelector'
 
 const Sidebar = (id: any) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true)
   const [sidebarOption, setSidebarOption] = useState<string>('')
   const { workspace, setWorkspace } = useContext(AccountContext)
+
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const toggleHandler = () => {
+    setMenuOpen(!menuOpen)
+  }
+
+  const closeMenu = () => {
+    setMenuOpen(false)
+  }
+
+  const menuRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        closeMenu()
+      }
+    }
+
+    if (menuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [menuOpen])
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -124,12 +151,15 @@ const Sidebar = (id: any) => {
       <div
         // onMouseEnter={() => setIsSidebarOpen(true)}
         // onMouseLeave={() => setIsSidebarOpen(false)}
-        className="z-[999] ml-[15px]  mt-[40px]  flex w-[180px] overflow-hidden rounded-[10px] bg-[#1D2144] px-[10px]  py-36 text-[16px] lg:py-[60px]"
+        className="relative !z-[9999] ml-[15px]  mt-[40px]  flex w-[180px]  rounded-[10px] bg-[#1D2144] px-[10px]  py-36 text-[16px] lg:py-[60px]"
       >
         <div className="w-full">
           {workspace && (
             <div
-              className={`mb-[5px] flex w-full cursor-pointer items-center  gap-x-[10px] rounded-[7px] px-[10px] py-[5px] text-[#fff] hover:bg-[#dbdbdb1e]`}
+              onClick={toggleHandler}
+              className={`relative mb-[5px] flex w-full cursor-pointer items-center  gap-x-[10px] rounded-[7px] px-[10px] py-[5px] text-[#fff] hover:bg-[#dbdbdb1e] ${
+                menuOpen && 'bg-[#dbdbdb1e]'
+              }`}
             >
               <img
                 src={
@@ -140,9 +170,17 @@ const Sidebar = (id: any) => {
                 alt="image"
                 className="mx-auto w-[20px] rounded-full"
               />
-              {isSidebarOpen && (
-                <div className="w-full text-[13px] font-light">
-                  {workspace.name}
+              <div className="w-full text-[13px] font-light">
+                {workspace.name}
+              </div>
+              <img
+                alt="ethereum avatar"
+                src="/images/header/arrow.svg"
+                className="w-[10px] rounded-full"
+              ></img>
+              {menuOpen && (
+                <div className="absolute top-[50px]" ref={menuRef}>
+                  <WorkspaceSelector />{' '}
                 </div>
               )}
             </div>
