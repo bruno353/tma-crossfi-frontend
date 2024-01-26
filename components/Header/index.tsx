@@ -210,6 +210,20 @@ const Header = () => {
                       onCloseNotifications={() => {
                         setNotificationOpen(false)
                       }}
+                      onWorkspaceInviteViewed={(value) => {
+                        const updatedUser = { ...user }
+                        const inviteIndex =
+                          updatedUser.WorkspaceInvite.findIndex(
+                            (invite) => invite.id === value,
+                          )
+                        if (inviteIndex !== -1) {
+                          updatedUser.WorkspaceInvite[inviteIndex] = {
+                            ...updatedUser.WorkspaceInvite[inviteIndex],
+                            viewed: false,
+                          }
+                          setUser(updatedUser)
+                        }
+                      }}
                     />{' '}
                   </div>
                 )}

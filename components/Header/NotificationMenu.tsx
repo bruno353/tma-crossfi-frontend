@@ -21,13 +21,13 @@ export interface NotificationMenuI {
   workspaceInvites: WorkspaceInviteProps[]
   onSignOut(): void
   onCloseNotifications(): void
+  onWorkspaceInviteViewed(id: string): void
 }
 
 const NotificationMenu = ({
-  user,
-  onSignOut,
   workspaceInvites,
   onCloseNotifications,
+  onWorkspaceInviteViewed,
 }: NotificationMenuI) => {
   const [workspaceSelected, setWorkspaceSelected] =
     useState<WorkspaceInviteProps>()
@@ -94,7 +94,8 @@ const NotificationMenu = ({
     }
 
     try {
-      handleLocalWorkspaceViewed(id)
+      onWorkspaceInviteViewed(id)
+      // handleLocalWorkspaceViewed(id)
       await setInviteUserToWorkspaceViewed(data, userSessionToken)
     } catch (err) {
       console.log(err)
