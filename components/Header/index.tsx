@@ -201,33 +201,55 @@ const Header = () => {
                     )}
                   </div>
                 )}
-                {user && notificationOpen && (
-                  <div className="absolute right-0 top-[50px]" ref={menuRef}>
-                    <NotificationMenu
-                      workspaceInvites={user.WorkspaceInvite}
-                      user={user}
-                      onSignOut={signOutUser}
-                      onCloseNotifications={() => {
-                        setNotificationOpen(false)
-                      }}
-                      onWorkspaceInviteViewed={(value) => {
-                        const updatedUser = { ...user }
-                        const inviteIndex =
-                          updatedUser.WorkspaceInvite.findIndex(
-                            (invite) => invite.id === value,
-                          )
-                        if (inviteIndex !== -1) {
-                          console.log('found')
-                          updatedUser.WorkspaceInvite[inviteIndex] = {
-                            ...updatedUser.WorkspaceInvite[inviteIndex],
-                            viewed: true,
+                {user &&
+                  notificationOpen &&
+                  user.WorkspaceInvite?.length > 0 && (
+                    <div className="absolute right-0 top-[50px]" ref={menuRef}>
+                      <NotificationMenu
+                        workspaceInvites={user.WorkspaceInvite}
+                        user={user}
+                        onSignOut={signOutUser}
+                        onCloseNotifications={() => {
+                          setNotificationOpen(false)
+                        }}
+                        onWorkspaceInviteViewed={(value) => {
+                          const updatedUser = { ...user }
+                          const inviteIndex =
+                            updatedUser.WorkspaceInvite.findIndex(
+                              (invite) => invite.id === value,
+                            )
+                          if (inviteIndex !== -1) {
+                            console.log('found')
+                            updatedUser.WorkspaceInvite[inviteIndex] = {
+                              ...updatedUser.WorkspaceInvite[inviteIndex],
+                              viewed: true,
+                            }
+                            setUser(updatedUser)
                           }
-                          setUser(updatedUser)
-                        }
-                      }}
-                    />{' '}
-                  </div>
-                )}
+                        }}
+                        onWorkspaceInviteArchived={(value) => {
+                          const updatedUser = { ...user }
+
+                          const inviteIndex =
+                            updatedUser.WorkspaceInvite.findIndex(
+                              (invite) => invite.id === value,
+                            )
+
+                          if (inviteIndex !== -1) {
+                            console.log('found archived')
+                            const updatedInvites = [
+                              ...updatedUser.WorkspaceInvite,
+                            ]
+                            updatedInvites.splice(inviteIndex, 1)
+                            console.log('final updated invites')
+                            console.log(updatedInvites)
+                            updatedUser.WorkspaceInvite = updatedInvites
+                            setUser(updatedUser)
+                          }
+                        }}
+                      />{' '}
+                    </div>
+                  )}
               </div>
               <div className="relative flex items-center justify-end pr-16 lg:pr-0">
                 {user && (
