@@ -32,13 +32,13 @@ const NotificationMenu = ({
   const [workspaceSelected, setWorkspaceSelected] =
     useState<WorkspaceInviteProps>()
   const [isLoading, setIsLoading] = useState(false)
-  const [localWorkspacesViewed, setLocalWorkspacesViewed] = useState([]) // utilized to store locally when a workspace has been viewed
   const [localWorkspacesArchived, setLocalWorkspacesArchived] = useState([]) // utilized to store locally when a workspace has been viewed
 
   const { push } = useRouter()
 
   const handleClickInvite = (workspace: WorkspaceInviteProps) => {
     if (!isLoading) {
+      console.log('click invited clicked')
       setWorkspaceSelected(workspace)
       handleSetInviteUserToWorkspaceViewed(workspace.id)
     }
@@ -87,6 +87,7 @@ const NotificationMenu = ({
   }
 
   const handleSetInviteUserToWorkspaceViewed = async (id: string) => {
+    console.log('setting to viewed')
     const { userSessionToken } = parseCookies()
 
     const data = {
@@ -95,16 +96,9 @@ const NotificationMenu = ({
 
     try {
       onWorkspaceInviteViewed(id)
-      // handleLocalWorkspaceViewed(id)
       await setInviteUserToWorkspaceViewed(data, userSessionToken)
     } catch (err) {
       console.log(err)
-    }
-  }
-
-  const handleLocalWorkspaceViewed = (id: string) => {
-    if (!localWorkspacesViewed.includes(id)) {
-      setLocalWorkspacesViewed([id, ...localWorkspacesViewed])
     }
   }
 
@@ -128,9 +122,7 @@ const NotificationMenu = ({
           >
             <div
               className={`h-[10px] w-[10px] flex-shrink-0 rounded-full  ${
-                workspace.viewed || localWorkspacesViewed.includes(workspace.id)
-                  ? 'bg-[#c5c4c4]'
-                  : 'bg-[#3415fa]'
+                workspace.viewed ? 'bg-[#c5c4c4]' : 'bg-[#3415fa]'
               }`}
             ></div>
             <div className="text-[#c5c4c4]">
@@ -153,7 +145,6 @@ const NotificationMenu = ({
                         : 'cursor-pointer  hover:bg-[#8e68e829]'
                     }  w-fit rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[11px]  text-[#642EE7] `}
                     onClick={() => {
-                      console.log(localWorkspacesViewed)
                       handleJoinWorkspace()
                     }}
                   >

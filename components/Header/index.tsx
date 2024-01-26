@@ -217,9 +217,10 @@ const Header = () => {
                             (invite) => invite.id === value,
                           )
                         if (inviteIndex !== -1) {
+                          console.log('found')
                           updatedUser.WorkspaceInvite[inviteIndex] = {
                             ...updatedUser.WorkspaceInvite[inviteIndex],
-                            viewed: false,
+                            viewed: true,
                           }
                           setUser(updatedUser)
                         }
