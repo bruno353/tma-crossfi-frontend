@@ -24,7 +24,9 @@ const Workspace = (id: any) => {
   return (
     <>
       <div className="flex">
-        <Sidebar id={id.id} />
+        <div>
+          <Sidebar id={id.id} />
+        </div>
         <div className="w-full">
           <WorkspacePage id={id.id} />
         </div>

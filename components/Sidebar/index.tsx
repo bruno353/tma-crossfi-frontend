@@ -124,7 +124,7 @@ const Sidebar = (id: any) => {
       <div
         // onMouseEnter={() => setIsSidebarOpen(true)}
         // onMouseLeave={() => setIsSidebarOpen(false)}
-        className="z-[999] flex  w-fit overflow-hidden bg-transparent bg-opacity-60 pb-16 pt-36 text-[16px] md:pb-20 lg:pb-0 lg:pt-[140px]"
+        className="z-[999] ml-[15px]  mt-[40px]  flex w-fit overflow-hidden rounded-[10px] bg-[#1D2144] px-[10px]  py-36 text-[16px] lg:py-[60px]"
       >
         <div className="text-[#fff]">
           {sidebarOptions.map((option, index) => (
@@ -135,17 +135,17 @@ const Sidebar = (id: any) => {
               key={index}
             >
               <div
-                className={`mb-[5px] cursor-pointer px-[20px] py-[20px] hover:bg-[#dbdbdb1e] ${
+                className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[5px] hover:bg-[#dbdbdb1e] ${
                   sidebarOption === option.name && 'bg-[#dbdbdb1e]'
                 }`}
               >
                 <img
                   src={option.imgSource}
                   alt="image"
-                  className="mx-auto w-[22px] rounded-full"
+                  className="mx-auto w-[20px] rounded-full"
                 />
                 {isSidebarOpen && (
-                  <div className="text-center text-[12px] font-light">
+                  <div className="text-center text-[13px] font-light">
                     {option.name}
                   </div>
                 )}

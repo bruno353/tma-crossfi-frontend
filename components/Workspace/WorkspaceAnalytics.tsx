@@ -53,7 +53,7 @@ const WorkspaceAnalytics = ({
   return (
     <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
       <div className="mt-[50px] text-[18px] font-medium">
-        <div>My blockchain wallets</div>
+        <div>Workspace's blockchain wallets</div>
         <div className="mt-[30px] grid gap-y-[25px]">
           <div className="flex items-center gap-x-[10px] text-[15px] font-normal">
             <div className="relative flex items-center gap-x-[10px]">
