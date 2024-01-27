@@ -84,19 +84,11 @@ const Dashboard = () => {
               <a key={index} href={`/workspace/${workspace.id}`}>
                 <div className="grid h-40 w-full cursor-pointer rounded-[5px]  border-[0.6px] border-[#c5c4c45e] bg-transparent  p-[20px] text-[#fff] hover:bg-[#13132c]">
                   <div className="flex items-start gap-x-[20px] overflow-hidden ">
-                    {/* <img
-                      src={
-                        workspace.finalURL
-                          ? workspace.finalURL
-                          : '/images/dashboard/work.webp'
-                      }
-                      alt="image"
-                      className="w-[40px] rounded-full"
-                    /> */}
                     <Logo
                       name={workspace.name}
                       workspaceUrl={workspace.finalURL}
                       tamanho={'[40px]'}
+                      textTamanho={'[16px]'}
                     />
                     <div
                       title={workspace.name}

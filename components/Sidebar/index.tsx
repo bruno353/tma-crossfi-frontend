@@ -17,6 +17,7 @@ import Workspace from '@/components/Workspace'
 import { AccountContext } from '../../contexts/AccountContext'
 import WorkspaceSelector from './WorkspaceSelector'
 import NewWorkspaceModal from '../Dashboard/NewWorkspace'
+import { Logo } from './Logo'
 
 const Sidebar = (id: any) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true)
@@ -172,14 +173,11 @@ const Sidebar = (id: any) => {
                 menuOpen && 'bg-[#dbdbdb1e]'
               }`}
             >
-              <img
-                src={
-                  workspace?.finalURL
-                    ? workspace?.finalURL
-                    : '/images/dashboard/work.webp'
-                }
-                alt="image"
-                className="mx-auto w-[20px] rounded-full"
+              <Logo
+                name={workspace.name}
+                workspaceUrl={workspace.finalURL}
+                tamanho={'[20px]'}
+                textTamanho={'[12px]'}
               />
               <div className="w-full text-[13px] font-normal">
                 {workspace.name}

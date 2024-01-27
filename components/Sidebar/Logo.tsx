@@ -1,4 +1,4 @@
-export const Logo = ({ name, workspaceUrl, tamanho }) => {
+export const Logo = ({ name, workspaceUrl, tamanho, textTamanho }) => {
   if (!name || name.length === 0) return null
   const firstLetter = name.charAt(0).toUpperCase()
 
@@ -31,7 +31,7 @@ export const Logo = ({ name, workspaceUrl, tamanho }) => {
   }
   return (
     <div
-      className={`flex h-${tamanho} w-${tamanho} flex-shrink-0 items-center justify-center rounded-full font-semibold text-white`}
+      className={`flex h-${tamanho} text-${textTamanho} text-center w-${tamanho} flex-shrink-0 items-center justify-center rounded-full font-semibold text-white`}
       style={{ backgroundColor }}
     >
       {firstLetter}
