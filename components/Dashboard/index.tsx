@@ -88,7 +88,6 @@ const Dashboard = () => {
                       name={workspace.name}
                       workspaceUrl={workspace.finalURL}
                       tamanho={'[40px]'}
-                      textTamanho={'[16px]'}
                     />
                     <div
                       title={workspace.name}

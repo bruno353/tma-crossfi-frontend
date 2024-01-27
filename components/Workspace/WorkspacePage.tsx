@@ -28,6 +28,7 @@ import WorkspaceMembers from './WorkspaceMembers'
 import WorkspaceSettings from './WorkspaceSettings'
 import SubNavBar from '../Modals/SubNavBar'
 import WorkspaceAnalytics from './WorkspaceAnalytics'
+import { Logo } from '../Sidebar/Logo'
 
 const WorkspacePage = ({ id }) => {
   const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
@@ -81,17 +82,14 @@ const WorkspacePage = ({ id }) => {
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="flex">
-              {workspace && (
-                <img
-                  alt="logo"
-                  src={
-                    workspace?.finalURL
-                      ? workspace?.finalURL
-                      : '/images/dashboard/work.webp'
-                  }
-                  className="w-[70px] max-w-[70px] rounded-full transition duration-300 ease-in-out group-hover:opacity-10"
+              <div className="text-[30px]">
+                <Logo
+                  name={workspace?.name}
+                  workspaceUrl={workspace?.finalURL}
+                  tamanho={'[70px]'}
                 />
-              )}
+              </div>
+
               <div className="ml-[10px] mt-auto text-[24px] font-medium 2xl:ml-[20px]">
                 {workspace?.name}
               </div>

@@ -173,12 +173,14 @@ const Sidebar = (id: any) => {
                 menuOpen && 'bg-[#dbdbdb1e]'
               }`}
             >
-              <Logo
-                name={workspace.name}
-                workspaceUrl={workspace.finalURL}
-                tamanho={'[25px]'}
-                textTamanho={'[10px]'}
-              />
+              <div className="text-[12px]">
+                <Logo
+                  name={workspace.name}
+                  workspaceUrl={workspace.finalURL}
+                  tamanho={'[25px]'}
+                />
+              </div>
+
               <div className="w-full text-[13px] font-normal">
                 {workspace.name}
               </div>

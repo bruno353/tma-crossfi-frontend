@@ -51,7 +51,6 @@ const WorkspaceSelector = ({
                     name={workspace.name}
                     workspaceUrl={workspace.finalURL}
                     tamanho={'[25px]'}
-                    textTamanho={'[14px]'}
                   />
                 </div>
                 <div className="overflow-hidden truncate text-ellipsis whitespace-nowrap text-[#c5c4c4]">
