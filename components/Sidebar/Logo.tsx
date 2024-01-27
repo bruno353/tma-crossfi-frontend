@@ -11,7 +11,7 @@ export const Logo = ({ name, workspaceUrl, tamanho }) => {
 
     // Definindo o range de cores (por exemplo, para tons pastel)
     const saturation = 60 // Saturação (0 a 100)
-    const lightness = 85 // Luminosidade (0 a 100)
+    const lightness = 20 // Luminosidade (0 a 100)
 
     const hue = hash % 360 // Matiz (0 a 360)
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`
@@ -31,7 +31,7 @@ export const Logo = ({ name, workspaceUrl, tamanho }) => {
   }
   return (
     <div
-      className={`flex h-${tamanho} w-${tamanho} items-center justify-center rounded-full font-normal text-black`}
+      className={`flex h-${tamanho} w-${tamanho} flex-shrink-0 items-center justify-center rounded-full font-semibold text-white`}
       style={{ backgroundColor }}
     >
       {firstLetter}

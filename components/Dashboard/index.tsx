@@ -23,6 +23,7 @@ import Link from 'next/link'
 import NewWorkspaceModal from './NewWorkspace'
 import { getUserWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
+import { Logo } from '../Sidebar/Logo'
 
 const Dashboard = () => {
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
@@ -83,7 +84,7 @@ const Dashboard = () => {
               <a key={index} href={`/workspace/${workspace.id}`}>
                 <div className="grid h-40 w-full cursor-pointer rounded-[5px]  border-[0.6px] border-[#c5c4c45e] bg-transparent  p-[20px] text-[#fff] hover:bg-[#13132c]">
                   <div className="flex items-start gap-x-[20px] overflow-hidden ">
-                    <img
+                    {/* <img
                       src={
                         workspace.finalURL
                           ? workspace.finalURL
@@ -91,6 +92,11 @@ const Dashboard = () => {
                       }
                       alt="image"
                       className="w-[40px] rounded-full"
+                    /> */}
+                    <Logo
+                      name={workspace.name}
+                      workspaceUrl={workspace.finalURL}
+                      tamanho={'[40px]'}
                     />
                     <div
                       title={workspace.name}
