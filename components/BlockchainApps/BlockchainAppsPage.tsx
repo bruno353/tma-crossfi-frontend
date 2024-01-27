@@ -15,27 +15,25 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css' // import styles
-import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
-import Link from 'next/link'
 // import NewWorkspaceModal from './NewWorkspace'
-import { getUserWorkspace, getWorkspace } from '@/utils/api'
+import { getBlockchainApps, getUserWorkspace, getWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
-import EditWorkspaceModal from './EditWorkspaceModal'
-import WorkspaceMembers from './WorkspaceMembers'
-import WorkspaceSettings from './WorkspaceSettings'
 import SubNavBar from '../Modals/SubNavBar'
-import WorkspaceAnalytics from './WorkspaceAnalytics'
 import { Logo } from '../Sidebar/Logo'
+import { BlockchainAppProps } from '@/types/blockchain-app'
+import AppsRender from './AppsRender'
 
 const BlockchainAppsPage = ({ id }) => {
   const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [workspaceNavBarSelected, setWorkspaceNavBarSelected] =
     useState('Analytics')
-  const [workspace, setWorkspace] = useState<WorkspaceProps>()
+  const [blockchainApps, setBlockchainApps] = useState<BlockchainAppProps[]>([])
+
+  const { workspace, user } = useContext(AccountContext)
 
   const openModal = () => {
     setIsEditingWorkspace(true)
@@ -53,8 +51,8 @@ const BlockchainAppsPage = ({ id }) => {
     }
 
     try {
-      const res = await getWorkspace(data, userSessionToken)
-      setWorkspace(res)
+      const res = await getBlockchainApps(data, userSessionToken)
+      setBlockchainApps(res)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -82,16 +80,8 @@ const BlockchainAppsPage = ({ id }) => {
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="flex">
-              <div className="text-[30px]">
-                <Logo
-                  name={workspace?.name}
-                  workspaceUrl={workspace?.finalURL}
-                  tamanho={'[70px]'}
-                />
-              </div>
-
-              <div className="ml-[10px] mt-auto text-[24px] font-medium 2xl:ml-[20px]">
-                {workspace?.name}
+              <div className="mt-auto text-[24px] font-medium">
+                Blockchain apps
               </div>
             </div>
             {workspace?.isUserAdmin && (
@@ -99,7 +89,7 @@ const BlockchainAppsPage = ({ id }) => {
                 onClick={openModal}
                 className="cursor-pointer rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] hover:bg-[#8e68e829]"
               >
-                Edit workspace
+                New app
               </div>
             )}
           </div>
@@ -112,24 +102,9 @@ const BlockchainAppsPage = ({ id }) => {
               itensList={['Analytics', 'Members', 'Settings']}
             />
             <div className="mt-[50px]">
-              {workspaceNavBarSelected === 'Analytics' && (
-                <WorkspaceAnalytics
-                  workspace={workspace}
-                  isUserAdmin={workspace?.isUserAdmin}
-                  onUpdate={getData}
-                />
-              )}
-              {workspaceNavBarSelected === 'Members' && (
-                <WorkspaceMembers
-                  users={workspace?.UserWorkspace}
-                  id={id}
-                  isUserAdmin={workspace?.isUserAdmin}
-                  onUpdate={getData}
-                />
-              )}
-              {workspaceNavBarSelected === 'Settings' && (
-                <WorkspaceSettings
-                  id={id}
+              {workspaceNavBarSelected === 'General' && (
+                <AppsRender
+                  apps={blockchainApps}
                   isUserAdmin={workspace?.isUserAdmin}
                   onUpdate={getData}
                 />
@@ -139,14 +114,6 @@ const BlockchainAppsPage = ({ id }) => {
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
       </section>
-      <EditWorkspaceModal
-        isOpen={isEditingWorkspace}
-        onClose={closeModal}
-        onUpdate={getData}
-        previousWorkspaceName={workspace?.name}
-        previouslogoURL={workspace?.finalURL}
-        workspaceId={workspace?.id}
-      />
     </>
   )
 }
