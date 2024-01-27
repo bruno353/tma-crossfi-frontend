@@ -95,6 +95,14 @@ const Sidebar = (id: any) => {
     },
   ]
 
+  const blockchainSidebarOptions = [
+    {
+      name: 'Apps',
+      option: `/${id.id}/blockchain-apps`,
+      imgSource: '/images/workspace/home.svg',
+    },
+  ]
+
   async function getData(id: any) {
     const { userSessionToken } = parseCookies()
     console.log('getting data')
@@ -226,6 +234,36 @@ const Sidebar = (id: any) => {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="mt-5">
+            <div></div>
+            <div className="grid gap-y-[3px] text-[#fff]">
+              {sidebarOptions.map((option, index) => (
+                <div
+                  onClick={() => {
+                    handleSidebarClick(option.name, option.option)
+                  }}
+                  key={index}
+                >
+                  <div
+                    className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[10px] hover:bg-[#dbdbdb1e] ${
+                      sidebarOption === option.name && 'bg-[#dbdbdb1e]'
+                    }`}
+                  >
+                    <img
+                      src={option.imgSource}
+                      alt="image"
+                      className="w-[20px] rounded-full"
+                    />
+                    {isSidebarOpen && (
+                      <div className="text-center text-[13px] font-light">
+                        {option.name}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <NewWorkspaceModal
