@@ -181,7 +181,7 @@ const Sidebar = (id: any) => {
                 alt="image"
                 className="mx-auto w-[20px] rounded-full"
               />
-              <div className="w-full text-[13px] font-light">
+              <div className="w-full text-[13px] font-normal">
                 {workspace.name}
               </div>
               <img
@@ -200,7 +200,7 @@ const Sidebar = (id: any) => {
               )}
             </div>
           )}
-          <div className="text-[#fff]">
+          <div className="grid gap-y-[3px] text-[#fff]">
             {sidebarOptions.map((option, index) => (
               <div
                 onClick={() => {
@@ -209,7 +209,7 @@ const Sidebar = (id: any) => {
                 key={index}
               >
                 <div
-                  className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[5px] hover:bg-[#dbdbdb1e] ${
+                  className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[10px] hover:bg-[#dbdbdb1e] ${
                     sidebarOption === option.name && 'bg-[#dbdbdb1e]'
                   }`}
                 >

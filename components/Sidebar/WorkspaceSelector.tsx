@@ -41,7 +41,7 @@ const WorkspaceSelector = ({
           {finalWorkspaces.map((workspace, index) => (
             <Link key={index} href={`/workspace/${workspace.id}`}>
               <div
-                className={`my-[2px] flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] hover:bg-[#c5c5c510] ${
+                className={`my-[5px] flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] hover:bg-[#c5c5c510] ${
                   currentlyWorkspaceId === workspace.id && 'bg-[#c5c5c510]'
                 }`}
               >
