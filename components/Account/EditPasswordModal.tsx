@@ -31,8 +31,12 @@ const EditPasswordModal = ({ isOpen, onClose, onUpdate }) => {
   const [isLoading, setIsLoading] = useState(null)
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
 
-  const handleOverlayClick = () => {
-    onClose()
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  const handleOverlayClick = (event) => {
+    if (event.target === modalRef.current) {
+      onClose()
+    }
   }
 
   const handleModalClick = (e) => {
@@ -76,13 +80,10 @@ const EditPasswordModal = ({ isOpen, onClose, onUpdate }) => {
       } transition-opacity duration-300`}
     >
       <div
-        onClick={handleModalClick}
-        className="absolute inset-0 bg-black opacity-50"
+        ref={modalRef}
+        className="absolute inset-0 bg-[#1c1c3d]  opacity-50"
       ></div>
-      <div
-        className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 md:w-[500px]"
-        onClick={handleModalClick}
-      >
+      <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 md:w-[500px]">
         <div onClick={onClose} className="absolute right-5 top-2">
           <img
             alt="delete"
