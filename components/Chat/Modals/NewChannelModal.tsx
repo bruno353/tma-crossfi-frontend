@@ -50,16 +50,6 @@ const NewChannelModal = ({
     setIsPrivate(e.target.checked)
   }
 
-  const handleOverlayClick = () => {
-    // Fechar o modal quando a sobreposição escura é clicada
-    onClose()
-  }
-
-  const handleModalClick = (e) => {
-    // Impedir que o clique no modal propague para a sobreposição escura
-    e.stopPropagation()
-  }
-
   const handleCreateChannel = async () => {
     setIsLoading(true)
 
@@ -86,6 +76,14 @@ const NewChannelModal = ({
     }
   }
 
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  const handleOverlayClick = (event) => {
+    if (event.target === modalRef.current) {
+      onClose()
+    }
+  }
+
   return (
     <div
       onClick={handleOverlayClick}
@@ -94,13 +92,10 @@ const NewChannelModal = ({
       } transition-opacity duration-300`}
     >
       <div
-        onClick={handleModalClick}
-        className="absolute inset-0 bg-black opacity-50"
+        ref={modalRef}
+        className="absolute inset-0 bg-[#1c1c3d] opacity-80"
       ></div>
-      <div
-        className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 md:w-[500px]"
-        onClick={handleModalClick}
-      >
+      <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 md:w-[500px]">
         <div onClick={onClose} className="absolute right-5 top-2">
           <img
             alt="delete"

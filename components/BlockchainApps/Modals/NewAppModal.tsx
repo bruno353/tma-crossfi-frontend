@@ -38,11 +38,6 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
     setIsPrivate(e.target.checked)
   }
 
-  //   const handleModalClick = (e) => {
-  //     // Impedir que o clique no modal propague para a sobreposição escura
-  //     e.stopPropagation()
-  //   }
-
   const handleCreateChannel = async () => {
     setIsLoading(true)
 
