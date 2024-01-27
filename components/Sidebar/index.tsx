@@ -180,7 +180,7 @@ const Sidebar = (id: any) => {
               ></img>
               {menuOpen && (
                 <div className="absolute top-[35px]" ref={menuRef}>
-                  <WorkspaceSelector workspaces={user} />{' '}
+                  <WorkspaceSelector user={user} />{' '}
                 </div>
               )}
             </div>

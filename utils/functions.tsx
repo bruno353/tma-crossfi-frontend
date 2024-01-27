@@ -165,15 +165,12 @@ export function getDifferenceInSeconds(date1, date2): number {
 }
 
 export function transformString(str) {
-  // Verifica se a string tem mais de 6 caracteres
-  if (str.length <= 6) {
+  if (str?.length <= 6) {
     return str
   }
 
-  // Pega os primeiros 3 e os últimos 3 caracteres
-  const firstThree = str.substring(0, 9)
-  const lastThree = str.substring(str.length - 9)
+  const firstThree = str?.substring(0, 9)
+  const lastThree = str?.substring(str?.length - 9)
 
-  // Junta com "..."
   return firstThree + '...' + lastThree
 }
