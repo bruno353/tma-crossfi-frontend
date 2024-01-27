@@ -11,22 +11,34 @@ import { WorkspaceProps } from '@/types/workspace'
 
 export interface MenuI {
   user: UserProps
+  currentlyWorkspaceId: string
 }
 
-const WorkspaceSelector = ({ user }: MenuI) => {
-  const finalWorkspaces: WorkspaceProps[] = user.UserWorkspaces.map(
+const WorkspaceSelector = ({ user, currentlyWorkspaceId }: MenuI) => {
+  let finalWorkspaces: WorkspaceProps[] = user.UserWorkspaces.map(
     (workspace) => workspace.workspace,
   )
+
+  // Em seguida, reordenamos para que o workspace com currentlyWorkspaceId venha primeiro, se existir
+  finalWorkspaces = finalWorkspaces.sort((a, b) => {
+    if (a.id === currentlyWorkspaceId) return -1
+    if (b.id === currentlyWorkspaceId) return 1
+    return 0
+  })
 
   return (
     <>
       <div className="h-full w-[300px] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[14px] font-normal text-[#c5c4c4]">
         <div className="grid gap-y-[20px]">My workspaces</div>
         <div className="my-[7px] h-[1px] w-full bg-[#33323e]"></div>
-        <div className="max-h-[250px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+        <div className="max-h-[250px] overflow-y-auto pr-3 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
           {finalWorkspaces.map((workspace, index) => (
             <Link key={index} href={`/workspace/${workspace.id}`}>
-              <div className="flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] hover:bg-[#c5c5c510]">
+              <div
+                className={`my-[2px] flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] hover:bg-[#c5c5c510] ${
+                  currentlyWorkspaceId === workspace.id && 'bg-[#c5c5c510]'
+                }`}
+              >
                 <img
                   alt="ethereum avatar"
                   src={
