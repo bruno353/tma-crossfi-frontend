@@ -32,6 +32,7 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
     {
       name: 'Internet computer protocol',
       value: 'ICP',
+      imageSrc: '/images/workspace/icp.png',
     },
   ]
 
@@ -77,6 +78,13 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
     }
   }
 
+  // imagem:
+  //   <img
+  //   alt="ethereum avatar"
+  //   src="/images/workspace/icp.png"
+  //   className="w-[35px] cursor-pointer rounded-full"
+  // ></img>
+
   return (
     <div
       onClick={handleOverlayClick}
@@ -121,13 +129,13 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
             Network
           </label>
           <select
-            className="w-full cursor-pointer rounded-md bg-[#242B51] px-[5px] py-[7px] text-[#C5C4C4]"
+            className="w-full cursor-pointer rounded-md bg-[#242B51] px-[5px] py-[6px] text-[#C5C4C4]"
             onChange={(option) => setSelected(option.target.value)}
             value={selected}
           >
             {optionsNetwork.map((option) => (
               <option key={option.name} value={option.value}>
-                {option.name}
+                <div>{option.name}</div>
               </option>
             ))}
           </select>
@@ -138,7 +146,7 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
               isLoading
                 ? 'animate-pulse bg-[#8e68e829]'
                 : 'cursor-pointer  hover:bg-[#8e68e829]'
-            }  rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] `}
+            }  rounded-[5px] border-[1px] border-[#273687] bg-[#273687] p-[2px] px-[10px] text-[14px] text-[#fff] `}
             onClick={() => {
               if (!isLoading) {
                 handleCreateChannel()
