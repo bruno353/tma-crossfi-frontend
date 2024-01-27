@@ -50,6 +50,7 @@ const WorkspaceSelector = ({
                   <Logo
                     name={workspace.name}
                     workspaceUrl={workspace.finalURL}
+                    tamanho={'[25px]'}
                   />
                 </div>
                 <div className="overflow-hidden truncate text-ellipsis whitespace-nowrap text-[#c5c4c4]">

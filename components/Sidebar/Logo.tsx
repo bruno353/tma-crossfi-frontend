@@ -1,4 +1,4 @@
-export const Logo = ({ name, workspaceUrl }) => {
+export const Logo = ({ name, workspaceUrl, tamanho }) => {
   if (!name || name.length === 0) return null
   const firstLetter = name.charAt(0).toUpperCase()
 
@@ -25,13 +25,13 @@ export const Logo = ({ name, workspaceUrl }) => {
       <img
         alt="ethereum avatar"
         src={workspaceUrl}
-        className="w-[25px] rounded-full"
+        className={`w-${tamanho} rounded-full`}
       ></img>
     )
   }
   return (
     <div
-      className={`flex h-[25px] w-[25px] items-center justify-center rounded-full font-normal text-black`}
+      className={`flex h-${tamanho} w-${tamanho} items-center justify-center rounded-full font-normal text-black`}
       style={{ backgroundColor }}
     >
       {firstLetter}
