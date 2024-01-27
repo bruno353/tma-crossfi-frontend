@@ -108,9 +108,9 @@ const Dashboard = () => {
           </div>
           {isLoading && (
             <div className="flex w-full justify-between gap-x-[30px]">
-              <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
-              <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
-              <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
+              <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
+              <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
+              <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
             </div>
           )}
           {workspaces?.length === 0 && !isLoading && (

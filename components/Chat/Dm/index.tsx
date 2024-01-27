@@ -443,22 +443,22 @@ const Dm = (id: any, workspaceId: any) => {
         {isLoading ? (
           <div className="mt-auto grid gap-y-[40px]  px-[40px] pb-[20px]">
             <div className="flex animate-pulse gap-x-[10px]   2xl:gap-x-[15px]">
-              <div className="h-[40px] w-[40px] rounded-full bg-[#dfdfdf]">
+              <div className="h-[40px] w-[40px] rounded-full bg-[#1d2144b0]">
                 {' '}
               </div>
-              <div className="mt-auto h-[40px]  w-full  rounded-[3px] bg-[#dfdfdf]"></div>
+              <div className="mt-auto h-[40px]  w-full  rounded-[3px] bg-[#1d2144b0]"></div>
             </div>
             <div className="flex animate-pulse gap-x-[10px]   2xl:gap-x-[15px]">
-              <div className="h-[40px] w-[40px] rounded-full bg-[#dfdfdf]">
+              <div className="h-[40px] w-[40px] rounded-full bg-[#1d2144b0]">
                 {' '}
               </div>
-              <div className="mt-auto h-[40px]  w-full  rounded-[3px] bg-[#dfdfdf]"></div>
+              <div className="mt-auto h-[40px]  w-full  rounded-[3px] bg-[#1d2144b0]"></div>
             </div>
             <div className="flex animate-pulse gap-x-[10px]   2xl:gap-x-[15px]">
-              <div className="h-[40px] w-[40px] rounded-full bg-[#dfdfdf]">
+              <div className="h-[40px] w-[40px] rounded-full bg-[#1d2144b0]">
                 {' '}
               </div>
-              <div className="mt-auto h-[40px]  w-full  rounded-[3px] bg-[#dfdfdf]"></div>
+              <div className="mt-auto h-[40px]  w-full  rounded-[3px] bg-[#1d2144b0]"></div>
             </div>
           </div>
         ) : (
@@ -654,7 +654,7 @@ const Dm = (id: any, workspaceId: any) => {
         <div className="flex w-full justify-between gap-x-[10px] border-b-[1px] border-[#141733] bg-[#1D2144] px-[40px] py-[20px]">
           <div className="flex gap-x-[5px]">
             {isLoading ? (
-              <div className="h-[25px] w-[300px] animate-pulse rounded-[3px] bg-[#dfdfdf]"></div>
+              <div className="h-[25px] w-[300px] animate-pulse rounded-[3px] bg-[#1d2144b0]"></div>
             ) : (
               <>
                 <img

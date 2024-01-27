@@ -170,10 +170,10 @@ const ChangePassword = () => {
     return (
       <section className="px-32 py-16 text-black md:py-20 lg:pt-40">
         <div className="container flex h-60 animate-pulse px-0 pb-12">
-          <div className="mr-10 w-3/4 animate-pulse bg-[#dfdfdf]"></div>
-          <div className="w-1/4 animate-pulse bg-[#dfdfdf]"></div>
+          <div className="mr-10 w-3/4 animate-pulse bg-[#1d2144b0]"></div>
+          <div className="w-1/4 animate-pulse bg-[#1d2144b0]"></div>
         </div>
-        <div className="container h-96 animate-pulse bg-[#dfdfdf] pb-12"></div>
+        <div className="container h-96 animate-pulse bg-[#1d2144b0] pb-12"></div>
       </section>
     )
   }

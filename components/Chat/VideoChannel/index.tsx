@@ -158,7 +158,7 @@ const VideoChannel = (id: any) => {
         <div className="z-[999] flex w-full justify-between gap-x-[10px] border-b-[1px] border-[#141733] bg-[#1D2144] px-[40px] py-[20px]">
           <div className="flex gap-x-[5px]">
             {isLoading ? (
-              <div className="h-[25px] w-[300px] animate-pulse rounded-[3px] bg-[#dfdfdf]"></div>
+              <div className="h-[25px] w-[300px] animate-pulse rounded-[3px] bg-[#1d2144b0]"></div>
             ) : (
               <>
                 <img

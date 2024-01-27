@@ -59,8 +59,8 @@ const EmailConfirmation = (id: any) => {
     return (
       <section className="px-32 py-16 text-black md:py-20 lg:pt-40">
         <div className="container h-40 animate-pulse px-0 pb-12">
-          <div className="mr-10 w-full animate-pulse bg-[#dfdfdf]"></div>
-          <div className="w-full animate-pulse bg-[#dfdfdf]"></div>
+          <div className="mr-10 w-full animate-pulse bg-[#1d2144b0]"></div>
+          <div className="w-full animate-pulse bg-[#1d2144b0]"></div>
         </div>
       </section>
     )

@@ -133,8 +133,8 @@ const Account = () => {
   }
   return (
     <div className="container grid w-full gap-y-[30px] pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[180px]">
-      <div className="h-20 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
-      <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#dfdfdf]"></div>
+      <div className="h-20 w-full animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
+      <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
     </div>
   )
 }
