@@ -162,13 +162,13 @@ const Sidebar = (id: any) => {
       <div
         // onMouseEnter={() => setIsSidebarOpen(true)}
         // onMouseLeave={() => setIsSidebarOpen(false)}
-        className="relative !z-[9999] ml-[15px]  mt-[40px]  flex w-[180px]  rounded-[10px] bg-[#1D2144] px-[10px]  py-36 text-[16px] lg:py-[60px]"
+        className="relative !z-[9999] ml-[15px] mt-[40px]  flex  h-[calc(100vh-10rem)] w-[210px]  rounded-[10px] bg-[#1D2144] px-[10px]  py-36 text-[16px] lg:py-[30px]"
       >
         <div className="w-full">
           {workspace && (
             <div
               onClick={toggleHandler}
-              className={`relative mb-[5px] flex w-full cursor-pointer items-center  gap-x-[10px] rounded-[7px] px-[10px] py-[5px] text-[#fff] hover:bg-[#dbdbdb1e] ${
+              className={`relative mb-[20px] flex w-full cursor-pointer items-center  gap-x-[10px] rounded-[7px] px-[10px] py-[5px] text-[#fff] hover:bg-[#dbdbdb1e] ${
                 menuOpen && 'bg-[#dbdbdb1e]'
               }`}
             >
