@@ -179,7 +179,7 @@ const Sidebar = (id: any) => {
                 className="w-[10px] rounded-full"
               ></img>
               {menuOpen && (
-                <div className="absolute top-[50px]" ref={menuRef}>
+                <div className="absolute top-[35px]" ref={menuRef}>
                   <WorkspaceSelector />{' '}
                 </div>
               )}
