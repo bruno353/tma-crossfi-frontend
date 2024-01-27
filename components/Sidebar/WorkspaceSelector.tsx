@@ -9,6 +9,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { UserProps } from '@/types/user'
 import { WorkspaceProps } from '@/types/workspace'
 import NewWorkspaceModal from '../Dashboard/NewWorkspace'
+import { Logo } from './Logo'
 
 export interface MenuI {
   user: UserProps
@@ -45,15 +46,12 @@ const WorkspaceSelector = ({
                   currentlyWorkspaceId === workspace.id && 'bg-[#c5c5c510]'
                 }`}
               >
-                <img
-                  alt="ethereum avatar"
-                  src={
-                    workspace.finalURL
-                      ? workspace.finalURL
-                      : '/images/dashboard/work.webp'
-                  }
-                  className="w-[25px] rounded-full"
-                ></img>
+                <div className="flex-shrink-0">
+                  <Logo
+                    name={workspace.name}
+                    workspaceUrl={workspace.finalURL}
+                  />
+                </div>
                 <div className="overflow-hidden truncate text-ellipsis whitespace-nowrap text-[#c5c4c4]">
                   {workspace.name}
                 </div>
