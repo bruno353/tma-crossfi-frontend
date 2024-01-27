@@ -16,11 +16,22 @@ import nookies, { parseCookies, setCookie } from 'nookies'
 import Workspace from '@/components/Workspace'
 import { AccountContext } from '../../contexts/AccountContext'
 import WorkspaceSelector from './WorkspaceSelector'
+import NewWorkspaceModal from '../Dashboard/NewWorkspace'
 
 const Sidebar = (id: any) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true)
   const [sidebarOption, setSidebarOption] = useState<string>('')
   const { workspace, setWorkspace, user } = useContext(AccountContext)
+
+  const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
+
+  const openModal = () => {
+    setIsCreatingNewWorkspace(true)
+  }
+
+  const closeModal = () => {
+    setIsCreatingNewWorkspace(false)
+  }
 
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -183,6 +194,7 @@ const Sidebar = (id: any) => {
                   <WorkspaceSelector
                     user={user}
                     currentlyWorkspaceId={workspace?.id}
+                    onNewWorkspace={openModal}
                   />{' '}
                 </div>
               )}
@@ -216,6 +228,10 @@ const Sidebar = (id: any) => {
             ))}
           </div>
         </div>
+        <NewWorkspaceModal
+          isOpen={isCreatingNewWorkspace}
+          onClose={closeModal}
+        />
       </div>
     </>
   )
