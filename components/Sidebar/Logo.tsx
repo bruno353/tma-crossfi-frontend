@@ -31,7 +31,7 @@ export const Logo = ({ name, workspaceUrl, tamanho, textTamanho }) => {
   }
   return (
     <div
-      className={`flex h-${tamanho} text-${textTamanho} text-center w-${tamanho} flex-shrink-0 items-center justify-center rounded-full font-semibold text-white`}
+      className={`flex h-${tamanho} text-${textTamanho} text-center w-${tamanho} flex-shrink-0 items-center justify-center rounded-full font-medium text-white`}
       style={{ backgroundColor }}
     >
       {firstLetter}

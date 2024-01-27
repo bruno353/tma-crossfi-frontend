@@ -176,8 +176,8 @@ const Sidebar = (id: any) => {
               <Logo
                 name={workspace.name}
                 workspaceUrl={workspace.finalURL}
-                tamanho={'[20px]'}
-                textTamanho={'[12px]'}
+                tamanho={'[25px]'}
+                textTamanho={'[10px]'}
               />
               <div className="w-full text-[13px] font-normal">
                 {workspace.name}
