@@ -25,23 +25,15 @@ import SubNavBar from '../Modals/SubNavBar'
 import { Logo } from '../Sidebar/Logo'
 import { BlockchainAppProps } from '@/types/blockchain-app'
 import AppsRender from './AppsRender'
+import NewAppModal from './Modals/NewAppModal'
 
 const BlockchainAppsPage = ({ id }) => {
-  const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
+  const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [workspaceNavBarSelected, setWorkspaceNavBarSelected] =
-    useState('Analytics')
+  const [navBarSelected, setNavBarSelected] = useState('General')
   const [blockchainApps, setBlockchainApps] = useState<BlockchainAppProps[]>([])
 
   const { workspace, user } = useContext(AccountContext)
-
-  const openModal = () => {
-    setIsEditingWorkspace(true)
-  }
-
-  const closeModal = () => {
-    setIsEditingWorkspace(false)
-  }
 
   async function getData() {
     const { userSessionToken } = parseCookies()
@@ -86,7 +78,9 @@ const BlockchainAppsPage = ({ id }) => {
             </div>
             {workspace?.isUserAdmin && (
               <div
-                onClick={openModal}
+                onClick={() => {
+                  setIsCreatingNewApp(true)
+                }}
                 className="cursor-pointer rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] hover:bg-[#8e68e829]"
               >
                 New app
@@ -96,13 +90,13 @@ const BlockchainAppsPage = ({ id }) => {
           <div className="mt-[45px]">
             <SubNavBar
               onChange={(value) => {
-                setWorkspaceNavBarSelected(value)
+                setNavBarSelected(value)
               }}
-              selected={workspaceNavBarSelected}
-              itensList={['Analytics', 'Members', 'Settings']}
+              selected={navBarSelected}
+              itensList={['General']}
             />
             <div className="mt-[50px]">
-              {workspaceNavBarSelected === 'General' && (
+              {navBarSelected === 'General' && (
                 <AppsRender
                   apps={blockchainApps}
                   isUserAdmin={workspace?.isUserAdmin}
@@ -113,6 +107,16 @@ const BlockchainAppsPage = ({ id }) => {
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
+        <NewAppModal
+          isOpen={isCreatingNewApp}
+          onClose={() => {
+            setIsCreatingNewApp(false)
+          }}
+          onChannelCreated={() => {
+            getData()
+          }}
+          workspaceId={id.id}
+        />
       </section>
     </>
   )

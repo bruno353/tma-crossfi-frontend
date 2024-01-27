@@ -9,7 +9,7 @@ import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Eye, EyeSlash } from 'phosphor-react'
+import { Eye, EyeSlash, SmileySad } from 'phosphor-react'
 import * as Yup from 'yup'
 import axios from 'axios'
 import { toast } from 'react-toastify'
@@ -90,10 +90,20 @@ const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
     admin: 'Admin',
   }
 
+  function NoAppsFound() {
+    return (
+      <div className="mx-auto w-fit items-center justify-center text-[15px] font-light">
+        <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
+        <span>No Apps found, create your first App</span>
+      </div>
+    )
+  }
+
   return (
     <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
       <div className="mt-[50px] text-[18px] font-medium">
         <div className="mt-[20px] grid gap-y-[25px]">
+          {apps?.length === 0 && NoAppsFound()}
           {apps?.map((app, index) => (
             <div
               key={index}
