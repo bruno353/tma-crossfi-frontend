@@ -75,11 +75,19 @@ const Sidebar = (id: any) => {
       name: 'Home',
       option: `/${id.id}`,
       imgSource: '/images/workspace/home.svg',
+      type: 'general',
     },
     {
       name: 'Chat',
       option: `/${id.id}/chat`,
       imgSource: '/images/workspace/chat.svg',
+      type: 'general',
+    },
+    {
+      name: 'Apps',
+      option: `/${id.id}/blockchain-apps`,
+      imgSource: '/images/sidebar/1.svg',
+      type: 'blockchain',
     },
     // {
     //   name: 'Notes',
@@ -96,14 +104,6 @@ const Sidebar = (id: any) => {
     //   option: `/${id.id}/tasks`,
     //   imgSource: '/images/workspace/tasks.svg',
     // },
-  ]
-
-  const blockchainSidebarOptions = [
-    {
-      name: 'Apps',
-      option: `/${id.id}/blockchain-apps`,
-      imgSource: '/images/workspace/home.svg',
-    },
   ]
 
   async function getData(id: any) {
@@ -218,6 +218,7 @@ const Sidebar = (id: any) => {
                   handleSidebarClick(option.name, option.option)
                 }}
                 key={index}
+                className={`${option.type !== 'general' && 'hidden'}`}
               >
                 <div
                   className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[10px] hover:bg-[#dbdbdb1e] ${
@@ -257,12 +258,13 @@ const Sidebar = (id: any) => {
 
             {isBlockchainSidebarOpen && (
               <div className="grid gap-y-[3px] text-[#fff]">
-                {blockchainSidebarOptions.map((option, index) => (
+                {sidebarOptions.map((option, index) => (
                   <div
                     onClick={() => {
                       handleSidebarClick(option.name, option.option)
                     }}
                     key={index}
+                    className={`${option.type !== 'blockchain' && 'hidden'}`}
                   >
                     <div
                       className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[10px] hover:bg-[#dbdbdb1e] ${
@@ -272,7 +274,7 @@ const Sidebar = (id: any) => {
                       <img
                         src={option.imgSource}
                         alt="image"
-                        className="w-[20px] rounded-full"
+                        className="w-[25px] rounded-full"
                       />
                       {isSidebarOpen && (
                         <div className="text-center text-[13px] font-light">
