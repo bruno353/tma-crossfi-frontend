@@ -6,6 +6,7 @@ export interface UserWorkspaceProps {
   userId: string
   user: UserProps
   role: string
+  workspace: any
   createdAt: string
   updatedAt: string
 }

@@ -1,4 +1,4 @@
-import { WorkspaceInviteProps } from './workspace'
+import { UserWorkspaceProps, WorkspaceInviteProps } from './workspace'
 
 export interface UserProps {
   id: string
@@ -9,6 +9,7 @@ export interface UserProps {
   sessionToken: string
   createdAt: string
   updatedAt: string
+  UserWorkspaces: UserWorkspaceProps[]
   WorkspaceInvite: WorkspaceInviteProps[]
 }
 

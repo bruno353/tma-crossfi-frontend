@@ -20,7 +20,7 @@ import WorkspaceSelector from './WorkspaceSelector'
 const Sidebar = (id: any) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true)
   const [sidebarOption, setSidebarOption] = useState<string>('')
-  const { workspace, setWorkspace } = useContext(AccountContext)
+  const { workspace, setWorkspace, user } = useContext(AccountContext)
 
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -180,7 +180,7 @@ const Sidebar = (id: any) => {
               ></img>
               {menuOpen && (
                 <div className="absolute top-[35px]" ref={menuRef}>
-                  <WorkspaceSelector />{' '}
+                  <WorkspaceSelector workspaces={user} />{' '}
                 </div>
               )}
             </div>
