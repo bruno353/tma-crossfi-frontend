@@ -26,7 +26,14 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
   const [isPrivate, setIsPrivate] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
   const [isLoading, setIsLoading] = useState(null)
-  const fileInputRef = useRef(null)
+  const [selected, setSelected] = useState<any>('ICP')
+
+  const optionsNetwork = [
+    {
+      name: 'Internet computer protocol',
+      value: 'ICP',
+    },
+  ]
 
   const handleInputChange = (e) => {
     if (!isLoading) {
@@ -81,8 +88,8 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
         ref={modalRef}
         className="absolute inset-0 bg-[#1c1c3d] opacity-80"
       ></div>
-      <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 md:w-[500px]">
-        <div onClick={onClose} className="absolute right-5 top-2">
+      <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 py-12 md:w-[500px]">
+        <div onClick={onClose} className="absolute right-5 top-5">
           <img
             alt="delete"
             src="/images/delete.svg"
@@ -94,10 +101,11 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            Channel name
+            App name
           </label>
           <input
             type="text"
+            maxLength={50}
             id="workspaceName"
             name="workspaceName"
             value={channelName}
@@ -105,26 +113,24 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
             className="w-full rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
           />
         </div>
-        <div className="mb-4 flex justify-between">
-          <div>
-            <div className="mb-2 block text-[14px] text-[#C5C4C4]">
-              Private channel
-            </div>
-            <div className="text-[10px] text-[#C5C4C4] 2xl:text-[11px]">
-              Only admins can interact with this chat
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between gap-x-[10px]">
-            <div>
-              <Switch
-                id="email-alerts"
-                isChecked={isPrivate}
-                onChange={handleToggleChange}
-                colorScheme="purple"
-              />
-            </div>
-          </div>
+        <div className="mb-6">
+          <label
+            htmlFor="workspaceName"
+            className="mb-2 block text-[14px] text-[#C5C4C4]"
+          >
+            Network
+          </label>
+          <select
+            className="w-full cursor-pointer rounded-md bg-[#242B51] px-[5px] py-[7px] text-[#C5C4C4]"
+            onChange={(option) => setSelected(option.target.value)}
+            value={selected}
+          >
+            {optionsNetwork.map((option) => (
+              <option key={option.name} value={option.value}>
+                {option.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mt-10 flex justify-start">
           <div

@@ -95,8 +95,8 @@ const EditChannelModal = ({
         ref={modalRef}
         className="absolute inset-0 bg-[#1c1c3d] opacity-80"
       ></div>
-      <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 md:w-[500px]">
-        <div onClick={onClose} className="absolute right-5 top-2">
+      <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 py-12 md:w-[500px]">
+        <div onClick={onClose} className="absolute right-5 top-5">
           <img
             alt="delete"
             src="/images/delete.svg"
