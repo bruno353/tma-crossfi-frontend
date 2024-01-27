@@ -24,6 +24,9 @@ const Sidebar = (id: any) => {
   const [sidebarOption, setSidebarOption] = useState<string>('')
   const { workspace, setWorkspace, user } = useContext(AccountContext)
 
+  const [isBlockchainSidebarOpen, setIsBlockchainSidebarOpen] =
+    useState<boolean>(true)
+
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
 
   const openModal = () => {
@@ -78,21 +81,21 @@ const Sidebar = (id: any) => {
       option: `/${id.id}/chat`,
       imgSource: '/images/workspace/chat.svg',
     },
-    {
-      name: 'Notes',
-      option: `/${id.id}/notes`,
-      imgSource: '/images/workspace/note.svg',
-    },
-    {
-      name: 'Deploy',
-      option: `/${id.id}/deploy`,
-      imgSource: '/images/workspace/rocket.svg',
-    },
-    {
-      name: 'Tasks',
-      option: `/${id.id}/tasks`,
-      imgSource: '/images/workspace/tasks.svg',
-    },
+    // {
+    //   name: 'Notes',
+    //   option: `/${id.id}/notes`,
+    //   imgSource: '/images/workspace/note.svg',
+    // },
+    // {
+    //   name: 'Deploy',
+    //   option: `/${id.id}/deploy`,
+    //   imgSource: '/images/workspace/rocket.svg',
+    // },
+    // {
+    //   name: 'Tasks',
+    //   option: `/${id.id}/tasks`,
+    //   imgSource: '/images/workspace/tasks.svg',
+    // },
   ]
 
   const blockchainSidebarOptions = [
@@ -236,34 +239,51 @@ const Sidebar = (id: any) => {
             ))}
           </div>
           <div className="mt-5">
-            <div></div>
-            <div className="grid gap-y-[3px] text-[#fff]">
-              {sidebarOptions.map((option, index) => (
-                <div
-                  onClick={() => {
-                    handleSidebarClick(option.name, option.option)
-                  }}
-                  key={index}
-                >
-                  <div
-                    className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[10px] hover:bg-[#dbdbdb1e] ${
-                      sidebarOption === option.name && 'bg-[#dbdbdb1e]'
-                    }`}
-                  >
-                    <img
-                      src={option.imgSource}
-                      alt="image"
-                      className="w-[20px] rounded-full"
-                    />
-                    {isSidebarOpen && (
-                      <div className="text-center text-[13px] font-light">
-                        {option.name}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
+            <div
+              onClick={() => {
+                setIsBlockchainSidebarOpen(!isBlockchainSidebarOpen)
+              }}
+              className="flex cursor-pointer  justify-between px-[10px]"
+            >
+              <div className="mb-1 text-[13px] text-[#c5c4c4]">Blockchain</div>
+              <img
+                alt="ethereum avatar"
+                src="/images/header/arrow-gray.svg"
+                className={`w-[10px] rounded-full transition-transform duration-200 ${
+                  !isBlockchainSidebarOpen && 'rotate-180'
+                }`}
+              ></img>
             </div>
+
+            {isBlockchainSidebarOpen && (
+              <div className="grid gap-y-[3px] text-[#fff]">
+                {blockchainSidebarOptions.map((option, index) => (
+                  <div
+                    onClick={() => {
+                      handleSidebarClick(option.name, option.option)
+                    }}
+                    key={index}
+                  >
+                    <div
+                      className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[10px] hover:bg-[#dbdbdb1e] ${
+                        sidebarOption === option.name && 'bg-[#dbdbdb1e]'
+                      }`}
+                    >
+                      <img
+                        src={option.imgSource}
+                        alt="image"
+                        className="w-[20px] rounded-full"
+                      />
+                      {isSidebarOpen && (
+                        <div className="text-center text-[13px] font-light">
+                          {option.name}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         <NewWorkspaceModal
