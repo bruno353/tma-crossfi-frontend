@@ -76,18 +76,21 @@ const Sidebar = (id: any) => {
       option: `/${id.id}`,
       imgSource: '/images/workspace/home.svg',
       type: 'general',
+      pathSegment: '',
     },
     {
       name: 'Chat',
       option: `/${id.id}/chat`,
       imgSource: '/images/workspace/chat.svg',
       type: 'general',
+      pathSegment: 'chat',
     },
     {
       name: 'Apps',
       option: `/${id.id}/blockchain-apps`,
       imgSource: '/images/sidebar/1.svg',
       type: 'blockchain',
+      pathSegment: 'blockchain-apps',
     },
     // {
     //   name: 'Notes',
@@ -159,14 +162,16 @@ const Sidebar = (id: any) => {
   }, [id])
 
   useEffect(() => {
-    for (let i = 0; i < sidebarOptions?.length; i++) {
-      const pathFinal = pathname.endsWith(sidebarOptions[i].option)
+    const pathnameSegments = pathname.split('/').filter(Boolean)
 
-      if (pathFinal) {
+    for (let i = 0; i < sidebarOptions.length; i++) {
+      if (pathnameSegments.includes(sidebarOptions[i].pathSegment)) {
         setSidebarOption(sidebarOptions[i].name)
-        break
+        return
       }
     }
+
+    setSidebarOption('')
   }, [pathname])
 
   return (
