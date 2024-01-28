@@ -81,7 +81,7 @@ const BlockchainAppsPage = ({ id }) => {
                 onClick={() => {
                   setIsCreatingNewApp(true)
                 }}
-                className="cursor-pointer rounded-[5px]  bg-[#273687] p-[2px] px-[10px] text-[14px] text-[#fff] hover:bg-[#35428a]"
+                className="cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
               >
                 New app
               </div>
