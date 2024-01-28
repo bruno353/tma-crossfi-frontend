@@ -73,7 +73,7 @@ const BlockchainAppPage = ({ id }) => {
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[90px]">
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
-            <div className="flex">
+            <div className="flex gap-x-[20px]">
               <img
                 src={
                   optionsNetwork.find((op) => {
@@ -81,11 +81,11 @@ const BlockchainAppPage = ({ id }) => {
                   }).imageSrc
                 }
                 alt="image"
-                className={
+                className={`${
                   optionsNetwork.find((op) => {
                     return op.value === blockchainApp?.network
                   }).imageStyle
-                }
+                } !w-[35px] flex-shrink-0`}
               />
               <div className="mt-auto text-[24px] font-medium">
                 {blockchainApp.name}
