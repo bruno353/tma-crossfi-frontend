@@ -144,9 +144,9 @@ const NotificationMenu = ({
                   <div
                     className={`${
                       isLoading
-                        ? 'animate-pulse bg-[#8e68e829]'
-                        : 'cursor-pointer  hover:bg-[#8e68e829]'
-                    }  w-fit rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[11px]  text-[#642EE7] `}
+                        ? 'animate-pulse !bg-[#35428a]'
+                        : 'cursor-pointer  hover:bg-[#35428a]'
+                    }  w-fit rounded-[5px] border-[#273687] p-[2px] px-[10px] text-[11px]  text-[#fff]`}
                     onClick={() => {
                       handleJoinWorkspace()
                     }}

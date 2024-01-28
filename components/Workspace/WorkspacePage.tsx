@@ -97,7 +97,7 @@ const WorkspacePage = ({ id }) => {
             {workspace?.isUserAdmin && (
               <div
                 onClick={openModal}
-                className="cursor-pointer rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] hover:bg-[#8e68e829]"
+                className="cursor-pointer rounded-[5px] bg-[#273687] p-[2px] px-[10px] text-[14px] text-[#fff] hover:bg-[#35428a]"
               >
                 Edit workspace
               </div>
