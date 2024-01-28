@@ -20,18 +20,19 @@ import nookies, { parseCookies, setCookie } from 'nookies'
 // import NewWorkspaceModal from './NewWorkspace'
 import { getBlockchainApps, getUserWorkspace, getWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
-import SubNavBar from '../Modals/SubNavBar'
-import { Logo } from '../Sidebar/Logo'
 import { BlockchainAppProps } from '@/types/blockchain-app'
-import AppsRender from './AppsRender'
-import NewAppModal from './Modals/NewAppModal'
 import { AccountContext } from '@/contexts/AccountContext'
+import { getBlockchainApp } from '@/utils/api-blockchain'
+import EditAppModal from '../Modals/EditAppModal'
+import CanistersRender from './CanistersRender'
+import SubNavBar from '@/components/Modals/SubNavBar'
 
 const BlockchainAppPage = ({ id }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [navBarSelected, setNavBarSelected] = useState('General')
-  const [blockchainApps, setBlockchainApps] = useState<BlockchainAppProps[]>([])
+  const [navBarSelected, setNavBarSelected] = useState('Canisters')
+  const [blockchainApp, setBlockchainApp] = useState<BlockchainAppProps>()
+  const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
 
   const { workspace, user } = useContext(AccountContext)
 
@@ -43,8 +44,8 @@ const BlockchainAppPage = ({ id }) => {
     }
 
     try {
-      const res = await getBlockchainApps(data, userSessionToken)
-      setBlockchainApps(res)
+      const res = await getBlockchainApp(data, userSessionToken)
+      setBlockchainApp(res)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -73,7 +74,7 @@ const BlockchainAppPage = ({ id }) => {
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="flex">
               <div className="mt-auto text-[24px] font-medium">
-                Blockchain apps
+                {blockchainApp.name}
               </div>
             </div>
             {workspace?.isUserAdmin && (
@@ -83,7 +84,7 @@ const BlockchainAppPage = ({ id }) => {
                 }}
                 className="cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
               >
-                New app
+                Edit app
               </div>
             )}
           </div>
@@ -93,12 +94,12 @@ const BlockchainAppPage = ({ id }) => {
                 setNavBarSelected(value)
               }}
               selected={navBarSelected}
-              itensList={['General']}
+              itensList={['Canisters', 'Analytics']}
             />
             <div className="mt-[50px]">
-              {navBarSelected === 'General' && (
+              {navBarSelected === 'Canisters' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                  <AppsRender
+                  <CanistersRender
                     apps={blockchainApps}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
@@ -109,13 +110,19 @@ const BlockchainAppPage = ({ id }) => {
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
-        <NewAppModal
-          isOpen={isCreatingNewApp}
-          onClose={() => {
-            setIsCreatingNewApp(false)
-          }}
-          workspaceId={workspace?.id}
-        />
+        {isEditAppOpen && (
+          <EditAppModal
+            isOpen={isEditAppOpen}
+            onClose={() => {
+              setIsEditAppOpen(false)
+            }}
+            onUpdateM={() => {
+              getData()
+              setIsEditAppOpen(false)
+            }}
+            app={blockchainApp}
+          />
+        )}
       </section>
     </>
   )

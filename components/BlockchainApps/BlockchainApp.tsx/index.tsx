@@ -17,10 +17,8 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
-import Sidebar from '../Sidebar'
-import WorkspacePage from '../Workspace/WorkspacePage'
-import BlockchainAppsPage from './BlockchainAppsPage'
 import BlockchainAppPage from './BlockchainAppPage'
+import Sidebar from '@/components/Sidebar'
 
 const BlockchainApp = (id: any) => {
   return (
