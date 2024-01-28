@@ -20,10 +20,10 @@ import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { Switch } from '@chakra-ui/react'
 import { createChannel } from '@/utils/api-chat'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
+import { createBlockchainApps } from '@/utils/api-blockchain'
 
 const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
-  const [channelName, setChannelName] = useState('')
-  const [isPrivate, setIsPrivate] = useState(false)
+  const [appName, setAppName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
 
   const optionsNetwork = [
@@ -38,12 +38,8 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
 
   const handleInputChange = (e) => {
     if (!isLoading) {
-      setChannelName(e.target.value)
+      setAppName(e.target.value)
     }
-  }
-
-  const handleToggleChange = (e) => {
-    setIsPrivate(e.target.checked)
   }
 
   const handleCreateChannel = async () => {
@@ -53,16 +49,13 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
 
     const final = {
       workspaceId,
-      name: channelName,
-      isPrivate,
+      name: appName,
+      network: selected.value,
     }
 
     try {
-      await createChannel(final, userSessionToken)
-      onChannelCreated()
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      await createBlockchainApps(final, userSessionToken)
       setIsLoading(false)
-      toast.success(`Success`)
       onClose()
     } catch (err) {
       console.log(err)
@@ -77,13 +70,6 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
       onClose()
     }
   }
-
-  // imagem:
-  //   <img
-  //   alt="ethereum avatar"
-  //   src="/images/workspace/icp.png"
-  //   className="w-[35px] cursor-pointer rounded-full"
-  // ></img>
 
   return (
     <div
@@ -116,7 +102,7 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
             maxLength={50}
             id="workspaceName"
             name="workspaceName"
-            value={channelName}
+            value={appName}
             onChange={handleInputChange}
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
@@ -132,7 +118,7 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
             optionSelected={selected}
             options={optionsNetwork}
             onValueChange={(value) => {
-              console.log('')
+              setSelected(value)
             }}
           />
         </div>

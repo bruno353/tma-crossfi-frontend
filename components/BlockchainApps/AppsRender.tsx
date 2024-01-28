@@ -101,15 +101,29 @@ const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
 
   return (
     <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
-      <div className="mt-[50px] text-[18px] font-medium">
+      <div className="mt-[50px] text-[16px] font-normal">
         <div className="mt-[20px] grid gap-y-[25px]">
-          {apps?.length === 0 && NoAppsFound()}
-          {apps?.map((app, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-x-[10px] text-[15px] font-normal"
-            ></div>
-          ))}
+          {apps?.length === 0 ? (
+            NoAppsFound()
+          ) : (
+            <div>
+              <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[5px]">
+                <div className="w-full max-w-[40%]">App name</div>
+                <div className="w-full max-w-[30%]">Network</div>
+                <div className="w-full max-w-[20%]">created at</div>
+              </div>
+              {apps?.map((app, index) => (
+                <div
+                  key={index}
+                  className="flex items-center text-[15px] font-normal"
+                >
+                  <div className="w-full max-w-[40%]">{app.name}</div>
+                  <div className="w-full max-w-[30%]">{app.network}</div>
+                  <div className="w-full max-w-[20%]">{app.createdAt}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

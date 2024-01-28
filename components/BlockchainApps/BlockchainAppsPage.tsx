@@ -115,7 +115,7 @@ const BlockchainAppsPage = ({ id }) => {
           onChannelCreated={() => {
             getData()
           }}
-          workspaceId={id.id}
+          workspaceId={workspace?.id}
         />
       </section>
     </>
