@@ -42,7 +42,12 @@ const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
 
+  const { push } = useRouter()
+  const pathname = usePathname()
+
   const menuRef = useRef(null)
+  const editRef = useRef(null)
+  const urlRef = useRef(null)
 
   const closeMenu = () => {
     setIsDeleteUserOpen(false)
@@ -69,6 +74,15 @@ const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isDeleteUserOpen])
+
+  function handleClickCanisters(id: string, event) {
+    if (
+      !editRef?.current?.contains(event.target) &&
+      !urlRef?.current?.contains(event.target)
+    ) {
+      // push(`${pathname}/${id}`)
+    }
+  }
 
   function NoAppsFound() {
     return (
@@ -97,32 +111,44 @@ const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
             NoAppsFound()
           ) : (
             <div className="">
-              <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
-                <div className="w-full max-w-[30%]">Canister Id</div>
-                <div className="w-full max-w-[30%]">URL</div>
-                <div className="w-full max-w-[20%]">Type</div>
-                <div className="w-full max-w-[20%]">Created at</div>
+              <div className="flex w-full gap-x-[5px] rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
+                <div className="w-full max-w-[20%]">Canister Id</div>
+                <div className="w-full max-w-[38%]">URL</div>
+                <div className="w-full max-w-[17%]">Type</div>
+                <div className="w-full max-w-[10%]">Created at</div>
               </div>
               <div className="max-h-[calc(100vh-32rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                 {' '}
                 {canisters?.map((canister, index) => (
                   <div
+                    onClick={(event) => {
+                      handleClickCanisters(canister.id, event)
+                    }}
                     key={index}
                     className={`flex items-center  ${
                       index !== canisters?.length - 1 &&
                       'border-b-[1px] border-[#c5c4c40e]'
-                    } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
+                    } cursor-pointer gap-x-[5px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
-                    <div className="w-full max-w-[30%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {canister.canisterId}
                     </div>
-                    <div className="flex w-full max-w-[30%] items-center gap-x-[7px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {canister.url}
-                    </div>
-                    <div className="flex w-full max-w-[20%] items-center gap-x-[7px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                    <a
+                      ref={urlRef}
+                      href={canister.url}
+                      target="_blank"
+                      className="w-full max-w-[38%]"
+                      rel="noreferrer"
+                    >
+                      <div className="flex w-full items-center gap-x-[7px] hover:text-[#0354EC]">
+                        {canister.url}
+                      </div>
+                    </a>
+
+                    <div className="flex w-full max-w-[17%] items-center gap-x-[7px]">
                       {canister.type}
                     </div>
-                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                    <div className="w-full max-w-[10%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {formatDate(canister.createdAt)}
                     </div>
                     <div className="ml-auto w-full max-w-[5%]">
@@ -154,6 +180,7 @@ const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
       </div>
       {/* {isEditAppOpen && (
         <EditAppModal
+          ref={editRef}
           isOpen={isEditAppOpen}
           onClose={() => {
             setIsEditAppOpen(false)
