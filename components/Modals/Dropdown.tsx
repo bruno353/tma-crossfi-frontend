@@ -13,9 +13,15 @@ interface ModalI {
   optionSelected: ValueObject
   options: ValueObject[]
   onValueChange(value: ValueObject): void
+  isDisable?: boolean
 }
 
-const Dropdown = ({ optionSelected, options, onValueChange }: ModalI) => {
+const Dropdown = ({
+  optionSelected,
+  options,
+  onValueChange,
+  isDisable,
+}: ModalI) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const dropdownRef = useRef(null)
@@ -42,9 +48,12 @@ const Dropdown = ({ optionSelected, options, onValueChange }: ModalI) => {
     >
       <div
         onClick={() => {
+          if (isDisable) {
+            return
+          }
           setIsOpen(!isOpen)
         }}
-        className="flex cursor-pointer justify-between"
+        className={`flex justify-between ${!isDisable && 'cursor-pointer'}`}
       >
         <div className="flex justify-between gap-x-[10px]">
           {optionSelected.imageSrc && (

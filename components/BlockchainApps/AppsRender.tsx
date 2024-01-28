@@ -27,6 +27,7 @@ import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
 import { BlockchainAppProps } from '@/types/blockchain-app'
 import { optionsNetwork } from './Modals/NewAppModal'
+import EditAppModal from './Modals/EditAppModal'
 
 export interface ModalI {
   apps: BlockchainAppProps[]
@@ -153,6 +154,18 @@ const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
           )}
         </div>
       </div>
+      {isEditAppOpen && (
+        <EditAppModal
+          isOpen={isEditAppOpen}
+          onClose={() => {
+            setIsEditAppOpen(false)
+          }}
+          onUpdate={() => {
+            setIsEditAppOpen(false)
+          }}
+          app={apps.find((app) => app.id === isEditAppOpen)}
+        />
+      )}
     </div>
   )
 }
