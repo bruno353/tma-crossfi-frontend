@@ -42,6 +42,9 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
 
+  const { push } = useRouter()
+  const pathname = usePathname()
+
   const menuRef = useRef(null)
   const editRef = useRef(null)
 
@@ -71,6 +74,12 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
     }
   }, [isDeleteUserOpen])
 
+  function handleClickApp(id: string, event) {
+    if (!editRef?.current?.contains(event.target)) {
+      push(`${pathname}/${id}`)
+    }
+  }
+
   function NoAppsFound() {
     return (
       <div className="mx-auto w-fit items-center justify-center text-[15px] font-light">
@@ -97,6 +106,9 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
                 {' '}
                 {apps?.map((app, index) => (
                   <div
+                    onClick={(event) => {
+                      handleClickApp(app.id, event)
+                    }}
                     key={index}
                     className={`flex items-center  ${
                       index !== apps?.length - 1 &&
@@ -146,7 +158,8 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
                           className="w-[15px] cursor-pointer 2xl:w-[25px]"
                           onMouseEnter={() => setIsEditInfoOpen(app.id)}
                           onMouseLeave={() => setIsEditInfoOpen(null)}
-                          onClick={() => {
+                          onClick={(event) => {
+                            event.stopPropagation()
                             setIsEditAppOpen(app.id)
                           }}
                         ></img>
