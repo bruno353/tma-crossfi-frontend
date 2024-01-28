@@ -97,11 +97,13 @@ const BlockchainAppsPage = ({ id }) => {
             />
             <div className="mt-[50px]">
               {navBarSelected === 'General' && (
-                <AppsRender
-                  apps={blockchainApps}
-                  isUserAdmin={workspace?.isUserAdmin}
-                  onUpdate={getData}
-                />
+                <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+                  <AppsRender
+                    apps={blockchainApps}
+                    isUserAdmin={workspace?.isUserAdmin}
+                    onUpdate={getData}
+                  />
+                </div>
               )}
             </div>
           </div>

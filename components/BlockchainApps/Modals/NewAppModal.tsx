@@ -22,18 +22,19 @@ import { createChannel } from '@/utils/api-chat'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { createBlockchainApps } from '@/utils/api-blockchain'
 
+export const optionsNetwork = [
+  {
+    name: 'Internet computer protocol',
+    value: 'ICP',
+    imageSrc: '/images/workspace/icp.png',
+    imageStyle: 'w-[25px]',
+  },
+]
+
 const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
   const [appName, setAppName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
 
-  const optionsNetwork = [
-    {
-      name: 'Internet computer protocol',
-      value: 'ICP',
-      imageSrc: '/images/workspace/icp.png',
-      imageStyle: 'w-[25px]',
-    },
-  ]
   const [selected, setSelected] = useState<ValueObject>(optionsNetwork[0])
 
   const handleInputChange = (e) => {

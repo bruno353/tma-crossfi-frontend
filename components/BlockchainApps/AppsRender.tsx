@@ -26,6 +26,7 @@ import {
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
 import { BlockchainAppProps } from '@/types/blockchain-app'
+import { optionsNetwork } from './Modals/NewAppModal'
 
 export interface ModalI {
   apps: BlockchainAppProps[]
@@ -34,30 +35,10 @@ export interface ModalI {
 }
 
 const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
-  const [memberEmailToAdd, setMemberEmailToAdd] = useState<string>()
-  const [isLoading, setIsLoading] = useState(false)
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
 
-  const [selected, setSelected] = useState<any>('normal')
-
   const menuRef = useRef(null)
-
-  const optionsMembers = [
-    {
-      name: 'Member',
-      value: 'normal',
-    },
-    {
-      name: 'Admin',
-      value: 'admin',
-    },
-  ]
-  const handleInputChange = (e) => {
-    if (!isLoading) {
-      setMemberEmailToAdd(e.target.value)
-    }
-  }
 
   const closeMenu = () => {
     setIsDeleteUserOpen(false)
@@ -85,11 +66,6 @@ const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
     }
   }, [isDeleteUserOpen])
 
-  const roleToValue = {
-    normal: 'Member',
-    admin: 'Admin',
-  }
-
   function NoAppsFound() {
     return (
       <div className="mx-auto w-fit items-center justify-center text-[15px] font-light">
@@ -100,28 +76,59 @@ const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
   }
 
   return (
-    <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
-      <div className="mt-[50px] text-[16px] font-normal">
-        <div className="mt-[20px] grid gap-y-[25px]">
+    <div className="text-[14px] text-[#C5C4C4]">
+      <div className=" text-[14px] font-normal">
+        <div className="grid gap-y-[25px]">
           {apps?.length === 0 ? (
             NoAppsFound()
           ) : (
-            <div>
-              <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[5px]">
+            <div className="">
+              <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
                 <div className="w-full max-w-[40%]">App name</div>
                 <div className="w-full max-w-[30%]">Network</div>
                 <div className="w-full max-w-[20%]">created at</div>
               </div>
-              {apps?.map((app, index) => (
-                <div
-                  key={index}
-                  className="flex items-center text-[15px] font-normal"
-                >
-                  <div className="w-full max-w-[40%]">{app.name}</div>
-                  <div className="w-full max-w-[30%]">{app.network}</div>
-                  <div className="w-full max-w-[20%]">{app.createdAt}</div>
-                </div>
-              ))}
+              <div className="max-h-[calc(100vh-35rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                {' '}
+                {apps?.map((app, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center  ${
+                      index !== apps?.length - 1 &&
+                      'border-b-[1px] border-[#c5c4c40e]'
+                    } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
+                  >
+                    <div className="w-full max-w-[40%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                      {app.name}
+                    </div>
+                    <div className="flex w-full max-w-[30%] items-center gap-x-[7px]">
+                      <img
+                        src={
+                          optionsNetwork.find((op) => {
+                            return op.value === app.network
+                          }).imageSrc
+                        }
+                        alt="image"
+                        className={
+                          optionsNetwork.find((op) => {
+                            return op.value === app.network
+                          }).imageStyle
+                        }
+                      />
+                      <div className="overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                        {
+                          optionsNetwork.find((op) => {
+                            return op.value === app.network
+                          }).name
+                        }
+                      </div>
+                    </div>
+                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                      {app.createdAt}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
