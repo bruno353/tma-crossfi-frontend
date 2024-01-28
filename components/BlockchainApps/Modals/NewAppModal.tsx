@@ -19,22 +19,22 @@ import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { Switch } from '@chakra-ui/react'
 import { createChannel } from '@/utils/api-chat'
+import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 
 const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
   const [channelName, setChannelName] = useState('')
-  const [selectedImage, setSelectedImage] = useState(null)
   const [isPrivate, setIsPrivate] = useState(false)
-  const [selectedFile, setSelectedFile] = useState(null)
   const [isLoading, setIsLoading] = useState(null)
-  const [selected, setSelected] = useState<any>('ICP')
 
   const optionsNetwork = [
     {
       name: 'Internet computer protocol',
       value: 'ICP',
       imageSrc: '/images/workspace/icp.png',
+      imageStyle: 'w-[25px]',
     },
   ]
+  const [selected, setSelected] = useState<ValueObject>(optionsNetwork[0])
 
   const handleInputChange = (e) => {
     if (!isLoading) {
@@ -118,7 +118,7 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
             name="workspaceName"
             value={channelName}
             onChange={handleInputChange}
-            className="w-full rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+            className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
         </div>
         <div className="mb-6">
@@ -128,17 +128,13 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
           >
             Network
           </label>
-          <select
-            className="w-full cursor-pointer rounded-md bg-[#242B51] px-[5px] py-[6px] text-[#C5C4C4]"
-            onChange={(option) => setSelected(option.target.value)}
-            value={selected}
-          >
-            {optionsNetwork.map((option) => (
-              <option key={option.name} value={option.value}>
-                <div>{option.name}</div>
-              </option>
-            ))}
-          </select>
+          <Dropdown
+            optionSelected={selected}
+            options={optionsNetwork}
+            onValueChange={(value) => {
+              console.log('')
+            }}
+          />
         </div>
         <div className="mt-10 flex justify-start">
           <div
