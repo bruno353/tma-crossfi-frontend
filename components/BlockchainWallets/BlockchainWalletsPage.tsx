@@ -24,10 +24,10 @@ import { WorkspaceProps } from '@/types/workspace'
 import SubNavBar from '../Modals/SubNavBar'
 import { Logo } from '../Sidebar/Logo'
 import { BlockchainAppProps } from '@/types/blockchain-app'
-import AppsRender from './AppsRender'
-import NewAppModal from './Modals/NewAppModal'
+import WalletsRender from './WalletsRender'
+// import NewAppModal from './Modals/NewAppModal'
 
-const BlockchainAppsPage = ({ id }) => {
+const BlockchainWalletsPage = ({ id }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('General')
@@ -98,7 +98,7 @@ const BlockchainAppsPage = ({ id }) => {
             <div className="mt-[50px]">
               {navBarSelected === 'General' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                  <AppsRender
+                  <WalletsRender
                     apps={blockchainApps}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
@@ -109,16 +109,16 @@ const BlockchainAppsPage = ({ id }) => {
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
-        <NewAppModal
+        {/* <NewAppModal
           isOpen={isCreatingNewApp}
           onClose={() => {
             setIsCreatingNewApp(false)
           }}
           workspaceId={workspace?.id}
-        />
+        /> */}
       </section>
     </>
   )
 }
 
-export default BlockchainAppsPage
+export default BlockchainWalletsPage

@@ -17,10 +17,11 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
-import BlockchainAppPage from './BlockchainAppPage'
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '../Sidebar'
+import WorkspacePage from '../Workspace/WorkspacePage'
+import BlockchainWalletsPage from './BlockchainWalletsPage'
 
-const BlockchainApp = (id: any) => {
+const BlockchainWallets = (id: any) => {
   return (
     <>
       <div className="flex">
@@ -28,11 +29,11 @@ const BlockchainApp = (id: any) => {
           <Sidebar id={id.id} />
         </div>
         <div className="w-full">
-          <BlockchainAppPage id={id.appId} />
+          <BlockchainWalletsPage id={id.id} />
         </div>
       </div>
     </>
   )
 }
 
-export default BlockchainApp
+export default BlockchainWallets

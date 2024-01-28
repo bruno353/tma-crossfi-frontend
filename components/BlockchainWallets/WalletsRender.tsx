@@ -26,9 +26,10 @@ import {
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
 import { BlockchainAppProps } from '@/types/blockchain-app'
-import { optionsNetwork } from './Modals/NewAppModal'
-import EditAppModal from './Modals/EditAppModal'
+// import { optionsNetwork } from './Modals/NewAppModal'
+// import EditAppModal from './Modals/EditAppModal'
 import { formatDate } from '@/utils/functions'
+import { optionsNetwork } from '../BlockchainApps/Modals/NewAppModal'
 
 export interface ModalI {
   apps: BlockchainAppProps[]
@@ -36,7 +37,7 @@ export interface ModalI {
   onUpdate(): void
 }
 
-const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
+const WalletsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
@@ -172,7 +173,7 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
           )}
         </div>
       </div>
-      {isEditAppOpen && (
+      {/* {isEditAppOpen && (
         <EditAppModal
           isOpen={isEditAppOpen}
           onClose={() => {
@@ -184,9 +185,9 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
           }}
           app={apps.find((app) => app.id === isEditAppOpen)}
         />
-      )}
+      )} */}
     </div>
   )
 }
 
-export default AppsRender
+export default WalletsRender
