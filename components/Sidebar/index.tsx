@@ -86,6 +86,13 @@ const Sidebar = (id: any) => {
       pathSegment: 'chat',
     },
     {
+      name: 'Wallets',
+      option: `/${id.id}/blockchain-wallets`,
+      imgSource: '/images/sidebar/wallet.svg',
+      type: 'blockchain',
+      pathSegment: 'blockchain-wallets',
+    },
+    {
       name: 'Apps',
       option: `/${id.id}/blockchain-apps`,
       imgSource: '/images/sidebar/1.svg',
@@ -250,9 +257,11 @@ const Sidebar = (id: any) => {
               onClick={() => {
                 setIsBlockchainSidebarOpen(!isBlockchainSidebarOpen)
               }}
-              className="flex cursor-pointer  justify-between px-[10px]"
+              className="mb-1 flex  cursor-pointer justify-between px-[10px]"
             >
-              <div className="mb-1 text-[13px] text-[#c5c4c4]">Blockchain</div>
+              <div className="mb-1 text-[13px] font-normal text-[#c5c4c4]">
+                Blockchain
+              </div>
               <img
                 alt="ethereum avatar"
                 src="/images/header/arrow-gray.svg"
@@ -273,7 +282,7 @@ const Sidebar = (id: any) => {
                     className={`${option.type !== 'blockchain' && 'hidden'}`}
                   >
                     <div
-                      className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[10px] hover:bg-[#dbdbdb1e] ${
+                      className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[6px] hover:bg-[#dbdbdb1e] ${
                         sidebarOption === option.name && 'bg-[#dbdbdb1e]'
                       }`}
                     >
