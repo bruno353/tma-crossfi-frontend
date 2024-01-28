@@ -144,9 +144,9 @@ const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
           <div
             className={`${
               isLoading
-                ? 'animate-pulse bg-[#8e68e829]'
-                : 'cursor-pointer  hover:bg-[#8e68e829]'
-            }  rounded-[5px] border-[1px] border-[#273687] bg-[#273687] p-[2px] px-[10px] text-[14px] text-[#fff] `}
+                ? 'animate-pulse !bg-[#35428a]'
+                : 'cursor-pointer  hover:bg-[#35428a]'
+            }  rounded-[5px] bg-[#273687] p-[2px] px-[10px] text-[14px] text-[#fff] `}
             onClick={() => {
               if (!isLoading) {
                 handleCreateChannel()

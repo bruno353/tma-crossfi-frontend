@@ -83,14 +83,6 @@ const Account = () => {
                   {user.name}
                 </div>
               </div>
-              {/* {workspace?.isUserAdmin && (
-                <div
-                  onClick={openModal}
-                  className="cursor-pointer rounded-[5px] border-[1px] border-[#642EE7] p-[2px] px-[10px] text-[14px] text-[#642EE7] hover:bg-[#8e68e829]"
-                >
-                  Edit workspace
-                </div>
-              )} */}
             </div>
             <div className="mt-[45px]">
               <SubNavBar
