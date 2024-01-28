@@ -8,11 +8,11 @@ import 'react-toastify/dist/ReactToastify.css'
 import { deleteApp } from '@/utils/api-blockchain'
 
 export interface MenuI {
-  appId: string
+  id: string
   onUpdateM(): void
 }
 
-const DeleteAppModal = ({ appId, onUpdateM }: MenuI) => {
+const DeleteAppModal = ({ id, onUpdateM }: MenuI) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleDeleteApp = async (id: string) => {
@@ -45,7 +45,7 @@ const DeleteAppModal = ({ appId, onUpdateM }: MenuI) => {
                 : 'cursor-pointer  hover:bg-[#cc556350]'
             }  mt-[5px] flex w-fit items-center rounded-[5px] border-[1px]  border-[#cc5563] p-[2px] px-[10px] text-center text-[12px] text-[#cc5563] `}
             onClick={() => {
-              handleDeleteApp(appId)
+              handleDeleteApp(id)
             }}
           >
             Delete

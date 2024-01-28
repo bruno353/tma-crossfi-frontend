@@ -16,6 +16,7 @@ import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { createBlockchainApps } from '@/utils/api-blockchain'
 import { BlockchainAppProps } from '@/types/blockchain-app'
 import { optionsNetwork } from './NewAppModal'
+import DeleteAppModal from './DeleteAppModal'
 
 export interface ModalI {
   app: BlockchainAppProps
@@ -171,9 +172,9 @@ const EditAppModal = ({ app, onUpdate, onClose, isOpen }: ModalI) => {
                 className="absolute z-50   -translate-x-[100%]  translate-y-[50%]"
               >
                 <DeleteAppModal
-                  id={channel?.id}
+                  id={app?.id}
                   onUpdateM={() => {
-                    handleChannelDeleted()
+                    setIsDeleteAppOpen(false)
                   }}
                 />{' '}
               </div>
