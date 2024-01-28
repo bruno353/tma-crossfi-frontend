@@ -43,6 +43,7 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
 
   const menuRef = useRef(null)
+  const editRef = useRef(null)
 
   const closeMenu = () => {
     setIsDeleteUserOpen(false)
@@ -139,6 +140,7 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
                       )}
                       {isUserAdmin && (
                         <img
+                          ref={editRef}
                           alt="ethereum avatar"
                           src="/images/chat/pencil.svg"
                           className="w-[15px] cursor-pointer 2xl:w-[25px]"

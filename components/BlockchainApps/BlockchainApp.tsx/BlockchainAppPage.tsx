@@ -26,6 +26,7 @@ import { getBlockchainApp } from '@/utils/api-blockchain'
 import EditAppModal from '../Modals/EditAppModal'
 import CanistersRender from './CanistersRender'
 import SubNavBar from '@/components/Modals/SubNavBar'
+import { optionsNetwork } from '../Modals/NewAppModal'
 
 const BlockchainAppPage = ({ id }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
@@ -73,6 +74,19 @@ const BlockchainAppPage = ({ id }) => {
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="flex">
+              <img
+                src={
+                  optionsNetwork.find((op) => {
+                    return op.value === blockchainApp?.network
+                  }).imageSrc
+                }
+                alt="image"
+                className={
+                  optionsNetwork.find((op) => {
+                    return op.value === blockchainApp?.network
+                  }).imageStyle
+                }
+              />
               <div className="mt-auto text-[24px] font-medium">
                 {blockchainApp.name}
               </div>
