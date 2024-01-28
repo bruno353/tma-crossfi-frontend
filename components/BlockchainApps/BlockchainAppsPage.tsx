@@ -114,9 +114,6 @@ const BlockchainAppsPage = ({ id }) => {
           onClose={() => {
             setIsCreatingNewApp(false)
           }}
-          onChannelCreated={() => {
-            getData()
-          }}
           workspaceId={workspace?.id}
         />
       </section>

@@ -13,19 +13,19 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
-import { createBlockchainApps } from '@/utils/api-blockchain'
+import { createBlockchainApps, editApp } from '@/utils/api-blockchain'
 import { BlockchainAppProps } from '@/types/blockchain-app'
 import { optionsNetwork } from './NewAppModal'
 import DeleteAppModal from './DeleteAppModal'
 
 export interface ModalI {
   app: BlockchainAppProps
-  onUpdate(): void
+  onUpdateM(): void
   onClose(): void
   isOpen: boolean
 }
 
-const EditAppModal = ({ app, onUpdate, onClose, isOpen }: ModalI) => {
+const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
   const [appName, setAppName] = useState(app.name)
   const [isLoading, setIsLoading] = useState(null)
   const [hasChanges, setHasChanges] = useState(false)
@@ -45,7 +45,7 @@ const EditAppModal = ({ app, onUpdate, onClose, isOpen }: ModalI) => {
     }
   }
 
-  const handleCreateChannel = async () => {
+  const handleEditApp = async () => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
@@ -53,13 +53,12 @@ const EditAppModal = ({ app, onUpdate, onClose, isOpen }: ModalI) => {
     const final = {
       id: app?.id,
       name: appName,
-      network: selected.value,
     }
 
     try {
-      await createBlockchainApps(final, userSessionToken)
+      await editApp(final, userSessionToken)
       setIsLoading(false)
-      onClose()
+      onUpdateM()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -174,6 +173,7 @@ const EditAppModal = ({ app, onUpdate, onClose, isOpen }: ModalI) => {
                 <DeleteAppModal
                   id={app?.id}
                   onUpdateM={() => {
+                    onUpdateM()
                     setIsDeleteAppOpen(false)
                   }}
                 />{' '}
@@ -204,7 +204,7 @@ const EditAppModal = ({ app, onUpdate, onClose, isOpen }: ModalI) => {
               }  ml-auto rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
               onClick={() => {
                 if (!isLoading && hasChanges) {
-                  handleCreateChannel()
+                  handleEditApp()
                 }
               }}
             >

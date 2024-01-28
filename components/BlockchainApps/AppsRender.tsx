@@ -28,6 +28,7 @@ import { UserWorkspaceProps } from '@/types/workspace'
 import { BlockchainAppProps } from '@/types/blockchain-app'
 import { optionsNetwork } from './Modals/NewAppModal'
 import EditAppModal from './Modals/EditAppModal'
+import { formatDate } from '@/utils/functions'
 
 export interface ModalI {
   apps: BlockchainAppProps[]
@@ -35,7 +36,7 @@ export interface ModalI {
   onUpdate(): void
 }
 
-const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
+const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
@@ -127,7 +128,7 @@ const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
                       </div>
                     </div>
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {app.createdAt}
+                      {formatDate(app.createdAt)}
                     </div>
                     <div className="ml-auto w-full max-w-[5%]">
                       {' '}
@@ -136,16 +137,18 @@ const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
                           Edit app
                         </div>
                       )}
-                      <img
-                        alt="ethereum avatar"
-                        src="/images/chat/pencil.svg"
-                        className="w-[15px] cursor-pointer 2xl:w-[25px]"
-                        onMouseEnter={() => setIsEditInfoOpen(app.id)}
-                        onMouseLeave={() => setIsEditInfoOpen(null)}
-                        onClick={() => {
-                          setIsEditAppOpen(app.id)
-                        }}
-                      ></img>{' '}
+                      {isUserAdmin && (
+                        <img
+                          alt="ethereum avatar"
+                          src="/images/chat/pencil.svg"
+                          className="w-[15px] cursor-pointer 2xl:w-[25px]"
+                          onMouseEnter={() => setIsEditInfoOpen(app.id)}
+                          onMouseLeave={() => setIsEditInfoOpen(null)}
+                          onClick={() => {
+                            setIsEditAppOpen(app.id)
+                          }}
+                        ></img>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -160,7 +163,8 @@ const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
           onClose={() => {
             setIsEditAppOpen(false)
           }}
-          onUpdate={() => {
+          onUpdateM={() => {
+            onUpdate()
             setIsEditAppOpen(false)
           }}
           app={apps.find((app) => app.id === isEditAppOpen)}

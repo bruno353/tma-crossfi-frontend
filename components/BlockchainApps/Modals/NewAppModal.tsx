@@ -24,7 +24,7 @@ export const optionsNetwork = [
   },
 ]
 
-const NewAppModal = ({ isOpen, onClose, onChannelCreated, workspaceId }) => {
+const NewAppModal = ({ isOpen, onClose, workspaceId }) => {
   const [appName, setAppName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
 
