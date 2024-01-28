@@ -25,18 +25,18 @@ import {
 } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
-import { BlockchainAppProps } from '@/types/blockchain-app'
+import { ICPCanisterProps } from '@/types/blockchain-app'
 import EditAppModal from '../Modals/EditAppModal'
 import { formatDate } from '@/utils/functions'
 import { optionsNetwork } from '../Modals/NewAppModal'
 
 export interface ModalI {
-  apps: BlockchainAppProps[]
+  canisters: ICPCanisterProps[]
   isUserAdmin: boolean
   onUpdate(): void
 }
 
-const CanistersRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
+const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
@@ -74,7 +74,7 @@ const CanistersRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
     return (
       <div className="mx-auto w-fit items-center justify-center text-[15px] font-light">
         <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
-        <span>No Apps found, create your first App</span>
+        <span>No Canisters found, deploy your first App</span>
       </div>
     )
   }
@@ -82,59 +82,54 @@ const CanistersRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
   return (
     <div className="text-[14px] text-[#C5C4C4]">
       <div className=" text-[14px] font-normal">
+        <div className="mb-[18px]">
+          <div
+            onClick={() => {
+              // setIsCreatingNewApp(true)
+            }}
+            className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
+          >
+            Deploy canister
+          </div>
+        </div>
         <div className="grid gap-y-[25px]">
-          {apps?.length === 0 ? (
+          {canisters?.length === 0 ? (
             NoAppsFound()
           ) : (
             <div className="">
               <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
-                <div className="w-full max-w-[40%]">App name</div>
-                <div className="w-full max-w-[30%]">Network</div>
-                <div className="w-full max-w-[20%]">created at</div>
+                <div className="w-full max-w-[30%]">Canister Id</div>
+                <div className="w-full max-w-[30%]">URL</div>
+                <div className="w-full max-w-[20%]">Type</div>
+                <div className="w-full max-w-[20%]">Created at</div>
               </div>
               <div className="max-h-[calc(100vh-32rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                 {' '}
-                {apps?.map((app, index) => (
+                {canisters?.map((canister, index) => (
                   <div
                     key={index}
                     className={`flex items-center  ${
-                      index !== apps?.length - 1 &&
+                      index !== canisters?.length - 1 &&
                       'border-b-[1px] border-[#c5c4c40e]'
                     } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
-                    <div className="w-full max-w-[40%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {app.name}
+                    <div className="w-full max-w-[30%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                      {canister.canisterId}
                     </div>
-                    <div className="flex w-full max-w-[30%] items-center gap-x-[7px]">
-                      <img
-                        src={
-                          optionsNetwork.find((op) => {
-                            return op.value === app.network
-                          }).imageSrc
-                        }
-                        alt="image"
-                        className={
-                          optionsNetwork.find((op) => {
-                            return op.value === app.network
-                          }).imageStyle
-                        }
-                      />
-                      <div className="overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                        {
-                          optionsNetwork.find((op) => {
-                            return op.value === app.network
-                          }).name
-                        }
-                      </div>
+                    <div className="flex w-full max-w-[30%] items-center gap-x-[7px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                      {canister.url}
                     </div>
-                    <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {formatDate(app.createdAt)}
+                    <div className="flex w-full max-w-[20%] items-center gap-x-[7px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                      {canister.type}
+                    </div>
+                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                      {formatDate(canister.createdAt)}
                     </div>
                     <div className="ml-auto w-full max-w-[5%]">
                       {' '}
-                      {isEditInfoOpen === app.id && (
+                      {isEditInfoOpen === canister.id && (
                         <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
-                          Edit app
+                          Edit canister
                         </div>
                       )}
                       {isUserAdmin && (
@@ -142,10 +137,10 @@ const CanistersRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
                           alt="ethereum avatar"
                           src="/images/chat/pencil.svg"
                           className="w-[15px] cursor-pointer 2xl:w-[25px]"
-                          onMouseEnter={() => setIsEditInfoOpen(app.id)}
+                          onMouseEnter={() => setIsEditInfoOpen(canister.id)}
                           onMouseLeave={() => setIsEditInfoOpen(null)}
                           onClick={() => {
-                            setIsEditAppOpen(app.id)
+                            setIsEditAppOpen(canister.id)
                           }}
                         ></img>
                       )}
@@ -157,7 +152,7 @@ const CanistersRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
           )}
         </div>
       </div>
-      {isEditAppOpen && (
+      {/* {isEditAppOpen && (
         <EditAppModal
           isOpen={isEditAppOpen}
           onClose={() => {
@@ -167,9 +162,9 @@ const CanistersRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
             onUpdate()
             setIsEditAppOpen(false)
           }}
-          app={apps.find((app) => app.id === isEditAppOpen)}
+          app={canisters.find((app) => app.id === isEditAppOpen)}
         />
-      )}
+      )} */}
     </div>
   )
 }

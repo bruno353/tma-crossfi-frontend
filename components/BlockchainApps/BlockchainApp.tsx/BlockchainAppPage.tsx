@@ -110,14 +110,14 @@ const BlockchainAppPage = ({ id }) => {
               selected={navBarSelected}
               itensList={['Canisters', 'Analytics']}
             />
-            <div className="mt-[50px]">
+            <div className="mt-[40px]">
               {navBarSelected === 'Canisters' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                  {/* <CanistersRender
-                    apps={blockchainApps}
+                  <CanistersRender
+                    canisters={blockchainApp.ICPCanister}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
-                  /> */}
+                  />
                 </div>
               )}
             </div>
