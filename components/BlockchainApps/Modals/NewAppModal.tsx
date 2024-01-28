@@ -7,18 +7,11 @@
 // import { useState } from 'react'
 import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Eye, EyeSlash } from 'phosphor-react'
-import * as Yup from 'yup'
-import axios from 'axios'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
-import { Switch } from '@chakra-ui/react'
-import { createChannel } from '@/utils/api-chat'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { createBlockchainApps } from '@/utils/api-blockchain'
 

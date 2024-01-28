@@ -13,7 +13,7 @@ export default function Page({ params }) {
   return (
     <>
       <ScrollUp />
-      <div className="h-[calc(100vh-10rem)] w-full">
+      <div className="max-h-[calc(100vh-10rem)] w-full">
         <BlockchainApps id={params.id} />
       </div>
     </>

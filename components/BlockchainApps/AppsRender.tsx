@@ -37,6 +37,8 @@ export interface ModalI {
 const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
+  const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
+  const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
 
   const menuRef = useRef(null)
 
@@ -88,7 +90,7 @@ const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
                 <div className="w-full max-w-[30%]">Network</div>
                 <div className="w-full max-w-[20%]">created at</div>
               </div>
-              <div className="max-h-[calc(100vh-35rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+              <div className="max-h-[calc(100vh-32rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                 {' '}
                 {apps?.map((app, index) => (
                   <div
@@ -123,8 +125,26 @@ const AppsRender = ({ apps, isUserAdmin }: ModalI) => {
                         }
                       </div>
                     </div>
-                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                    <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {app.createdAt}
+                    </div>
+                    <div className="ml-auto w-full max-w-[5%]">
+                      {' '}
+                      {isEditInfoOpen === app.id && (
+                        <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                          Edit app
+                        </div>
+                      )}
+                      <img
+                        alt="ethereum avatar"
+                        src="/images/chat/pencil.svg"
+                        className="w-[15px] cursor-pointer 2xl:w-[25px]"
+                        onMouseEnter={() => setIsEditInfoOpen(app.id)}
+                        onMouseLeave={() => setIsEditInfoOpen(null)}
+                        onClick={() => {
+                          setIsEditAppOpen(app.id)
+                        }}
+                      ></img>{' '}
                     </div>
                   </div>
                 ))}

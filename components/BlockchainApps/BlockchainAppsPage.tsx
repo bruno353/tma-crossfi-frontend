@@ -68,7 +68,7 @@ const BlockchainAppsPage = ({ id }) => {
 
   return (
     <>
-      <section className="relative z-10 overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[90px]">
+      <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[90px]">
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="flex">
