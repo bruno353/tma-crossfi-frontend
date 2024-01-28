@@ -40,45 +40,35 @@ const Dropdown = ({ optionSelected, options, onValueChange }: ModalI) => {
       } w-full rounded-md  border  border-transparent  bg-[#242B51] px-6 py-2 text-base text-body-color`}
       ref={dropdownRef}
     >
-      <div className="flex">
-        <button
-          type="button"
-          className={`inline-flex w-full items-center gap-x-[5px]
-            ${isOpen ? '' : ''}`}
-          id="options-menu"
-          aria-haspopup="true"
-          aria-expanded="true"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {/* <img
-              src={`${
-                process.env.NEXT_PUBLIC_ENVIRONMENT === 'PROD'
-                  ? process.env.NEXT_PUBLIC_BASE_PATH
-                  : ''
-              }${getSrcForValue(value)}`}
+      <div
+        onClick={() => {
+          setIsOpen(!isOpen)
+        }}
+        className="flex cursor-pointer justify-between"
+      >
+        <div className="flex justify-between gap-x-[10px]">
+          {optionSelected.imageSrc && (
+            <img
+              src={optionSelected.imageSrc}
               alt="image"
-              className={`my-auto w-[10px] md:w-[12px] lg:w-[14px] xl:w-[16px] 2xl:w-[20px]`}
-            /> */}
-          {optionSelected.name}
-          <svg
-            className="my-auto ml-auto w-[6px] lg:w-[9px]"
-            viewBox="0 0 9 7"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M4.5 7L0.602886 0.25L8.39711 0.25L4.5 7Z" fill="#676767" />
-          </svg>
-        </button>
+              className={optionSelected.imageStyle}
+            />
+          )}
+
+          <div>{optionSelected.name}</div>
+        </div>
+        <img
+          alt="ethereum avatar"
+          src="/images/header/arrow-gray.svg"
+          className={`w-[10px] rounded-full transition-transform duration-200 ${
+            isOpen && 'rotate-180'
+          }`}
+        ></img>
       </div>
 
       {isOpen && (
-        <div className="absolute left-0 z-50 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition">
-          <div
-            className="py-1"
-            role="menu"
-            aria-orientation="vertical"
-            aria-labelledby="options-menu"
-          >
+        <div className="absolute left-0 top-0 z-50 w-full translate-y-[100%] rounded-md  bg-[#242B51] transition">
+          <div className="py-1">
             {options.map((option, index) => (
               <div
                 key={index}
@@ -86,7 +76,9 @@ const Dropdown = ({ optionSelected, options, onValueChange }: ModalI) => {
                   setIsOpen(false)
                   onValueChange(option)
                 }}
-                className="flex cursor-pointer gap-x-[7.5px] px-4 py-2 hover:bg-[#f7f5f5] md:gap-x-[9px]  lg:gap-x-[10.5px] xl:gap-x-[12px] 2xl:gap-x-[15px] "
+                className={`flex cursor-pointer gap-x-[7.5px] px-4 py-2 hover:bg-[#dbdbdb1e] md:gap-x-[9px]  lg:gap-x-[10.5px] xl:gap-x-[12px] 2xl:gap-x-[15px] ${
+                  optionSelected.value === option.value && 'bg-[#dbdbdb1e]'
+                }`}
               >
                 {/* <img
                     src={`${
