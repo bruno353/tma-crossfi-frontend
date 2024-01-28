@@ -28,7 +28,7 @@ const BlockchainApp = (id: any) => {
           <Sidebar id={id.id} />
         </div>
         <div className="w-full">
-          <BlockchainAppPage id={id.id} />
+          <BlockchainAppPage id={id.appId} />
         </div>
       </div>
     </>

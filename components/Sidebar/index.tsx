@@ -137,6 +137,7 @@ const Sidebar = (id: any) => {
 
   const handleSidebarClick = (name, option) => {
     const basePath = pathname.split('/')[1]
+    console.log('the bash pathhhh ' + basePath)
     const newPath = `/${basePath}${option}` // Constrói o novo caminho
 
     push(newPath)
