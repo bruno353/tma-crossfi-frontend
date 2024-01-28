@@ -149,9 +149,9 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
             <div
               className={`${
                 isLoading
-                  ? 'animate-pulse bg-[#8e68e829]'
-                  : 'cursor-pointer  hover:bg-[#8e68e829]'
-              } mt-[35px] w-fit  items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
+                  ? 'animate-pulse !bg-[#35428a]'
+                  : 'cursor-pointer  hover:bg-[#35428a]'
+              } mt-[35px] w-fit  items-center rounded-[5px]  bg-[#273687] p-[2px] px-[10px] text-center text-[14px] text-[#fff] `}
               onClick={() => {
                 handleUpdateUser()
               }}
@@ -163,9 +163,9 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
         <div
           className={`${
             isLoading
-              ? 'animate-pulse bg-[#8e68e829]'
-              : 'cursor-pointer  hover:bg-[#8e68e829]'
-          } h-fit w-fit  items-center rounded-[5px]  border-[1px]  border-[#642EE7] p-[2px] px-[10px] text-center text-[14px] text-[#642EE7] `}
+              ? 'animate-pulse !bg-[#35428a]'
+              : 'cursor-pointer  hover:bg-[#35428a]'
+          } h-fit w-fit  items-center rounded-[5px]  bg-[#273687] p-[2px] px-[10px] text-center text-[14px] text-[#fff] `}
           onClick={() => {
             openModal()
           }}
