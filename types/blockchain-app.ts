@@ -11,7 +11,7 @@ export interface ICPCanisterProps {
   updatedAt: string
 }
 
-export interface BlockchainWalletsProps {
+export interface BlockchainWalletProps {
   id: string
   icpWalletId: string
   icpWalletPubKId: string
