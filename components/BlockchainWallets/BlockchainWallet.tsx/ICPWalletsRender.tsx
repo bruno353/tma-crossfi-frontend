@@ -31,6 +31,7 @@ import { BlockchainWalletProps, ICPWalletsProps } from '@/types/blockchain-app'
 import { formatDate, transformString } from '@/utils/functions'
 import NewICPWalletModal from '../Modals/NewICPWalletModal'
 import EditICPWalletModal from '../Modals/EditICPWalletModal'
+import FundICPWalletModal from '../Modals/FundICPWalletModal'
 
 export interface ModalI {
   wallets: ICPWalletsProps[]
@@ -228,7 +229,7 @@ const ICPWalletsRender = ({
         />
       )}
       {isFundWalletOpen && (
-        <EditICPWalletModal
+        <FundICPWalletModal
           isOpen={isFundWalletOpen}
           onClose={() => {
             setIsEditWalletOpen(false)
