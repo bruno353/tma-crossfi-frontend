@@ -158,6 +158,30 @@ export async function getBlockchainWallets(
   return finalData
 }
 
+export async function getBlockchainWallet(data: any, userSessionToken: string) {
+  const config = {
+    method: 'post' as 'post',
+    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/blockchain/functions/getWallet`,
+    headers: {
+      'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
+      'X-Parse-Session-Token': userSessionToken,
+    },
+    data,
+  }
+
+  let finalData
+
+  await axios(config).then(function (response) {
+    if (response.data) {
+      finalData = response.data
+      console.log('api response')
+      console.log(finalData)
+    }
+  })
+
+  return finalData
+}
+
 export async function createWallet(data: any, userSessionToken: string) {
   const config = {
     method: 'post' as 'post',
@@ -186,6 +210,54 @@ export async function editWallet(data: any, userSessionToken: string) {
   const config = {
     method: 'put' as 'put',
     url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/blockchain/functions/editWallet`,
+    headers: {
+      'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
+      'X-Parse-Session-Token': userSessionToken,
+    },
+    data,
+  }
+
+  let finalData
+
+  await axios(config).then(function (response) {
+    if (response.data) {
+      finalData = response.data
+      console.log('api response')
+      console.log(finalData)
+    }
+  })
+
+  return finalData
+}
+
+export async function deployICPWallet(data: any, userSessionToken: string) {
+  const config = {
+    method: 'post' as 'post',
+    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/blockchain/functions/deployICPWallet`,
+    headers: {
+      'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
+      'X-Parse-Session-Token': userSessionToken,
+    },
+    data,
+  }
+
+  let finalData
+
+  await axios(config).then(function (response) {
+    if (response.data) {
+      finalData = response.data
+      console.log('api response')
+      console.log(finalData)
+    }
+  })
+
+  return finalData
+}
+
+export async function editICPWallet(data: any, userSessionToken: string) {
+  const config = {
+    method: 'put' as 'put',
+    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/blockchain/functions/editICPWallet`,
     headers: {
       'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
       'X-Parse-Session-Token': userSessionToken,

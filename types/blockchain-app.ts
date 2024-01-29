@@ -11,6 +11,16 @@ export interface ICPCanisterProps {
   updatedAt: string
 }
 
+export interface ICPWalletsProps {
+  id: string
+  name: string
+  walletId: string
+  balance: string
+  blockchainWalletId: string
+  createdAt: string
+  updatedAt: string
+}
+
 export interface BlockchainWalletProps {
   id: string
   icpWalletId: string
@@ -20,6 +30,7 @@ export interface BlockchainWalletProps {
   name: string
   network: string
   workspaceId: string
+  ICPWallets: ICPWalletsProps[]
   createdAt: string
   updatedAt: string
 }
