@@ -17,6 +17,7 @@ import { fundICPWallet } from '@/utils/api-blockchain'
 import { ICPWalletsProps } from '@/types/blockchain-app'
 import { optionsNetwork } from './NewWalletModal'
 import DeleteAppModal from './DeleteAppModal'
+import ConfirmFundICPWalletModal from './ConfirmFundICPWalletModal'
 
 export interface ModalI {
   wallet: ICPWalletsProps
@@ -28,11 +29,12 @@ export interface ModalI {
 const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
   const [fundAmount, setFundAmount] = useState('0.0')
   const [isLoading, setIsLoading] = useState(null)
-  const [hasChanges, setHasChanges] = useState(false)
-  const [isDeleteAppOpen, setIsDeleteAppOpen] = useState(false)
-  const deleteAppRef = useRef(null)
+  const [isConfirmTransactionOpen, setIsConfirmTransactionOpen] =
+    useState<any>(false)
+  const confirmTransactionRef = useRef(null)
 
   const handleInputChange = (e) => {
+    setIsConfirmTransactionOpen(false)
     if (!isLoading) {
       const value = e.target.value
       // Esta expressão regular permite apenas números
@@ -44,7 +46,7 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
     }
   }
 
-  const handleEditApp = async () => {
+  const handleFund = async () => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
@@ -75,14 +77,14 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        deleteAppRef.current &&
-        !deleteAppRef.current.contains(event.target)
+        confirmTransactionRef.current &&
+        !confirmTransactionRef.current.contains(event.target)
       ) {
-        setIsDeleteAppOpen(false)
+        setIsConfirmTransactionOpen(false)
       }
     }
 
-    if (isDeleteAppOpen) {
+    if (isConfirmTransactionOpen) {
       document.addEventListener('mousedown', handleClickOutside)
     } else {
       document.removeEventListener('mousedown', handleClickOutside)
@@ -91,7 +93,7 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isDeleteAppOpen])
+  }, [isConfirmTransactionOpen])
 
   return (
     <div
@@ -145,7 +147,7 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
         </div>
-        <div className="mt-10 flex justify-between">
+        <div className="relative mt-10 flex justify-between">
           {Number(fundAmount) > 0 && (
             <div
               className={`${
@@ -155,11 +157,22 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
               } rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
               onClick={() => {
                 if (!isLoading && fundAmount && Number(fundAmount) > 0) {
-                  handleEditApp()
+                  setIsConfirmTransactionOpen(true)
                 }
               }}
             >
               Fund wallet
+            </div>
+          )}
+          {isConfirmTransactionOpen && (
+            <div ref={confirmTransactionRef} className="absolute right-0">
+              <ConfirmFundICPWalletModal
+                amount={fundAmount}
+                wallet={wallet}
+                onConfirmTransaction={() => {
+                  handleFund()
+                }}
+              />
             </div>
           )}
         </div>
