@@ -1,6 +1,7 @@
 'use client'
 
 import BlockchainApps from '@/components/BlockchainApps'
+import BlockchainWallets from '@/components/BlockchainWallets'
 import ChangePasswordRecovery from '@/components/ChangePasswordRecovery'
 import ChangePasswordRecoveryFinal from '@/components/ChangePasswordRecovery2'
 import Chat from '@/components/Chat'
