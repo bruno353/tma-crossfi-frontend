@@ -13,20 +13,20 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
-import { createBlockchainApps, editApp } from '@/utils/api-blockchain'
-import { BlockchainAppProps } from '@/types/blockchain-app'
-import { optionsNetwork } from './NewAppModal'
+import { editWallet } from '@/utils/api-blockchain'
+import { BlockchainWalletProps } from '@/types/blockchain-app'
+import { optionsNetwork } from './NewWalletModal'
 import DeleteAppModal from './DeleteAppModal'
 
 export interface ModalI {
-  app: BlockchainAppProps
+  wallet: BlockchainWalletProps
   onUpdateM(): void
   onClose(): void
   isOpen: boolean
 }
 
-const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
-  const [appName, setAppName] = useState(app.name)
+const EditWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
+  const [appName, setAppName] = useState(wallet.name)
   const [isLoading, setIsLoading] = useState(null)
   const [hasChanges, setHasChanges] = useState(false)
   const [isDeleteAppOpen, setIsDeleteAppOpen] = useState(false)
@@ -34,7 +34,7 @@ const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
 
   const [selected, setSelected] = useState<ValueObject>(
     optionsNetwork.find((op) => {
-      return op.value === app?.network
+      return op.value === wallet?.network
     }),
   )
 
@@ -51,12 +51,12 @@ const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
     const { userSessionToken } = parseCookies()
 
     const final = {
-      id: app?.id,
+      id: wallet?.id,
       name: appName,
     }
 
     try {
-      await editApp(final, userSessionToken)
+      await editWallet(final, userSessionToken)
       setIsLoading(false)
       onUpdateM()
     } catch (err) {
@@ -118,7 +118,7 @@ const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            App Id
+            Wallet / Identity Id
           </label>
           <input
             type="text"
@@ -126,7 +126,7 @@ const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             id="workspaceName"
             disabled={true}
             name="workspaceName"
-            value={app?.id}
+            value={wallet?.id}
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
         </div>
@@ -135,7 +135,7 @@ const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            App name
+            Wallet description
           </label>
           <input
             type="text"
@@ -164,37 +164,6 @@ const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
           />
         </div>
         <div className="mt-10 flex justify-between">
-          <div className="relative">
-            {isDeleteAppOpen && (
-              <div
-                ref={deleteAppRef}
-                className="absolute z-50   -translate-x-[100%]  translate-y-[50%]"
-              >
-                <DeleteAppModal
-                  id={app?.id}
-                  onUpdateM={() => {
-                    onUpdateM()
-                    setIsDeleteAppOpen(false)
-                  }}
-                />{' '}
-              </div>
-            )}
-            <div
-              className={`${
-                isLoading
-                  ? 'animate-pulse bg-[#cc556350]'
-                  : 'cursor-pointer  hover:bg-[#cc556350]'
-              }  rounded-[5px]  border-[1px]  border-[#cc5563] p-[4px] px-[15px] text-[14px] text-[#cc5563] `}
-              onClick={() => {
-                if (!isLoading) {
-                  setIsDeleteAppOpen(true)
-                }
-              }}
-            >
-              Delete
-            </div>
-          </div>
-
           {hasChanges && (
             <div
               className={`${
@@ -217,4 +186,4 @@ const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
   )
 }
 
-export default EditAppModal
+export default EditWalletModal

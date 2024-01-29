@@ -13,7 +13,7 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
-import { createBlockchainApps } from '@/utils/api-blockchain'
+import { createBlockchainApps, createWallet } from '@/utils/api-blockchain'
 
 export const optionsNetwork = [
   {
@@ -24,7 +24,7 @@ export const optionsNetwork = [
   },
 ]
 
-const NewAppModal = ({ isOpen, onClose, workspaceId }) => {
+const NewWalletModal = ({ isOpen, onClose, workspaceId }) => {
   const [appName, setAppName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
 
@@ -44,11 +44,11 @@ const NewAppModal = ({ isOpen, onClose, workspaceId }) => {
     const final = {
       workspaceId,
       name: appName,
-      network: selected.value,
+      walletNetwork: selected.value,
     }
 
     try {
-      await createBlockchainApps(final, userSessionToken)
+      await createWallet(final, userSessionToken)
       setIsLoading(false)
       onClose()
     } catch (err) {
@@ -89,7 +89,7 @@ const NewAppModal = ({ isOpen, onClose, workspaceId }) => {
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            App name
+            Wallet description
           </label>
           <input
             type="text"
@@ -137,4 +137,4 @@ const NewAppModal = ({ isOpen, onClose, workspaceId }) => {
   )
 }
 
-export default NewAppModal
+export default NewWalletModal

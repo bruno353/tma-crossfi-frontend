@@ -26,10 +26,11 @@ import { Logo } from '../Sidebar/Logo'
 import { BlockchainWalletProps } from '@/types/blockchain-app'
 import WalletsRender from './WalletsRender'
 import { getBlockchainWallets } from '@/utils/api-blockchain'
+import NewWalletModal from './Modals/NewWalletModal'
 // import NewAppModal from './Modals/NewAppModal'
 
 const BlockchainWalletsPage = ({ id }) => {
-  const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
+  const [isCreatingNewWallet, setIsCreatingNewWallet] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('General')
   const [blockchainWallets, setBlockchainWallets] = useState<
@@ -82,7 +83,7 @@ const BlockchainWalletsPage = ({ id }) => {
             {workspace?.isUserAdmin && (
               <div
                 onClick={() => {
-                  setIsCreatingNewApp(true)
+                  setIsCreatingNewWallet(true)
                 }}
                 className="cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
               >
@@ -112,13 +113,13 @@ const BlockchainWalletsPage = ({ id }) => {
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
-        {/* <NewAppModal
-          isOpen={isCreatingNewApp}
+        <NewWalletModal
+          isOpen={isCreatingNewWallet}
           onClose={() => {
-            setIsCreatingNewApp(false)
+            setIsCreatingNewWallet(false)
           }}
           workspaceId={workspace?.id}
-        /> */}
+        />
       </section>
     </>
   )

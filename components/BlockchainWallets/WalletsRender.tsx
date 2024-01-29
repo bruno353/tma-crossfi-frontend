@@ -30,6 +30,7 @@ import { BlockchainWalletProps } from '@/types/blockchain-app'
 // import EditAppModal from './Modals/EditAppModal'
 import { formatDate, transformString } from '@/utils/functions'
 import { optionsNetwork } from '../BlockchainApps/Modals/NewAppModal'
+import EditWalletModal from './Modals/EditWalletModal'
 
 export interface ModalI {
   wallets: BlockchainWalletProps[]
@@ -42,7 +43,7 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
-  const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
+  const [isEditWalletOpen, setIsEditWalletOpen] = useState<any>()
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -192,7 +193,7 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                           onMouseLeave={() => setIsEditInfoOpen(null)}
                           onClick={(event) => {
                             event.stopPropagation()
-                            setIsEditAppOpen(wallet.id)
+                            setIsEditWalletOpen(wallet.id)
                           }}
                         ></img>
                       )}
@@ -204,19 +205,19 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
           )}
         </div>
       </div>
-      {/* {isEditAppOpen && (
-        <EditAppModal
-          isOpen={isEditAppOpen}
+      {isEditWalletOpen && (
+        <EditWalletModal
+          isOpen={isEditWalletOpen}
           onClose={() => {
-            setIsEditAppOpen(false)
+            setIsEditWalletOpen(false)
           }}
           onUpdateM={() => {
             onUpdate()
-            setIsEditAppOpen(false)
+            setIsEditWalletOpen(false)
           }}
-          app={apps.find((app) => app.id === isEditAppOpen)}
+          wallet={wallets.find((app) => app.id === isEditWalletOpen)}
         />
-      )} */}
+      )}
     </div>
   )
 }
