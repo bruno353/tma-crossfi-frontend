@@ -103,7 +103,7 @@ const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
             }}
             className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
           >
-            Deploy canister
+            Deploy new canister
           </div>
         </div>
         <div className="grid gap-y-[25px]">
