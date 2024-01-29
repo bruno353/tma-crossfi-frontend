@@ -41,6 +41,7 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
+  const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
 
   const { push } = useRouter()
@@ -99,11 +100,11 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
           ) : (
             <div className="">
               <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
-                <div className="w-full max-w-[30%]">Wallet / Identity Id</div>
-                <div className="w-full max-w-[30%]">Network</div>
-                <div className="w-full max-w-[25%]">Description</div>
+                <div className="w-full max-w-[25%]">Wallet / Identity Id</div>
+                <div className="w-full max-w-[20%]">Network</div>
+                <div className="w-full max-w-[20%]">Description</div>
                 <div className="w-full max-w-[15%]">Balance</div>
-                <div className="w-full max-w-[10%]">created at</div>
+                <div className="w-full max-w-[15%]">created at</div>
               </div>
               <div className="max-h-[calc(100vh-32rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                 {' '}
@@ -118,20 +119,32 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                       'border-b-[1px] border-[#c5c4c40e]'
                     } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
-                    <div className="flex w-full max-w-[30%] gap-x-[7px]">
-                      <div className=" overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                        {transformString(wallet.icpWalletPubKId)}
+                    <div className="flex w-full max-w-[25%] gap-x-[7px]">
+                      <div className="relative flex w-fit gap-x-[7px]">
+                        {isCopyInfoOpen === wallet.id && (
+                          <div className="absolute right-0 !z-50 flex w-fit -translate-y-[10%]  translate-x-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                            Copy id
+                          </div>
+                        )}
+                        <div className=" overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                          {transformString(wallet.icpWalletPubKId)}
+                        </div>
+                        <img
+                          ref={editRef}
+                          alt="ethereum avatar"
+                          src="/images/workspace/copy.svg"
+                          className="w-[20px] cursor-pointer rounded-full"
+                          onMouseEnter={() => setIsCopyInfoOpen(wallet.id)}
+                          onMouseLeave={() => setIsCopyInfoOpen(null)}
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              wallet.icpWalletPubKId,
+                            )
+                          }}
+                        ></img>
                       </div>
-                      <img
-                        alt="ethereum avatar"
-                        src="/images/workspace/copy.svg"
-                        className="w-[20px] cursor-pointer rounded-full"
-                        onClick={() => {
-                          navigator.clipboard.writeText(wallet.icpWalletPubKId)
-                        }}
-                      ></img>
                     </div>
-                    <div className="flex w-full max-w-[30%] items-center gap-x-[7px]">
+                    <div className="flex w-full max-w-[20%] items-center gap-x-[7px]">
                       <img
                         src={
                           optionsNetwork.find((op) => {
@@ -153,11 +166,11 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                         }
                       </div>
                     </div>
-                    <div className="w-full max-w-[25%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {wallet.name}
                     </div>
-                    <div className="w-full max-w-[25%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {wallet.name}
+                    <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                      {wallet.balance} {wallet.network}
                     </div>
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {formatDate(wallet.createdAt)}
