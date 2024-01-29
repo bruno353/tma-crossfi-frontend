@@ -50,7 +50,9 @@ const ICPWalletsRender = ({
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
   const [isEditWalletOpen, setIsEditWalletOpen] = useState<any>()
+  const [isFundWalletOpen, setIsFundWalletOpen] = useState<any>()
   const [isCreatingNewWallet, setIsCreatingNewWallet] = useState<boolean>(false)
+  const [isFundInfoOpen, setIsFundInfoOpen] = useState<any>()
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -163,7 +165,7 @@ const ICPWalletsRender = ({
                     </div>
                     <div className="ml-auto w-full max-w-[5%]">
                       {' '}
-                      {isEditInfoOpen === wallet.id && (
+                      {isFundInfoOpen === wallet.id && (
                         <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
                           Fund wallet
                         </div>
@@ -172,13 +174,13 @@ const ICPWalletsRender = ({
                         <img
                           ref={editRef}
                           alt="ethereum avatar"
-                          src="/images/chat/pencil.svg"
-                          className="w-[15px] cursor-pointer 2xl:w-[25px]"
-                          onMouseEnter={() => setIsEditInfoOpen(wallet.id)}
-                          onMouseLeave={() => setIsEditInfoOpen(null)}
+                          src="/images/workspace/money.svg"
+                          className="w-[14px] cursor-pointer 2xl:w-[24px]"
+                          onMouseEnter={() => setIsFundInfoOpen(wallet.id)}
+                          onMouseLeave={() => setIsFundInfoOpen(null)}
                           onClick={(event) => {
                             event.stopPropagation()
-                            setIsEditWalletOpen(wallet.id)
+                            setIsFundWalletOpen(wallet.id)
                           }}
                         ></img>
                       )}
@@ -215,6 +217,19 @@ const ICPWalletsRender = ({
       {isEditWalletOpen && (
         <EditICPWalletModal
           isOpen={isEditWalletOpen}
+          onClose={() => {
+            setIsEditWalletOpen(false)
+          }}
+          onUpdateM={() => {
+            onUpdate()
+            setIsEditWalletOpen(false)
+          }}
+          wallet={wallets.find((app) => app.id === isEditWalletOpen)}
+        />
+      )}
+      {isFundWalletOpen && (
+        <EditICPWalletModal
+          isOpen={isFundWalletOpen}
           onClose={() => {
             setIsEditWalletOpen(false)
           }}
