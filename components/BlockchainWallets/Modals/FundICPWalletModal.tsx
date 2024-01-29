@@ -36,7 +36,7 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
     if (!isLoading) {
       const value = e.target.value
       // Esta expressão regular permite apenas números
-      const regex = /^[0-9]*$/
+      const regex = /^\d*\.?\d*$/
 
       if (regex.test(value)) {
         setFundAmount(value)
@@ -117,7 +117,7 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            Wallet / Identity Id
+            ICP Wallet Id
           </label>
           <input
             type="text"
@@ -125,7 +125,7 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
             id="workspaceName"
             disabled={true}
             name="workspaceName"
-            value={wallet?.id}
+            value={wallet?.walletId}
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
         </div>
@@ -152,7 +152,7 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
                 isLoading
                   ? 'animate-pulse !bg-[#35428a]'
                   : 'cursor-pointer  hover:bg-[#35428a]'
-              }  ml-auto rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+              } rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
               onClick={() => {
                 if (!isLoading && fundAmount && Number(fundAmount) > 0) {
                   handleEditApp()

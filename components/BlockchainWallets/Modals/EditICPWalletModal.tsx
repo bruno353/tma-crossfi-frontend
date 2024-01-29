@@ -120,7 +120,7 @@ const EditICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
             id="workspaceName"
             disabled={true}
             name="workspaceName"
-            value={wallet?.id}
+            value={wallet?.walletId}
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
         </div>

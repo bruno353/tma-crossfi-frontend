@@ -232,13 +232,13 @@ const ICPWalletsRender = ({
         <FundICPWalletModal
           isOpen={isFundWalletOpen}
           onClose={() => {
-            setIsEditWalletOpen(false)
+            setIsFundWalletOpen(false)
           }}
           onUpdateM={() => {
             onUpdate()
-            setIsEditWalletOpen(false)
+            setIsFundWalletOpen(false)
           }}
-          wallet={wallets.find((app) => app.id === isEditWalletOpen)}
+          wallet={wallets.find((app) => app.id === isFundWalletOpen)}
         />
       )}
       {isCreatingNewWallet && (
