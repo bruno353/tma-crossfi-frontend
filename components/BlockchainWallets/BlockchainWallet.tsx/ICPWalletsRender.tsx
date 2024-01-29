@@ -159,7 +159,7 @@ const ICPWalletsRender = ({
                       {wallet.name}
                     </div>
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {wallet.balance} Cycles
+                      {wallet.balance} TCycles
                     </div>
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {formatDate(wallet.createdAt)}
