@@ -21,6 +21,9 @@ import Sidebar from '@/components/Sidebar'
 import BlockchainWalletPage from './BlockchainWalletPage'
 
 const BlockchainWallet = (id: any) => {
+  console.log('id recebido pelo bloccc ' + id)
+  console.log(id)
+
   return (
     <>
       <div className="flex">

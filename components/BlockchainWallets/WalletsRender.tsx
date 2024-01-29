@@ -121,7 +121,10 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                     } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
                     <div className="flex w-full max-w-[25%] gap-x-[7px]">
-                      <div className="relative flex w-fit gap-x-[7px]">
+                      <div
+                        ref={editRef}
+                        className="relative flex w-fit gap-x-[7px]"
+                      >
                         {isCopyInfoOpen === wallet.id && (
                           <div className="absolute right-0 !z-50 flex w-fit -translate-y-[10%]  translate-x-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
                             Copy id

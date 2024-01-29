@@ -10,7 +10,7 @@ export default function Page({ params }) {
     <>
       <ScrollUp />
       <div className="max-h-[calc(100vh-10rem)] w-full">
-        <BlockchainWallet appId={params.walletId} id={params.id} />
+        <BlockchainWallet walletId={params.walletId} id={params.id} />
       </div>
     </>
   )

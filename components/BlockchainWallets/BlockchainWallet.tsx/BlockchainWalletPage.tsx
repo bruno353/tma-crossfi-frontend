@@ -30,6 +30,8 @@ import EditWalletModal from '../Modals/EditWalletModal'
 
 const BlockchainWalletPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
+  const [isInfoBalanceOpen, setIsInfoBalanceOpen] = useState(false)
+
   const [navBarSelected, setNavBarSelected] = useState('Wallets')
   const [blockchainWallet, setBlockchainWallet] =
     useState<BlockchainWalletProps>()
@@ -73,22 +75,55 @@ const BlockchainWalletPage = ({ id }) => {
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[90px]">
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
-            <div className="flex gap-x-[20px]">
-              <img
-                src={
-                  optionsNetwork.find((op) => {
-                    return op.value === blockchainWallet?.network
-                  }).imageSrc
-                }
-                alt="image"
-                className={`${
-                  optionsNetwork.find((op) => {
-                    return op.value === blockchainWallet?.network
-                  }).imageStyle
-                } !w-[35px] flex-shrink-0`}
-              />
-              <div className="mt-auto text-[24px] font-medium">
-                {blockchainWallet.name}
+            <div className="">
+              <div className="flex gap-x-[20px]">
+                <img
+                  src={
+                    optionsNetwork.find((op) => {
+                      return op.value === blockchainWallet?.network
+                    })?.imageSrc
+                  }
+                  alt="image"
+                  className={`${
+                    optionsNetwork.find((op) => {
+                      return op.value === blockchainWallet?.network
+                    })?.imageStyle
+                  } !w-[35px] flex-shrink-0`}
+                />
+                <div className="mt-auto text-[24px] font-medium">
+                  {blockchainWallet?.name}
+                </div>
+              </div>
+              <a
+                href={`https://dashboard.internetcomputer.org/account/${blockchainWallet?.icpWalletPubKId}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div className="mt-2 text-[14px] ">
+                  Identity public Id:{' '}
+                  <span className="hover:text-[#0354EC]">
+                    {blockchainWallet?.icpWalletPubKId}
+                  </span>
+                </div>
+              </a>
+              <div className="relative flex w-fit gap-x-[5px]">
+                <div className="mt-2 text-[14px] ">
+                  Identity balance: <span>{blockchainWallet?.balance} ICP</span>
+                </div>
+                <img
+                  alt="ethereum avatar"
+                  src="/images/header/help.svg"
+                  className="w-[17px] cursor-pointer rounded-full"
+                  onMouseEnter={() => setIsInfoBalanceOpen(true)}
+                  onMouseLeave={() => setIsInfoBalanceOpen(false)}
+                ></img>
+                {isInfoBalanceOpen && (
+                  <div className="absolute right-0 flex w-fit -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                    To fund your Identity, its necessary to transfer ICP tokens
+                    to your Identity public Id. You can buy ICP tokens in
+                    exchanges as Binance
+                  </div>
+                )}
               </div>
             </div>
             {workspace?.isUserAdmin && (
@@ -114,10 +149,10 @@ const BlockchainWalletPage = ({ id }) => {
               {navBarSelected === 'Wallets' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                   <ICPWalletsRender
-                    wallets={blockchainWallet.ICPWallets}
+                    wallets={blockchainWallet?.ICPWallets}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
-                    blockchainWalletId={blockchainWallet.id}
+                    blockchainWalletId={blockchainWallet?.id}
                   />
                 </div>
               )}
