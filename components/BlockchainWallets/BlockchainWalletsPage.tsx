@@ -23,15 +23,18 @@ import { getBlockchainApps, getUserWorkspace, getWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
 import SubNavBar from '../Modals/SubNavBar'
 import { Logo } from '../Sidebar/Logo'
-import { BlockchainAppProps } from '@/types/blockchain-app'
+import { BlockchainWalletProps } from '@/types/blockchain-app'
 import WalletsRender from './WalletsRender'
+import { getBlockchainWallets } from '@/utils/api-blockchain'
 // import NewAppModal from './Modals/NewAppModal'
 
 const BlockchainWalletsPage = ({ id }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('General')
-  const [blockchainApps, setBlockchainApps] = useState<BlockchainAppProps[]>([])
+  const [blockchainWallets, setBlockchainWallets] = useState<
+    BlockchainWalletProps[]
+  >([])
 
   const { workspace, user } = useContext(AccountContext)
 
@@ -43,8 +46,8 @@ const BlockchainWalletsPage = ({ id }) => {
     }
 
     try {
-      const res = await getBlockchainApps(data, userSessionToken)
-      setBlockchainApps(res)
+      const res = await getBlockchainWallets(data, userSessionToken)
+      setBlockchainWallets(res)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -83,7 +86,7 @@ const BlockchainWalletsPage = ({ id }) => {
                 }}
                 className="cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
               >
-                New app
+                New wallet
               </div>
             )}
           </div>
@@ -99,7 +102,7 @@ const BlockchainWalletsPage = ({ id }) => {
               {navBarSelected === 'General' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                   <WalletsRender
-                    apps={blockchainApps}
+                    wallets={blockchainWallets}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
                   />

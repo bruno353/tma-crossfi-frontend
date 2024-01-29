@@ -16,6 +16,7 @@ export interface BlockchainWalletProps {
   icpWalletId: string
   icpWalletPubKId: string
   icpWalletPubKPrincipal: string
+  balance: string
   name: string
   network: string
   workspaceId: string
