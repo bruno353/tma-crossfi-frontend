@@ -170,6 +170,7 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
                 amount={fundAmount}
                 wallet={wallet}
                 onConfirmTransaction={() => {
+                  setIsConfirmTransactionOpen(false)
                   handleFund()
                 }}
               />
