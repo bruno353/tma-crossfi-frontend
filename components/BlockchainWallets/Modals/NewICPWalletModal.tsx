@@ -179,6 +179,7 @@ const NewICPWalletModal = ({
               <ConfirmDeployICPWalletModal
                 wallet={blockchainWallet}
                 onConfirmTransaction={() => {
+                  setIsConfirmTransactionOpen(false)
                   handleFund()
                 }}
               />
