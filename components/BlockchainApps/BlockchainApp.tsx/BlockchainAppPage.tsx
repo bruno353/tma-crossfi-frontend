@@ -28,7 +28,7 @@ import CanistersRender from './CanistersRender'
 import SubNavBar from '@/components/Modals/SubNavBar'
 import { optionsNetwork } from '../Modals/NewAppModal'
 
-const BlockchainAppPage = ({ id }) => {
+const BlockchainAppPage = ({ id, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('Canisters')
@@ -36,6 +36,9 @@ const BlockchainAppPage = ({ id }) => {
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
 
   const { workspace, user } = useContext(AccountContext)
+
+  const pathname = usePathname()
+  const { push } = useRouter()
 
   async function getData() {
     const { userSessionToken } = parseCookies()
@@ -71,7 +74,25 @@ const BlockchainAppPage = ({ id }) => {
   return (
     <>
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[90px]">
-        <div className="container text-[#fff]">
+        <div className="container relative text-[#fff]">
+          <div
+            onClick={() => {
+              const basePath = pathname.split('/')[1]
+              console.log('the bash pathhhh ' + basePath)
+              const newPath = `/${basePath}/${workspaceId}/blockchain-apps` // Constrói o novo caminho
+              push(newPath)
+            }}
+            className="absolute left-0 flex -translate-y-[180%] cursor-pointer gap-x-[5px]"
+          >
+            <img
+              alt="ethereum avatar"
+              src="/images/blockchain/arrow-left.svg"
+              className="w-[12px]"
+            ></img>
+            <div className="text-[14px] text-[#c5c4c4] hover:text-[#b8b8b8]">
+              Apps
+            </div>
+          </div>
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="flex gap-x-[20px]">
               <img

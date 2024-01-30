@@ -31,7 +31,7 @@ const BlockchainWallet = (id: any) => {
           <Sidebar id={id.id} />
         </div>
         <div className="w-full">
-          <BlockchainWalletPage id={id.walletId} />
+          <BlockchainWalletPage id={id.walletId} workspaceId={id.id} />
         </div>
       </div>
     </>

@@ -77,7 +77,7 @@ const BlockchainWalletsPage = ({ id }) => {
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="flex">
               <div className="mt-auto text-[24px] font-medium">
-                Blockchain apps
+                Blockchain wallets
               </div>
             </div>
             {workspace?.isUserAdmin && (

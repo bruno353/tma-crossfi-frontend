@@ -14,6 +14,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { deployICPWallet } from '@/utils/api-blockchain'
+import ConfirmDeployICPWalletModal from './ConfirmDeployICPWalletModal'
 
 export const optionsNetwork = [
   {
@@ -24,9 +25,17 @@ export const optionsNetwork = [
   },
 ]
 
-const NewICPWalletModal = ({ isOpen, onClose, blockchainWalletId }) => {
+const NewICPWalletModal = ({
+  isOpen,
+  onClose,
+  blockchainWalletId,
+  blockchainWallet,
+}) => {
   const [appName, setAppName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
+  const [isConfirmTransactionOpen, setIsConfirmTransactionOpen] =
+    useState<any>(false)
+  const confirmTransactionRef = useRef(null)
 
   const handleInputChange = (e) => {
     if (!isLoading) {
@@ -46,7 +55,7 @@ const NewICPWalletModal = ({ isOpen, onClose, blockchainWalletId }) => {
   //     }
   //   }
 
-  const handleCreateChannel = async () => {
+  const handleFund = async () => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
@@ -74,6 +83,27 @@ const NewICPWalletModal = ({ isOpen, onClose, blockchainWalletId }) => {
     }
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        confirmTransactionRef.current &&
+        !confirmTransactionRef.current.contains(event.target)
+      ) {
+        setIsConfirmTransactionOpen(false)
+      }
+    }
+
+    if (isConfirmTransactionOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isConfirmTransactionOpen])
+
   return (
     <div
       onClick={handleOverlayClick}
@@ -98,7 +128,7 @@ const NewICPWalletModal = ({ isOpen, onClose, blockchainWalletId }) => {
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            Wallet description
+            Canister-wallet description
           </label>
           <input
             type="text"
@@ -126,7 +156,7 @@ const NewICPWalletModal = ({ isOpen, onClose, blockchainWalletId }) => {
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
         </div> */}
-        <div className="mt-10 flex justify-start">
+        <div className="relative mt-10 flex justify-start">
           <div
             className={`${
               isLoading
@@ -135,12 +165,25 @@ const NewICPWalletModal = ({ isOpen, onClose, blockchainWalletId }) => {
             }  rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
             onClick={() => {
               if (!isLoading) {
-                handleCreateChannel()
+                setIsConfirmTransactionOpen(true)
               }
             }}
           >
             Deploy
           </div>
+          {isConfirmTransactionOpen && (
+            <div
+              ref={confirmTransactionRef}
+              className="absolute right-0 translate-x-[30%]"
+            >
+              <ConfirmDeployICPWalletModal
+                wallet={blockchainWallet}
+                onConfirmTransaction={() => {
+                  handleFund()
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

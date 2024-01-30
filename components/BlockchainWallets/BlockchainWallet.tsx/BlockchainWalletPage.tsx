@@ -28,16 +28,19 @@ import { optionsNetwork } from '../Modals/NewWalletModal'
 import ICPWalletsRender from './ICPWalletsRender'
 import EditWalletModal from '../Modals/EditWalletModal'
 
-const BlockchainWalletPage = ({ id }) => {
+const BlockchainWalletPage = ({ id, workspaceId }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isInfoBalanceOpen, setIsInfoBalanceOpen] = useState(false)
 
-  const [navBarSelected, setNavBarSelected] = useState('Wallets')
+  const [navBarSelected, setNavBarSelected] = useState('Canister-wallets')
   const [blockchainWallet, setBlockchainWallet] =
     useState<BlockchainWalletProps>()
   const [isEditWalletOpen, setIsEditWalletOpen] = useState<boolean>(false)
 
   const { workspace, user } = useContext(AccountContext)
+
+  const pathname = usePathname()
+  const { push } = useRouter()
 
   async function getData() {
     const { userSessionToken } = parseCookies()
@@ -73,7 +76,25 @@ const BlockchainWalletPage = ({ id }) => {
   return (
     <>
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[90px]">
-        <div className="container text-[#fff]">
+        <div className="container relative text-[#fff]">
+          <div
+            onClick={() => {
+              const basePath = pathname.split('/')[1]
+              console.log('the bash pathhhh ' + basePath)
+              const newPath = `/${basePath}/${workspaceId}/blockchain-wallets` // Constrói o novo caminho
+              push(newPath)
+            }}
+            className="absolute left-0 flex -translate-y-[180%] cursor-pointer gap-x-[5px]"
+          >
+            <img
+              alt="ethereum avatar"
+              src="/images/blockchain/arrow-left.svg"
+              className="w-[12px]"
+            ></img>
+            <div className="text-[14px] text-[#c5c4c4] hover:text-[#b8b8b8]">
+              Wallets
+            </div>
+          </div>
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="">
               <div className="flex gap-x-[20px]">
@@ -143,16 +164,17 @@ const BlockchainWalletPage = ({ id }) => {
                 setNavBarSelected(value)
               }}
               selected={navBarSelected}
-              itensList={['Wallets', 'Transactions']}
+              itensList={['Canister-wallets', 'Transactions']}
             />
             <div className="mt-[40px]">
-              {navBarSelected === 'Wallets' && (
+              {navBarSelected === 'Canister-wallets' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                   <ICPWalletsRender
                     wallets={blockchainWallet?.ICPWallets}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
                     blockchainWalletId={blockchainWallet?.id}
+                    blockchainWallet={blockchainWallet}
                   />
                 </div>
               )}

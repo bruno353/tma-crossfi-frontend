@@ -35,6 +35,7 @@ import FundICPWalletModal from '../Modals/FundICPWalletModal'
 
 export interface ModalI {
   wallets: ICPWalletsProps[]
+  blockchainWallet: BlockchainWalletProps
   blockchainWalletId: string
   isUserAdmin: boolean
   onUpdate(): void
@@ -45,6 +46,7 @@ const ICPWalletsRender = ({
   onUpdate,
   isUserAdmin,
   blockchainWalletId,
+  blockchainWallet,
 }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
@@ -52,7 +54,8 @@ const ICPWalletsRender = ({
   const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
   const [isEditWalletOpen, setIsEditWalletOpen] = useState<any>()
   const [isFundWalletOpen, setIsFundWalletOpen] = useState<any>()
-  const [isCreatingNewWallet, setIsCreatingNewWallet] = useState<boolean>(false)
+  const [isDeployNewCanisterWalletOpen, setIsDeployNewCanisterWalletOpen] =
+    useState<boolean>(false)
   const [isFundInfoOpen, setIsFundInfoOpen] = useState<any>()
 
   const { push } = useRouter()
@@ -97,7 +100,7 @@ const ICPWalletsRender = ({
     return (
       <div className="mx-auto w-fit items-center justify-center text-[15px] font-light">
         <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
-        <span>No Wallets found, create your first Wallet</span>
+        <span>No Canister-wallets found, create your first Wallet</span>
       </div>
     )
   }
@@ -105,18 +108,28 @@ const ICPWalletsRender = ({
   return (
     <div className="text-[14px] text-[#C5C4C4]">
       <div className=" text-[14px] font-normal">
+        <div className="mb-[18px]">
+          <div
+            onClick={() => {
+              setIsDeployNewCanisterWalletOpen(true)
+            }}
+            className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
+          >
+            Deploy new Canister-wallet
+          </div>
+        </div>
         <div className="grid gap-y-[25px]">
           {wallets?.length === 0 ? (
             NoAppsFound()
           ) : (
             <div className="">
               <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
-                <div className="w-full max-w-[30%]">Wallet Id</div>
+                <div className="w-full max-w-[30%]">Canister-wallet Id</div>
                 <div className="w-full max-w-[30%]">Description</div>
                 <div className="w-full max-w-[15%]">Balance</div>
                 <div className="w-full max-w-[15%]">created at</div>
               </div>
-              <div className="max-h-[calc(100vh-32rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+              <div className="max-h-[calc(100vh-42rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                 {' '}
                 {wallets?.map((wallet, index) => (
                   <div
@@ -241,13 +254,14 @@ const ICPWalletsRender = ({
           wallet={wallets.find((app) => app.id === isFundWalletOpen)}
         />
       )}
-      {isCreatingNewWallet && (
+      {isDeployNewCanisterWalletOpen && (
         <NewICPWalletModal
-          isOpen={isCreatingNewWallet}
+          isOpen={isDeployNewCanisterWalletOpen}
           onClose={() => {
-            setIsCreatingNewWallet(false)
+            setIsDeployNewCanisterWalletOpen(false)
           }}
           blockchainWalletId={blockchainWalletId}
+          blockchainWallet={blockchainWallet}
         />
       )}
     </div>
