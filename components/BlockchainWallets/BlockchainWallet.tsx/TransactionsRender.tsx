@@ -32,6 +32,7 @@ import { formatDate, transformString } from '@/utils/functions'
 import NewICPWalletModal from '../Modals/NewICPWalletModal'
 import EditICPWalletModal from '../Modals/EditICPWalletModal'
 import FundICPWalletModal from '../Modals/FundICPWalletModal'
+import TransferICPModal from '../Modals/TransferICPModal'
 
 export interface ModalI {
   wallets: ICPWalletsProps[]
@@ -53,7 +54,7 @@ const TransactionsRender = ({
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
   const [isEditWalletOpen, setIsEditWalletOpen] = useState<any>()
-  const [isFundWalletOpen, setIsFundWalletOpen] = useState<any>()
+  const [isTransferOpen, setIsTransferOpen] = useState<any>()
   const [isDeployNewCanisterWalletOpen, setIsDeployNewCanisterWalletOpen] =
     useState<boolean>(false)
   const [isFundInfoOpen, setIsFundInfoOpen] = useState<any>()
@@ -105,7 +106,7 @@ const TransactionsRender = ({
         <div className="mb-[18px]">
           <div
             onClick={() => {
-              setIsDeployNewCanisterWalletOpen(true)
+              setIsTransferOpen(true)
             }}
             className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
           >
@@ -125,6 +126,19 @@ const TransactionsRender = ({
           </a>
         </div>
       </div>
+      {isTransferOpen && (
+        <TransferICPModal
+          isOpen={isTransferOpen}
+          onClose={() => {
+            setIsTransferOpen(false)
+          }}
+          onUpdateM={() => {
+            onUpdate()
+            setIsTransferOpen(false)
+          }}
+          blockchainWallet={blockchainWallet}
+        />
+      )}
     </div>
   )
 }

@@ -33,7 +33,7 @@ const TransferICPModal = ({
   onClose,
   isOpen,
 }: ModalI) => {
-  const [addressTo, setAddressTo] = useState('0.0')
+  const [addressTo, setAddressTo] = useState('')
   const [fundAmount, setFundAmount] = useState('0.0')
   const [isLoading, setIsLoading] = useState(null)
   const [isConfirmTransactionOpen, setIsConfirmTransactionOpen] =
@@ -137,13 +137,14 @@ const TransferICPModal = ({
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            ICP Wallet Id
+            Address to transfer
           </label>
           <input
             type="text"
             maxLength={500}
             id="workspaceName"
             name="workspaceName"
+            placeholder="0x..."
             onChange={handleInputAddressChange}
             value={addressTo}
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
@@ -179,7 +180,7 @@ const TransferICPModal = ({
           />
         </div>
         <div className="relative mt-10 flex justify-between">
-          {Number(fundAmount) > 0 && (
+          {Number(fundAmount) > 0 && addressTo && addressTo.length > 0 && (
             <div
               className={`${
                 isLoading
@@ -198,11 +199,14 @@ const TransferICPModal = ({
                 }
               }}
             >
-              Fund wallet
+              Transfer
             </div>
           )}
           {isConfirmTransactionOpen && (
-            <div ref={confirmTransactionRef} className="absolute right-0">
+            <div
+              ref={confirmTransactionRef}
+              className="absolute right-0 w-fit translate-x-[30%]"
+            >
               <ConfirmFundICPWalletModal
                 amount={fundAmount}
                 wallet={addressTo}
