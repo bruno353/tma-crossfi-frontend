@@ -35,6 +35,9 @@ const BlockchainAppsPage = ({ id }) => {
 
   const { workspace, user } = useContext(AccountContext)
 
+  const { push } = useRouter()
+  const pathname = usePathname()
+
   async function getData() {
     setIsLoading(true)
     const { userSessionToken } = parseCookies()
@@ -114,6 +117,10 @@ const BlockchainAppsPage = ({ id }) => {
           isOpen={isCreatingNewApp}
           onClose={() => {
             setIsCreatingNewApp(false)
+          }}
+          onUpdateM={(appId: string) => {
+            setIsCreatingNewApp(false)
+            push(`${pathname}/${appId}`)
           }}
           workspaceId={workspace?.id}
         />

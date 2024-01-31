@@ -24,7 +24,7 @@ export const optionsNetwork = [
   },
 ]
 
-const NewAppModal = ({ isOpen, onClose, workspaceId }) => {
+const NewAppModal = ({ isOpen, onUpdateM, onClose, workspaceId }) => {
   const [appName, setAppName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
 
@@ -48,9 +48,9 @@ const NewAppModal = ({ isOpen, onClose, workspaceId }) => {
     }
 
     try {
-      await createBlockchainApps(final, userSessionToken)
+      const app = await createBlockchainApps(final, userSessionToken)
       setIsLoading(false)
-      onClose()
+      onUpdateM(app.id)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)

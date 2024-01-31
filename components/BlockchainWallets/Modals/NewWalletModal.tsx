@@ -48,9 +48,9 @@ const NewWalletModal = ({ isOpen, onUpdateM, onClose, workspaceId }) => {
     }
 
     try {
-      await createWallet(final, userSessionToken)
+      const wallet = await createWallet(final, userSessionToken)
       setIsLoading(false)
-      onUpdateM()
+      onUpdateM(wallet.id)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
