@@ -171,7 +171,7 @@ const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
                     </a>
 
                     <div className="flex w-full max-w-[17%] items-center gap-x-[7px]">
-                      {canister.type}
+                      {canister.typeTemplate}
                     </div>
                     <div className="w-full max-w-[10%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {formatDate(canister.createdAt)}
