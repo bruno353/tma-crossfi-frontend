@@ -40,6 +40,12 @@ const BlockchainAppPage = ({ id, workspaceId }) => {
   const pathname = usePathname()
   const { push } = useRouter()
 
+  function pushBack() {
+    const lastIndex = pathname.lastIndexOf('/')
+    const final = pathname.substring(0, lastIndex)
+    push(final)
+  }
+
   async function getData() {
     setIsLoading(true)
     const { userSessionToken } = parseCookies()
@@ -50,6 +56,10 @@ const BlockchainAppPage = ({ id, workspaceId }) => {
 
     try {
       const res = await getBlockchainApp(data, userSessionToken)
+      if (!res) {
+        pushBack()
+        return
+      }
       setBlockchainApp(res)
     } catch (err) {
       console.log(err)
