@@ -28,6 +28,7 @@ export const optionsNetwork = [
 const NewICPWalletModal = ({
   isOpen,
   onClose,
+  onUpdateM,
   blockchainWalletId,
   blockchainWallet,
 }) => {
@@ -68,7 +69,7 @@ const NewICPWalletModal = ({
     try {
       await deployICPWallet(final, userSessionToken)
       setIsLoading(false)
-      onClose()
+      onUpdateM()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)

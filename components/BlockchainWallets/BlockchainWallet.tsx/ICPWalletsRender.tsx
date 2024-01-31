@@ -257,6 +257,10 @@ const ICPWalletsRender = ({
       {isDeployNewCanisterWalletOpen && (
         <NewICPWalletModal
           isOpen={isDeployNewCanisterWalletOpen}
+          onUpdateM={() => {
+            setIsDeployNewCanisterWalletOpen(false)
+            onUpdate()
+          }}
           onClose={() => {
             setIsDeployNewCanisterWalletOpen(false)
           }}
