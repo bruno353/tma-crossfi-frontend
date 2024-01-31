@@ -90,12 +90,6 @@ const ICPWalletsRender = ({
     }
   }, [isDeleteUserOpen])
 
-  function handleClickApp(id: string, event) {
-    if (!editRef?.current?.contains(event.target)) {
-      push(`${pathname}/${id}`)
-    }
-  }
-
   function NoAppsFound() {
     return (
       <div className="mx-auto w-fit items-center justify-center text-[15px] font-light">
@@ -133,14 +127,11 @@ const ICPWalletsRender = ({
                 {' '}
                 {wallets?.map((wallet, index) => (
                   <div
-                    onClick={(event) => {
-                      handleClickApp(wallet.id, event)
-                    }}
                     key={index}
                     className={`flex items-center  ${
                       index !== wallets?.length - 1 &&
                       'border-b-[1px] border-[#c5c4c40e]'
-                    } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
+                    }  gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
                     <div className="flex w-full max-w-[30%] gap-x-[7px]">
                       <div
