@@ -24,7 +24,7 @@ export const optionsNetwork = [
   },
 ]
 
-const NewWalletModal = ({ isOpen, onClose, workspaceId }) => {
+const NewWalletModal = ({ isOpen, onUpdateM, onClose, workspaceId }) => {
   const [appName, setAppName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
 
@@ -50,7 +50,7 @@ const NewWalletModal = ({ isOpen, onClose, workspaceId }) => {
     try {
       await createWallet(final, userSessionToken)
       setIsLoading(false)
-      onClose()
+      onUpdateM()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)

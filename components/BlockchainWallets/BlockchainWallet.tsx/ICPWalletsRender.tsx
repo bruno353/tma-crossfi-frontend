@@ -153,7 +153,8 @@ const ICPWalletsRender = ({
                           className="w-[20px] cursor-pointer rounded-full"
                           onMouseEnter={() => setIsCopyInfoOpen(wallet.id)}
                           onMouseLeave={() => setIsCopyInfoOpen(null)}
-                          onClick={() => {
+                          onClick={(event) => {
+                            event.stopPropagation()
                             navigator.clipboard.writeText(wallet.walletId)
                           }}
                         ></img>

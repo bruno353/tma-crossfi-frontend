@@ -72,7 +72,8 @@ const WorkspaceAnalytics = ({
                   alt="ethereum avatar"
                   src="/images/workspace/copy.svg"
                   className="w-[20px] cursor-pointer rounded-full"
-                  onClick={() => {
+                  onClick={(event) => {
+                    event.stopPropagation()
                     navigator.clipboard.writeText(workspace?.icpWalletPubKId)
                   }}
                 ></img>

@@ -115,6 +115,10 @@ const BlockchainWalletsPage = ({ id }) => {
         </div>
         <NewWalletModal
           isOpen={isCreatingNewWallet}
+          onUpdateM={() => {
+            setIsCreatingNewWallet(false)
+            getData()
+          }}
           onClose={() => {
             setIsCreatingNewWallet(false)
           }}
