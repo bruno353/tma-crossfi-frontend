@@ -27,6 +27,7 @@ import SubNavBar from '@/components/Modals/SubNavBar'
 import { optionsNetwork } from '../Modals/NewWalletModal'
 import ICPWalletsRender from './ICPWalletsRender'
 import EditWalletModal from '../Modals/EditWalletModal'
+import TransactionsRender from './TransactionsRender'
 
 const BlockchainWalletPage = ({ id, workspaceId }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -170,6 +171,17 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
               {navBarSelected === 'Canister-wallets' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                   <ICPWalletsRender
+                    wallets={blockchainWallet?.ICPWallets}
+                    isUserAdmin={workspace?.isUserAdmin}
+                    onUpdate={getData}
+                    blockchainWalletId={blockchainWallet?.id}
+                    blockchainWallet={blockchainWallet}
+                  />
+                </div>
+              )}
+              {navBarSelected === 'Transactions' && (
+                <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+                  <TransactionsRender
                     wallets={blockchainWallet?.ICPWallets}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}

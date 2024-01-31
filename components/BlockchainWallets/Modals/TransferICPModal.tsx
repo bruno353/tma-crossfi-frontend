@@ -21,20 +21,19 @@ import ConfirmFundICPWalletModal from './ConfirmFundICPWalletModal'
 import { wait } from '@/utils/functions'
 
 export interface ModalI {
-  wallet: ICPWalletsProps
   blockchainWallet: BlockchainWalletProps
   onUpdateM(): void
   onClose(): void
   isOpen: boolean
 }
 
-const FundICPWalletModal = ({
-  wallet,
+const TransferICPModal = ({
   blockchainWallet,
   onUpdateM,
   onClose,
   isOpen,
 }: ModalI) => {
+  const [addressTo, setAddressTo] = useState('0.0')
   const [fundAmount, setFundAmount] = useState('0.0')
   const [isLoading, setIsLoading] = useState(null)
   const [isConfirmTransactionOpen, setIsConfirmTransactionOpen] =
@@ -54,13 +53,22 @@ const FundICPWalletModal = ({
     }
   }
 
+  const handleInputAddressChange = (e) => {
+    setIsConfirmTransactionOpen(false)
+    if (!isLoading) {
+      const value = e.target.value
+      setAddressTo(value)
+    }
+  }
+
   const handleFund = async () => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
 
     const final = {
-      id: wallet?.id,
+      id: blockchainWallet?.id,
+      addressTo,
       amount: fundAmount,
     }
 
@@ -133,11 +141,11 @@ const FundICPWalletModal = ({
           </label>
           <input
             type="text"
-            maxLength={50}
+            maxLength={500}
             id="workspaceName"
-            disabled={true}
             name="workspaceName"
-            value={wallet?.walletId}
+            onChange={handleInputAddressChange}
+            value={addressTo}
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
         </div>
@@ -197,7 +205,7 @@ const FundICPWalletModal = ({
             <div ref={confirmTransactionRef} className="absolute right-0">
               <ConfirmFundICPWalletModal
                 amount={fundAmount}
-                wallet={wallet.walletId}
+                wallet={addressTo}
                 onConfirmTransaction={() => {
                   setIsConfirmTransactionOpen(false)
                   handleFund()
@@ -211,4 +219,4 @@ const FundICPWalletModal = ({
   )
 }
 
-export default FundICPWalletModal
+export default TransferICPModal
