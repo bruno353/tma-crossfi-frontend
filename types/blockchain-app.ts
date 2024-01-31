@@ -4,7 +4,7 @@ export interface ICPCanisterProps {
   id: string
   url: string
   canisterId: string
-  type: string
+  typeTemplate: string
   workspaceId: string
   blockchainAppId: string
   createdAt: string
