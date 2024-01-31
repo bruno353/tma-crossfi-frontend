@@ -120,7 +120,10 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                       'border-b-[1px] border-[#c5c4c40e]'
                     } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
-                    <div className="flex w-full max-w-[25%] gap-x-[7px]">
+                    <div
+                      ref={editRef}
+                      className="flex w-full max-w-[25%] gap-x-[7px]"
+                    >
                       <div
                         ref={editRef}
                         className="relative flex w-fit gap-x-[7px]"

@@ -13,7 +13,7 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
-import { fundICPWallet } from '@/utils/api-blockchain'
+import { fundICPWallet, transferICP } from '@/utils/api-blockchain'
 import { ICPWalletsProps, BlockchainWalletProps } from '@/types/blockchain-app'
 import { optionsNetwork } from './NewWalletModal'
 import DeleteAppModal from './DeleteAppModal'
@@ -73,8 +73,8 @@ const TransferICPModal = ({
     }
 
     try {
-      await fundICPWallet(final, userSessionToken)
-      wait(1500)
+      await transferICP(final, userSessionToken)
+      await wait(1500)
       toast.success(`Success`)
       setIsLoading(false)
       onUpdateM()
