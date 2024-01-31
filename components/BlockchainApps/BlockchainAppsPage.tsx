@@ -36,6 +36,7 @@ const BlockchainAppsPage = ({ id }) => {
   const { workspace, user } = useContext(AccountContext)
 
   async function getData() {
+    setIsLoading(true)
     const { userSessionToken } = parseCookies()
 
     const data = {

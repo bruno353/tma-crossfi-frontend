@@ -41,6 +41,7 @@ const BlockchainAppPage = ({ id, workspaceId }) => {
   const { push } = useRouter()
 
   async function getData() {
+    setIsLoading(true)
     const { userSessionToken } = parseCookies()
 
     const data = {

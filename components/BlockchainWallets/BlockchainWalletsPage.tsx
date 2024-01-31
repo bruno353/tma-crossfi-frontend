@@ -39,7 +39,11 @@ const BlockchainWalletsPage = ({ id }) => {
 
   const { workspace, user } = useContext(AccountContext)
 
+  const { push } = useRouter()
+  const pathname = usePathname()
+
   async function getData() {
+    setIsLoading(true)
     const { userSessionToken } = parseCookies()
 
     const data = {
@@ -117,6 +121,7 @@ const BlockchainWalletsPage = ({ id }) => {
           isOpen={isCreatingNewWallet}
           onUpdateM={() => {
             setIsCreatingNewWallet(false)
+            push(`${pathname}/${id}`)
             getData()
           }}
           onClose={() => {
