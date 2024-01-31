@@ -252,6 +252,7 @@ const ICPWalletsRender = ({
             setIsFundWalletOpen(false)
           }}
           wallet={wallets.find((app) => app.id === isFundWalletOpen)}
+          blockchainWallet={blockchainWallet}
         />
       )}
       {isDeployNewCanisterWalletOpen && (

@@ -174,3 +174,7 @@ export function transformString(str) {
 
   return firstThree + '...' + lastThree
 }
+
+export async function wait(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds))
+}

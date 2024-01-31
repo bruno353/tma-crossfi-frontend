@@ -14,19 +14,27 @@ import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { fundICPWallet } from '@/utils/api-blockchain'
-import { ICPWalletsProps } from '@/types/blockchain-app'
+import { ICPWalletsProps, BlockchainWalletProps } from '@/types/blockchain-app'
 import { optionsNetwork } from './NewWalletModal'
 import DeleteAppModal from './DeleteAppModal'
 import ConfirmFundICPWalletModal from './ConfirmFundICPWalletModal'
+import { wait } from '@/utils/functions'
 
 export interface ModalI {
   wallet: ICPWalletsProps
+  blockchainWallet: BlockchainWalletProps
   onUpdateM(): void
   onClose(): void
   isOpen: boolean
 }
 
-const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
+const FundICPWalletModal = ({
+  wallet,
+  blockchainWallet,
+  onUpdateM,
+  onClose,
+  isOpen,
+}: ModalI) => {
   const [fundAmount, setFundAmount] = useState('0.0')
   const [isLoading, setIsLoading] = useState(null)
   const [isConfirmTransactionOpen, setIsConfirmTransactionOpen] =
@@ -58,6 +66,8 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
 
     try {
       await fundICPWallet(final, userSessionToken)
+      wait(1500)
+      toast.success(`Success`)
       setIsLoading(false)
       onUpdateM()
     } catch (err) {
@@ -132,12 +142,25 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
           />
         </div>
         <div className="mb-6">
-          <label
-            htmlFor="workspaceName"
-            className="mb-2 block text-[14px] text-[#C5C4C4]"
-          >
-            Amount (ICPs) to fund
-          </label>
+          <div className="flex items-center justify-between gap-x-[5px]">
+            <label
+              htmlFor="workspaceName"
+              className="mb-2 block text-[14px] text-[#C5C4C4]"
+            >
+              Amount (ICPs) to fund
+            </label>
+            <div
+              onClick={() => {
+                if (blockchainWallet.balance) {
+                  setFundAmount(blockchainWallet.balance)
+                }
+              }}
+              className="cursor-pointer rounded-[7px] p-[5px] py-[2px] text-[13px] hover:bg-[#c9c9c921]"
+            >
+              Max
+            </div>
+          </div>
+
           <input
             type="text"
             id="workspaceName"
@@ -156,6 +179,12 @@ const FundICPWalletModal = ({ wallet, onUpdateM, onClose, isOpen }: ModalI) => {
                   : 'cursor-pointer  hover:bg-[#35428a]'
               } rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
               onClick={() => {
+                if (Number(fundAmount) > Number(blockchainWallet.balance)) {
+                  toast.error(
+                    `Fund amount cannot be greater than wallet balance`,
+                  )
+                  return
+                }
                 if (!isLoading && fundAmount && Number(fundAmount) > 0) {
                   setIsConfirmTransactionOpen(true)
                 }

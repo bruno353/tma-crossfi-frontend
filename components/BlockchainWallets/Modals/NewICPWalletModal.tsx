@@ -15,6 +15,7 @@ import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { deployICPWallet } from '@/utils/api-blockchain'
 import ConfirmDeployICPWalletModal from './ConfirmDeployICPWalletModal'
+import { wait } from '@/utils/functions'
 
 export const optionsNetwork = [
   {
@@ -68,6 +69,8 @@ const NewICPWalletModal = ({
 
     try {
       await deployICPWallet(final, userSessionToken)
+      wait(1500)
+      toast.success(`Success`)
       setIsLoading(false)
       onUpdateM()
     } catch (err) {
