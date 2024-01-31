@@ -27,7 +27,7 @@ import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
 import { ICPCanisterProps } from '@/types/blockchain-app'
 import EditAppModal from '../Modals/EditAppModal'
-import { formatDate } from '@/utils/functions'
+import { formatDate, transformString } from '@/utils/functions'
 import { optionsNetwork } from '../Modals/NewAppModal'
 
 export interface ModalI {
@@ -41,6 +41,7 @@ const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
+  const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -130,8 +131,32 @@ const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
                       'border-b-[1px] border-[#c5c4c40e]'
                     } cursor-pointer gap-x-[5px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
-                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {canister.canisterId}
+                    <div className="flex w-full max-w-[20%] gap-x-[7px]">
+                      <div
+                        ref={editRef}
+                        className="relative flex w-fit gap-x-[7px]"
+                      >
+                        {isCopyInfoOpen === canister.id && (
+                          <div className="absolute right-0 !z-50 flex w-fit -translate-y-[10%]  translate-x-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                            Copy id
+                          </div>
+                        )}
+                        <div className=" overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                          {transformString(canister.canisterId)}
+                        </div>
+                        <img
+                          ref={editRef}
+                          alt="ethereum avatar"
+                          src="/images/workspace/copy.svg"
+                          className="w-[20px] cursor-pointer rounded-full"
+                          onMouseEnter={() => setIsCopyInfoOpen(canister.id)}
+                          onMouseLeave={() => setIsCopyInfoOpen(null)}
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            navigator.clipboard.writeText(canister.canisterId)
+                          }}
+                        ></img>
+                      </div>
                     </div>
                     <a
                       ref={urlRef}
