@@ -126,7 +126,7 @@ const BlockchainAppPage = ({ id, workspaceId }) => {
             {workspace?.isUserAdmin && (
               <div
                 onClick={() => {
-                  setIsCreatingNewApp(true)
+                  setIsEditAppOpen(true)
                 }}
                 className="cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
               >
