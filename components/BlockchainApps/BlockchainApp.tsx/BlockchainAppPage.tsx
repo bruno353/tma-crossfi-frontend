@@ -110,13 +110,13 @@ const BlockchainAppPage = ({ id, workspaceId }) => {
                 src={
                   optionsNetwork.find((op) => {
                     return op.value === blockchainApp?.network
-                  }).imageSrc
+                  })?.imageSrc
                 }
                 alt="image"
                 className={`${
                   optionsNetwork.find((op) => {
                     return op.value === blockchainApp?.network
-                  }).imageStyle
+                  })?.imageStyle
                 } !w-[35px] flex-shrink-0`}
               />
               <div className="mt-auto text-[24px] font-medium">

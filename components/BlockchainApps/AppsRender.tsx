@@ -123,20 +123,20 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
                         src={
                           optionsNetwork.find((op) => {
                             return op.value === app.network
-                          }).imageSrc
+                          })?.imageSrc
                         }
                         alt="image"
                         className={
                           optionsNetwork.find((op) => {
                             return op.value === app.network
-                          }).imageStyle
+                          })?.imageStyle
                         }
                       />
                       <div className="overflow-hidden truncate text-ellipsis whitespace-nowrap">
                         {
                           optionsNetwork.find((op) => {
                             return op.value === app.network
-                          }).name
+                          })?.name
                         }
                       </div>
                     </div>

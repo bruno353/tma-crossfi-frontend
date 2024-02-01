@@ -145,7 +145,9 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             ICP canister-wallet
           </label>
           {optionWallet.length === 0 && (
-            //botar aqui q tem q criar wallet
+            <div className='text-[#cc5563] '>
+              You have no wallets. Deploy your first ICP wallet to continue
+            </div>
           )}
           <Dropdown
             optionSelected={selectedICPWallet}

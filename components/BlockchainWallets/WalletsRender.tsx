@@ -155,20 +155,20 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                         src={
                           optionsNetwork.find((op) => {
                             return op.value === wallet.network
-                          }).imageSrc
+                          })?.imageSrc
                         }
                         alt="image"
                         className={
                           optionsNetwork.find((op) => {
                             return op.value === wallet.network
-                          }).imageStyle
+                          })?.imageStyle
                         }
                       />
                       <div className="overflow-hidden truncate text-ellipsis whitespace-nowrap">
                         {
                           optionsNetwork.find((op) => {
                             return op.value === wallet.network
-                          }).name
+                          })?.name
                         }
                       </div>
                     </div>
