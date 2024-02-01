@@ -13,7 +13,11 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
-import { createBlockchainApps, createWallet } from '@/utils/api-blockchain'
+import {
+  createBlockchainApps,
+  createWallet,
+  deployCanister,
+} from '@/utils/api-blockchain'
 import {
   BlockchainAppProps,
   BlockchainWalletProps,
@@ -75,7 +79,7 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
     }
 
     try {
-      const wallet = await createWallet(final, userSessionToken)
+      const wallet = await deployCanister(final, userSessionToken)
       setIsLoading(false)
       onUpdateM(wallet.id)
     } catch (err) {
@@ -188,7 +192,8 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             ></img>
             {isInfoICPCanisterWallet && (
               <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
-                Select the ICP wallet that will be deploying this canister
+                Select the ICP wallet that will be deploying this canister.
+                Ensure it's enough cycles
               </div>
             )}
           </div>
