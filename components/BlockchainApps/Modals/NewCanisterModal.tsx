@@ -47,7 +47,7 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
   const [selectedCanisterTemplate, setSelectedCanisterTemplate] =
     useState<ValueObject>(optionsCanisterTemplate[0])
   const [selectedICPWallet, setSelectedICPWallet] = useState<ValueObject>(
-    optionWallet[0],
+    optionWallet?.at(0),
   )
 
   const handleInputChange = (e) => {
@@ -158,7 +158,7 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
               (canisterName.length === 0 ||
                 !selectedCanisterTemplate ||
                 !selectedICPWallet) &&
-              '!bg-[#55609cdc]'
+              '!cursor-auto !bg-[#8d96c5b7]'
             } ${
               isLoading
                 ? 'animate-pulse !bg-[#35428a]'
