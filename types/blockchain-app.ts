@@ -40,6 +40,7 @@ export interface BlockchainAppProps {
   name: string
   network: string
   ICPCanister: ICPCanisterProps[]
+  icpWallets: ICPWalletsProps[]
   createdAt: string
   updatedAt: string
 }
