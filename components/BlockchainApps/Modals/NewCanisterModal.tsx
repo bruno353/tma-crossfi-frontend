@@ -19,32 +19,40 @@ import {
   BlockchainWalletProps,
 } from '@/types/blockchain-app'
 
-export const optionsNetwork = [
+export const optionsCanisterTemplate = [
   {
-    name: 'Internet computer protocol',
-    value: 'ICP',
-    imageSrc: '/images/workspace/icp.png',
-    imageStyle: 'w-[25px]',
+    name: 'Hello World',
+    value: 'HELLO_WORLD',
   },
 ]
 
 export interface ModalI {
-    blockchainWallet: BlockchainWalletProps
-    app: BlockchainAppProps
-    onUpdateM(): void
-    onClose(): void
-    isOpen: boolean
-  }
-  
-const NewCanisterModal = ({ isOpen, onUpdateM, onClose, blockchainWalletId }) => {
-  const [appName, setAppName] = useState('')
+  app: BlockchainAppProps
+  onUpdateM(value: string): void
+  onClose(): void
+  isOpen: boolean
+}
+
+const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
+  const optionWallet = app?.icpWallets?.map((icpWallet) => {
+    const newValue = {
+      name: `${icpWallet.walletId}`,
+      value: icpWallet.id,
+    }
+    return newValue
+  })
+  const [canisterName, setCanisterName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
 
-  const [selected, setSelected] = useState<ValueObject>(optionsNetwork[0])
+  const [selectedCanisterTemplate, setSelectedCanisterTemplate] =
+    useState<ValueObject>(optionsCanisterTemplate[0])
+  const [selectedICPWallet, setSelectedICPWallet] = useState<ValueObject>(
+    optionWallet[0],
+  )
 
   const handleInputChange = (e) => {
     if (!isLoading) {
-      setAppName(e.target.value)
+      setCanisterName(e.target.value)
     }
   }
 
@@ -54,9 +62,10 @@ const NewCanisterModal = ({ isOpen, onUpdateM, onClose, blockchainWalletId }) =>
     const { userSessionToken } = parseCookies()
 
     const final = {
-      workspaceId,
-      name: appName,
-      walletNetwork: selected.value,
+      id: app.id,
+      name: canisterName,
+      icpWalletId: selectedICPWallet.value,
+      canisterTemplate: selectedCanisterTemplate.value,
     }
 
     try {
@@ -101,14 +110,14 @@ const NewCanisterModal = ({ isOpen, onUpdateM, onClose, blockchainWalletId }) =>
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            Wallet description
+            Canister name
           </label>
           <input
             type="text"
             maxLength={50}
             id="workspaceName"
             name="workspaceName"
-            value={appName}
+            value={canisterName}
             onChange={handleInputChange}
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
@@ -118,30 +127,55 @@ const NewCanisterModal = ({ isOpen, onUpdateM, onClose, blockchainWalletId }) =>
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            Network
+            Canister template
           </label>
           <Dropdown
-            optionSelected={selected}
-            options={optionsNetwork}
+            optionSelected={selectedCanisterTemplate}
+            options={optionsCanisterTemplate}
             onValueChange={(value) => {
-              setSelected(value)
+              setSelectedCanisterTemplate(value)
+            }}
+          />
+        </div>
+        <div className="mb-6">
+          <label
+            htmlFor="workspaceName"
+            className="mb-2 block text-[14px] text-[#C5C4C4]"
+          >
+            ICP canister-wallet
+          </label>
+          <Dropdown
+            optionSelected={selectedICPWallet}
+            options={optionWallet}
+            onValueChange={(value) => {
+              setSelectedICPWallet(value)
             }}
           />
         </div>
         <div className="mt-10 flex justify-start">
           <div
             className={`${
+              (canisterName.length === 0 ||
+                !selectedCanisterTemplate ||
+                !selectedICPWallet) &&
+              '!bg-[#55609cdc]'
+            } ${
               isLoading
                 ? 'animate-pulse !bg-[#35428a]'
                 : 'cursor-pointer  hover:bg-[#35428a]'
             }  rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
             onClick={() => {
-              if (!isLoading) {
+              if (
+                !isLoading &&
+                canisterName.length > 0 &&
+                selectedCanisterTemplate &&
+                selectedICPWallet
+              ) {
                 handleCreateChannel()
               }
             }}
           >
-            Create
+            Deploy canister
           </div>
         </div>
       </div>

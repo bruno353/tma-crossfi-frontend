@@ -25,23 +25,27 @@ import {
 } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
-import { ICPCanisterProps } from '@/types/blockchain-app'
+import { BlockchainAppProps, ICPCanisterProps } from '@/types/blockchain-app'
 import EditAppModal from '../Modals/EditAppModal'
 import { formatDate, transformString } from '@/utils/functions'
 import { optionsNetwork } from '../Modals/NewAppModal'
+import NewCanisterModal from '../Modals/NewCanisterModal'
 
 export interface ModalI {
+  app: BlockchainAppProps
   canisters: ICPCanisterProps[]
   isUserAdmin: boolean
   onUpdate(): void
 }
 
-const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
+const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
   const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
+  const [isCreatingNewCanisterOpen, setIsCreatingNewCanisterOpen] =
+    useState<boolean>(false)
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -100,7 +104,7 @@ const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
         <div className="mb-[18px]">
           <div
             onClick={() => {
-              // setIsCreatingNewApp(true)
+              setIsCreatingNewCanisterOpen(true)
             }}
             className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
           >
@@ -217,6 +221,19 @@ const CanistersRender = ({ canisters, onUpdate, isUserAdmin }: ModalI) => {
           app={canisters.find((app) => app.id === isEditAppOpen)}
         />
       )} */}
+      {isCreatingNewCanisterOpen && (
+        <NewCanisterModal
+          isOpen={isCreatingNewCanisterOpen}
+          onClose={() => {
+            setIsCreatingNewCanisterOpen(false)
+          }}
+          onUpdateM={() => {
+            onUpdate()
+            setIsCreatingNewCanisterOpen(false)
+          }}
+          app={app}
+        />
+      )}
     </div>
   )
 }

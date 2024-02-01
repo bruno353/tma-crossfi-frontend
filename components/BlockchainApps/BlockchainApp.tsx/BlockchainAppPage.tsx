@@ -149,6 +149,7 @@ const BlockchainAppPage = ({ id, workspaceId }) => {
                     canisters={blockchainApp.ICPCanister}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
+                    app={blockchainApp}
                   />
                 </div>
               )}
