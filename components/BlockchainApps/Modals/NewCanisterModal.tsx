@@ -50,6 +50,9 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
     optionWallet?.at(0),
   )
 
+  const { push } = useRouter()
+  const pathname = usePathname()
+
   const handleInputChange = (e) => {
     if (!isLoading) {
       setCanisterName(e.target.value)
@@ -145,17 +148,32 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             ICP canister-wallet
           </label>
           {optionWallet.length === 0 && (
-            <div className='text-[#cc5563] '>
-              You have no wallets. Deploy your first ICP wallet to continue
+            <div className="text-[#cc5563]">
+              You have no wallets.{' '}
+              <span
+                onClick={() => {
+                  const basePath = pathname.split('/')[1]
+                  const workspaceId = pathname.split('/')[2]
+                  const newPath = `/${basePath}/${workspaceId}` // Constrói o novo caminho
+
+                  push(newPath)
+                }}
+                className="cursor-pointer underline underline-offset-2 hover:text-[#0354EC]"
+              >
+                Deploy your first ICP wallet
+              </span>{' '}
+              to continue with a canister creation.
             </div>
           )}
-          <Dropdown
-            optionSelected={selectedICPWallet}
-            options={optionWallet}
-            onValueChange={(value) => {
-              setSelectedICPWallet(value)
-            }}
-          />
+          {optionWallet.length !== 0 && (
+            <Dropdown
+              optionSelected={selectedICPWallet}
+              options={optionWallet}
+              onValueChange={(value) => {
+                setSelectedICPWallet(value)
+              }}
+            />
+          )}
         </div>
         <div className="mt-10 flex justify-start">
           <div
