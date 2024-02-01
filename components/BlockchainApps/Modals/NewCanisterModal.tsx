@@ -43,6 +43,9 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
   })
   const [canisterName, setCanisterName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
+  const [isInfoICPCanisterWallet, setIsInfoICPCanisterWallet] = useState(false)
+  const [isInfoICPCanisterTemplate, setIsInfoICPCanisterTemplate] =
+    useState(false)
 
   const [selectedCanisterTemplate, setSelectedCanisterTemplate] =
     useState<ValueObject>(optionsCanisterTemplate[0])
@@ -126,12 +129,40 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
           />
         </div>
         <div className="mb-6">
-          <label
-            htmlFor="workspaceName"
-            className="mb-2 block text-[14px] text-[#C5C4C4]"
-          >
-            Canister template
-          </label>
+          <div className="flex justify-between gap-x-[5px]">
+            <div className="relative flex w-fit items-start gap-x-[7px]">
+              <label
+                htmlFor="workspaceName"
+                className="mb-2 block text-[14px] text-[#C5C4C4]"
+              >
+                Canister template
+              </label>
+              <img
+                alt="ethereum avatar"
+                src="/images/header/help.svg"
+                className="w-[15px] cursor-pointer rounded-full"
+                onMouseEnter={() => setIsInfoICPCanisterTemplate(true)}
+                onMouseLeave={() => setIsInfoICPCanisterTemplate(false)}
+              ></img>
+              {isInfoICPCanisterTemplate && (
+                <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                  Select the canister code for your deployment; you can choose
+                  from a variety of canister templates.
+                </div>
+              )}
+            </div>
+            <a
+              href="https://docs.accelar.io/"
+              target="_blank"
+              rel="noreferrer"
+              className="my-auto"
+            >
+              <div className="my-auto cursor-pointer text-[12px] text-[#0354EC]">
+                Templates
+              </div>
+            </a>
+          </div>
+
           <Dropdown
             optionSelected={selectedCanisterTemplate}
             options={optionsCanisterTemplate}
@@ -141,12 +172,27 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
           />
         </div>
         <div className="mb-6">
-          <label
-            htmlFor="workspaceName"
-            className="mb-2 block text-[14px] text-[#C5C4C4]"
-          >
-            ICP canister-wallet
-          </label>
+          <div className="relative flex w-fit items-start gap-x-[7px]">
+            <label
+              htmlFor="workspaceName"
+              className="mb-2 block text-[14px] text-[#C5C4C4]"
+            >
+              ICP canister-wallet
+            </label>
+            <img
+              alt="ethereum avatar"
+              src="/images/header/help.svg"
+              className="w-[15px] cursor-pointer rounded-full"
+              onMouseEnter={() => setIsInfoICPCanisterWallet(true)}
+              onMouseLeave={() => setIsInfoICPCanisterWallet(false)}
+            ></img>
+            {isInfoICPCanisterWallet && (
+              <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                Select the ICP wallet that will be deploying this canister
+              </div>
+            )}
+          </div>
+
           {optionWallet.length === 0 && (
             <div className="text-[#cc5563]">
               You have no wallets.{' '}
