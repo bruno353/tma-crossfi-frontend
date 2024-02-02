@@ -30,7 +30,7 @@ import { optionsNetwork } from '../Modals/NewAppModal'
 const CanisterPage = ({ appId, canisterId, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [navBarSelected, setNavBarSelected] = useState('Canisters')
+  const [navBarSelected, setNavBarSelected] = useState('Interact')
   const [canister, setCanister] = useState<ICPCanisterProps>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
 
@@ -89,7 +89,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
             onClick={() => {
               const basePath = pathname.split('/')[1]
               console.log('the bash pathhhh ' + basePath)
-              const newPath = `/${basePath}/${workspaceId}/blockchain-apps` // Constrói o novo caminho
+              const newPath = `/${basePath}/${workspaceId}/blockchain-apps/${appId}` // Constrói o novo caminho
               push(newPath)
             }}
             className="absolute left-4 flex -translate-y-[180%] cursor-pointer gap-x-[5px]"
@@ -100,7 +100,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
               className="w-[12px]"
             ></img>
             <div className="text-[14px] text-[#c5c4c4] hover:text-[#b8b8b8]">
-              Apps
+              App {canister?.blockchainApp.name}
             </div>
           </div>
           <div className="flex items-center justify-between gap-x-[20px]">
@@ -139,7 +139,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
                 setNavBarSelected(value)
               }}
               selected={navBarSelected}
-              itensList={['Canisters', 'Analytics']}
+              itensList={['Interact', 'History']}
             />
             <div className="mt-[40px]">
               {navBarSelected === 'Canisters' && (

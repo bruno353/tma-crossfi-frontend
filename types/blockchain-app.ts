@@ -19,6 +19,8 @@ export interface ICPCanisterProps {
   workspaceId: string
   blockchainAppId: string
   icpWallet: ICPWalletsProps
+  // eslint-disable-next-line no-use-before-define
+  blockchainApp: BlockchainAppProps
   createdAt: string
   updatedAt: string
 }
