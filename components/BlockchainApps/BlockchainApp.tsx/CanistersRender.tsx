@@ -85,7 +85,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
       !editRef?.current?.contains(event.target) &&
       !urlRef?.current?.contains(event.target)
     ) {
-      // push(`${pathname}/${id}`)
+      push(`${pathname}/canister/${id}`)
     }
   }
 
