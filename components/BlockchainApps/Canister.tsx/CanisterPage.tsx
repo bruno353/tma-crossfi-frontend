@@ -92,7 +92,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
               const newPath = `/${basePath}/${workspaceId}/blockchain-apps` // Constrói o novo caminho
               push(newPath)
             }}
-            className="absolute left-0 flex -translate-y-[180%] cursor-pointer gap-x-[5px]"
+            className="absolute left-4 flex -translate-y-[180%] cursor-pointer gap-x-[5px]"
           >
             <img
               alt="ethereum avatar"

@@ -19,6 +19,7 @@ export default function Page({ params }) {
         <Canister
           appId={params.appId}
           workspaceId={params.id}
+          id={params.id}
           canisterId={params.canisterId}
         />
       </div>
