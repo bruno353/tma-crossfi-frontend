@@ -1,5 +1,15 @@
 import { UserProps } from './user'
 
+export interface ICPWalletsProps {
+  id: string
+  name: string
+  walletId: string
+  balance: string
+  blockchainWalletId: string
+  createdAt: string
+  updatedAt: string
+}
+
 export interface ICPCanisterProps {
   id: string
   url: string
@@ -8,16 +18,7 @@ export interface ICPCanisterProps {
   typeTemplate: string
   workspaceId: string
   blockchainAppId: string
-  createdAt: string
-  updatedAt: string
-}
-
-export interface ICPWalletsProps {
-  id: string
-  name: string
-  walletId: string
-  balance: string
-  blockchainWalletId: string
+  icpWallet: ICPWalletsProps
   createdAt: string
   updatedAt: string
 }
