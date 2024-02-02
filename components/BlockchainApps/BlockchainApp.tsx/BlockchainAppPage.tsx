@@ -120,7 +120,7 @@ const BlockchainAppPage = ({ id, workspaceId }) => {
                 } !w-[35px] flex-shrink-0`}
               />
               <div className="mt-auto text-[24px] font-medium">
-                {blockchainApp.name}
+                {blockchainApp?.name}
               </div>
             </div>
             {workspace?.isUserAdmin && (
@@ -146,7 +146,7 @@ const BlockchainAppPage = ({ id, workspaceId }) => {
               {navBarSelected === 'Canisters' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                   <CanistersRender
-                    canisters={blockchainApp.ICPCanister}
+                    canisters={blockchainApp?.ICPCanister}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
                     app={blockchainApp}
