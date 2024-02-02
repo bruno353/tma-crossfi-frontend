@@ -3,6 +3,7 @@ import { UserProps } from './user'
 export interface ICPCanisterProps {
   id: string
   url: string
+  name: string
   canisterId: string
   typeTemplate: string
   workspaceId: string

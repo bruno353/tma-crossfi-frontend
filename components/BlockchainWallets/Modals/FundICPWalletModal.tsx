@@ -66,7 +66,7 @@ const FundICPWalletModal = ({
 
     try {
       await fundICPWallet(final, userSessionToken)
-      await wait(1500)
+      await wait(3500)
       toast.success(`Success`)
       setIsLoading(false)
       onUpdateM()

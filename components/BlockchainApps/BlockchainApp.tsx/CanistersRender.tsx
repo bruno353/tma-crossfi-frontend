@@ -145,8 +145,13 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                             Copy id
                           </div>
                         )}
-                        <div className=" overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                          {transformString(canister.canisterId)}
+                        <div>
+                          <div className=" overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                            {canister.name}
+                          </div>
+                          <div className=" overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                            {transformString(canister.canisterId)}
+                          </div>
                         </div>
                         <img
                           ref={editRef}

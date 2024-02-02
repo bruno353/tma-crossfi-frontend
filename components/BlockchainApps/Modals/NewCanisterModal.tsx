@@ -22,6 +22,7 @@ import {
   BlockchainAppProps,
   BlockchainWalletProps,
 } from '@/types/blockchain-app'
+import { wait } from '@/utils/functions'
 
 export const optionsCanisterTemplate = [
   {
@@ -80,7 +81,9 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
 
     try {
       const wallet = await deployCanister(final, userSessionToken)
+      await wait(3500)
       setIsLoading(false)
+      toast.success(`Success`)
       onUpdateM(wallet.id)
     } catch (err) {
       console.log(err)
