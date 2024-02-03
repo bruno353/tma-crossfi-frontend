@@ -26,6 +26,8 @@ const Sidebar = (id: any) => {
 
   const [isBlockchainSidebarOpen, setIsBlockchainSidebarOpen] =
     useState<boolean>(true)
+  const [isManagmentSidebarOpen, setIsManagmentSidebarOpen] =
+    useState<boolean>(true)
 
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
 
@@ -72,9 +74,10 @@ const Sidebar = (id: any) => {
 
   const sidebarOptions = [
     {
-      name: 'Home',
+      name: 'Dashboard',
       option: `/${id.id}`,
-      imgSource: '/images/workspace/home.svg',
+      imgSource: '/images/sidebar/stats.svg',
+      imgStyle: 'w-[18px]',
       type: 'general',
       pathSegment: '',
     },
@@ -82,13 +85,15 @@ const Sidebar = (id: any) => {
       name: 'Chat',
       option: `/${id.id}/chat`,
       imgSource: '/images/workspace/chat.svg',
-      type: 'general',
+      imgStyle: 'w-[20px] rounded-full',
+      type: 'managment',
       pathSegment: 'chat',
     },
     {
       name: 'Wallets',
       option: `/${id.id}/blockchain-wallets`,
       imgSource: '/images/sidebar/wallet.svg',
+      imgStyle: 'w-[23px] rounded-full',
       type: 'blockchain',
       pathSegment: 'blockchain-wallets',
     },
@@ -96,6 +101,7 @@ const Sidebar = (id: any) => {
       name: 'Apps',
       option: `/${id.id}/blockchain-apps`,
       imgSource: '/images/sidebar/1.svg',
+      imgStyle: 'w-[25px] rounded-full',
       type: 'blockchain',
       pathSegment: 'blockchain-apps',
     },
@@ -235,13 +241,13 @@ const Sidebar = (id: any) => {
               >
                 <div
                   className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[10px] hover:bg-[#dbdbdb1e] ${
-                    sidebarOption === option.name && 'bg-[#dbdbdb1e]'
+                    sidebarOption === '' && 'bg-[#dbdbdb1e]'
                   }`}
                 >
                   <img
                     src={option.imgSource}
                     alt="image"
-                    className="w-[20px] rounded-full"
+                    className={option.imgStyle}
                   />
                   {isSidebarOpen && (
                     <div className="text-center text-[13px] font-light">
@@ -265,7 +271,7 @@ const Sidebar = (id: any) => {
               <img
                 alt="ethereum avatar"
                 src="/images/header/arrow-gray.svg"
-                className={`w-[10px] rounded-full transition-transform duration-200 ${
+                className={`w-[10px] rounded-full transition-transform duration-150 ${
                   !isBlockchainSidebarOpen && 'rotate-180'
                 }`}
               ></img>
@@ -289,7 +295,57 @@ const Sidebar = (id: any) => {
                       <img
                         src={option.imgSource}
                         alt="image"
-                        className="w-[25px] rounded-full"
+                        className={option.imgStyle}
+                      />
+                      {isSidebarOpen && (
+                        <div className="text-center text-[13px] font-light">
+                          {option.name}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="mt-5">
+            <div
+              onClick={() => {
+                setIsManagmentSidebarOpen(!isManagmentSidebarOpen)
+              }}
+              className="mb-1 flex  cursor-pointer justify-between px-[10px]"
+            >
+              <div className="mb-1 text-[13px] font-normal text-[#c5c4c4]">
+                Managment
+              </div>
+              <img
+                alt="ethereum avatar"
+                src="/images/header/arrow-gray.svg"
+                className={`w-[10px] rounded-full transition-transform duration-150 ${
+                  !isManagmentSidebarOpen && 'rotate-180'
+                }`}
+              ></img>
+            </div>
+
+            {isManagmentSidebarOpen && (
+              <div className="grid gap-y-[3px] text-[#fff]">
+                {sidebarOptions.map((option, index) => (
+                  <div
+                    onClick={() => {
+                      handleSidebarClick(option.name, option.option)
+                    }}
+                    key={index}
+                    className={`${option.type !== 'managment' && 'hidden'}`}
+                  >
+                    <div
+                      className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[6px] hover:bg-[#dbdbdb1e] ${
+                        sidebarOption === option.name && 'bg-[#dbdbdb1e]'
+                      }`}
+                    >
+                      <img
+                        src={option.imgSource}
+                        alt="image"
+                        className={option.imgStyle}
                       />
                       {isSidebarOpen && (
                         <div className="text-center text-[13px] font-light">
