@@ -78,8 +78,8 @@ const WorkspaceSettings = ({
   }, [isDeleteWorkspaceOpen, isLeaveWorkspaceOpen])
 
   return (
-    <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
-      <div className="mt-[50px] text-[18px] font-medium">
+    <div className="max-h-[calc(100vh-30rem)] items-start justify-start overflow-y-auto text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+      <div className="mt-[10px] text-[18px] font-medium">
         <div className="grid gap-y-[50px]">
           <div>
             <div>Leave workspace</div>
