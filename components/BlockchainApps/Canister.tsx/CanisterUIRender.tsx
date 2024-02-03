@@ -96,7 +96,7 @@ const CanistersUIRender = ({
       valuesArgs.push(args.callArguments[i].value)
     }
 
-    const resultJoinArgs = `(${valuesArgs.join(', ')})`
+    const resultJoinArgs = `('${valuesArgs.join(', ')}')`
 
     console.log('meu result join')
     console.log(resultJoinArgs)
@@ -109,9 +109,11 @@ const CanistersUIRender = ({
     }
 
     try {
-      await callCanister(final, userSessionToken)
+      const res = await callCanister(final, userSessionToken)
       toast.success(`Success`)
       setIsLoading(false)
+      console.log(' aresposta')
+      console.log(res)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -174,7 +176,7 @@ const CanistersUIRender = ({
                   (canisterTFunction, index) => (
                     <div
                       key={index}
-                      className={`flex items-center gap-x-[5px]  rounded-md border-[1px] border-[#c5c4c496] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
+                      className={`flex items-center gap-x-[5px]  rounded-md border-[1px] border-[#c5c4c47c] px-[25px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                     >
                       <div className="flex w-full max-w-[20%] gap-x-[7px]">
                         <div
@@ -217,7 +219,7 @@ const CanistersUIRender = ({
                                 isLoading
                                   ? 'animate-pulse !bg-[#35428a]'
                                   : 'cursor-pointer  hover:bg-[#35428a]'
-                              }  rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] w-fit mt-[15px]`}
+                              }  mt-[15px] w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff]`}
                               onClick={() => {
                                 if (
                                   !isLoading &&
