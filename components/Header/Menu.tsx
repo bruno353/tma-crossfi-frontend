@@ -35,7 +35,7 @@ const Menu = ({ user, onSignOut }: MenuI) => {
               src="/images/header/home.svg"
               className="w-[17px] rounded-full"
             ></img>
-            <div className="text-[#c5c4c4]">Dashboard</div>
+            <div className="text-[#c5c4c4]">Home</div>
           </div>
         </Link>
         <Link href={'/account'}>
