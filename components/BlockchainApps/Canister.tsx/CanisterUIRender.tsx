@@ -160,7 +160,7 @@ const CanistersUIRender = ({
   return (
     <div className="text-[14px] text-[#C5C4C4]">
       <div className=" text-[14px] font-normal">
-        <div className="relative mb-[18px] flex gap-x-[5px] w-fit">
+        <div className="relative mb-[18px] flex w-fit gap-x-[5px]">
           <div>ICP canister-wallet: {canister?.icpWallet.walletId}</div>
           <img
             alt="ethereum avatar"
