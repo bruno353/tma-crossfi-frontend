@@ -54,6 +54,7 @@ const CanistersUIRender = ({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isCreatingNewCanisterOpen, setIsCreatingNewCanisterOpen] =
     useState<boolean>(false)
+  const [isInfoWalletOpen, setIsInfoWalletOpen] = useState<boolean>(false)
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -114,6 +115,10 @@ const CanistersUIRender = ({
       setIsLoading(false)
       console.log(' aresposta')
       console.log(res)
+      // setting the response
+      const canisterFinal = { ...canisterTemplateState }
+      canisterFinal.functions[index].callResponse = res
+      setCanisterTemplateState(canisterFinal)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -155,15 +160,21 @@ const CanistersUIRender = ({
   return (
     <div className="text-[14px] text-[#C5C4C4]">
       <div className=" text-[14px] font-normal">
-        <div className="mb-[18px]">
-          {/* <div
-            onClick={() => {
-              setIsCreatingNewCanisterOpen(true)
-            }}
-            className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
-          >
-            Deploy new canister
-          </div> */}
+        <div className="relative mb-[18px] flex gap-x-[5px] w-fit">
+          <div>ICP canister-wallet: {canister?.icpWallet.walletId}</div>
+          <img
+            alt="ethereum avatar"
+            src="/images/header/help.svg"
+            className="w-[17px] cursor-pointer rounded-full"
+            onMouseEnter={() => setIsInfoWalletOpen(true)}
+            onMouseLeave={() => setIsInfoWalletOpen(false)}
+          ></img>
+          {isInfoWalletOpen && (
+            <div className="absolute right-0 flex w-fit translate-x-[105%]  items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+              This ICP wallet is the canister's controller, all the interactions
+              interactions will be done through this wallet.
+            </div>
+          )}
         </div>
         <div className="grid gap-y-[25px]">
           {canisterTemplate?.functions.length === 0 ? (
@@ -231,6 +242,11 @@ const CanistersUIRender = ({
                             >
                               Call canister
                             </div>
+                            {canisterTFunction.callResponse && (
+                              <div className="mt-[30px]">
+                                Response: {canisterTFunction.callResponse}{' '}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>

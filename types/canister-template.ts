@@ -7,6 +7,7 @@ export interface CanisterFunctionProps {
   id: number
   methodName: string
   callArguments: CanisterMethodArgument[]
+  callResponse?: string
 }
 
 export interface CanisterTemplateProps {
