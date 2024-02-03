@@ -96,7 +96,7 @@ const CanistersUIRender = ({
       valuesArgs.push(args.callArguments[i].value)
     }
 
-    const resultJoinArgs = `('${valuesArgs.join(', ')}')`
+    const resultJoinArgs = `("${valuesArgs.join(', ')}")`
 
     console.log('meu result join')
     console.log(resultJoinArgs)
