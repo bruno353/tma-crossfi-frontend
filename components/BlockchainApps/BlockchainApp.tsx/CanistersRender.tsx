@@ -30,6 +30,7 @@ import EditAppModal from '../Modals/EditAppModal'
 import { formatDate, transformString } from '@/utils/functions'
 import { optionsNetwork } from '../Modals/NewAppModal'
 import NewCanisterModal from '../Modals/NewCanisterModal'
+import EditCanisterModal from '../Modals/EditCanisterModal'
 
 export interface ModalI {
   app: BlockchainAppProps
@@ -42,7 +43,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
-  const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
+  const [isEditCanisterOpen, setIsEditCanisterOpen] = useState<any>()
   const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
   const [isCreatingNewCanisterOpen, setIsCreatingNewCanisterOpen] =
     useState<boolean>(false)
@@ -169,6 +170,9 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                     </div>
                     <a
                       ref={urlRef}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                      }}
                       href={canister.url}
                       target="_blank"
                       className="w-full max-w-[38%]"
@@ -194,13 +198,15 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                       )}
                       {isUserAdmin && (
                         <img
+                          ref={editRef}
                           alt="ethereum avatar"
                           src="/images/chat/pencil.svg"
                           className="w-[15px] cursor-pointer 2xl:w-[25px]"
                           onMouseEnter={() => setIsEditInfoOpen(canister.id)}
                           onMouseLeave={() => setIsEditInfoOpen(null)}
-                          onClick={() => {
-                            setIsEditAppOpen(canister.id)
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            setIsEditCanisterOpen(canister.id)
                           }}
                         ></img>
                       )}
@@ -212,20 +218,21 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
           )}
         </div>
       </div>
-      {/* {isEditAppOpen && (
-        <EditAppModal
-          ref={editRef}
-          isOpen={isEditAppOpen}
+      {isEditCanisterOpen && (
+        <EditCanisterModal
+          isOpen={isEditCanisterOpen !== false}
           onClose={() => {
-            setIsEditAppOpen(false)
+            setIsEditCanisterOpen(false)
           }}
           onUpdateM={() => {
             onUpdate()
-            setIsEditAppOpen(false)
+            setIsEditCanisterOpen(false)
           }}
-          app={canisters.find((app) => app.id === isEditAppOpen)}
+          canister={canisters.find(
+            (canister) => canister.id === isEditCanisterOpen,
+          )}
         />
-      )} */}
+      )}
       {isCreatingNewCanisterOpen && (
         <NewCanisterModal
           isOpen={isCreatingNewCanisterOpen}
