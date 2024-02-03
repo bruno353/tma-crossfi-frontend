@@ -172,7 +172,7 @@ const CanistersUIRender = ({
           {isInfoWalletOpen && (
             <div className="absolute right-0 flex  w-[80%] translate-x-[105%]  items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
               This ICP wallet is the canister's controller, all the interactions
-              interactions will be done through this wallet.
+              with the canister will be done through this wallet.
             </div>
           )}
         </div>
