@@ -26,13 +26,15 @@ import { getBlockchainApp, getCanister } from '@/utils/api-blockchain'
 import EditAppModal from '../Modals/EditAppModal'
 import SubNavBar from '@/components/Modals/SubNavBar'
 import { optionsNetwork } from '../Modals/NewAppModal'
+import HistoryRender from './HistoryRender'
+import EditCanisterModal from '../Modals/EditCanisterModal'
 
 const CanisterPage = ({ appId, canisterId, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('Interact')
   const [canister, setCanister] = useState<ICPCanisterProps>()
-  const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
+  const [isEditOpen, setIsEditOpen] = useState<boolean>(false)
 
   const { workspace, user } = useContext(AccountContext)
 
@@ -125,7 +127,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
             {workspace?.isUserAdmin && (
               <div
                 onClick={() => {
-                  setIsEditAppOpen(true)
+                  setIsEditOpen(true)
                 }}
                 className="cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
               >
@@ -133,7 +135,11 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
               </div>
             )}
           </div>
-          <div className="mt-[45px]">
+          <div className="mt-[10px] flex items-center gap-x-[30px] text-[15px]">
+            <div className="">{canister?.canisterId}</div>
+            <div>Balance: {canister?.balance} TCycles</div>
+          </div>
+          <div className="mt-[35px]">
             <SubNavBar
               onChange={(value) => {
                 setNavBarSelected(value)
@@ -142,7 +148,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
               itensList={['Interact', 'History']}
             />
             <div className="mt-[40px]">
-              {navBarSelected === 'Canisters' && (
+              {navBarSelected === 'Interact' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                   {/* <CanistersRender
                     canisters={blockchainApp?.ICPCanister}
@@ -152,23 +158,28 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
                   /> */}
                 </div>
               )}
+              {navBarSelected === 'History' && (
+                <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+                  <HistoryRender canister={canister} />
+                </div>
+              )}
             </div>
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
-        {/* {isEditAppOpen && (
-          <EditAppModal
-            isOpen={isEditAppOpen}
+        {isEditOpen && (
+          <EditCanisterModal
+            isOpen={isEditOpen}
             onClose={() => {
-              setIsEditAppOpen(false)
+              setIsEditOpen(false)
             }}
             onUpdateM={() => {
               getData()
-              setIsEditAppOpen(false)
+              setIsEditOpen(false)
             }}
-            app={blockchainApp}
+            canister={canister}
           />
-        )} */}
+        )}
       </section>
     </>
   )

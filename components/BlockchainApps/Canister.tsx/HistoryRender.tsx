@@ -86,7 +86,7 @@ const HistoryRender = ({ canister }: ModalI) => {
       <div className=" text-[14px] font-normal">
         <div className="mx-auto flex w-full">
           <a
-            href={`https://dashboard.internetcomputer.org/account/${canister.canisterId}`}
+            href={`https://dashboard.internetcomputer.org/canister/${canister.canisterId}`}
             target="_blank"
             rel="noreferrer"
             className="mx-auto"

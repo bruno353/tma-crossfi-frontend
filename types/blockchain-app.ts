@@ -18,6 +18,7 @@ export interface ICPCanisterProps {
   typeTemplate: string
   workspaceId: string
   blockchainAppId: string
+  balance: string
   icpWallet: ICPWalletsProps
   // eslint-disable-next-line no-use-before-define
   blockchainApp: BlockchainAppProps
