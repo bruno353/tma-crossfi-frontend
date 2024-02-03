@@ -9,7 +9,7 @@ import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Eye, EyeSlash } from 'phosphor-react'
+import { SmileySad } from 'phosphor-react'
 import * as Yup from 'yup'
 import axios from 'axios'
 import { toast } from 'react-toastify'
@@ -52,40 +52,10 @@ const WorkspaceAnalytics = ({
 
   return (
     <div className="pb-[80px] text-[14px] text-[#C5C4C4]">
-      <div className="mt-[50px] text-[18px] font-medium">
-        <div>Workspace's blockchain wallets</div>
-        <div className="mt-[30px] grid gap-y-[25px]">
-          <div className="flex items-center gap-x-[10px] text-[15px] font-normal">
-            <div className="relative flex items-center gap-x-[10px]">
-              <img
-                alt="ethereum avatar"
-                src="/images/workspace/icp.png"
-                className="w-[35px] cursor-pointer rounded-full"
-                onMouseEnter={() =>
-                  setIsUserModalOpen(workspace?.icpWalletPubKId)
-                }
-                onMouseLeave={() => setIsUserModalOpen(null)}
-              ></img>
-              <div className="flex w-[250px] gap-x-[12px] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                {transformString(workspace?.icpWalletPubKId)}
-                <img
-                  alt="ethereum avatar"
-                  src="/images/workspace/copy.svg"
-                  className="w-[20px] cursor-pointer rounded-full"
-                  onClick={(event) => {
-                    event.stopPropagation()
-                    navigator.clipboard.writeText(workspace?.icpWalletPubKId)
-                  }}
-                ></img>
-              </div>
-              {isUserModalOpen === workspace?.icpWalletPubKId && (
-                <div className="absolute -top-[10px] -translate-y-[100%] ">
-                  <ICPInfoModal workspace={workspace} />
-                </div>
-              )}
-            </div>
-            <div>Balance: {workspace?.icpAccountBalance} ICP</div>
-          </div>
+      <div className="mt-[50px] flex items-center justify-center text-[16px] font-light">
+        <div>
+          <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
+          <div className="mt-[30px]">No data source connected yet</div>
         </div>
       </div>
     </div>
