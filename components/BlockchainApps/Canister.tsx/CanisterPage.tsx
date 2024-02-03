@@ -28,6 +28,8 @@ import SubNavBar from '@/components/Modals/SubNavBar'
 import { optionsNetwork } from '../Modals/NewAppModal'
 import HistoryRender from './HistoryRender'
 import EditCanisterModal from '../Modals/EditCanisterModal'
+import CanistersUIRender from './CanisterUIRender'
+import { CANISTER_HELLO_WORLD } from '@/types/canister-template'
 
 const CanisterPage = ({ appId, canisterId, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
@@ -156,6 +158,15 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
                     onUpdate={getData}
                     app={blockchainApp}
                   /> */}
+                  <CanistersUIRender
+                    canister={canister}
+                    canisterTemplate={
+                      canister.typeTemplate === 'HELLO_WORLD' &&
+                      CANISTER_HELLO_WORLD
+                    }
+                    isUserAdmin={workspace?.isUserAdmin}
+                    onUpdate={getData}
+                  />
                 </div>
               )}
               {navBarSelected === 'History' && (
