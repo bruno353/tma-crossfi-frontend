@@ -32,6 +32,7 @@ import { optionsNetwork } from '../Modals/NewAppModal'
 import NewCanisterModal from '../Modals/NewCanisterModal'
 import EditCanisterModal from '../Modals/EditCanisterModal'
 import { CanisterTemplateProps } from '@/types/canister-template'
+import { callCanister } from '@/utils/api-blockchain'
 
 export interface ModalI {
   canister: ICPCanisterProps
@@ -83,6 +84,41 @@ const CanistersUIRender = ({
     }
     return true
   }
+
+  const handleCallCanister = async (index) => {
+    const args = canisterTemplateState.functions[index]
+    setIsLoading(true)
+
+    const { userSessionToken } = parseCookies()
+
+    const valuesArgs = []
+    for (let i = 0; i < args.callArguments.length; i++) {
+      valuesArgs.push(args.callArguments[i].value)
+    }
+
+    const resultJoinArgs = `(${valuesArgs.join(', ')})`
+
+    console.log('meu result join')
+    console.log(resultJoinArgs)
+
+    const final = {
+      canisterId: canister?.canisterId,
+      icpWalletId: canister.icpWallet.id,
+      methodName: args.methodName,
+      callArguments: resultJoinArgs,
+    }
+
+    try {
+      await callCanister(final, userSessionToken)
+      toast.success(`Success`)
+      setIsLoading(false)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+      setIsLoading(false)
+    }
+  }
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -175,23 +211,23 @@ const CanistersUIRender = ({
                             </div>
                             <div
                               className={`${
-                                checkIfAllArgumentsValuesAreFilled(index) &&
+                                !checkIfAllArgumentsValuesAreFilled(index) &&
                                 '!cursor-auto !bg-[#8d96c5b7]'
                               } ${
                                 isLoading
                                   ? 'animate-pulse !bg-[#35428a]'
                                   : 'cursor-pointer  hover:bg-[#35428a]'
-                              }  rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                              }  rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] w-fit mt-[15px]`}
                               onClick={() => {
                                 if (
                                   !isLoading &&
                                   checkIfAllArgumentsValuesAreFilled(index)
                                 ) {
-                                  handleCallCanister()
+                                  handleCallCanister(index)
                                 }
                               }}
                             >
-                              Call
+                              Call canister
                             </div>
                           </div>
                         </div>
