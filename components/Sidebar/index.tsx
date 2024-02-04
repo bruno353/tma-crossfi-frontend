@@ -90,6 +90,14 @@ const Sidebar = (id: any) => {
       pathSegment: 'chat',
     },
     {
+      name: 'Kanban',
+      option: `/${id.id}/kanban`,
+      imgSource: '/images/sidebar/paper-draft.svg',
+      imgStyle: 'w-[21px] rounded-full',
+      type: 'managment',
+      pathSegment: 'kanban',
+    },
+    {
       name: 'Wallets',
       option: `/${id.id}/blockchain-wallets`,
       imgSource: '/images/sidebar/wallet.svg',
