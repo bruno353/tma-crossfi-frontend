@@ -29,6 +29,10 @@ export const optionsCanisterTemplate = [
     name: 'Hello World',
     value: 'HELLO_WORLD',
   },
+  {
+    name: 'Vector Database',
+    value: 'VECTOR_DATABASE',
+  },
 ]
 
 export interface ModalI {
