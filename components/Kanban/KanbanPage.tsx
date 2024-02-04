@@ -119,19 +119,19 @@ const KanbanPage = ({ id }) => {
     const newTask: Task = {
       id: generateId(),
       columnId,
-      content: `Task ${tasks.length + 1}`,
+      content: `Task ${tasks?.length + 1}`,
     }
 
     setTasks([...tasks, newTask])
   }
 
   function deleteTask(id: Id) {
-    const newTasks = tasks.filter((task) => task.id !== id)
+    const newTasks = tasks?.filter((task) => task.id !== id)
     setTasks(newTasks)
   }
 
   function updateTask(id: Id, content: string) {
-    const newTasks = tasks.map((task) => {
+    const newTasks = tasks?.map((task) => {
       if (task.id !== id) return task
       return { ...task, content }
     })
@@ -152,7 +152,7 @@ const KanbanPage = ({ id }) => {
     const filteredColumns = columns.filter((col) => col.id !== id)
     setColumns(filteredColumns)
 
-    const newTasks = tasks.filter((t) => t.columnId !== id)
+    const newTasks = tasks?.filter((t) => t.columnId !== id)
     setTasks(newTasks)
   }
 
@@ -219,8 +219,8 @@ const KanbanPage = ({ id }) => {
     // Im dropping a Task over another Task
     if (isActiveATask && isOverATask) {
       setTasks((tasks) => {
-        const activeIndex = tasks.findIndex((t) => t.id === activeId)
-        const overIndex = tasks.findIndex((t) => t.id === overId)
+        const activeIndex = tasks?.findIndex((t) => t.id === activeId)
+        const overIndex = tasks?.findIndex((t) => t.id === overId)
 
         if (tasks[activeIndex].columnId !== tasks[overIndex].columnId) {
           // Fix introduced after video recording
@@ -237,7 +237,7 @@ const KanbanPage = ({ id }) => {
     // Im dropping a Task over a column
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
-        const activeIndex = tasks.findIndex((t) => t.id === activeId)
+        const activeIndex = tasks?.findIndex((t) => t.id === activeId)
 
         tasks[activeIndex].columnId = overId
         console.log('DROPPING TASK OVER COLUMN', { activeIndex })
@@ -277,7 +277,7 @@ const KanbanPage = ({ id }) => {
                   createTask={createTask}
                   deleteTask={deleteTask}
                   updateTask={updateTask}
-                  tasks={tasks.filter((task) => task.columnId === col.id)}
+                  tasks={tasks?.filter((task) => task.columnId === col.id)}
                 />
               ))}
             </SortableContext>
@@ -316,7 +316,7 @@ const KanbanPage = ({ id }) => {
                 createTask={createTask}
                 deleteTask={deleteTask}
                 updateTask={updateTask}
-                tasks={tasks.filter(
+                tasks={tasks?.filter(
                   (task) => task.columnId === activeColumn.id,
                 )}
               />
