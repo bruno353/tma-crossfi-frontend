@@ -42,6 +42,7 @@ import { SortableContext, arrayMove } from '@dnd-kit/sortable'
 import ColumnContainer from './ColumnContainer'
 import TaskCard from './TaskCard'
 import { createPortal } from 'react-dom'
+import { getKanbanData, updateKanban } from '@/utils/kanban'
 
 const defaultCols: Column[] = [
   {
@@ -84,16 +85,35 @@ const KanbanPage = ({ id }) => {
     const { userSessionToken } = parseCookies()
 
     const data = {
-      id,
+      workspaceId: id.id,
     }
 
     try {
-      const res = await getBlockchainWallets(data, userSessionToken)
+      const res = await getKanbanData(data, userSessionToken)
+      if (res) {
+        setTasks(JSON.parse(res))
+      }
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
     }
     setIsLoading(false)
+  }
+
+  async function saveDataTasks(tasksData: any) {
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      workspaceId: workspace.id,
+      kanbanTasksData: JSON.stringify(tasksData),
+    }
+
+    try {
+      const res = await updateKanban(data, userSessionToken)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
   }
 
   useEffect(() => {
@@ -111,8 +131,8 @@ const KanbanPage = ({ id }) => {
   }
 
   function generateId() {
-    /* Generate a random number between 0 and 10000 */
-    return Math.floor(Math.random() * 10001)
+    /* Generate a random number between 0 and 1000000 */
+    return Math.floor(Math.random() * 1000001)
   }
 
   function createTask(columnId: Id) {
@@ -123,11 +143,13 @@ const KanbanPage = ({ id }) => {
     }
 
     setTasks([...tasks, newTask])
+    saveDataTasks([...tasks, newTask])
   }
 
   function deleteTask(id: Id) {
     const newTasks = tasks?.filter((task) => task.id !== id)
     setTasks(newTasks)
+    saveDataTasks(newTasks)
   }
 
   function updateTask(id: Id, content: string) {
@@ -137,15 +159,6 @@ const KanbanPage = ({ id }) => {
     })
 
     setTasks(newTasks)
-  }
-
-  function createNewColumn() {
-    const columnToAdd: Column = {
-      id: generateId(),
-      title: `Column ${columns.length + 1}`,
-    }
-
-    setColumns([...columns, columnToAdd])
   }
 
   function deleteColumn(id: Id) {
@@ -282,28 +295,6 @@ const KanbanPage = ({ id }) => {
               ))}
             </SortableContext>
           </div>
-          <button
-            onClick={() => {
-              createNewColumn()
-            }}
-            className="
-      bg-mainBackgroundColor
-      border-columnBackgroundColor
-      ring-rose-500
-      flex
-      h-[60px]
-      w-[350px]
-      min-w-[350px]
-      cursor-pointer
-      gap-2
-      rounded-lg
-      border-2
-      p-4
-      hover:ring-2
-      "
-          >
-            Add Column
-          </button>
         </div>
 
         {createPortal(
