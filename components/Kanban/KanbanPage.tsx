@@ -264,14 +264,7 @@ const KanbanPage = ({ id }) => {
   return (
     <div
       className="
-        m-auto
-        flex
-        min-h-screen
-        w-full
-        items-center
-        overflow-x-auto
-        overflow-y-hidden
-        px-[40px]
+      mx-auto flex overflow-x-auto pt-36 text-[#C5C4C4] lg:pt-[90px]
     "
     >
       <DndContext
@@ -280,7 +273,7 @@ const KanbanPage = ({ id }) => {
         onDragEnd={onDragEnd}
         onDragOver={onDragOver}
       >
-        <div className="m-auto flex gap-4">
+        <div className="mx-auto flex gap-4">
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
               {columns?.map((col) => (

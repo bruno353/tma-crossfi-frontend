@@ -77,13 +77,13 @@ function ColumnContainer({
       ref={setNodeRef}
       style={style}
       className="
-  bg-columnBackgroundColor
   flex
   h-[500px]
   max-h-[500px]
   w-[350px]
   flex-col
   rounded-md
+  bg-[#161C22]
   "
     >
       {/* Column title */}
@@ -94,9 +94,7 @@ function ColumnContainer({
           setEditMode(true)
         }}
         className="
-      bg-mainBackgroundColor
       text-md
-      border-columnBackgroundColor
       flex
       h-[60px]
       cursor-grab
@@ -104,7 +102,8 @@ function ColumnContainer({
       justify-between
       rounded-md
       rounded-b-none
-      border-4
+      bg-[#0D1117]
+      
       p-3
       font-bold
       "
