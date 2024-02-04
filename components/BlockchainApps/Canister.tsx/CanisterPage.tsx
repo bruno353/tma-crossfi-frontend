@@ -29,7 +29,10 @@ import { optionsNetwork } from '../Modals/NewAppModal'
 import HistoryRender from './HistoryRender'
 import EditCanisterModal from '../Modals/EditCanisterModal'
 import CanistersUIRender from './CanisterUIRender'
-import { CANISTER_HELLO_WORLD } from '@/types/canister-template'
+import {
+  CANISTER_HELLO_WORLD,
+  CANISTER_VECTOR_DATABASE,
+} from '@/types/canister-template'
 
 const CanisterPage = ({ appId, canisterId, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
@@ -42,6 +45,11 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
 
   const pathname = usePathname()
   const { push } = useRouter()
+
+  const canisterToTypeTemplate = {
+    HELLO_WORLD: CANISTER_HELLO_WORLD,
+    VECTOR_DATABASE: CANISTER_VECTOR_DATABASE,
+  }
 
   function pushBack() {
     const lastIndex = pathname.lastIndexOf('/')
@@ -161,8 +169,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
                   <CanistersUIRender
                     canister={canister}
                     canisterTemplate={
-                      canister.typeTemplate === 'HELLO_WORLD' &&
-                      CANISTER_HELLO_WORLD
+                      canisterToTypeTemplate[canister?.typeTemplate]
                     }
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}

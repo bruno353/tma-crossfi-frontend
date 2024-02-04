@@ -29,3 +29,34 @@ export const CANISTER_HELLO_WORLD: CanisterTemplateProps = {
     },
   ],
 }
+
+export const CANISTER_VECTOR_DATABASE: CanisterTemplateProps = {
+  id: '3',
+  name: 'Vector Database',
+  type: 'VECTOR_DATABASE',
+  functions: [
+    {
+      id: 1,
+      methodName: 'getVectors',
+      callArguments: [],
+    },
+    {
+      id: 2,
+      methodName: 'addVector',
+      callArguments: [{ name: 'value', value: '' }],
+    },
+    {
+      id: 3,
+      methodName: 'removeVector',
+      callArguments: [{ name: 'id', value: '' }],
+    },
+    {
+      id: 4,
+      methodName: 'searchEngine',
+      callArguments: [
+        { name: 'targetValue', value: '' },
+        { name: 'threshold', value: '' },
+      ],
+    },
+  ],
+}
