@@ -88,7 +88,7 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
       {...attributes}
       {...listeners}
       onClick={toggleEditMode}
-      className="bg-mainBackgroundColor hover:ring-rose-500 task relative flex h-[100px] min-h-[100px] cursor-grab items-center rounded-xl p-2.5 text-left hover:ring-2 hover:ring-inset"
+      className="hover:ring-rose-500 task relative flex h-[100px] min-h-[100px] cursor-grab items-center rounded-xl bg-[#0D1117] p-2.5 text-left hover:ring-2 hover:ring-inset"
       onMouseEnter={() => {
         setMouseIsOver(true)
       }}
@@ -105,9 +105,9 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
           onClick={() => {
             deleteTask(task?.id)
           }}
-          className="bg-columnBackgroundColor absolute right-4 top-1/2 -translate-y-1/2 rounded stroke-white p-2 opacity-60 hover:opacity-100"
+          className="bg-columnBackgroundColor absolute right-4 top-1/2 -translate-y-1/2 rounded stroke-white p-2 text-[12px] opacity-60 hover:opacity-100"
         >
-          deltask
+          Delete
         </button>
       )}
     </div>

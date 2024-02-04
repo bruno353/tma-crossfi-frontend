@@ -47,11 +47,11 @@ import { getKanbanData, updateKanban } from '@/utils/kanban'
 const defaultCols: Column[] = [
   {
     id: 'todo',
-    title: 'Todo',
+    title: 'To do',
   },
   {
     id: 'doing',
-    title: 'Work in progress',
+    title: 'Progress',
   },
   {
     id: 'done',
@@ -93,7 +93,8 @@ const KanbanPage = ({ id }) => {
     try {
       const res = await getKanbanData(data, userSessionToken)
       if (res) {
-        setTasks(JSON.parse(res))
+        console.log('entrei aqui no get certo')
+        setTasks(JSON.parse(res.kanbanTasksData))
       }
     } catch (err) {
       console.log(err)
@@ -106,12 +107,12 @@ const KanbanPage = ({ id }) => {
     const { userSessionToken } = parseCookies()
 
     const data = {
-      workspaceId: workspace.id,
+      workspaceId: id,
       kanbanTasksData: JSON.stringify(tasksData),
     }
 
     try {
-      const res = await updateKanban(data, userSessionToken)
+      await updateKanban(data, userSessionToken)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -161,23 +162,15 @@ const KanbanPage = ({ id }) => {
     })
 
     setTasks(newTasks)
+    saveDataTasks(newTasks)
   }
 
   function deleteColumn(id: Id) {
-    const filteredColumns = columns.filter((col) => col.id !== id)
-    setColumns(filteredColumns)
-
-    const newTasks = tasks?.filter((t) => t.columnId !== id)
-    setTasks(newTasks)
+    console.log('')
   }
 
   function updateColumn(id: Id, title: string) {
-    const newColumns = columns?.map((col) => {
-      if (col.id !== id) return col
-      return { ...col, title }
-    })
-
-    setColumns(newColumns)
+    console.log('')
   }
 
   function onDragStart(event: DragStartEvent) {
@@ -251,13 +244,14 @@ const KanbanPage = ({ id }) => {
 
     // Im dropping a Task over a column
     if (isActiveATask && isOverAColumn) {
-      setTasks((tasks) => {
-        const activeIndex = tasks?.findIndex((t) => t.id === activeId)
+      // Implemente a lógica similar à acima para ajustar o columnId da tarefa e reordenar se necessário
+      const newTasks = tasks.slice() // Cria uma cópia do estado atual de tasks
+      const activeIndex = newTasks.findIndex((t) => t.id === activeId)
 
-        tasks[activeIndex].columnId = overId
-        console.log('DROPPING TASK OVER COLUMN', { activeIndex })
-        return arrayMove(tasks, activeIndex, activeIndex)
-      })
+      newTasks[activeIndex].columnId = overId // Atualiza o columnId da tarefa
+
+      setTasks(newTasks)
+      saveDataTasks(newTasks) // Salva o novo estado de tasks
     }
   }
 
