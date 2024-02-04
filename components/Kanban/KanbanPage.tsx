@@ -59,10 +59,12 @@ const defaultCols: Column[] = [
   },
 ]
 
+const defaultTasks: Task[] = []
+
 const KanbanPage = ({ id }) => {
   const [columns, setColumns] = useState<Column[]>(defaultCols)
-  const columnsId = useMemo(() => columns.map((col) => col.id), [columns])
-  const [tasks, setTasks] = useState<Task[]>()
+  const columnsId = useMemo(() => columns?.map((col) => col.id), [columns])
+  const [tasks, setTasks] = useState<Task[]>(defaultTasks)
   const [activeColumn, setActiveColumn] = useState<Column | null>(null)
   const [activeTask, setActiveTask] = useState<Task | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -85,7 +87,7 @@ const KanbanPage = ({ id }) => {
     const { userSessionToken } = parseCookies()
 
     const data = {
-      workspaceId: id.id,
+      workspaceId: id,
     }
 
     try {
@@ -170,7 +172,7 @@ const KanbanPage = ({ id }) => {
   }
 
   function updateColumn(id: Id, title: string) {
-    const newColumns = columns.map((col) => {
+    const newColumns = columns?.map((col) => {
       if (col.id !== id) return col
       return { ...col, title }
     })
@@ -281,7 +283,7 @@ const KanbanPage = ({ id }) => {
         <div className="m-auto flex gap-4">
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
-              {columns.map((col) => (
+              {columns?.map((col) => (
                 <ColumnContainer
                   key={col.id}
                   column={col}

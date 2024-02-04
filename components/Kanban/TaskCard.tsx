@@ -66,7 +66,7 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
         h-[90%]
         w-full resize-none rounded border-none bg-transparent text-white focus:outline-none
         "
-          value={task.content}
+          value={task?.content}
           autoFocus
           placeholder="Task content here"
           onBlur={toggleEditMode}
@@ -97,13 +97,13 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
       }}
     >
       <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
-        {task.content}
+        {task?.content}
       </p>
 
       {mouseIsOver && (
         <button
           onClick={() => {
-            deleteTask(task.id)
+            deleteTask(task?.id)
           }}
           className="bg-columnBackgroundColor absolute right-4 top-1/2 -translate-y-1/2 rounded stroke-white p-2 opacity-60 hover:opacity-100"
         >
