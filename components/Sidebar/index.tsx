@@ -165,14 +165,14 @@ const Sidebar = (id: any) => {
     return dado
   }
 
-  const handleSidebarClick = (name, option) => {
+  const handleSidebarClick = (pathSegment, option) => {
     const basePath = pathname.split('/')[1]
     console.log('the bash pathhhh ' + basePath)
     const newPath = `/${basePath}${option}` // Constrói o novo caminho
 
     push(newPath)
 
-    setSidebarOption(name)
+    setSidebarOption(pathSegment)
   }
 
   useEffect(() => {
@@ -197,7 +197,7 @@ const Sidebar = (id: any) => {
 
     for (let i = 0; i < sidebarOptions.length; i++) {
       if (pathnameSegments.includes(sidebarOptions[i].pathSegment)) {
-        setSidebarOption(sidebarOptions[i].name)
+        setSidebarOption(sidebarOptions[i].pathSegment)
         return
       }
     }
@@ -269,7 +269,7 @@ const Sidebar = (id: any) => {
             {sidebarOptions.map((option, index) => (
               <div
                 onClick={() => {
-                  handleSidebarClick(option.name, option.option)
+                  handleSidebarClick(option.pathSegment, option.option)
                 }}
                 key={index}
                 className={`${option.type !== 'general' && 'hidden'}`}
@@ -317,14 +317,14 @@ const Sidebar = (id: any) => {
                 {sidebarOptions.map((option, index) => (
                   <div
                     onClick={() => {
-                      handleSidebarClick(option.name, option.option)
+                      handleSidebarClick(option.pathSegment, option.option)
                     }}
                     key={index}
                     className={`${option.type !== 'blockchain' && 'hidden'}`}
                   >
                     <div
                       className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[6px] hover:bg-[#dbdbdb1e] ${
-                        sidebarOption === option.name && 'bg-[#dbdbdb1e]'
+                        sidebarOption === option.pathSegment && 'bg-[#dbdbdb1e]'
                       }`}
                     >
                       <img
@@ -367,14 +367,14 @@ const Sidebar = (id: any) => {
                 {sidebarOptions.map((option, index) => (
                   <div
                     onClick={() => {
-                      handleSidebarClick(option.name, option.option)
+                      handleSidebarClick(option.pathSegment, option.option)
                     }}
                     key={index}
                     className={`${option.type !== 'llm' && 'hidden'}`}
                   >
                     <div
                       className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[6px] hover:bg-[#dbdbdb1e] ${
-                        sidebarOption === option.name && 'bg-[#dbdbdb1e]'
+                        sidebarOption === option.pathSegment && 'bg-[#dbdbdb1e]'
                       }`}
                     >
                       <img
@@ -417,14 +417,14 @@ const Sidebar = (id: any) => {
                 {sidebarOptions.map((option, index) => (
                   <div
                     onClick={() => {
-                      handleSidebarClick(option.name, option.option)
+                      handleSidebarClick(option.pathSegment, option.option)
                     }}
                     key={index}
                     className={`${option.type !== 'managment' && 'hidden'}`}
                   >
                     <div
                       className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[6px] hover:bg-[#dbdbdb1e] ${
-                        sidebarOption === option.name && 'bg-[#dbdbdb1e]'
+                        sidebarOption === option.pathSegment && 'bg-[#dbdbdb1e]'
                       }`}
                     >
                       <img
