@@ -17,9 +17,10 @@ import { createBlockchainApps, editApp } from '@/utils/api-blockchain'
 import { BlockchainAppProps } from '@/types/blockchain-app'
 import DeleteAppModal from './DeleteAppModal'
 import { editLLMApp } from '@/utils/api-llm'
+import { LLMAppProps } from '@/types/llm'
 
 export interface ModalI {
-  app: BlockchainAppProps
+  app: LLMAppProps
   onUpdateM(): void
   onClose(): void
   isOpen: boolean

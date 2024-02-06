@@ -28,9 +28,10 @@ import { UserWorkspaceProps } from '@/types/workspace'
 import { BlockchainAppProps } from '@/types/blockchain-app'
 import EditAppModal from './Modals/EditAppModal'
 import { formatDate } from '@/utils/functions'
+import { LLMAppProps } from '@/types/llm'
 
 export interface ModalI {
-  apps: BlockchainAppProps[]
+  apps: LLMAppProps[]
   isUserAdmin: boolean
   onUpdate(): void
 }

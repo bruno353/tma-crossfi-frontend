@@ -26,12 +26,14 @@ import { Logo } from '../Sidebar/Logo'
 import { BlockchainAppProps } from '@/types/blockchain-app'
 import AppsRender from './AppsRender'
 import NewAppModal from './Modals/NewAppModal'
+import { getLLMApps } from '@/utils/api-llm'
+import { LLMAppProps } from '@/types/llm'
 
 const LLMAppsPage = ({ id }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('General')
-  const [blockchainApps, setBlockchainApps] = useState<BlockchainAppProps[]>([])
+  const [llmApps, setLLMApps] = useState<LLMAppProps[]>([])
 
   const { workspace, user } = useContext(AccountContext)
 
@@ -47,8 +49,8 @@ const LLMAppsPage = ({ id }) => {
     }
 
     try {
-      const res = await getBlockchainApps(data, userSessionToken)
-      setBlockchainApps(res)
+      const res = await getLLMApps(data, userSessionToken)
+      setLLMApps(res)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -101,7 +103,7 @@ const LLMAppsPage = ({ id }) => {
               {navBarSelected === 'General' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                   <AppsRender
-                    apps={blockchainApps}
+                    apps={llmApps}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
                   />
