@@ -121,7 +121,7 @@ function ColumnContainer({
         text-sm
         "
           >
-            0
+            {tasks?.length}
           </div>
           {!editMode && column.title}
           {editMode && (
