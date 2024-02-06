@@ -34,7 +34,7 @@ const WorkspacePage = ({ id }) => {
   const [isEditingWorkspace, setIsEditingWorkspace] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [workspaceNavBarSelected, setWorkspaceNavBarSelected] =
-    useState('Analytics')
+    useState('Members')
   const [workspace, setWorkspace] = useState<WorkspaceProps>()
 
   const openModal = () => {
@@ -109,7 +109,7 @@ const WorkspacePage = ({ id }) => {
                 setWorkspaceNavBarSelected(value)
               }}
               selected={workspaceNavBarSelected}
-              itensList={['Analytics', 'Members', 'Settings']}
+              itensList={['Members', 'Analytics', 'Settings']}
             />
             <div className="mt-[50px]">
               {workspaceNavBarSelected === 'Analytics' && (
