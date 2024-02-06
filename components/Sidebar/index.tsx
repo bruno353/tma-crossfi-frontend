@@ -215,8 +215,7 @@ const Sidebar = (id: any) => {
         >
           <div className="h-full w-full">
             <div className="h-10 w-full animate-pulse rounded-[5px] bg-[#2f3358]"></div>
-            <div className="mt-[30px] h-8 w-full animate-pulse rounded-[5px] bg-[#2f3358]"></div>
-            <div className="mt-[30px] h-8 w-full animate-pulse rounded-[5px] bg-[#2f3358]"></div>
+            <div className="mt-[30px] h-[50%] w-full animate-pulse rounded-[5px] bg-[#2f3358]"></div>
           </div>
         </div>
       </>
