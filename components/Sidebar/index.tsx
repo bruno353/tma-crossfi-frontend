@@ -28,6 +28,7 @@ const Sidebar = (id: any) => {
     useState<boolean>(true)
   const [isManagmentSidebarOpen, setIsManagmentSidebarOpen] =
     useState<boolean>(true)
+  const [isLLMSidebarOpen, setIsLLMSidebarOpen] = useState<boolean>(true)
 
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
 
@@ -113,6 +114,14 @@ const Sidebar = (id: any) => {
       type: 'blockchain',
       pathSegment: 'blockchain-apps',
     },
+    {
+      name: 'Apps',
+      option: `/${id.id}/llm-apps`,
+      imgSource: '/images/sidebar/1.svg',
+      imgStyle: 'w-[25px] rounded-full',
+      type: 'llm',
+      pathSegment: 'llm-apps',
+    },
     // {
     //   name: 'Notes',
     //   option: `/${id.id}/notes`,
@@ -195,6 +204,24 @@ const Sidebar = (id: any) => {
 
     setSidebarOption('')
   }, [pathname])
+
+  if (!workspace) {
+    return (
+      <>
+        <div
+          // onMouseEnter={() => setIsSidebarOpen(true)}
+          // onMouseLeave={() => setIsSidebarOpen(false)}
+          className="relative !z-[9999] ml-[15px] mt-[40px]  flex  h-[calc(100vh-10rem)] w-[210px]  rounded-[10px] bg-[#1D2144] px-[10px]  py-36 text-[16px] lg:py-[30px]"
+        >
+          <div className="h-full w-full">
+            <div className="h-10 w-full animate-pulse rounded-[5px] bg-[#2f3358]"></div>
+            <div className="mt-[30px] h-8 w-full animate-pulse rounded-[5px] bg-[#2f3358]"></div>
+            <div className="mt-[30px] h-8 w-full animate-pulse rounded-[5px] bg-[#2f3358]"></div>
+          </div>
+        </div>
+      </>
+    )
+  }
 
   return (
     <>
@@ -294,6 +321,56 @@ const Sidebar = (id: any) => {
                     }}
                     key={index}
                     className={`${option.type !== 'blockchain' && 'hidden'}`}
+                  >
+                    <div
+                      className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[6px] hover:bg-[#dbdbdb1e] ${
+                        sidebarOption === option.name && 'bg-[#dbdbdb1e]'
+                      }`}
+                    >
+                      <img
+                        src={option.imgSource}
+                        alt="image"
+                        className={option.imgStyle}
+                      />
+                      {isSidebarOpen && (
+                        <div className="text-center text-[13px] font-light">
+                          {option.name}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="mt-5">
+            <div
+              onClick={() => {
+                setIsLLMSidebarOpen(!isLLMSidebarOpen)
+              }}
+              className="mb-1 flex  cursor-pointer justify-between px-[10px]"
+            >
+              <div className="mb-1 text-[13px] font-normal text-[#c5c4c4]">
+                LLM
+              </div>
+              <img
+                alt="ethereum avatar"
+                src="/images/header/arrow-gray.svg"
+                className={`w-[10px] rounded-full transition-transform duration-150 ${
+                  !isLLMSidebarOpen && 'rotate-180'
+                }`}
+              ></img>
+            </div>
+
+            {isLLMSidebarOpen && (
+              <div className="grid gap-y-[3px] text-[#fff]">
+                {sidebarOptions.map((option, index) => (
+                  <div
+                    onClick={() => {
+                      handleSidebarClick(option.name, option.option)
+                    }}
+                    key={index}
+                    className={`${option.type !== 'llm' && 'hidden'}`}
                   >
                     <div
                       className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[6px] hover:bg-[#dbdbdb1e] ${
