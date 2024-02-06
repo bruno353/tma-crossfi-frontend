@@ -1,6 +1,7 @@
 'use client'
 
 import BlockchainApps from '@/components/BlockchainApps'
+import BlockchainApp from '@/components/BlockchainApps/BlockchainApp.tsx'
 import ChangePasswordRecovery from '@/components/ChangePasswordRecovery'
 import ChangePasswordRecoveryFinal from '@/components/ChangePasswordRecovery2'
 import Chat from '@/components/Chat'
@@ -14,7 +15,7 @@ export default function Page({ params }) {
     <>
       <ScrollUp />
       <div className="max-h-[calc(100vh-10rem)] w-full">
-        <BlockchainApps id={params.id} />
+        <BlockchainApp appId={params.appId} id={params.id} />
       </div>
     </>
   )
