@@ -68,16 +68,14 @@ const Header = () => {
   const { push } = useRouter()
 
   function cleanData() {
-    destroyCookie(undefined, 'userSessionToken')
-    nookies.destroy(null, 'userSessionToken')
-    destroyCookie(undefined, 'user')
-    nookies.destroy(null, 'user')
+    destroyCookie(undefined, 'userSessionToken', { path: '/' })
+    destroyCookie(undefined, 'user', { path: '/' })
     setUser(null)
-    handleUserPath(false)
   }
 
   function signOutUser() {
     cleanData()
+    push('/')
   }
 
   async function getUserData() {
@@ -94,10 +92,18 @@ const Header = () => {
         const dado = await getCurrentUser(userSessionToken)
         if (dado) {
           setUser(dado)
-          destroyCookie(undefined, 'user')
-          destroyCookie(undefined, 'userSessionToken')
-          setCookie(null, 'userSessionToken', dado.sessionToken)
-          setCookie(null, 'user', JSON.stringify(dado))
+          setCookie(null, 'userSessionToken', dado.sessionToken, {
+            path: '/',
+            maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+            secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+            sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+          })
+          setCookie(null, 'user', JSON.stringify(dado), {
+            path: '/',
+            maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+            secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+            sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+          })
           handleUserPath(true)
         } else {
           cleanData()

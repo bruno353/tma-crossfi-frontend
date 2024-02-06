@@ -35,14 +35,6 @@ const SignUp = () => {
 
   const { user, setUser } = useContext(AccountContext)
 
-  function cleanData() {
-    destroyCookie(undefined, 'userSessionToken')
-    nookies.destroy(null, 'userSessionToken')
-    destroyCookie(undefined, 'user')
-    nookies.destroy(null, 'user')
-    setUser(null)
-  }
-
   const validSchema = Yup.object().shape({
     email: Yup.string().max(500).required('Email is required'),
     password: Yup.string().max(500).required('Password is required'),
@@ -65,8 +57,18 @@ const SignUp = () => {
 
     try {
       const res = await loginUser(data)
-      setCookie(null, 'userSessionToken', res.sessionToken)
-      setCookie(null, 'user', JSON.stringify(res))
+      setCookie(null, 'userSessionToken', res.sessionToken, {
+        path: '/',
+        maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+        secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+        sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+      })
+      setCookie(null, 'user', JSON.stringify(res), {
+        path: '/',
+        maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+        secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+        sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+      })
       setUser(res)
       setIsLoading(false)
       push('/dashboard')
@@ -82,8 +84,18 @@ const SignUp = () => {
     try {
       const user = await googleRedirect(url)
       if (user) {
-        nookies.set(null, 'userSessionToken', user['sessionToken'])
-        nookies.set(null, 'user', JSON.stringify(user))
+        setCookie(null, 'userSessionToken', user['sessionToken'], {
+          path: '/',
+          maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+          secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+          sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+        })
+        setCookie(null, 'user', JSON.stringify(user), {
+          path: '/',
+          maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+          secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+          sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+        })
         setUser(user)
         push('/dashboard')
       }
