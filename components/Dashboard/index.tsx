@@ -30,6 +30,9 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [workspaces, setWorkspaces] = useState<WorkspaceProps[]>([])
 
+  const { push } = useRouter()
+  const pathname = usePathname()
+
   const openModal = () => {
     setIsCreatingNewWorkspace(true)
   }
@@ -48,6 +51,7 @@ const Dashboard = () => {
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
+      push('/')
       setIsLoading(false)
     }
   }

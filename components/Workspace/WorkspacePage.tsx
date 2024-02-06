@@ -37,6 +37,8 @@ const WorkspacePage = ({ id }) => {
     useState('Members')
   const [workspace, setWorkspace] = useState<WorkspaceProps>()
 
+  const { push } = useRouter()
+
   const openModal = () => {
     setIsEditingWorkspace(true)
   }
@@ -54,12 +56,17 @@ const WorkspacePage = ({ id }) => {
 
     try {
       const res = await getWorkspace(data, userSessionToken)
-      setWorkspace(res)
+      if (res) {
+        setWorkspace(res)
+        setIsLoading(false)
+      } else {
+        push('/dashboard')
+      }
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
+      push('/dashboard')
     }
-    setIsLoading(false)
   }
 
   useEffect(() => {
