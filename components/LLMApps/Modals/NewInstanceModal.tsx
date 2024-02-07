@@ -20,6 +20,7 @@ import {
 } from '@/utils/api-blockchain'
 import { wait } from '@/utils/functions'
 import { LLMAppProps } from '@/types/llm'
+import { deployLLMInstance } from '@/utils/api-llm'
 
 export const optionsLLMInstanceTemplate = [
   {
@@ -36,31 +37,19 @@ export interface ModalI {
 }
 
 const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
-  const optionWallet = app?.icpWallets?.map((icpWallet) => {
-    const newValue = {
-      name: `${icpWallet.walletId}`,
-      value: icpWallet.id,
-    }
-    return newValue
-  })
-  const [canisterName, setCanisterName] = useState('')
+  const [instanceName, setInstanceName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
-  const [isInfoICPCanisterWallet, setIsInfoICPCanisterWallet] = useState(false)
-  const [isInfoICPCanisterTemplate, setIsInfoICPCanisterTemplate] =
-    useState(false)
+  const [isInfoInstanceTemplate, setIsInfoInstanceTemplate] = useState(false)
 
-  const [selectedCanisterTemplate, setSelectedCanisterTemplate] =
+  const [selectedInstanceTemplate, setSelectedInstanceTemplate] =
     useState<ValueObject>(optionsLLMInstanceTemplate[0])
-  const [selectedICPWallet, setSelectedICPWallet] = useState<ValueObject>(
-    optionWallet?.at(0),
-  )
 
   const { push } = useRouter()
   const pathname = usePathname()
 
   const handleInputChange = (e) => {
     if (!isLoading) {
-      setCanisterName(e.target.value)
+      setInstanceName(e.target.value)
     }
   }
 
@@ -71,17 +60,16 @@ const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
 
     const final = {
       id: app.id,
-      name: canisterName,
-      icpWalletId: selectedICPWallet.value,
-      canisterTemplate: selectedCanisterTemplate.value,
+      name: instanceName,
+      llmTemplate: selectedInstanceTemplate.value,
     }
 
     try {
-      const wallet = await deployCanister(final, userSessionToken)
+      const instance = await deployLLMInstance(final, userSessionToken)
       await wait(3500)
       setIsLoading(false)
       toast.success(`Success`)
-      onUpdateM(wallet.id)
+      onUpdateM(instance.id)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -120,14 +108,14 @@ const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            Canister name
+            Instance name
           </label>
           <input
             type="text"
             maxLength={50}
             id="workspaceName"
             name="workspaceName"
-            value={canisterName}
+            value={instanceName}
             onChange={handleInputChange}
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
@@ -139,19 +127,19 @@ const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
                 htmlFor="workspaceName"
                 className="mb-2 block text-[14px] text-[#C5C4C4]"
               >
-                Canister template
+                Instance template
               </label>
               <img
                 alt="ethereum avatar"
                 src="/images/header/help.svg"
                 className="w-[15px] cursor-pointer rounded-full"
-                onMouseEnter={() => setIsInfoICPCanisterTemplate(true)}
-                onMouseLeave={() => setIsInfoICPCanisterTemplate(false)}
+                onMouseEnter={() => setIsInfoInstanceTemplate(true)}
+                onMouseLeave={() => setIsInfoInstanceTemplate(false)}
               ></img>
-              {isInfoICPCanisterTemplate && (
+              {isInfoInstanceTemplate && (
                 <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
-                  Select the canister code for your deployment; you can choose
-                  from a variety of canister templates.
+                  Select the LLM model for your deployment; you can choose from
+                  a variety of models templates.
                 </div>
               )}
             </div>
@@ -168,70 +156,17 @@ const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
           </div>
 
           <Dropdown
-            optionSelected={selectedCanisterTemplate}
-            options={optionsCanisterTemplate}
+            optionSelected={selectedInstanceTemplate}
+            options={optionsLLMInstanceTemplate}
             onValueChange={(value) => {
-              setSelectedCanisterTemplate(value)
+              setSelectedInstanceTemplate(value)
             }}
           />
-        </div>
-        <div className="mb-6">
-          <div className="relative flex w-fit items-start gap-x-[7px]">
-            <label
-              htmlFor="workspaceName"
-              className="mb-2 block text-[14px] text-[#C5C4C4]"
-            >
-              ICP canister-wallet
-            </label>
-            <img
-              alt="ethereum avatar"
-              src="/images/header/help.svg"
-              className="w-[15px] cursor-pointer rounded-full"
-              onMouseEnter={() => setIsInfoICPCanisterWallet(true)}
-              onMouseLeave={() => setIsInfoICPCanisterWallet(false)}
-            ></img>
-            {isInfoICPCanisterWallet && (
-              <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
-                Select the ICP wallet that will be deploying this canister.
-                Ensure it's enough cycles
-              </div>
-            )}
-          </div>
-
-          {optionWallet.length === 0 && (
-            <div className="text-[#cc5563]">
-              You have no wallets.{' '}
-              <span
-                onClick={() => {
-                  const basePath = pathname.split('/')[1]
-                  const workspaceId = pathname.split('/')[2]
-                  const newPath = `/${basePath}/${workspaceId}` // Constrói o novo caminho
-
-                  push(newPath)
-                }}
-                className="cursor-pointer underline underline-offset-2 hover:text-[#0354EC]"
-              >
-                Deploy your first ICP wallet
-              </span>{' '}
-              to continue with a canister creation.
-            </div>
-          )}
-          {optionWallet.length !== 0 && (
-            <Dropdown
-              optionSelected={selectedICPWallet}
-              options={optionWallet}
-              onValueChange={(value) => {
-                setSelectedICPWallet(value)
-              }}
-            />
-          )}
         </div>
         <div className="mt-10 flex justify-start">
           <div
             className={`${
-              (canisterName.length === 0 ||
-                !selectedCanisterTemplate ||
-                !selectedICPWallet) &&
+              (instanceName.length === 0 || !selectedInstanceTemplate) &&
               '!cursor-auto !bg-[#8d96c5b7]'
             } ${
               isLoading
@@ -241,9 +176,8 @@ const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             onClick={() => {
               if (
                 !isLoading &&
-                canisterName.length > 0 &&
-                selectedCanisterTemplate &&
-                selectedICPWallet
+                instanceName.length > 0 &&
+                selectedInstanceTemplate
               ) {
                 handleCreateChannel()
               }

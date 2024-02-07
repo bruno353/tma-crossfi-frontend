@@ -25,27 +25,26 @@ import {
 } from '@/utils/api'
 import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
-import { BlockchainAppProps, ICPCanisterProps } from '@/types/blockchain-app'
 import EditAppModal from '../Modals/EditAppModal'
 import { formatDate, transformString } from '@/utils/functions'
-import { optionsNetwork } from '../Modals/NewAppModal'
-import NewCanisterModal from '../Modals/NewCanisterModal'
-import EditCanisterModal from '../Modals/EditCanisterModal'
+import NewInstanceModal from '../Modals/NewInstanceModal'
+import EditInstanceModal from '../Modals/EditInstanceModal'
+import { LLMAppProps, LLMInstanceProps } from '@/types/llm'
 
 export interface ModalI {
-  app: BlockchainAppProps
-  canisters: ICPCanisterProps[]
+  app: LLMAppProps
+  instances: LLMInstanceProps[]
   isUserAdmin: boolean
   onUpdate(): void
 }
 
-const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
+const InstancesRender = ({ app, instances, onUpdate, isUserAdmin }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
-  const [isEditCanisterOpen, setIsEditCanisterOpen] = useState<any>()
+  const [isEditInstanceOpen, setIsEditInstanceOpen] = useState<any>()
   const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
-  const [isCreatingNewCanisterOpen, setIsCreatingNewCanisterOpen] =
+  const [isCreatingNewInstanceOpen, setIsCreatingNewInstanceOpen] =
     useState<boolean>(false)
 
   const { push } = useRouter()
@@ -81,7 +80,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
     }
   }, [isDeleteUserOpen])
 
-  function handleClickCanisters(id: string, event) {
+  function handleClick(id: string, event) {
     if (
       !editRef?.current?.contains(event.target) &&
       !urlRef?.current?.contains(event.target)
@@ -105,7 +104,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
         <div className="mb-[18px]">
           <div
             onClick={() => {
-              setIsCreatingNewCanisterOpen(true)
+              setIsCreatingNewInstanceOpen(true)
             }}
             className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
           >
@@ -113,7 +112,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
           </div>
         </div>
         <div className="grid gap-y-[25px]">
-          {canisters?.length === 0 ? (
+          {instances?.length === 0 ? (
             NoAppsFound()
           ) : (
             <div className="">
@@ -124,14 +123,14 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
               </div>
               <div className="max-h-[calc(100vh-32rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                 {' '}
-                {canisters?.map((canister, index) => (
+                {instances?.map((instance, index) => (
                   <div
                     onClick={(event) => {
-                      handleClickCanisters(canister.id, event)
+                      handleClick(instance.id, event)
                     }}
                     key={index}
                     className={`flex items-center  ${
-                      index !== canisters?.length - 1 &&
+                      index !== instances?.length - 1 &&
                       'border-b-[1px] border-[#c5c4c40e]'
                     } cursor-pointer gap-x-[5px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
@@ -140,17 +139,17 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                         ref={editRef}
                         className="relative flex w-fit gap-x-[7px]"
                       >
-                        {isCopyInfoOpen === canister.id && (
+                        {isCopyInfoOpen === instance.id && (
                           <div className="absolute right-0 !z-50 flex w-fit -translate-y-[10%]  translate-x-[120%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
                             Copy id
                           </div>
                         )}
                         <div>
                           <div className=" overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                            {canister.name}
+                            {instance.name}
                           </div>
                           <div className=" overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                            {transformString(canister.canisterId)}
+                            {transformString(instance.id)}
                           </div>
                         </div>
                         <img
@@ -158,11 +157,11 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                           alt="ethereum avatar"
                           src="/images/workspace/copy.svg"
                           className="w-[20px] cursor-pointer rounded-full"
-                          onMouseEnter={() => setIsCopyInfoOpen(canister.id)}
+                          onMouseEnter={() => setIsCopyInfoOpen(instance.id)}
                           onMouseLeave={() => setIsCopyInfoOpen(null)}
                           onClick={(event) => {
                             event.stopPropagation()
-                            navigator.clipboard.writeText(canister.canisterId)
+                            navigator.clipboard.writeText(instance.id)
                           }}
                         ></img>
                       </div>
@@ -172,25 +171,25 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                       onClick={(event) => {
                         event.stopPropagation()
                       }}
-                      href={canister.url}
+                      href={instance.url}
                       target="_blank"
                       className="w-full max-w-[38%]"
                       rel="noreferrer"
                     >
                       <div className="flex w-full items-center gap-x-[7px] hover:text-[#0354EC]">
-                        {canister.url}
+                        {instance.url}
                       </div>
                     </a>
 
                     <div className="flex w-full max-w-[37%] items-center gap-x-[7px]">
-                      {canister.typeTemplate}
+                      {instance.typeTemplate}
                     </div>
                     <div className="w-full max-w-[10%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {formatDate(canister.createdAt)}
+                      {formatDate(instance.createdAt)}
                     </div>
                     <div className="ml-auto w-full max-w-[5%]">
                       {' '}
-                      {isEditInfoOpen === canister.id && (
+                      {isEditInfoOpen === instance.id && (
                         <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
                           Edit canister
                         </div>
@@ -201,11 +200,11 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                           alt="ethereum avatar"
                           src="/images/chat/pencil.svg"
                           className="w-[15px] cursor-pointer 2xl:w-[25px]"
-                          onMouseEnter={() => setIsEditInfoOpen(canister.id)}
+                          onMouseEnter={() => setIsEditInfoOpen(instance.id)}
                           onMouseLeave={() => setIsEditInfoOpen(null)}
                           onClick={(event) => {
                             event.stopPropagation()
-                            setIsEditCanisterOpen(canister.id)
+                            setIsEditInstanceOpen(instance.id)
                           }}
                         ></img>
                       )}
@@ -217,30 +216,30 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
           )}
         </div>
       </div>
-      {isEditCanisterOpen && (
-        <EditCanisterModal
-          isOpen={isEditCanisterOpen !== false}
+      {isEditInstanceOpen && (
+        <EditInstanceModal
+          isOpen={isEditInstanceOpen !== false}
           onClose={() => {
-            setIsEditCanisterOpen(false)
+            setIsEditInstanceOpen(false)
           }}
           onUpdateM={() => {
             onUpdate()
-            setIsEditCanisterOpen(false)
+            setIsEditInstanceOpen(false)
           }}
-          canister={canisters.find(
-            (canister) => canister.id === isEditCanisterOpen,
+          llmInstance={instances.find(
+            (instance) => instance.id === isEditInstanceOpen,
           )}
         />
       )}
-      {isCreatingNewCanisterOpen && (
-        <NewCanisterModal
-          isOpen={isCreatingNewCanisterOpen}
+      {isCreatingNewInstanceOpen && (
+        <NewInstanceModal
+          isOpen={isCreatingNewInstanceOpen}
           onClose={() => {
-            setIsCreatingNewCanisterOpen(false)
+            setIsCreatingNewInstanceOpen(false)
           }}
           onUpdateM={() => {
             onUpdate()
-            setIsCreatingNewCanisterOpen(false)
+            setIsCreatingNewInstanceOpen(false)
           }}
           app={app}
         />
@@ -249,4 +248,4 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
   )
 }
 
-export default CanistersRender
+export default InstancesRender

@@ -27,6 +27,7 @@ import EditAppModal from '../Modals/EditAppModal'
 import SubNavBar from '@/components/Modals/SubNavBar'
 import { getLLMApp } from '@/utils/api-llm'
 import { LLMAppProps } from '@/types/llm'
+import InstancesRender from './InstancesRender'
 
 const LLMAppPage = ({ id, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
@@ -137,11 +138,11 @@ const LLMAppPage = ({ id, workspaceId }) => {
             <div className="mt-[40px]">
               {navBarSelected === 'Instances' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                  <CanistersRender
-                    canisters={blockchainApp?.ICPCanister}
+                  <InstancesRender
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
-                    app={blockchainApp}
+                    app={LLMApp}
+                    instances={LLMApp?.llmInstances}
                   />
                 </div>
               )}
