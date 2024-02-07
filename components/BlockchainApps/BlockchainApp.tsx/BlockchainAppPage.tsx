@@ -168,6 +168,9 @@ const BlockchainAppPage = ({ id, workspaceId }) => {
               setIsEditAppOpen(false)
             }}
             app={blockchainApp}
+            onDelete={() => {
+              pushBack()
+            }}
           />
         )}
       </section>

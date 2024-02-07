@@ -21,11 +21,18 @@ import DeleteAppModal from './DeleteAppModal'
 export interface ModalI {
   app: BlockchainAppProps
   onUpdateM(): void
+  onDelete(): void
   onClose(): void
   isOpen: boolean
 }
 
-const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
+const EditAppModal = ({
+  app,
+  onUpdateM,
+  onDelete,
+  onClose,
+  isOpen,
+}: ModalI) => {
   const [appName, setAppName] = useState(app.name)
   const [isLoading, setIsLoading] = useState(null)
   const [hasChanges, setHasChanges] = useState(false)
@@ -173,7 +180,7 @@ const EditAppModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
                 <DeleteAppModal
                   id={app?.id}
                   onUpdateM={() => {
-                    onUpdateM()
+                    onDelete()
                     setIsDeleteAppOpen(false)
                   }}
                 />{' '}

@@ -10,10 +10,10 @@ import { deleteLLMApp } from '@/utils/api-llm'
 
 export interface MenuI {
   id: string
-  onUpdateM(): void
+  onUpdateModal(): void
 }
 
-const DeleteAppModal = ({ id, onUpdateM }: MenuI) => {
+const DeleteAppModal = ({ id, onUpdateModal }: MenuI) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleDeleteApp = async (id: string) => {
@@ -26,7 +26,7 @@ const DeleteAppModal = ({ id, onUpdateM }: MenuI) => {
 
     try {
       await deleteLLMApp(data, userSessionToken)
-      onUpdateM()
+      onUpdateModal()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)

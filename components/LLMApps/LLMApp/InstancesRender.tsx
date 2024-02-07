@@ -93,7 +93,7 @@ const InstancesRender = ({ app, instances, onUpdate, isUserAdmin }: ModalI) => {
     return (
       <div className="mx-auto w-fit items-center justify-center text-[15px] font-light">
         <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
-        <span>No Intances found, deploy your first Model</span>
+        <span>No Intances found, deploy your first Instance</span>
       </div>
     )
   }
@@ -108,7 +108,7 @@ const InstancesRender = ({ app, instances, onUpdate, isUserAdmin }: ModalI) => {
             }}
             className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
           >
-            Deploy new model instance
+            Deploy new Instance
           </div>
         </div>
         <div className="grid gap-y-[25px]">
