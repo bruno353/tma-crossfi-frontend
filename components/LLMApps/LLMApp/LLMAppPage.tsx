@@ -160,6 +160,9 @@ const LLMAppPage = ({ id, workspaceId }) => {
               getData()
               setIsEditAppOpen(false)
             }}
+            onDelete={() => {
+              pushBack()
+            }}
             app={LLMApp}
           />
         )}

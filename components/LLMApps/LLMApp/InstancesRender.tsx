@@ -166,7 +166,7 @@ const InstancesRender = ({ app, instances, onUpdate, isUserAdmin }: ModalI) => {
                         ></img>
                       </div>
                     </div>
-                    <a
+                    {/* <a
                       ref={urlRef}
                       onClick={(event) => {
                         event.stopPropagation()
@@ -179,7 +179,7 @@ const InstancesRender = ({ app, instances, onUpdate, isUserAdmin }: ModalI) => {
                       <div className="flex w-full items-center gap-x-[7px] hover:text-[#0354EC]">
                         {instance.url}
                       </div>
-                    </a>
+                    </a> */}
 
                     <div className="flex w-full max-w-[37%] items-center gap-x-[7px]">
                       {instance.typeTemplate}
