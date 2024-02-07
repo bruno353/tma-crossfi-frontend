@@ -16,3 +16,14 @@ export interface LLMAppProps {
   createdAt: string
   updatedAt: string
 }
+
+export interface LLMInstanceProps {
+  id: string
+  url: string
+  name: string
+  typeTemplate: string
+  workspaceId: string
+  llmAppId: string
+  createdAt: string
+  updatedAt: string
+}

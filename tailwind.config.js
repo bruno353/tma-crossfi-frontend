@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -40,6 +41,6 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/line-clamp'),
-    require('tailwind-scrollbar')({ nocompatible: true }), // Adicione esta linha
+    require('tailwind-scrollbar')({ nocompatible: true }),
   ],
 }

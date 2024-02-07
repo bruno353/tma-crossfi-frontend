@@ -94,7 +94,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
     return (
       <div className="mx-auto w-fit items-center justify-center text-[15px] font-light">
         <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
-        <span>No Canisters found, deploy your first Canister</span>
+        <span>No Intances found, deploy your first Model</span>
       </div>
     )
   }
@@ -109,7 +109,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
             }}
             className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
           >
-            Deploy new canister
+            Deploy new model instance
           </div>
         </div>
         <div className="grid gap-y-[25px]">
@@ -118,9 +118,8 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
           ) : (
             <div className="">
               <div className="flex w-full gap-x-[5px] rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
-                <div className="w-full max-w-[20%]">Canister Id</div>
-                <div className="w-full max-w-[38%]">URL</div>
-                <div className="w-full max-w-[17%]">Type</div>
+                <div className="w-full max-w-[38%]">Instance Id</div>
+                <div className="w-full max-w-[37%]">Type</div>
                 <div className="w-full max-w-[10%]">Created at</div>
               </div>
               <div className="max-h-[calc(100vh-32rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
@@ -136,7 +135,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                       'border-b-[1px] border-[#c5c4c40e]'
                     } cursor-pointer gap-x-[5px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
-                    <div className="flex w-full max-w-[20%] gap-x-[7px]">
+                    <div className="flex w-full max-w-[38%] gap-x-[7px]">
                       <div
                         ref={editRef}
                         className="relative flex w-fit gap-x-[7px]"
@@ -183,7 +182,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                       </div>
                     </a>
 
-                    <div className="flex w-full max-w-[17%] items-center gap-x-[7px]">
+                    <div className="flex w-full max-w-[37%] items-center gap-x-[7px]">
                       {canister.typeTemplate}
                     </div>
                     <div className="w-full max-w-[10%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
