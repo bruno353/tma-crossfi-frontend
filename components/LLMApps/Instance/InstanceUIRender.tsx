@@ -258,6 +258,34 @@ const CanistersUIRender = ({
           )}
         </div>
       </div>
+      {/* {isEditCanisterOpen && (
+        <EditCanisterModal
+          isOpen={isEditCanisterOpen !== false}
+          onClose={() => {
+            setIsEditCanisterOpen(false)
+          }}
+          onUpdateM={() => {
+            onUpdate()
+            setIsEditCanisterOpen(false)
+          }}
+          canister={canisters.find(
+            (canister) => canister.id === isEditCanisterOpen,
+          )}
+        />
+      )} */}
+      {/* {isCreatingNewCanisterOpen && (
+        <NewCanisterModal
+          isOpen={isCreatingNewCanisterOpen}
+          onClose={() => {
+            setIsCreatingNewCanisterOpen(false)
+          }}
+          onUpdateM={() => {
+            onUpdate()
+            setIsCreatingNewCanisterOpen(false)
+          }}
+          app={app}
+        />
+      )} */}
     </div>
   )
 }
