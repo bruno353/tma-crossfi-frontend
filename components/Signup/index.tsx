@@ -34,7 +34,7 @@ const SignUp = () => {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false)
   const [isRecaptchaValidated, setIsRecaptchaValidated] =
     useState<boolean>(false)
-  const [googleRecaptchaToken, setGoogleRecaptchaToken] = useState()
+  const [googleRecaptchaToken, setGoogleRecaptchaToken] = useState<any>()
 
   function onChange(value) {
     console.log('Captcha value:', value)
@@ -77,12 +77,14 @@ const SignUp = () => {
     if (!isCheckboxChecked) {
       toast.error('You need to accept the privacy policy before proceeding.')
       setIsLoading(false)
+      setGoogleRecaptchaToken(null)
       return
     }
 
     if (data.password !== data.confirmPassword) {
       toast.error('Passwords do not match.')
       setIsLoading(false)
+      setGoogleRecaptchaToken(null)
       return
     }
 
@@ -100,6 +102,7 @@ const SignUp = () => {
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
+      setGoogleRecaptchaToken(null)
       setIsLoading(false)
     }
   }
