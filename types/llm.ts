@@ -5,6 +5,8 @@ export interface LLMInstanceProps {
   typeTemplate: string
   workspaceId: string
   llmAppId: string
+  // eslint-disable-next-line no-use-before-define
+  llmApp: LLMAppProps
   createdAt: string
   updatedAt: string
 }

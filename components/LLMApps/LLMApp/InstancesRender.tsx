@@ -85,7 +85,7 @@ const InstancesRender = ({ app, instances, onUpdate, isUserAdmin }: ModalI) => {
       !editRef?.current?.contains(event.target) &&
       !urlRef?.current?.contains(event.target)
     ) {
-      push(`${pathname}/canister/${id}`)
+      push(`${pathname}/instance/${id}`)
     }
   }
 

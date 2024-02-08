@@ -18,9 +18,9 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
 import nookies, { parseCookies, setCookie } from 'nookies'
 import Sidebar from '@/components/Sidebar'
-import CanisterPage from './CanisterPage'
+import InstancePage from './InstancePage'
 
-const Canister = (id: any) => {
+const Instance = (id: any) => {
   return (
     <>
       <div className="flex">
@@ -28,10 +28,10 @@ const Canister = (id: any) => {
           <Sidebar id={id.id} />
         </div>
         <div className="w-full">
-          <CanisterPage
+          <InstancePage
             appId={id.appId}
             workspaceId={id.id}
-            canisterId={id.canisterId}
+            instanceId={id.instanceId}
           />
         </div>
       </div>
@@ -39,4 +39,4 @@ const Canister = (id: any) => {
   )
 }
 
-export default Canister
+export default Instance

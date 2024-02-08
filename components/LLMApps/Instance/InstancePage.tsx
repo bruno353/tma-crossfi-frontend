@@ -6,50 +6,29 @@
 // import { useState } from 'react'
 import { useEffect, useState, ChangeEvent, FC, useContext } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Eye, EyeSlash, SmileySad } from 'phosphor-react'
-import * as Yup from 'yup'
-import axios from 'axios'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies, setCookie } from 'nookies'
 // import NewWorkspaceModal from './NewWorkspace'
-import { getBlockchainApps, getUserWorkspace, getWorkspace } from '@/utils/api'
-import { WorkspaceProps } from '@/types/workspace'
-import { BlockchainAppProps, ICPCanisterProps } from '@/types/blockchain-app'
 import { AccountContext } from '@/contexts/AccountContext'
-import { getBlockchainApp, getCanister } from '@/utils/api-blockchain'
-import EditAppModal from '../Modals/EditAppModal'
 import SubNavBar from '@/components/Modals/SubNavBar'
-import { optionsNetwork } from '../Modals/NewAppModal'
-import HistoryRender from './HistoryRender'
-import EditCanisterModal from '../Modals/EditCanisterModal'
-import CanistersUIRender from './CanisterUIRender'
-import {
-  CANISTER_HELLO_WORLD,
-  CANISTER_VECTOR_DATABASE,
-} from '@/types/canister-template'
+import InstanceUIRender from './InstanceUIRender'
+import EditInstanceModal from '../Modals/EditInstanceModal'
+import { LLMInstanceProps } from '@/types/llm'
+import { getLLMInstance } from '@/utils/api-llm'
 
-const CanisterPage = ({ appId, canisterId, workspaceId }) => {
-  const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
+const InstancePage = ({ appId, instanceId, workspaceId }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('Interact')
-  const [canister, setCanister] = useState<ICPCanisterProps>()
+  const [instance, setInstance] = useState<LLMInstanceProps>()
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false)
 
   const { workspace, user } = useContext(AccountContext)
 
   const pathname = usePathname()
   const { push } = useRouter()
-
-  const canisterToTypeTemplate = {
-    HELLO_WORLD: CANISTER_HELLO_WORLD,
-    VECTOR_DATABASE: CANISTER_VECTOR_DATABASE,
-  }
 
   function pushBack() {
     const lastIndex = pathname.lastIndexOf('/')
@@ -62,16 +41,16 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
     const { userSessionToken } = parseCookies()
 
     const data = {
-      id: canisterId,
+      id: instanceId,
     }
 
     try {
-      const res = await getCanister(data, userSessionToken)
+      const res = await getLLMInstance(data, userSessionToken)
       if (!res) {
         pushBack()
         return
       }
-      setCanister(res)
+      setInstance(res)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -82,7 +61,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
   useEffect(() => {
     setIsLoading(true)
     getData()
-  }, [canisterId])
+  }, [instanceId])
 
   if (isLoading) {
     return (
@@ -112,7 +91,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
               className="w-[12px]"
             ></img>
             <div className="text-[14px] text-[#c5c4c4] hover:text-[#b8b8b8]">
-              App {canister?.blockchainApp.name}
+              App {instance?.llmApp.name}
             </div>
           </div>
           <div className="flex items-center justify-between gap-x-[20px]">
@@ -131,7 +110,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
                 } !w-[35px] flex-shrink-0`}
               /> */}
               <div className="mt-auto text-[24px] font-medium">
-                {canister?.name}
+                {instance?.name}
               </div>
             </div>
             {workspace?.isUserAdmin && (
@@ -141,13 +120,13 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
                 }}
                 className="cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
               >
-                Edit canister
+                Edit Instance
               </div>
             )}
           </div>
           <div className="mt-[10px] flex items-center gap-x-[30px] text-[15px]">
-            <div className="">{canister?.canisterId}</div>
-            <div>Balance: {canister?.balance} TCycles</div>
+            <div className="">{instance?.id}</div>
+            {/* <div>Balance: {canister?.balance} TCycles</div> */}
           </div>
           <div className="mt-[35px]">
             <SubNavBar
@@ -155,7 +134,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
                 setNavBarSelected(value)
               }}
               selected={navBarSelected}
-              itensList={['Interact', 'History']}
+              itensList={['Interact', 'Analytics']}
             />
             <div className="mt-[40px]">
               {navBarSelected === 'Interact' && (
@@ -166,19 +145,11 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
                     onUpdate={getData}
                     app={blockchainApp}
                   /> */}
-                  <CanistersUIRender
-                    canister={canister}
-                    canisterTemplate={
-                      canisterToTypeTemplate[canister?.typeTemplate]
-                    }
+                  <InstanceUIRender
+                    instance={instance}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
                   />
-                </div>
-              )}
-              {navBarSelected === 'History' && (
-                <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                  <HistoryRender canister={canister} />
                 </div>
               )}
             </div>
@@ -186,7 +157,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
         {isEditOpen && (
-          <EditCanisterModal
+          <EditInstanceModal
             isOpen={isEditOpen}
             onClose={() => {
               setIsEditOpen(false)
@@ -195,7 +166,7 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
               getData()
               setIsEditOpen(false)
             }}
-            canister={canister}
+            llmInstance={instance}
           />
         )}
       </section>
@@ -203,4 +174,4 @@ const CanisterPage = ({ appId, canisterId, workspaceId }) => {
   )
 }
 
-export default CanisterPage
+export default InstancePage
