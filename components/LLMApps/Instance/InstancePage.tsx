@@ -80,7 +80,7 @@ const InstancePage = ({ appId, instanceId, workspaceId }) => {
             onClick={() => {
               const basePath = pathname.split('/')[1]
               console.log('the bash pathhhh ' + basePath)
-              const newPath = `/${basePath}/${workspaceId}/blockchain-apps/${appId}` // Constrói o novo caminho
+              const newPath = `/${basePath}/${workspaceId}/llm-apps/${appId}` // Constrói o novo caminho
               push(newPath)
             }}
             className="absolute left-4 flex -translate-y-[180%] cursor-pointer gap-x-[5px]"
