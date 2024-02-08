@@ -161,6 +161,10 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
             setIsEditAppOpen(false)
           }}
           app={apps.find((app) => app.id === isEditAppOpen)}
+          onDelete={() => {
+            onUpdate()
+            setIsEditAppOpen(false)
+          }}
         />
       )}
     </div>
