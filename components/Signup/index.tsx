@@ -4,7 +4,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 // import { useState } from 'react'
-import { useEffect, useState, ChangeEvent, FC, useContext } from 'react'
+import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -46,6 +46,8 @@ const SignUp = () => {
     setIsCheckboxChecked(event.target.checked)
   }
 
+  const recaptchaRef = useRef(null)
+
   const { push } = useRouter()
 
   const { user, setUser } = useContext(AccountContext)
@@ -78,6 +80,8 @@ const SignUp = () => {
       toast.error('You need to accept the privacy policy before proceeding.')
       setIsLoading(false)
       setGoogleRecaptchaToken(null)
+      setIsRecaptchaValidated(false)
+      recaptchaRef.current.reset()
       return
     }
 
@@ -85,6 +89,8 @@ const SignUp = () => {
       toast.error('Passwords do not match.')
       setIsLoading(false)
       setGoogleRecaptchaToken(null)
+      setIsRecaptchaValidated(false)
+      recaptchaRef.current.reset()
       return
     }
 
@@ -103,6 +109,8 @@ const SignUp = () => {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
       setGoogleRecaptchaToken(null)
+      setIsRecaptchaValidated(false)
+      recaptchaRef.current.reset()
       setIsLoading(false)
     }
   }
@@ -350,6 +358,7 @@ const SignUp = () => {
                     </div>
                     <div className="mb-8 w-[50px]">
                       <ReCAPTCHA
+                        ref={recaptchaRef}
                         sitekey="6Ld9YR0pAAAAAPaq2xBLMZXyfPdAKMCik2cBVbJ4"
                         onChange={onChange}
                       />
