@@ -27,6 +27,10 @@ export const optionsLLMInstanceTemplate = [
     name: 'NLP',
     value: 'NLP',
   },
+  {
+    name: 'FALCON_7B',
+    value: 'FALCON_7B',
+  },
 ]
 
 export interface ModalI {
@@ -53,7 +57,7 @@ const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
     }
   }
 
-  const handleCreateChannel = async () => {
+  const handleCreateInstance = async () => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
@@ -87,7 +91,7 @@ const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
   return (
     <div
       onClick={handleOverlayClick}
-      className={`fixed  inset-0 z-50 flex items-center justify-center font-normal ${
+      className={`fixed  inset-0 z-50 flex items-center justify-center font-normal backdrop-blur-sm ${
         isOpen ? 'visible opacity-100' : 'invisible opacity-0'
       } transition-opacity duration-300`}
     >
@@ -179,13 +183,18 @@ const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
                 instanceName.length > 0 &&
                 selectedInstanceTemplate
               ) {
-                handleCreateChannel()
+                handleCreateInstance()
               }
             }}
           >
             Deploy LLM instance
           </div>
         </div>
+        {!isLoading && (
+          <div className="absolute bottom-4 text-[#0354EC]">
+            Loading: the instance deployment may take up to 20 minutes.
+          </div>
+        )}
       </div>
     </div>
   )

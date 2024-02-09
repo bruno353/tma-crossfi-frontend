@@ -94,7 +94,7 @@ const EditCanisterModal = ({
   return (
     <div
       onClick={handleOverlayClick}
-      className={`fixed  inset-0 z-50 flex items-center justify-center font-normal ${
+      className={`fixed  inset-0 z-50 flex items-center justify-center font-normal backdrop-blur-sm ${
         isOpen ? 'visible opacity-100' : 'invisible opacity-0'
       } transition-opacity duration-300`}
     >
