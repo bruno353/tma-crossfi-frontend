@@ -79,7 +79,6 @@ const InstanceUIRender = ({ instance, onUpdate, isUserAdmin }: ModalI) => {
 
     try {
       const res = await callLLMInstance(final, userSessionToken)
-      toast.success(`Success`)
       setIsLoading(false)
       console.log(' aresposta')
       console.log(res)

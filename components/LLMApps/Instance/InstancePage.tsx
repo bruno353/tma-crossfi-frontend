@@ -32,7 +32,8 @@ const InstancePage = ({ appId, instanceId, workspaceId }) => {
 
   function pushBack() {
     const lastIndex = pathname.lastIndexOf('/')
-    const final = pathname.substring(0, lastIndex)
+    const penultimateIndex = pathname.lastIndexOf('/', lastIndex - 1)
+    const final = pathname.substring(0, penultimateIndex)
     push(final)
   }
 
@@ -165,6 +166,9 @@ const InstancePage = ({ appId, instanceId, workspaceId }) => {
             onUpdateM={() => {
               getData()
               setIsEditOpen(false)
+            }}
+            onDelete={() => {
+              pushBack()
             }}
             llmInstance={instance}
           />

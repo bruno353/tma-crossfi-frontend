@@ -17,10 +17,12 @@ import { editCanister, editICPWallet, editWallet } from '@/utils/api-blockchain'
 import { ICPCanisterProps, ICPWalletsProps } from '@/types/blockchain-app'
 import { LLMInstanceProps } from '@/types/llm'
 import { editLLMInstance } from '@/utils/api-llm'
+import DeleteInstanceModal from './DeleteInstanceModal'
 
 export interface ModalI {
   llmInstance: LLMInstanceProps
   onUpdateM(): void
+  onDelete(): void
   onClose(): void
   isOpen: boolean
 }
@@ -28,6 +30,7 @@ export interface ModalI {
 const EditCanisterModal = ({
   llmInstance,
   onUpdateM,
+  onDelete,
   onClose,
   isOpen,
 }: ModalI) => {
@@ -147,6 +150,36 @@ const EditCanisterModal = ({
           />
         </div>
         <div className="mt-10 flex justify-between">
+          <div className="relative">
+            {isDeleteAppOpen && (
+              <div
+                ref={deleteAppRef}
+                className="absolute z-50   -translate-x-[100%]  translate-y-[50%]"
+              >
+                <DeleteInstanceModal
+                  id={llmInstance?.id}
+                  onUpdateModal={() => {
+                    onDelete()
+                    setIsDeleteAppOpen(false)
+                  }}
+                />{' '}
+              </div>
+            )}
+            <div
+              className={`${
+                isLoading
+                  ? 'animate-pulse bg-[#cc556350]'
+                  : 'cursor-pointer  hover:bg-[#cc556350]'
+              }  rounded-[5px]  border-[1px]  border-[#cc5563] p-[4px] px-[15px] text-[14px] text-[#cc5563] `}
+              onClick={() => {
+                if (!isLoading) {
+                  setIsDeleteAppOpen(true)
+                }
+              }}
+            >
+              Delete
+            </div>
+          </div>
           {hasChanges && (
             <div
               className={`${
