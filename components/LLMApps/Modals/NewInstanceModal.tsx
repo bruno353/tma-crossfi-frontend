@@ -70,7 +70,6 @@ const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
 
     try {
       const instance = await deployLLMInstance(final, userSessionToken)
-      await wait(3500)
       setIsLoading(false)
       toast.success(`Success`)
       onUpdateM(instance.id)

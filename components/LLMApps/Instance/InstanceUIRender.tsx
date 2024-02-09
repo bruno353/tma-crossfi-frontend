@@ -105,7 +105,7 @@ const InstanceUIRender = ({ instance, onUpdate, isUserAdmin }: ModalI) => {
             onMouseLeave={() => setIsInfoWalletOpen(false)}
           ></img>
           {isInfoWalletOpen && (
-            <div className="absolute right-0 z-50 flex w-[190%] translate-x-[105%]  items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+            <div className="absolute right-0 z-50 flex w-[50%] translate-x-[105%]  items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
               The open-source model related to this instance, you can interact
               with it by using the input bellow.
             </div>
