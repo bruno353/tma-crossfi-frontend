@@ -157,9 +157,8 @@ const Sidebar = (id: any) => {
       }
     } catch (err) {
       toast.error(`Not a valid workspace`)
-      toast.error(`Error: ${err}`)
       await new Promise((resolve) => setTimeout(resolve, 1500))
-      push('/dashboard')
+      // push('/dashboard')
     }
 
     return dado
