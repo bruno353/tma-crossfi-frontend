@@ -226,6 +226,10 @@ const InstancesRender = ({ app, instances, onUpdate, isUserAdmin }: ModalI) => {
             onUpdate()
             setIsEditInstanceOpen(false)
           }}
+          onDelete={() => {
+            onUpdate()
+            setIsEditInstanceOpen(false)
+          }}
           llmInstance={instances.find(
             (instance) => instance.id === isEditInstanceOpen,
           )}
