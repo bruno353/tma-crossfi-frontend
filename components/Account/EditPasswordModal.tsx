@@ -1,8 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable react/no-unknown-property */
-/* eslint-disable dot-notation */
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable no-unused-vars */
 "use client";
 // import { useState } from 'react'
 import {
@@ -16,11 +11,11 @@ import {
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Eye, EyeSlash } from "phosphor-react";
+import { Eye, EyeSlash } from "phosphor-react"
 import * as Yup from "yup";
 import axios from "axios";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css"
 import "react-quill/dist/quill.snow.css"; // import styles
 import "react-datepicker/dist/react-datepicker.css";
 import nookies, { parseCookies } from "nookies";
