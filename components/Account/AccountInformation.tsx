@@ -11,7 +11,7 @@ import {
   ChangeEvent,
   FC,
   useContext,
-  useRef,
+  useRef
 } from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
@@ -27,7 +27,7 @@ import {
   changeUserWorkspaceRole,
   createWorkspace,
   inviteUserToWorkspace,
-  updateWorkspace,
+  updateWorkspace
 } from "@/utils/api";
 import { parseCookies } from "nookies";
 import { UserWorkspaceProps } from "@/types/workspace";
@@ -53,7 +53,7 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
 
   const menuRef = useRef(null);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     if (!isLoading) {
       setHasChange(true);
       setNewNameUser(e.target.value);
@@ -74,7 +74,7 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
     const { userSessionToken } = parseCookies();
 
     const data = {
-      name: newNameUser,
+      name: newNameUser
     };
 
     try {
@@ -95,7 +95,7 @@ const AccountInfo = ({ onUpdate }: AccountInformationI) => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = event => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         // Clicked outside of the menu, so close it
         closeMenu();

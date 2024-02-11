@@ -14,7 +14,7 @@ import * as Yup from 'yup'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import 'react-quill/dist/quill.snow.css' // import styles
+import 'react-quill/dist/quill.snow.css' //import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import nookies, { parseCookies } from 'nookies'
 import { changePassword } from '@/utils/api-user'
@@ -108,7 +108,7 @@ const EditPasswordModal = ({ isOpen, onClose, onUpdate }) => {
                 className="flex cursor-pointer items-center text-center"
               >
                 <Eye className="cursor-pointer text-[#C5C4C4]" />
-              </div>
+                  </div>
             )}
           </div>
           <input
