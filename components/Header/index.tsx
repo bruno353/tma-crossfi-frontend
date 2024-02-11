@@ -68,7 +68,6 @@ const Header = () => {
   const { push } = useRouter()
 
   function cleanData() {
-    return
     destroyCookie(undefined, 'userSessionToken', { path: '/' })
     destroyCookie(undefined, 'user', { path: '/' })
     setUser(null)

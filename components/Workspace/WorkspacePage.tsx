@@ -60,12 +60,12 @@ const WorkspacePage = ({ id }) => {
         setWorkspace(res)
         setIsLoading(false)
       } else {
-        // push('/dashboard')
+        push('/dashboard')
       }
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
-      // push('/dashboard')
+      push('/dashboard')
     }
   }
 
