@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
-import nookies, { parseCookies, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 // import NewWorkspaceModal from './NewWorkspace'
 import { getBlockchainApps, getUserWorkspace, getWorkspace } from '@/utils/api'

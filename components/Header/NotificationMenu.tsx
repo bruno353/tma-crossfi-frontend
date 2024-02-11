@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, useContext } from 'react'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 import {
   acceptInviteUserToWorkspace,

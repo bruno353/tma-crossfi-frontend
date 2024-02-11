@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
-import nookies, { parseCookies, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 // import NewWorkspaceModal from './NewWorkspace'
 import { AccountContext } from '@/contexts/AccountContext'
 import SubNavBar from '@/components/Modals/SubNavBar'

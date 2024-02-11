@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState, useContext } from 'react'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 import { deleteMessage } from '@/utils/api'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'

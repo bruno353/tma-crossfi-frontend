@@ -17,7 +17,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { createWorkspace } from '@/utils/api'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 import { WorkspaceInviteProps } from '@/types/workspace'
 
 export interface InviteModalI {

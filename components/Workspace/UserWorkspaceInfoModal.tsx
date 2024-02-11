@@ -2,7 +2,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState, useContext } from 'react'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 import { getCurrentUser } from '@/utils/api'
 import { usePathname, useRouter } from 'next/navigation'

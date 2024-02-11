@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
-import nookies, { parseCookies, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 import { getUserChannels } from '@/utils/api-chat'
 import {
   ChannelProps,

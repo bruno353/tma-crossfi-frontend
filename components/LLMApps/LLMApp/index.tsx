@@ -16,7 +16,6 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { getWorkspace } from '@/utils/api'
-import nookies, { parseCookies, setCookie } from 'nookies'
 import Sidebar from '@/components/Sidebar'
 import LLMAppPage from './LLMAppPage'
 

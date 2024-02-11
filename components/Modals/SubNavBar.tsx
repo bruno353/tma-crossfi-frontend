@@ -21,7 +21,6 @@ import {
   updateWorkspace,
   updateWorkspaceLogo,
 } from '@/utils/api'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 
 export interface SubNavBarI {
   selected: string

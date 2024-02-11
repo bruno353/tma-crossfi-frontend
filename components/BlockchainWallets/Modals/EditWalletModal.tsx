@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { editWallet } from '@/utils/api-blockchain'
 import { BlockchainWalletProps } from '@/types/blockchain-app'

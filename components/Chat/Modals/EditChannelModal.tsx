@@ -16,7 +16,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 import { Switch } from '@chakra-ui/react'
 import { editChannel } from '@/utils/api-chat'
 

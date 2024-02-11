@@ -2,7 +2,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState, useContext } from 'react'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { deleteApp } from '@/utils/api-blockchain'

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import ThemeToggler from './ThemeToggler'
 import menuData from './menuData'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
+import { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 import { getCurrentUser } from '@/utils/api'
 import { usePathname, useRouter } from 'next/navigation'
@@ -68,6 +68,7 @@ const Header = () => {
   const { push } = useRouter()
 
   function cleanData() {
+    return
     destroyCookie(undefined, 'userSessionToken', { path: '/' })
     destroyCookie(undefined, 'user', { path: '/' })
     setUser(null)

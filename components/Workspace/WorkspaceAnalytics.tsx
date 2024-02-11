@@ -23,7 +23,6 @@ import {
   updateWorkspace,
   updateWorkspaceLogo,
 } from '@/utils/api'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps, WorkspaceProps } from '@/types/workspace'
 import UserWorkspaceInfoModal from './UserWorkspaceInfoModal'
 import DeleteUserWorkspaceModal from './DeleteUserWorkspaceModal'

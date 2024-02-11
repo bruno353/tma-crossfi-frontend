@@ -23,7 +23,6 @@ import {
   updateWorkspace,
   updateWorkspaceLogo,
 } from '@/utils/api'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'
 import { BlockchainAppProps } from '@/types/blockchain-app'
 import EditAppModal from './Modals/EditAppModal'

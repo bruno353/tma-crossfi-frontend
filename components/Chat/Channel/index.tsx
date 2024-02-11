@@ -13,7 +13,7 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import '../ChatsCSS/react-quill.css'
 import { getChannel, getWorkspace } from '@/utils/api'
-import nookies, { parseCookies, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 import {
   editMessage,
   getUserChannels,

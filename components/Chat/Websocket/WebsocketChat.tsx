@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import io from 'socket.io-client'
-import nookies, { parseCookies, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 import {
   NewChannelMessageProps,
   NewConversationMessageProps,

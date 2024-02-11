@@ -23,7 +23,7 @@ import {
   updateWorkspace,
   updateWorkspaceLogo,
 } from '@/utils/api'
-import nookies, { parseCookies, destroyCookie, setCookie } from 'nookies'
+import { parseCookies } from 'nookies'
 import { CanisterTemplateProps } from '@/types/canister-template'
 import { callCanister } from '@/utils/api-blockchain'
 import { LLMInstanceProps } from '@/types/llm'
