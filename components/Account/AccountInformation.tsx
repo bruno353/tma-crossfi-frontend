@@ -21,7 +21,6 @@ import {
   createWorkspace,
   inviteUserToWorkspace,
   updateWorkspace,
-  updateWorkspaceLogo,
 } from '@/utils/api'
 import  { parseCookies } from 'nookies'
 import { UserWorkspaceProps } from '@/types/workspace'

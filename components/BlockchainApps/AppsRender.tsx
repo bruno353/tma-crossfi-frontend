@@ -16,13 +16,6 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
-import {
-  changeUserWorkspaceRole,
-  createWorkspace,
-  inviteUserToWorkspace,
-  updateWorkspace,
-  updateWorkspaceLogo,
-} from '@/utils/api'
 import { UserWorkspaceProps } from '@/types/workspace'
 import { BlockchainAppProps } from '@/types/blockchain-app'
 import { optionsNetwork } from './Modals/NewAppModal'
