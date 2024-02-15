@@ -258,7 +258,7 @@ const KanbanPage = ({ id }) => {
   return (
     <div
       className="
-      mx-auto flex overflow-x-auto pt-36 text-[#C5C4C4] lg:pt-[90px]
+      mx-auto flex overflow-x-auto px-[20px] text-[#C5C4C4] lg:pt-[40px]
     "
     >
       <DndContext

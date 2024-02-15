@@ -76,7 +76,7 @@ const LLMAppPage = ({ id, workspaceId }) => {
 
   if (isLoading) {
     return (
-      <div className="container grid w-full gap-y-[30px] pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[180px]">
+      <div className="container grid w-full gap-y-[30px] text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="h-20 w-full animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
         <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
       </div>
@@ -85,7 +85,7 @@ const LLMAppPage = ({ id, workspaceId }) => {
 
   return (
     <>
-      <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[90px]">
+      <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="container relative text-[#fff]">
           <div
             onClick={() => {

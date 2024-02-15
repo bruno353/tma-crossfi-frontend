@@ -95,7 +95,7 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
                 <div className="w-full max-w-[30%]">Network</div>
                 <div className="w-full max-w-[20%]">created at</div>
               </div>
-              <div className="max-h-[calc(100vh-32rem)] overflow-y-auto  rounded-b-md border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+              <div className="max-h-[calc(100vh-26rem)] overflow-y-auto rounded-b-md  border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-32rem)] ">
                 {' '}
                 {apps?.map((app, index) => (
                   <div

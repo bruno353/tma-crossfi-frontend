@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -257,7 +258,7 @@ const Header = () => {
                     <img
                       alt="ethereum avatar"
                       src={user.profilePicture}
-                      className="w-[40px] rounded-full"
+                      className="w-[40px] max-w-[40px] rounded-full"
                     ></img>
                     <img
                       alt="arrow"

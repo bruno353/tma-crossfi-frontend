@@ -112,7 +112,7 @@ const InstanceUIRender = ({ instance, onUpdate, isUserAdmin }: ModalI) => {
         </div>
         <div className="grid gap-y-[25px]">
           <div className="">
-            <div className="max-h-[calc(100vh-32rem)] overflow-y-auto  scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+            <div className="max-h-[calc(100vh-26rem)] overflow-y-auto scrollbar-thin  scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-32rem)] ">
               {' '}
               <div
                 className={`flex items-center gap-x-[5px]  rounded-md border-[1px] border-[#c5c4c47c] px-[25px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}

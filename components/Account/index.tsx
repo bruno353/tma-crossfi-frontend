@@ -70,7 +70,7 @@ const Account = () => {
   if (user) {
     return (
       <>
-        <section className="relative z-10 overflow-hidden pb-16 pt-36 text-[16px] md:pb-20 lg:pb-28 lg:pt-[90px]">
+        <section className="relative z-10 overflow-hidden px-[20px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
           <div className="container text-[#fff]">
             <div className="flex items-center justify-between gap-x-[20px]">
               <div className="flex">
