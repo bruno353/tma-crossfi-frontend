@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable dot-notation */
 /* eslint-disable react/no-unescaped-entities */
@@ -29,6 +30,8 @@ const Sidebar = (id: any) => {
   const [isManagmentSidebarOpen, setIsManagmentSidebarOpen] =
     useState<boolean>(true)
   const [isLLMSidebarOpen, setIsLLMSidebarOpen] = useState<boolean>(true)
+  const [isAutomationSidebarOpen, setIsAutomationSidebarOpen] =
+    useState<boolean>(true)
 
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
 
@@ -121,6 +124,14 @@ const Sidebar = (id: any) => {
       imgStyle: 'w-[25px] rounded-full',
       type: 'llm',
       pathSegment: 'llm-apps',
+    },
+    {
+      name: 'Workflows',
+      option: `/${id.id}/automation-workflows`,
+      imgSource: '/images/sidebar/1.svg',
+      imgStyle: 'w-[25px] rounded-full',
+      type: 'automation',
+      pathSegment: 'automation-workflows',
     },
     // {
     //   name: 'Notes',
@@ -226,7 +237,7 @@ const Sidebar = (id: any) => {
       <div
         // onMouseEnter={() => setIsSidebarOpen(true)}
         // onMouseLeave={() => setIsSidebarOpen(false)}
-        className="relative !z-[9999] ml-[15px] mt-[40px]  flex  h-[calc(100vh-10rem)] w-[210px]  rounded-[10px] bg-[#1D2144] px-[10px]  py-36 text-[16px] lg:py-[30px]"
+        className="relative !z-[9999] ml-[15px] mt-[40px] flex h-[calc(100vh-10rem)] w-[210px] overflow-y-auto rounded-[10px] bg-[#1D2144]  px-[10px]  py-36 text-[16px] scrollbar-thin scrollbar-track-[#1D2144]  scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md lg:py-[30px]"
       >
         <div className="w-full">
           {workspace && (
@@ -392,6 +403,55 @@ const Sidebar = (id: any) => {
             )}
           </div>
           <div className="mt-5">
+            <div
+              onClick={() => {
+                setIsAutomationSidebarOpen(!isAutomationSidebarOpen)
+              }}
+              className="mb-1 flex  cursor-pointer justify-between px-[10px]"
+            >
+              <div className="mb-1 text-[13px] font-normal text-[#c5c4c4]">
+                Automation
+              </div>
+              <img
+                alt="ethereum avatar"
+                src="/images/header/arrow-gray.svg"
+                className={`w-[10px] rounded-full transition-transform duration-150 ${
+                  !isAutomationSidebarOpen && 'rotate-180'
+                }`}
+              ></img>
+            </div>
+            {isAutomationSidebarOpen && (
+              <div className="grid gap-y-[3px] text-[#fff]">
+                {sidebarOptions.map((option, index) => (
+                  <div
+                    onClick={() => {
+                      handleSidebarClick(option.pathSegment, option.option)
+                    }}
+                    key={index}
+                    className={`${option.type !== 'automation' && 'hidden'}`}
+                  >
+                    <div
+                      className={`mb-[5px] flex cursor-pointer  items-center gap-x-[10px] rounded-[7px] px-[10px] py-[6px] hover:bg-[#dbdbdb1e] ${
+                        sidebarOption === option.pathSegment && 'bg-[#dbdbdb1e]'
+                      }`}
+                    >
+                      <img
+                        src={option.imgSource}
+                        alt="image"
+                        className={option.imgStyle}
+                      />
+                      {isSidebarOpen && (
+                        <div className="text-center text-[13px] font-light">
+                          {option.name}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="mt-5 pb-[30px]">
             <div
               onClick={() => {
                 setIsManagmentSidebarOpen(!isManagmentSidebarOpen)
