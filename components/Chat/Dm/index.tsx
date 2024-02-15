@@ -574,7 +574,7 @@ const Dm = (id: any, workspaceId: any) => {
                             </div>
                           </div>
                         ) : (
-                          <div>{mss}</div>
+                          <div className="break-all">{mss}</div>
                         )}
                       </div>
                       {isMessageHovered === message?.id &&
