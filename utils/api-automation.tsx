@@ -95,7 +95,7 @@ export async function getAutomationWorkflows(
 ) {
   const config = {
     method: 'post' as 'post',
-    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/automation/functions/getWorkflows`,
+    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/automation/functions/getWorkspaceWorkflows`,
     headers: {
       'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
       'X-Parse-Session-Token': userSessionToken,

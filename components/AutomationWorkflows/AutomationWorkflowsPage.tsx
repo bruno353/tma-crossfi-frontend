@@ -6,34 +6,25 @@
 // import { useState } from 'react'
 import { useEffect, useState, ChangeEvent, FC, useContext } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Eye, EyeSlash, SmileySad } from 'phosphor-react'
-import * as Yup from 'yup'
-import axios from 'axios'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { parseCookies } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
-// import NewWorkspaceModal from './NewWorkspace'
-import { getBlockchainApps, getUserWorkspace, getWorkspace } from '@/utils/api'
-import { WorkspaceProps } from '@/types/workspace'
 import SubNavBar from '../Modals/SubNavBar'
-import { Logo } from '../Sidebar/Logo'
-import { BlockchainAppProps } from '@/types/blockchain-app'
-import AppsRender from './AppsRender'
-import NewAppModal from './Modals/NewAppModal'
-import { getLLMApps } from '@/utils/api-llm'
-import { LLMAppProps } from '@/types/llm'
+import { AutomationWorkflowProps } from '@/types/automation'
+import { getAutomationWorkflows } from '@/utils/api-automation'
+import NewWorkflowModal from './Modals/NewWorkflowModal'
+import WorkflowsRender from './WorkflowsRender'
 
 const AutomationWorkflowsPage = ({ id }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('General')
-  const [llmApps, setLLMApps] = useState<LLMAppProps[]>([])
+  const [automationWorkflows, setAutomationWorkflows] = useState<
+    AutomationWorkflowProps[]
+  >([])
 
   const { workspace, user } = useContext(AccountContext)
 
@@ -49,8 +40,8 @@ const AutomationWorkflowsPage = ({ id }) => {
     }
 
     try {
-      const res = await getLLMApps(data, userSessionToken)
-      setLLMApps(res)
+      const res = await getAutomationWorkflows(data, userSessionToken)
+      setAutomationWorkflows(res)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -79,7 +70,7 @@ const AutomationWorkflowsPage = ({ id }) => {
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="flex">
               <div className="mt-auto text-[24px] font-medium">
-                Automation workflows
+                Automation Workflows
               </div>
             </div>
             {workspace?.isUserAdmin && (
@@ -89,7 +80,7 @@ const AutomationWorkflowsPage = ({ id }) => {
                 }}
                 className="cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
               >
-                New workflow
+                New Workflow
               </div>
             )}
           </div>
@@ -104,8 +95,8 @@ const AutomationWorkflowsPage = ({ id }) => {
             <div className="mt-[50px]">
               {navBarSelected === 'General' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                  <AppsRender
-                    apps={llmApps}
+                  <WorkflowsRender
+                    apps={automationWorkflows}
                     isUserAdmin={workspace?.isUserAdmin}
                     onUpdate={getData}
                   />
@@ -115,7 +106,7 @@ const AutomationWorkflowsPage = ({ id }) => {
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
-        <NewAppModal
+        <NewWorkflowModal
           isOpen={isCreatingNewApp}
           onClose={() => {
             setIsCreatingNewApp(false)
