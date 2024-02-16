@@ -34,7 +34,7 @@ import { getAutomationWorkflow } from '@/utils/api-automation'
 const AutomationWorkflowPage = ({ id, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [navBarSelected, setNavBarSelected] = useState('Instances')
+  const [navBarSelected, setNavBarSelected] = useState('Board')
   const [workflow, setWorkflow] = useState<AutomationWorkflowProps>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
 
@@ -135,10 +135,10 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                 setNavBarSelected(value)
               }}
               selected={navBarSelected}
-              itensList={['Instances', 'Analytics']}
+              itensList={['Board', 'Analytics']}
             />
             <div className="mt-[40px]">
-              {navBarSelected === 'Instances' && (
+              {navBarSelected === 'Board' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md"></div>
               )}
             </div>

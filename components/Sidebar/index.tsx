@@ -233,7 +233,7 @@ const Sidebar = (id: any) => {
   }
 
   return (
-    <>
+    <div className="relative">
       <div
         // onMouseEnter={() => setIsSidebarOpen(true)}
         // onMouseLeave={() => setIsSidebarOpen(false)}
@@ -263,15 +263,6 @@ const Sidebar = (id: any) => {
                 src="/images/header/arrow.svg"
                 className="w-[10px] rounded-full"
               ></img>
-              {menuOpen && (
-                <div className="absolute top-[35px]" ref={menuRef}>
-                  <WorkspaceSelector
-                    user={user}
-                    currentlyWorkspaceId={workspace?.id}
-                    onNewWorkspace={openModal}
-                  />{' '}
-                </div>
-              )}
             </div>
           )}
           <div className="grid gap-y-[3px] text-[#fff]">
@@ -502,12 +493,25 @@ const Sidebar = (id: any) => {
             )}
           </div>
         </div>
+
         <NewWorkspaceModal
           isOpen={isCreatingNewWorkspace}
           onClose={closeModal}
         />
       </div>
-    </>
+      {menuOpen && (
+        <div
+          className="absolute top-[35px] !z-[999999] translate-x-[40px] translate-y-[40px]"
+          ref={menuRef}
+        >
+          <WorkspaceSelector
+            user={user}
+            currentlyWorkspaceId={workspace?.id}
+            onNewWorkspace={openModal}
+          />{' '}
+        </div>
+      )}
+    </div>
   )
 }
 
