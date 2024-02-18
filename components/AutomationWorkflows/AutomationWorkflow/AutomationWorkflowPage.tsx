@@ -7,29 +7,29 @@
 // import { useState } from 'react'
 import { useEffect, useState, ChangeEvent, FC, useContext } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Eye, EyeSlash, SmileySad } from 'phosphor-react'
-import * as Yup from 'yup'
-import axios from 'axios'
+
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { parseCookies } from 'nookies'
-// import NewWorkspaceModal from './NewWorkspace'
-import { getBlockchainApps, getUserWorkspace, getWorkspace } from '@/utils/api'
-import { WorkspaceProps } from '@/types/workspace'
-import { BlockchainAppProps } from '@/types/blockchain-app'
 import { AccountContext } from '@/contexts/AccountContext'
-import { getBlockchainApp } from '@/utils/api-blockchain'
 import SubNavBar from '@/components/Modals/SubNavBar'
-import { getLLMApp } from '@/utils/api-llm'
-import { LLMAppProps } from '@/types/llm'
 import EditWorkflowModal from '../Modals/EditWorkflowModal'
 import { AutomationWorkflowProps } from '@/types/automation'
 import { getAutomationWorkflow } from '@/utils/api-automation'
+import ReactFlow, {
+  Controls,
+  Background,
+  applyNodeChanges,
+  applyEdgeChanges,
+  MiniMap,
+  addEdge,
+  useNodesState,
+  useEdgesState,
+  NodeTypes,
+} from 'reactflow'
+import 'reactflow/dist/style.css'
 
 const AutomationWorkflowPage = ({ id, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
@@ -139,7 +139,44 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
             />
             <div className="mt-[40px]">
               {navBarSelected === 'Board' && (
-                <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md"></div>
+                <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+                  <div className="relative h-full w-full">
+                    <ReactFlow
+                      nodes={nodesAmounts}
+                      edges={edgesWithUpdatedTypes}
+                      onNodesChange={(value) => {
+                        console.log('chamado fuii')
+                        console.log(nodesAmounts)
+                        // validator type of nodes cannot be edited
+                        if (xnodeType !== 'validator') {
+                          console.log('entrei nao')
+                          onNodesChange(value)
+                        }
+                      }}
+                      onEdgesChange={(value) => {
+                        // validator type of nodes cannot be edited
+                        console.log('chamado fuii')
+                        if (xnodeType !== 'validator') {
+                          console.log('entrei nao')
+                          onEdgesChange(value)
+                        }
+                      }}
+                      onConnect={onConnect}
+                      onInit={onInit}
+                      fitView
+                      attributionPosition="top-right"
+                      nodeTypes={nodeTypes}
+                    >
+                      <div className="absolute right-0 top-[75px] md:top-[90px] lg:top-[105px] xl:top-[120px] 2xl:top-[150px]">
+                        <MiniMap style={minimapStyle} zoomable pannable />
+                      </div>
+                      <div className="absolute left-[25px] top-[80px] md:left-[30px] md:top-[96px] lg:left-[35px] lg:top-[112px] xl:left-[40px] xl:top-[128px] 2xl:left-[50px] 2xl:top-[160px]">
+                        <Controls />
+                      </div>
+                      <Background color="#aaa" gap={16} />
+                    </ReactFlow>
+                  </div>
+                </div>
               )}
             </div>
           </div>
