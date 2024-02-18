@@ -105,8 +105,8 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
 
   return (
     <>
-      <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
-        <div className="container relative text-[#fff]">
+      <section className="relative z-10 h-full max-h-[calc(100vh-8rem)]  overflow-hidden px-[20px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
+        <div className="container relative h-full text-[#fff] ">
           <div
             onClick={() => {
               const basePath = pathname.split('/')[1]
@@ -147,7 +147,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
               </div>
             )}
           </div>
-          <div className="mt-[45px]">
+          <div className="mt-[45px] h-full ">
             <SubNavBar
               onChange={(value) => {
                 setNavBarSelected(value)
@@ -155,13 +155,16 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
               selected={navBarSelected}
               itensList={['Board', 'Analytics']}
             />
-            <div className="mt-[40px]">
+            <div className="mt-[20px] h-full 2xl:mt-[40px]">
               {navBarSelected === 'Board' && (
-                <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                  <div className="relative h-[500px] w-[500px]">
+                <div className="h-full overflow-y-auto pb-[20px] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+                  <div className="relative h-full w-full rounded-md bg-[#1D2144]">
                     <ReactFlow
                       nodes={[]}
                       edges={[]}
+                      proOptions={{
+                        hideAttribution: true,
+                      }}
                       onNodesChange={(value) => {
                         console.log('chamado fuii')
                         // if (xnodeType !== 'validator') {
@@ -181,13 +184,14 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                       fitView
                       attributionPosition="top-right"
                     >
-                      {/* <div className="absolute right-0 top-[75px] md:top-[90px] lg:top-[105px] xl:top-[120px] 2xl:top-[150px]">
-                        <MiniMap style={minimapStyle} zoomable pannable />
-                      </div> */}
-                      <div className="absolute left-[25px] top-[80px] md:left-[30px] md:top-[96px] lg:left-[35px] lg:top-[112px] xl:left-[40px] xl:top-[128px] 2xl:left-[50px] 2xl:top-[160px]">
-                        <Controls />
+                      <div className="absolute bottom-56">
+                        <Controls
+                          style={{
+                            backgroundColor: '#fff',
+                          }}
+                        />
                       </div>
-                      <Background color="#aaa" gap={16} />
+                      <Background gap={16} />
                     </ReactFlow>
                   </div>
                 </div>
