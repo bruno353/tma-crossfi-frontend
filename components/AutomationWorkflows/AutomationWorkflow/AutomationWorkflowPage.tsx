@@ -12,8 +12,13 @@ import {
   FC,
   useContext,
   useCallback,
+  useMemo,
 } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
+import './reactflow-overrides.css' // Ajuste o caminho conforme necessário
+
+import TriggerNode from './ReactFlowComponents/TriggerNode'
+import withProps from './ReactFlowComponents/withProps'
 
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -35,6 +40,8 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   NodeTypes,
+  MarkerType,
+  Position,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 
@@ -55,6 +62,16 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
       setEdges((eds) =>
         addEdge({ ...params, animated: true, style: { stroke: '#000' } }, eds),
       ),
+    [],
+  )
+  const handleNodeRemove = (nodeIdToRemove) => {
+    console.log('new test')
+  }
+
+  const nodeTypes = useMemo(
+    () => ({
+      trigger: withProps(TriggerNode, { handleNodeRemove }),
+    }),
     [],
   )
 
@@ -158,9 +175,23 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
             <div className="mt-[20px] h-full 2xl:mt-[40px]">
               {navBarSelected === 'Board' && (
                 <div className="h-full overflow-y-auto pb-[20px] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                  <div className="relative h-full w-full rounded-md bg-[#1D2144]">
+                  <div className="relative flex h-full w-full rounded-md  border-[0.5px] border-[#c5c4c45f] bg-[#1D2144]">
                     <ReactFlow
-                      nodes={[]}
+                      nodes={[
+                        {
+                          id: '1',
+                          type: 'trigger',
+                          position: { x: 500, y: 200 },
+                          data: {
+                            selects: {
+                              'handle-0': 'smoothstep',
+                              'handle-1': 'smoothstep',
+                            },
+                            defaultValueServerType: 'Small c3.x86 x 1',
+                          },
+                          sourcePosition: Position.Right,
+                        },
+                      ]}
                       edges={[]}
                       proOptions={{
                         hideAttribution: true,
@@ -183,16 +214,14 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                       onInit={onInit}
                       fitView
                       attributionPosition="top-right"
+                      nodeTypes={nodeTypes}
                     >
-                      <div className="absolute bottom-56">
-                        <Controls
-                          style={{
-                            backgroundColor: '#fff',
-                          }}
-                        />
+                      <div className="absolute  bottom-[5%]">
+                        <Controls />
                       </div>
                       <Background gap={16} />
                     </ReactFlow>
+                    <div className="h-full w-[300px] rounded-r-md bg-[#060621]"></div>
                   </div>
                 </div>
               )}
