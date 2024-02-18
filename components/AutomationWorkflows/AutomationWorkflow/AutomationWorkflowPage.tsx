@@ -57,6 +57,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   const { workspace, user } = useContext(AccountContext)
   const [triggerOptionInfo, setTriggerOptionInfo] = useState<any>()
+  const [nodeSelected, setNodeSelected] = useState<any>()
 
   const onConnect = useCallback(
     (params) =>
@@ -260,7 +261,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                               }`}
                             >
                               <div
-                                className={`relative mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#dbdbdb1e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
+                                className={`relative mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#e6e5e51e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
                               >
                                 <img
                                   src={option.imgSource}

@@ -26,6 +26,11 @@ interface CreateUserContextProps {
   conversations: ConversationProps[] | undefined
   setConversations: (conversations: ConversationProps[] | undefined) => void
 
+  automationWorkflowNodeSelected: string | undefined
+  setAutomationWorkflowNodeSelected: (
+    automationWorkflowNodeSelected: string | undefined,
+  ) => void
+
   workspace: WorkspaceProps | undefined
   setWorkspace: (workspace: WorkspaceProps | undefined) => void
 }
@@ -40,6 +45,8 @@ export default function AccountContextProvider({
   const [channel, setChannel] = useState<ChannelProps>()
   const [conversation, setConversation] = useState<ConversationProps>()
   const [conversations, setConversations] = useState<ConversationProps[]>()
+  const [automationWorkflowNodeSelected, setAutomationWorkflowNodeSelected] =
+    useState<string>('')
 
   const [dm, setDm] = useState<ChannelProps>()
   const [workspace, setWorkspace] = useState<WorkspaceProps>()
@@ -61,6 +68,8 @@ export default function AccountContextProvider({
         setConversations,
         workspace,
         setWorkspace,
+        automationWorkflowNodeSelected,
+        setAutomationWorkflowNodeSelected,
       }}
     >
       {children}
