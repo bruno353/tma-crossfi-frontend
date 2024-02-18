@@ -5,7 +5,14 @@
 /* eslint-disable no-unused-vars */
 'use client'
 // import { useState } from 'react'
-import { useEffect, useState, ChangeEvent, FC, useContext } from 'react'
+import {
+  useEffect,
+  useState,
+  ChangeEvent,
+  FC,
+  useContext,
+  useCallback,
+} from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 
 import { toast } from 'react-toastify'
@@ -31,14 +38,25 @@ import ReactFlow, {
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 
+const onInit = (reactFlowInstance) =>
+  console.log('flow loaded:', reactFlowInstance)
+
 const AutomationWorkflowPage = ({ id, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('Board')
   const [workflow, setWorkflow] = useState<AutomationWorkflowProps>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
-
+  const [edges, setEdges, onEdgesChange] = useEdgesState([])
   const { workspace, user } = useContext(AccountContext)
+
+  const onConnect = useCallback(
+    (params) =>
+      setEdges((eds) =>
+        addEdge({ ...params, animated: true, style: { stroke: '#000' } }, eds),
+      ),
+    [],
+  )
 
   const pathname = usePathname()
   const { push } = useRouter()
@@ -140,36 +158,32 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
             <div className="mt-[40px]">
               {navBarSelected === 'Board' && (
                 <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                  <div className="relative h-full w-full">
+                  <div className="relative h-[500px] w-[500px]">
                     <ReactFlow
-                      nodes={nodesAmounts}
-                      edges={edgesWithUpdatedTypes}
+                      nodes={[]}
+                      edges={[]}
                       onNodesChange={(value) => {
                         console.log('chamado fuii')
-                        console.log(nodesAmounts)
-                        // validator type of nodes cannot be edited
-                        if (xnodeType !== 'validator') {
-                          console.log('entrei nao')
-                          onNodesChange(value)
-                        }
+                        // if (xnodeType !== 'validator') {
+                        //   onNodesChange(value)
+                        // }
                       }}
                       onEdgesChange={(value) => {
                         // validator type of nodes cannot be edited
                         console.log('chamado fuii')
-                        if (xnodeType !== 'validator') {
-                          console.log('entrei nao')
-                          onEdgesChange(value)
-                        }
+                        // if (xnodeType !== 'validator') {
+                        //   console.log('entrei nao')
+                        //   onEdgesChange(value)
+                        // }
                       }}
                       onConnect={onConnect}
                       onInit={onInit}
                       fitView
                       attributionPosition="top-right"
-                      nodeTypes={nodeTypes}
                     >
-                      <div className="absolute right-0 top-[75px] md:top-[90px] lg:top-[105px] xl:top-[120px] 2xl:top-[150px]">
+                      {/* <div className="absolute right-0 top-[75px] md:top-[90px] lg:top-[105px] xl:top-[120px] 2xl:top-[150px]">
                         <MiniMap style={minimapStyle} zoomable pannable />
-                      </div>
+                      </div> */}
                       <div className="absolute left-[25px] top-[80px] md:left-[30px] md:top-[96px] lg:left-[35px] lg:top-[112px] xl:left-[40px] xl:top-[128px] 2xl:left-[50px] 2xl:top-[160px]">
                         <Controls />
                       </div>
