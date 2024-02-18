@@ -10,10 +10,36 @@
 //   createdAt: string
 //   updatedAt: string
 // }
+enum NodeActionWorkflowType {
+  CALL_CANISTER,
+}
+enum NodeTriggerWorkflowType {
+  CRON,
+}
+
+export interface NodeTriggerWorkflowProps {
+  id: string
+  type: NodeTriggerWorkflowType
+  value: string
+  workflowId: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface NodeActionWorkflowProps {
+  id: string
+  type: NodeActionWorkflowType
+  value: string
+  workflowId: string
+  createdAt: string
+  updatedAt: string
+}
 
 export interface AutomationWorkflowProps {
   id: string
   name: string
+  nodeTriggerWorkflow?: NodeTriggerWorkflowProps
+  nodeActionWorkflow: NodeActionWorkflowProps[] | []
   createdAt: string
   updatedAt: string
 }

@@ -29,7 +29,10 @@ import { AccountContext } from '@/contexts/AccountContext'
 import SubNavBar from '@/components/Modals/SubNavBar'
 import EditWorkflowModal from '../Modals/EditWorkflowModal'
 import { AutomationWorkflowProps } from '@/types/automation'
-import { getAutomationWorkflow } from '@/utils/api-automation'
+import {
+  createWorkflowTrigger,
+  getAutomationWorkflow,
+} from '@/utils/api-automation'
 import ReactFlow, {
   Controls,
   Background,
@@ -55,7 +58,14 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
   const [workflow, setWorkflow] = useState<AutomationWorkflowProps>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
-  const { workspace, user } = useContext(AccountContext)
+
+  const {
+    workspace,
+    user,
+    automationWorkflowNodeSelected,
+    setAutomationWorkflowNodeSelected,
+    setNodeIsLoading,
+  } = useContext(AccountContext)
   const [triggerOptionInfo, setTriggerOptionInfo] = useState<any>()
   const [nodeSelected, setNodeSelected] = useState<any>()
 
@@ -84,6 +94,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
       imgSource: '/images/workflows/clock.svg',
       imgStyle: 'w-[18px]',
       type: 'Jobs',
+      triggerType: 'CRON',
       pathSegment: '',
     },
   ]
@@ -111,12 +122,34 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
         pushBack()
         return
       }
+      if (!res.nodeTriggerWorkflow) {
+        // trigger not created yet
+        setAutomationWorkflowNodeSelected('trigger')
+      }
       setWorkflow(res)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
     }
     setIsLoading(false)
+  }
+
+  async function createTrigger(triggerType: string) {
+    setNodeIsLoading('trigger')
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id,
+      type: triggerType,
+    }
+
+    try {
+      const res = await createWorkflowTrigger(data, userSessionToken)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setNodeIsLoading('')
   }
 
   useEffect(() => {
@@ -234,54 +267,59 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                       </div>
                       <Background gap={16} />
                     </ReactFlow>
-                    <div className="h-full w-[30%] rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4]">
-                      <div>
-                        <div className="">Select your trigger</div>
-                        <div className="mt-[5px] text-[11px] text-[#c5c4c49d]">
-                          This will be the event that will start the workflow
-                        </div>
-                      </div>
-                      <div className="mt-[25px]">
+                    {automationWorkflowNodeSelected === 'trigger' && (
+                      <div className="h-full w-[30%] rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4]">
                         <div>
-                          <div className="mb-[7px] text-[12px]">Jobs</div>
-                          {triggerOptions.map((option, index) => (
-                            <div
-                              onClick={() => {
-                                // handleSidebarClick(option.pathSegment, option.option)
-                              }}
-                              onMouseEnter={() => {
-                                setTriggerOptionInfo(option.name)
-                              }}
-                              onMouseLeave={() => {
-                                setTriggerOptionInfo('')
-                              }}
-                              key={index}
-                              className={`${
-                                option.type !== 'Jobs' && 'hidden'
-                              }`}
-                            >
+                          <div className="">Select your trigger</div>
+                          <div className="mt-[5px] text-[11px] text-[#c5c4c49d]">
+                            This will be the event that will start the workflow
+                          </div>
+                        </div>
+                        <div className="mt-[25px]">
+                          <div>
+                            <div className="mb-[7px] text-[12px]">Jobs</div>
+                            {triggerOptions.map((option, index) => (
                               <div
-                                className={`relative mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#e6e5e51e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
+                                onClick={() => {
+                                  // handleSidebarClick(option.pathSegment, option.option)
+                                }}
+                                onMouseEnter={() => {
+                                  setTriggerOptionInfo(option.name)
+                                }}
+                                onMouseLeave={() => {
+                                  setTriggerOptionInfo('')
+                                }}
+                                key={index}
+                                className={`${
+                                  option.type !== 'Jobs' && 'hidden'
+                                }`}
                               >
-                                <img
-                                  src={option.imgSource}
-                                  alt="image"
-                                  className={option.imgStyle}
-                                />
-                                <div className="text-center text-[13px] font-light">
-                                  {option.name}
-                                </div>
-                                {triggerOptionInfo === option.name && (
-                                  <div className=" absolute left-0 top-0 w-[200px] -translate-x-[105%] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px] font-normal text-[#c5c4c4]">
-                                    <div>{option.description}</div>
+                                <div
+                                  onClick={() => {
+                                    createTrigger(option.triggerType)
+                                  }}
+                                  className={`relative mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#e6e5e51e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
+                                >
+                                  <img
+                                    src={option.imgSource}
+                                    alt="image"
+                                    className={option.imgStyle}
+                                  />
+                                  <div className="text-center text-[13px] font-light">
+                                    {option.name}
                                   </div>
-                                )}
+                                  {triggerOptionInfo === option.name && (
+                                    <div className=" absolute left-0 top-0 w-[200px] -translate-x-[105%] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px] font-normal text-[#c5c4c4]">
+                                      <div>{option.description}</div>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               )}

@@ -6,12 +6,22 @@ import withProps from './withProps'
 import { AccountContext } from '@/contexts/AccountContext'
 
 function TriggerNode({ id, data, handleNodeRemove }) {
+  const { automationWorkflowNodeSelected, nodeIsLoading } =
+    useContext(AccountContext)
+
   const handleClick = () => {
     handleNodeRemove(id)
   }
   return (
     <>
-      <div className="relative rounded-[8px] border-[0.5px] border-dashed border-[#642EE7] bg-[#060621] px-[50px] py-[15px] text-[10px] 2xl:text-[14px]">
+      <div
+        className={`relative rounded-[8px]  border-[0.5px] border-[#c5c4c45f] ${
+          automationWorkflowNodeSelected === 'trigger' &&
+          'border-dashed !border-[#642EE7] '
+        } ${
+          nodeIsLoading === 'trigger' && 'animate-pulse '
+        }  bg-[#060621] px-[50px] py-[15px] text-[10px] 2xl:text-[14px]`}
+      >
         <img
           alt="ethereum avatar"
           src="/images/workflows/play.svg"
