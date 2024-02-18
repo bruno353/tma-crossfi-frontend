@@ -75,6 +75,17 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     [],
   )
 
+  const triggerOptions = [
+    {
+      name: 'Schedule',
+      description: 'Schedule a cron job to run your workflow',
+      imgSource: '/images/workflows/clock.svg',
+      imgStyle: 'w-[18px]',
+      type: 'Jobs',
+      pathSegment: '',
+    },
+  ]
+
   const pathname = usePathname()
   const { push } = useRouter()
 
@@ -221,7 +232,43 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                       </div>
                       <Background gap={16} />
                     </ReactFlow>
-                    <div className="h-full w-[300px] rounded-r-md bg-[#060621]"></div>
+                    <div className="h-full w-[30%] rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4]">
+                      <div>
+                        <div className="">Select your trigger</div>
+                        <div className="mt-[5px] text-[11px] text-[#c5c4c49d]">
+                          This will be the event that will start the workflow
+                        </div>
+                      </div>
+                      <div className="mt-[25px]">
+                        <div>
+                          <div className="mb-[7px] text-[12px]">Jobs</div>
+                          {triggerOptions.map((option, index) => (
+                            <div
+                              onClick={() => {
+                                // handleSidebarClick(option.pathSegment, option.option)
+                              }}
+                              key={index}
+                              className={`${
+                                option.type !== 'Jobs' && 'hidden'
+                              }`}
+                            >
+                              <div
+                                className={`mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#dbdbdb1e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
+                              >
+                                <img
+                                  src={option.imgSource}
+                                  alt="image"
+                                  className={option.imgStyle}
+                                />
+                                <div className="text-center text-[13px] font-light">
+                                  {option.name}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
