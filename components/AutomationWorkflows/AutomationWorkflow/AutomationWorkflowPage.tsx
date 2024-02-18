@@ -56,6 +56,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   const { workspace, user } = useContext(AccountContext)
+  const [triggerOptionInfo, setTriggerOptionInfo] = useState<any>()
 
   const onConnect = useCallback(
     (params) =>
@@ -247,13 +248,19 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                               onClick={() => {
                                 // handleSidebarClick(option.pathSegment, option.option)
                               }}
+                              onMouseEnter={() => {
+                                setTriggerOptionInfo(option.name)
+                              }}
+                              onMouseLeave={() => {
+                                setTriggerOptionInfo('')
+                              }}
                               key={index}
                               className={`${
                                 option.type !== 'Jobs' && 'hidden'
                               }`}
                             >
                               <div
-                                className={`mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#dbdbdb1e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
+                                className={`relative mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#dbdbdb1e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
                               >
                                 <img
                                   src={option.imgSource}
@@ -263,6 +270,11 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                                 <div className="text-center text-[13px] font-light">
                                   {option.name}
                                 </div>
+                                {triggerOptionInfo === option.name && (
+                                  <div className=" absolute left-0 top-0 w-[200px] -translate-x-[105%] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px] font-normal text-[#c5c4c4]">
+                                    <div>{option.description}</div>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           ))}
