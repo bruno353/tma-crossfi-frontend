@@ -51,11 +51,23 @@ import 'reactflow/dist/style.css'
 const onInit = (reactFlowInstance) =>
   console.log('flow loaded:', reactFlowInstance)
 
+export const triggerOptions = [
+  {
+    name: 'Schedule',
+    description: 'Schedule a cron job to run your workflow',
+    imgSource: '/images/workflows/clock.svg',
+    imgStyle: 'w-[18px]',
+    imgStyleBoard: 'w-[11px]',
+    type: 'Jobs',
+    triggerType: 'CRON',
+    pathSegment: '',
+  },
+]
+
 const AutomationWorkflowPage = ({ id, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('Board')
-  const [workflow, setWorkflow] = useState<AutomationWorkflowProps>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
 
@@ -65,6 +77,8 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     automationWorkflowNodeSelected,
     setAutomationWorkflowNodeSelected,
     setNodeIsLoading,
+    automationWorkflowSelected,
+    setAutomationWorkflowSelected,
   } = useContext(AccountContext)
   const [triggerOptionInfo, setTriggerOptionInfo] = useState<any>()
   const [nodeSelected, setNodeSelected] = useState<any>()
@@ -86,18 +100,6 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     }),
     [],
   )
-
-  const triggerOptions = [
-    {
-      name: 'Schedule',
-      description: 'Schedule a cron job to run your workflow',
-      imgSource: '/images/workflows/clock.svg',
-      imgStyle: 'w-[18px]',
-      type: 'Jobs',
-      triggerType: 'CRON',
-      pathSegment: '',
-    },
-  ]
 
   const pathname = usePathname()
   const { push } = useRouter()
@@ -126,7 +128,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
         // trigger not created yet
         setAutomationWorkflowNodeSelected('trigger')
       }
-      setWorkflow(res)
+      setAutomationWorkflowSelected(res)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -196,7 +198,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                 className="w-[35px]"
               ></img>
               <div className="mt-auto text-[24px] font-medium">
-                {workflow?.name}
+                {automationWorkflowSelected?.name}
               </div>
             </div>
             {workspace?.isUserAdmin && (
@@ -340,7 +342,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
             onDelete={() => {
               pushBack()
             }}
-            app={workflow}
+            app={automationWorkflowSelected}
           />
         )}
       </section>

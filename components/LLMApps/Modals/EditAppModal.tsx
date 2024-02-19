@@ -154,7 +154,7 @@ const EditAppModal = ({
             {isDeleteAppOpen && (
               <div
                 ref={deleteAppRef}
-                className="absolute z-50   -translate-x-[100%]  translate-y-[50%]"
+                className="absolute z-50   -translate-x-[60%]  translate-y-[50%]"
               >
                 <DeleteAppModal
                   id={app?.id}

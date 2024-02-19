@@ -1,3 +1,4 @@
+import { AutomationWorkflowProps } from '@/types/automation'
 import { ChannelProps, ConversationProps } from '@/types/chat'
 import { UserProps } from '@/types/user'
 import { WorkspaceProps } from '@/types/workspace'
@@ -31,6 +32,11 @@ interface CreateUserContextProps {
     automationWorkflowNodeSelected: string | undefined,
   ) => void
 
+  automationWorkflowSelected: AutomationWorkflowProps | undefined
+  setAutomationWorkflowSelected: (
+    automationWorkflowSelected: AutomationWorkflowProps | undefined,
+  ) => void
+
   nodeIsLoading: string | undefined
   setNodeIsLoading: (nodeIsLoading: string | undefined) => void
 
@@ -50,6 +56,8 @@ export default function AccountContextProvider({
   const [conversations, setConversations] = useState<ConversationProps[]>()
   const [automationWorkflowNodeSelected, setAutomationWorkflowNodeSelected] =
     useState<string>('')
+  const [automationWorkflowSelected, setAutomationWorkflowSelected] =
+    useState<AutomationWorkflowProps>()
   const [nodeIsLoading, setNodeIsLoading] = useState<string>('')
 
   const [dm, setDm] = useState<ChannelProps>()
@@ -60,6 +68,8 @@ export default function AccountContextProvider({
       value={{
         user,
         setUser,
+        automationWorkflowSelected,
+        setAutomationWorkflowSelected,
         dm,
         setDm,
         channel,
