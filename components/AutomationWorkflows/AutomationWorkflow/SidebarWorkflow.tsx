@@ -33,16 +33,16 @@ export interface ModalI {
 
 export const optionsCRONType = [
   {
-    name: 'Every day at midnight',
-    value: 'Every day at midnight',
+    name: 'Every 1 hour',
+    value: '0 * * * *',
   },
   {
-    name: 'Every hour',
-    value: 'Every hour',
+    name: 'Every day at midnight',
+    value: '0 0 * * *',
   },
   {
     name: 'Every month at 1st',
-    value: 'Every month at 1st',
+    value: '0 0 1 * *',
   },
 ]
 
