@@ -6,7 +6,7 @@ import withProps from './withProps'
 import { AccountContext } from '@/contexts/AccountContext'
 import { triggerOptions } from '../AutomationWorkflowPage'
 
-function TriggerNode({ id, data, handleNodeRemove }) {
+function TriggerNode({ id, data, handleNodeRemove, handleNodeSelect }) {
   const {
     automationWorkflowNodeSelected,
     nodeIsLoading,
@@ -52,12 +52,15 @@ function TriggerNode({ id, data, handleNodeRemove }) {
   return (
     <>
       <div
+        onClick={() => {
+          handleNodeSelect('trigger')
+        }}
         className={`relative rounded-[5px]  border-[0.5px] border-[#c5c4c45f] ${
           automationWorkflowNodeSelected === 'trigger' &&
           'border-dashed !border-[#642EE7] '
         } ${
           nodeIsLoading === 'trigger' && 'animate-pulse '
-        }  w-[200px] bg-[#060621] px-[10px] py-[5px] text-[10px] 2xl:text-[14px]`}
+        }  relative w-[200px] bg-[#060621] px-[10px] py-[5px] text-[10px] 2xl:text-[14px]`}
       >
         <div className="flex justify-between gap-x-[10px]">
           <div className="flex gap-x-[5px]">
@@ -78,10 +81,18 @@ function TriggerNode({ id, data, handleNodeRemove }) {
         <div className="text-[7px] text-[#c5c4c49d] 2xl:text-[10px]">
           {triggerOptions?.at(nodeValueIndex)?.description}
         </div>
+        {!automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
+          <img
+            alt="ethereum avatar"
+            src="/images/workflows/warning.svg"
+            className="absolute right-0 top-0 w-[12px] -translate-y-[100%]"
+          ></img>
+        )}
+
         <Handle type="source" position={Position.Right} id={'1'} />
       </div>
     </>
   )
 }
 
-export default withProps(TriggerNode, ['handleNodeRemove'])
+export default withProps(TriggerNode, ['handleNodeRemove', 'handleNodeSelect'])

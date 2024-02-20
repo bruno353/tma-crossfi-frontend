@@ -47,6 +47,7 @@ import ReactFlow, {
   Position,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
+import SidebarWorkflow from './SidebarWorkflow'
 
 const onInit = (reactFlowInstance) =>
   console.log('flow loaded:', reactFlowInstance)
@@ -94,9 +95,15 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     console.log('new test')
   }
 
+  const handleNodeSelect = (nodeIdToSelect) => {
+    console.log('handleNodeSelect')
+    console.log(nodeIdToSelect)
+    setAutomationWorkflowNodeSelected(nodeIdToSelect)
+  }
+
   const nodeTypes = useMemo(
     () => ({
-      trigger: withProps(TriggerNode, { handleNodeRemove }),
+      trigger: withProps(TriggerNode, { handleNodeRemove, handleNodeSelect }),
     }),
     [],
   )
@@ -269,59 +276,15 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                       </div>
                       <Background gap={16} />
                     </ReactFlow>
-                    {automationWorkflowNodeSelected === 'trigger' && (
-                      <div className="h-full w-[30%] rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4]">
-                        <div>
-                          <div className="">Select your trigger</div>
-                          <div className="mt-[5px] text-[11px] text-[#c5c4c49d]">
-                            This will be the event that will start the workflow
-                          </div>
-                        </div>
-                        <div className="mt-[25px]">
-                          <div>
-                            <div className="mb-[7px] text-[12px]">Jobs</div>
-                            {triggerOptions.map((option, index) => (
-                              <div
-                                onClick={() => {
-                                  // handleSidebarClick(option.pathSegment, option.option)
-                                }}
-                                onMouseEnter={() => {
-                                  setTriggerOptionInfo(option.name)
-                                }}
-                                onMouseLeave={() => {
-                                  setTriggerOptionInfo('')
-                                }}
-                                key={index}
-                                className={`${
-                                  option.type !== 'Jobs' && 'hidden'
-                                }`}
-                              >
-                                <div
-                                  onClick={() => {
-                                    createTrigger(option.triggerType)
-                                  }}
-                                  className={`relative mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#e6e5e51e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
-                                >
-                                  <img
-                                    src={option.imgSource}
-                                    alt="image"
-                                    className={option.imgStyle}
-                                  />
-                                  <div className="text-center text-[13px] font-light">
-                                    {option.name}
-                                  </div>
-                                  {triggerOptionInfo === option.name && (
-                                    <div className=" absolute left-0 top-0 w-[200px] -translate-x-[105%] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px] font-normal text-[#c5c4c4]">
-                                      <div>{option.description}</div>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                    <SidebarWorkflow
+                      automationWorkflowSelected={automationWorkflowSelected}
+                      automationWorkflowNodeSelected={
+                        automationWorkflowNodeSelected
+                      }
+                      handleCreateTrigger={createTrigger}
+                      handleSetTriggerOptionInfo={setTriggerOptionInfo}
+                      triggerOptionInfo={triggerOptionInfo}
+                    />
                   </div>
                 </div>
               )}
