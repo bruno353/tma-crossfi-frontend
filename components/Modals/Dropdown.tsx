@@ -43,7 +43,7 @@ const Dropdown = ({
     <div
       className={`relative ${
         isOpen && 'border-primary'
-      } w-full rounded-md  border  border-transparent  bg-[#242B51] px-6 py-2 text-base text-body-color`}
+      } w-full rounded-md  border  border-transparent  bg-[#242B51] px-6 py-2 text-body-color`}
       ref={dropdownRef}
     >
       <div

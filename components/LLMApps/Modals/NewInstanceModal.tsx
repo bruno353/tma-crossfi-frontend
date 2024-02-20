@@ -123,7 +123,7 @@ const NewInstanceModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
         </div>
-        <div className="mb-6">
+        <div className="mb-6 text-base">
           <div className="flex justify-between gap-x-[5px]">
             <div className="relative flex w-fit items-start gap-x-[7px]">
               <label

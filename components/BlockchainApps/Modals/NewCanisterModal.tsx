@@ -174,13 +174,15 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             </a>
           </div>
 
-          <Dropdown
-            optionSelected={selectedCanisterTemplate}
-            options={optionsCanisterTemplate}
-            onValueChange={(value) => {
-              setSelectedCanisterTemplate(value)
-            }}
-          />
+          <div className="text-base">
+            <Dropdown
+              optionSelected={selectedCanisterTemplate}
+              options={optionsCanisterTemplate}
+              onValueChange={(value) => {
+                setSelectedCanisterTemplate(value)
+              }}
+            />
+          </div>
         </div>
         <div className="mb-6">
           <div className="relative flex w-fit items-start gap-x-[7px]">
@@ -224,13 +226,15 @@ const NewCanisterModal = ({ app, onUpdateM, onClose, isOpen }: ModalI) => {
             </div>
           )}
           {optionWallet.length !== 0 && (
-            <Dropdown
-              optionSelected={selectedICPWallet}
-              options={optionWallet}
-              onValueChange={(value) => {
-                setSelectedICPWallet(value)
-              }}
-            />
+            <div className="text-base">
+              <Dropdown
+                optionSelected={selectedICPWallet}
+                options={optionWallet}
+                onValueChange={(value) => {
+                  setSelectedICPWallet(value)
+                }}
+              />
+            </div>
           )}
         </div>
         <div className="mt-10 flex justify-start">

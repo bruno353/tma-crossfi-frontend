@@ -161,14 +161,16 @@ const EditAppModal = ({
           >
             Network
           </label>
-          <Dropdown
-            optionSelected={selected}
-            options={optionsNetwork}
-            isDisable={true}
-            onValueChange={(value) => {
-              setSelected(value)
-            }}
-          />
+          <div className="text-base">
+            <Dropdown
+              optionSelected={selected}
+              options={optionsNetwork}
+              isDisable={true}
+              onValueChange={(value) => {
+                setSelected(value)
+              }}
+            />
+          </div>
         </div>
         <div className="mt-10 flex justify-between">
           <div className="relative">

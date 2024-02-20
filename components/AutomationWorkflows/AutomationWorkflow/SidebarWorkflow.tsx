@@ -15,6 +15,7 @@ import { parseCookies } from 'nookies'
 import { AutomationWorkflowProps } from '@/types/automation'
 import { editAutomationWorkflow } from '@/utils/api-automation'
 import { triggerOptions } from './AutomationWorkflowPage'
+import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 
 export interface ModalI {
   automationWorkflowSelected: AutomationWorkflowProps
@@ -22,8 +23,28 @@ export interface ModalI {
   handleSetTriggerOptionInfo(value: string): void
   handleCreateTrigger(value: string): void
   handleEditTrigger(value: string): void
+  handleSaveChangesCronTrigger(
+    selectedCronExpressionTemplate?: ValueObject,
+    cronExpression?: string,
+  ): void
+  isLoading: boolean
   triggerOptionInfo: string
 }
+
+export const optionsCRONType = [
+  {
+    name: 'Every day at midnight',
+    value: 'Every day at midnight',
+  },
+  {
+    name: 'Every hour',
+    value: 'Every hour',
+  },
+  {
+    name: 'Every month at 1st',
+    value: 'Every month at 1st',
+  },
+]
 
 const SidebarWorkflow = ({
   automationWorkflowSelected,
@@ -31,10 +52,17 @@ const SidebarWorkflow = ({
   handleSetTriggerOptionInfo,
   handleCreateTrigger,
   handleEditTrigger,
+  handleSaveChangesCronTrigger,
+  isLoading,
   triggerOptionInfo,
 }: ModalI) => {
   const [isEditingTriggerNode, setIsEditingTriggerNode] =
     useState<boolean>(false)
+  const [selectedCronExpressionTemplate, setSelectedCronExpressionTemplate] =
+    useState<ValueObject>(optionsCRONType[0])
+  const [cronExpression, setCronExpression] = useState<string>('')
+  const [hasChanges, setHasChanges] = useState<boolean>(false)
+
   const nodeValueIndex = triggerOptions?.findIndex(
     (opt) =>
       opt.triggerType ===
@@ -156,12 +184,63 @@ const SidebarWorkflow = ({
             </div>
 
             <div className="mt-[25px]">
-              <div>
-                <div className="mb-[7px] text-[12px]">Value</div>
-
+              <div className="text-[12px]">
+                <div className="">Value</div>
+                {!automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
+                  <div className="text-[11px] text-[#cc5563]">
+                    Save the value input to finish the node setup
+                  </div>
+                )}
                 {String(
                   automationWorkflowSelected?.nodeTriggerWorkflow?.type,
-                ) === 'CRON' && <div> </div>}
+                ) === 'CRON' && (
+                  <div className="mt-[15px]">
+                    <div>
+                      <Dropdown
+                        optionSelected={selectedCronExpressionTemplate}
+                        options={optionsCRONType}
+                        onValueChange={(value) => {
+                          setCronExpression('')
+                          setSelectedCronExpressionTemplate(value)
+                        }}
+                      />
+                    </div>
+                    <div className="my-[7px] flex justify-center text-[#c5c4c49d]">
+                      ---- OR ----
+                    </div>
+                    <input
+                      type="text"
+                      maxLength={500}
+                      placeholder="Insert your CRON expression"
+                      name="cronExpression"
+                      value={cronExpression}
+                      onChange={(event) => {
+                        setCronExpression(event.target.value)
+                      }}
+                      className="w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51]"
+                    />
+                  </div>
+                )}
+                {(hasChanges ||
+                  !automationWorkflowSelected?.nodeTriggerWorkflow?.value) && (
+                  <div
+                    className={`${
+                      isLoading
+                        ? 'animate-pulse !bg-[#35428a]'
+                        : 'cursor-pointer  hover:bg-[#35428a]'
+                    }  ml-auto rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                    onClick={() => {
+                      if (!isLoading && hasChanges) {
+                        handleSaveChangesCronTrigger(
+                          selectedCronExpressionTemplate,
+                          cronExpression,
+                        )
+                      }
+                    }}
+                  >
+                    Save
+                  </div>
+                )}
               </div>
             </div>
           </div>
