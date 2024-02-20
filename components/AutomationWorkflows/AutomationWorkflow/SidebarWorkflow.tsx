@@ -157,44 +157,11 @@ const SidebarWorkflow = ({
 
             <div className="mt-[25px]">
               <div>
-                <div className="mb-[7px] text-[12px]">Values</div>
+                <div className="mb-[7px] text-[12px]">Value</div>
 
-                {triggerOptions.map((option, index) => (
-                  <div
-                    onClick={() => {
-                      // handleSidebarClick(option.pathSegment, option.option)
-                    }}
-                    onMouseEnter={() => {
-                      handleSetTriggerOptionInfo(option.name)
-                    }}
-                    onMouseLeave={() => {
-                      handleSetTriggerOptionInfo('')
-                    }}
-                    key={index}
-                    className={`${option.type !== 'Jobs' && 'hidden'}`}
-                  >
-                    <div
-                      onClick={() => {
-                        handleCreateTrigger(option.triggerType)
-                      }}
-                      className={`relative mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#e6e5e51e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
-                    >
-                      <img
-                        src={option.imgSource}
-                        alt="image"
-                        className={option.imgStyle}
-                      />
-                      <div className="text-center text-[13px] font-light">
-                        {option.name}
-                      </div>
-                      {triggerOptionInfo === option.name && (
-                        <div className="absolute left-0 top-0 w-[200px] -translate-y-[120%] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px] font-normal text-[#c5c4c4]">
-                          <div>{option.description}</div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                {String(
+                  automationWorkflowSelected?.nodeTriggerWorkflow?.type,
+                ) === 'CRON' && <div> </div>}
               </div>
             </div>
           </div>
