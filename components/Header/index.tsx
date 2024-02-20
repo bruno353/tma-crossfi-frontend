@@ -163,7 +163,7 @@ const Header = () => {
                   console.log(user)
                 }}
                 href={user ? '/dashboard' : '/'}
-                className={`header-logo block w-full py-8`}
+                className={`header-logo block w-fit py-8`}
               >
                 <Image
                   src="/images/logo/logo-icon.svg"
