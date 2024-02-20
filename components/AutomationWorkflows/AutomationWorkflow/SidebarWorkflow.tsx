@@ -21,6 +21,7 @@ export interface ModalI {
   automationWorkflowNodeSelected: string
   handleSetTriggerOptionInfo(value: string): void
   handleCreateTrigger(value: string): void
+  handleEditTrigger(value: string): void
   triggerOptionInfo: string
 }
 
@@ -29,6 +30,7 @@ const SidebarWorkflow = ({
   automationWorkflowNodeSelected,
   handleSetTriggerOptionInfo,
   handleCreateTrigger,
+  handleEditTrigger,
   triggerOptionInfo,
 }: ModalI) => {
   const [isEditingTriggerNode, setIsEditingTriggerNode] =
@@ -80,6 +82,9 @@ const SidebarWorkflow = ({
                           )
                         ) {
                           setIsEditingTriggerNode(false)
+                          handleSetTriggerOptionInfo('')
+                        } else {
+                          handleEditTrigger(option.triggerType)
                         }
                       }
                       // if not, create the trigger

@@ -31,6 +31,7 @@ import EditWorkflowModal from '../Modals/EditWorkflowModal'
 import { AutomationWorkflowProps } from '@/types/automation'
 import {
   createWorkflowTrigger,
+  editWorkflowTrigger,
   getAutomationWorkflow,
 } from '@/utils/api-automation'
 import ReactFlow, {
@@ -161,6 +162,24 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setNodeIsLoading('')
   }
 
+  async function editTrigger(triggerType: string) {
+    setNodeIsLoading('trigger')
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id,
+      type: triggerType,
+    }
+
+    try {
+      const res = await editWorkflowTrigger(data, userSessionToken)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setNodeIsLoading('')
+  }
+
   useEffect(() => {
     setIsLoading(true)
     getData()
@@ -281,6 +300,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                       automationWorkflowNodeSelected={
                         automationWorkflowNodeSelected
                       }
+                      handleEditTrigger={editTrigger}
                       handleCreateTrigger={createTrigger}
                       handleSetTriggerOptionInfo={setTriggerOptionInfo}
                       triggerOptionInfo={triggerOptionInfo}
