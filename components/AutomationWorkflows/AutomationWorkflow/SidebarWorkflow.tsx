@@ -32,6 +32,7 @@ export interface ModalI {
 }
 
 export const optionsCRONType = [
+  { name: 'Select a value', value: '' },
   {
     name: 'Every 1 hour',
     value: '0 * * * *',
@@ -60,7 +61,9 @@ const SidebarWorkflow = ({
     useState<boolean>(false)
   const [selectedCronExpressionTemplate, setSelectedCronExpressionTemplate] =
     useState<ValueObject>(optionsCRONType[0])
-  const [cronExpression, setCronExpression] = useState<string>('')
+  const [cronExpression, setCronExpression] = useState<string>(
+    automationWorkflowSelected?.nodeTriggerWorkflow?.value || '',
+  )
   const [hasChanges, setHasChanges] = useState<boolean>(false)
 
   const nodeValueIndex = triggerOptions?.findIndex(
@@ -68,6 +71,19 @@ const SidebarWorkflow = ({
       opt.triggerType ===
       String(automationWorkflowSelected?.nodeTriggerWorkflow?.type),
   )
+
+  useEffect(() => {
+    if (automationWorkflowSelected?.nodeTriggerWorkflow?.value) {
+      setCronExpression(automationWorkflowSelected?.nodeTriggerWorkflow?.value)
+      const findValue = optionsCRONType.findIndex(
+        (opt) =>
+          opt.value === automationWorkflowSelected?.nodeTriggerWorkflow?.value,
+      )
+      if (findValue !== -1) {
+        setSelectedCronExpressionTemplate(optionsCRONType[findValue])
+      }
+    }
+  }, [automationWorkflowSelected])
 
   return (
     <>
@@ -200,6 +216,7 @@ const SidebarWorkflow = ({
                         optionSelected={selectedCronExpressionTemplate}
                         options={optionsCRONType}
                         onValueChange={(value) => {
+                          setHasChanges(true)
                           setCronExpression('')
                           setSelectedCronExpressionTemplate(value)
                         }}
@@ -215,9 +232,12 @@ const SidebarWorkflow = ({
                       name="cronExpression"
                       value={cronExpression}
                       onChange={(event) => {
+                        setHasChanges(true)
                         setCronExpression(event.target.value)
                       }}
-                      className="w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51]"
+                      className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51] ${
+                        cronExpression && '!border-primary'
+                      }`}
                     />
                   </div>
                 )}
@@ -228,13 +248,19 @@ const SidebarWorkflow = ({
                       isLoading
                         ? 'animate-pulse !bg-[#35428a]'
                         : 'cursor-pointer  hover:bg-[#35428a]'
-                    }  ml-auto rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                    }  mt-[25px] w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[12px] text-[#fff] `}
                     onClick={() => {
-                      if (!isLoading && hasChanges) {
+                      if (
+                        !isLoading &&
+                        (hasChanges ||
+                          !automationWorkflowSelected?.nodeTriggerWorkflow
+                            ?.value)
+                      ) {
                         handleSaveChangesCronTrigger(
                           selectedCronExpressionTemplate,
                           cronExpression,
                         )
+                        setHasChanges(false)
                       }
                     }}
                   >

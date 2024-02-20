@@ -49,6 +49,7 @@ import ReactFlow, {
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import SidebarWorkflow from './SidebarWorkflow'
+import { ValueObject } from '@/components/Modals/Dropdown'
 
 const onInit = (reactFlowInstance) =>
   console.log('flow loaded:', reactFlowInstance)
@@ -81,6 +82,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setNodeIsLoading,
     automationWorkflowSelected,
     setAutomationWorkflowSelected,
+    nodeIsLoading,
   } = useContext(AccountContext)
   const [triggerOptionInfo, setTriggerOptionInfo] = useState<any>()
   const [nodeSelected, setNodeSelected] = useState<any>()
@@ -177,7 +179,45 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
     }
-    setNodeIsLoading('')
+    setNodeIsLoading(null)
+  }
+
+  async function handleSaveChangesCronTrigger(
+    selectedCronExpressionTemplate?: ValueObject,
+    cronExpression?: string,
+  ) {
+    if (!selectedCronExpressionTemplate?.value && !cronExpression) {
+      return
+    }
+    setNodeIsLoading('trigger')
+    const { userSessionToken } = parseCookies()
+
+    let expression = selectedCronExpressionTemplate.value
+
+    if (cronExpression.length > 0) {
+      expression = cronExpression
+    }
+
+    const data = {
+      id,
+      value: expression,
+    }
+
+    try {
+      const res = await editWorkflowTrigger(data, userSessionToken)
+      const newAutomatedWorkflowSet = {
+        ...automationWorkflowSelected,
+        nodeTriggerWorkflow: {
+          ...automationWorkflowSelected.nodeTriggerWorkflow,
+          value: expression,
+        },
+      }
+      setAutomationWorkflowSelected(newAutomatedWorkflowSet)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setNodeIsLoading(null)
   }
 
   useEffect(() => {
@@ -304,6 +344,10 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                       handleCreateTrigger={createTrigger}
                       handleSetTriggerOptionInfo={setTriggerOptionInfo}
                       triggerOptionInfo={triggerOptionInfo}
+                      isLoading={!!nodeIsLoading}
+                      handleSaveChangesCronTrigger={
+                        handleSaveChangesCronTrigger
+                      }
                     />
                   </div>
                 </div>

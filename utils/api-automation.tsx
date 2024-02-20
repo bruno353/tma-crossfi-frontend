@@ -173,7 +173,7 @@ export async function createWorkflowTrigger(
 export async function editWorkflowTrigger(data: any, userSessionToken: string) {
   const config = {
     method: 'put' as 'put',
-    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/automation/functions/editWorkflowTrigger`,
+    url: `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/automation/functions/updateNodeTrigger`,
     headers: {
       'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
       'X-Parse-Session-Token': userSessionToken,
