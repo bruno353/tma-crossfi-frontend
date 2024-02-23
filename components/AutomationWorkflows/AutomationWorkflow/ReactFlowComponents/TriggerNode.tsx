@@ -5,6 +5,7 @@ import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow'
 import withProps from './withProps'
 import { AccountContext } from '@/contexts/AccountContext'
 import { triggerOptions } from '../AutomationWorkflowPage'
+import cronstrue from 'cronstrue'
 
 function TriggerNode({ id, data, handleNodeRemove, handleNodeSelect }) {
   const {
@@ -15,6 +16,14 @@ function TriggerNode({ id, data, handleNodeRemove, handleNodeSelect }) {
 
   const handleClick = () => {
     handleNodeRemove(id)
+  }
+
+  const getCronDescription = (cronExpression) => {
+    try {
+      return cronstrue.toString(cronExpression)
+    } catch (e) {
+      return ''
+    }
   }
 
   const nodeValueIndex = triggerOptions?.findIndex(
@@ -81,6 +90,15 @@ function TriggerNode({ id, data, handleNodeRemove, handleNodeSelect }) {
         <div className="text-[7px] text-[#c5c4c49d] 2xl:text-[10px]">
           {triggerOptions?.at(nodeValueIndex)?.description}
         </div>
+        {automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
+          <div className="mt-[5px] text-[7px] text-[#c5c4c49d] 2xl:text-[12px]">
+            {' '}
+            {automationWorkflowSelected?.nodeTriggerWorkflow?.value} -{' '}
+            {getCronDescription(
+              automationWorkflowSelected.nodeTriggerWorkflow.value,
+            )}
+          </div>
+        )}
         {!automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
           <img
             alt="ethereum avatar"
