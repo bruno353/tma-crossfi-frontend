@@ -7,7 +7,7 @@ import { AccountContext } from '@/contexts/AccountContext'
 import { triggerOptions } from '../AutomationWorkflowPage'
 import cronstrue from 'cronstrue'
 
-function TriggerNode({
+function ActionNode({
   id,
   data,
   handleNodeRemove,
@@ -127,10 +127,7 @@ function TriggerNode({
               onMouseLeave={() => setIsPlusNode(false)}
               className={`translate absolute right-0 top-[32%] my-auto flex w-[100px] translate-x-[103%] pl-[6px] text-[#fff]`}
             >
-              <div
-                onClick={handleNewNode}
-                className="cursor-pointer text-[14px] hover:text-[#642EE7]"
-              >
+              <div className="cursor-pointer text-[14px] hover:text-[#642EE7]">
                 +
               </div>
             </div>
@@ -141,7 +138,7 @@ function TriggerNode({
   )
 }
 
-export default withProps(TriggerNode, [
+export default withProps(ActionNode, [
   'handleNodeRemove',
   'handleNodeSelect',
   'handleNewNode',

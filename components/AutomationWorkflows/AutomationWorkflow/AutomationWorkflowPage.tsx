@@ -18,6 +18,7 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import './reactflow-overrides.css' // Ajuste o caminho conforme necessário
 
 import TriggerNode from './ReactFlowComponents/TriggerNode'
+import NewNode from './ReactFlowComponents/NewNode'
 import withProps from './ReactFlowComponents/withProps'
 
 import { toast } from 'react-toastify'
@@ -28,7 +29,10 @@ import { parseCookies } from 'nookies'
 import { AccountContext } from '@/contexts/AccountContext'
 import SubNavBar from '@/components/Modals/SubNavBar'
 import EditWorkflowModal from '../Modals/EditWorkflowModal'
-import { AutomationWorkflowProps } from '@/types/automation'
+import {
+  AutomationWorkflowProps,
+  NodeActionWorkflowProps,
+} from '@/types/automation'
 import {
   createWorkflowTrigger,
   editWorkflowTrigger,
@@ -50,6 +54,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css'
 import SidebarWorkflow from './SidebarWorkflow'
 import { ValueObject } from '@/components/Modals/Dropdown'
+import ActionNode from './ReactFlowComponents/ActionNode'
 
 const onInit = (reactFlowInstance) =>
   console.log('flow loaded:', reactFlowInstance)
@@ -67,12 +72,21 @@ export const triggerOptions = [
   },
 ]
 
+const triggerDefault = {
+  id: '1',
+  type: 'trigger',
+  position: { x: 500, y: 200 },
+  data: {},
+  sourcePosition: Position.Right,
+}
+
 const AutomationWorkflowPage = ({ id, workspaceId }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('Board')
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
+  const [nodes, setNodes] = useNodesState([triggerDefault])
 
   const {
     workspace,
@@ -85,7 +99,6 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     nodeIsLoading,
   } = useContext(AccountContext)
   const [triggerOptionInfo, setTriggerOptionInfo] = useState<any>()
-  const [nodeSelected, setNodeSelected] = useState<any>()
 
   const onConnect = useCallback(
     (params) =>
@@ -104,9 +117,39 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setAutomationWorkflowNodeSelected(nodeIdToSelect)
   }
 
+  const handleNewNode = () => {
+    console.log('handleNewNode')
+    const newNodes = [...nodes]
+    newNodes.push({
+      id: 'newNode',
+      type: 'newNode',
+      position: {
+        x: newNodes[newNodes.length - 1].position.x + 350,
+        y: 200,
+      },
+      data: {},
+      sourcePosition: Position.Right,
+    })
+    setNodes(newNodes)
+  }
+
   const nodeTypes = useMemo(
     () => ({
-      trigger: withProps(TriggerNode, { handleNodeRemove, handleNodeSelect }),
+      trigger: withProps(TriggerNode, {
+        handleNodeRemove,
+        handleNodeSelect,
+        handleNewNode,
+      }),
+      action: withProps(ActionNode, {
+        handleNodeRemove,
+        handleNodeSelect,
+        handleNewNode,
+      }),
+      newNode: withProps(NewNode, {
+        handleNodeRemove,
+        handleNodeSelect,
+        handleNewNode,
+      }),
     }),
     [],
   )
@@ -182,6 +225,40 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setNodeIsLoading(null)
   }
 
+  function arrangeNodes(data: AutomationWorkflowProps) {
+    const actionNodes = data.nodeActionWorkflow
+    const position = data.nodesActionPosition
+
+    const triggerDefault = {
+      id: '1',
+      type: 'trigger',
+      position: { x: 500, y: 350 },
+      data: {},
+      sourcePosition: Position.Right,
+    }
+
+    const newNodeOrder = [triggerDefault]
+
+    for (let i = 0; i < position.length; i++) {
+      const node = actionNodes.find(
+        (nodeOpt: NodeActionWorkflowProps) => nodeOpt.id === position[i],
+      )
+      if (node) {
+        newNodeOrder.push({
+          id: node.id,
+          type: 'action',
+          position: {
+            x: newNodeOrder[newNodeOrder.length - 1].position.x + 200,
+            y: 200,
+          },
+          data: {},
+          sourcePosition: Position.Right,
+        })
+      }
+    }
+    setNodes(newNodeOrder)
+  }
+
   async function handleSaveChangesCronTrigger(
     selectedCronExpressionTemplate?: ValueObject,
     cronExpression?: string,
@@ -219,6 +296,12 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     }
     setNodeIsLoading(null)
   }
+
+  useEffect(() => {
+    if (automationWorkflowSelected) {
+      arrangeNodes(automationWorkflowSelected)
+    }
+  }, [automationWorkflowSelected])
 
   useEffect(() => {
     setIsLoading(true)
@@ -291,21 +374,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                 <div className="h-full overflow-y-auto pb-[20px] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                   <div className="relative flex h-full w-full rounded-md  border-[0.5px] border-[#c5c4c45f] bg-[#1D2144]">
                     <ReactFlow
-                      nodes={[
-                        {
-                          id: '1',
-                          type: 'trigger',
-                          position: { x: 500, y: 200 },
-                          data: {
-                            selects: {
-                              'handle-0': 'smoothstep',
-                              'handle-1': 'smoothstep',
-                            },
-                            defaultValueServerType: 'Small c3.x86 x 1',
-                          },
-                          sourcePosition: Position.Right,
-                        },
-                      ]}
+                      nodes={nodes}
                       edges={[]}
                       proOptions={{
                         hideAttribution: true,

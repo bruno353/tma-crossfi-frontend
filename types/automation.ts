@@ -40,6 +40,7 @@ export interface AutomationWorkflowProps {
   name: string
   nodeTriggerWorkflow?: NodeTriggerWorkflowProps
   nodeActionWorkflow: NodeActionWorkflowProps[] | []
+  nodesActionPosition: string[]
   createdAt: string
   updatedAt: string
 }
