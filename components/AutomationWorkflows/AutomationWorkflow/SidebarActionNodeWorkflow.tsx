@@ -67,6 +67,9 @@ const SidebarActionNodeWorkflow = ({
     automationWorkflowSelected?.nodeTriggerWorkflow?.value || '',
   )
   const [hasChanges, setHasChanges] = useState<boolean>(false)
+  const [isInfoCanisterId, setIsInfoCanisterId] = useState<boolean>(false)
+  const [isInfoICPCanisterWallet, setIsInfoICPCanisterWallet] =
+    useState<boolean>(false)
 
   const node: NodeActionWorkflowProps =
     automationWorkflowSelected.nodeActionWorkflow.find(
@@ -206,16 +209,62 @@ const SidebarActionNodeWorkflow = ({
 
           <div className="mt-[25px]">
             <div className="text-[12px]">
-              <div className="">Value</div>
+              <div className="">Inputs</div>
               {!automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
                 <div className="text-[11px] text-[#cc5563]">
-                  Save the value input to finish the node setup
+                  Save the inputs to finish the node setup
                 </div>
               )}
-              {String(automationWorkflowSelected?.nodeTriggerWorkflow?.type) ===
-                'CRON' && (
-                <div className="mt-[15px]">
+              {String(node.type) === 'CALL_CANISTER' && (
+                <div className="mt-[15px] grid gap-y-[12px] text-[#c5c4c49d]">
                   <div>
+                    <div className="relative mb-[5px] flex items-center gap-x-[7px]">
+                      <div className="">Canister Id</div>
+                      <img
+                        alt="ethereum avatar"
+                        src="/images/header/help.svg"
+                        className="w-[15px] cursor-pointer rounded-full"
+                        onMouseEnter={() => setIsInfoCanisterId(true)}
+                        onMouseLeave={() => setIsInfoCanisterId(false)}
+                      ></img>
+                      {isInfoCanisterId && (
+                        <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                          Set the canister pub id that will be called
+                        </div>
+                      )}
+                    </div>
+                    <input
+                      type="text"
+                      maxLength={500}
+                      placeholder=""
+                      name="cronExpression"
+                      value={cronExpression}
+                      onChange={(event) => {
+                        setHasChanges(true)
+                        setCronExpression(event.target.value)
+                      }}
+                      className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51] ${
+                        cronExpression && '!border-primary'
+                      }`}
+                    />
+                  </div>
+                  <div>
+                    <div className="relative mb-[5px] flex items-center gap-x-[7px]">
+                      <div className="">ICP canister-wallet</div>
+                      <img
+                        alt="ethereum avatar"
+                        src="/images/header/help.svg"
+                        className="w-[15px] cursor-pointer rounded-full"
+                        onMouseEnter={() => setIsInfoICPCanisterWallet(true)}
+                        onMouseLeave={() => setIsInfoICPCanisterWallet(false)}
+                      ></img>
+                      {isInfoICPCanisterWallet && (
+                        <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                          Select the ICP wallet that will be deploying this
+                          canister. Ensure it's enough cycles{' '}
+                        </div>
+                      )}
+                    </div>
                     <Dropdown
                       optionSelected={selectedCronExpressionTemplate}
                       options={optionsCRONType}
@@ -226,23 +275,6 @@ const SidebarActionNodeWorkflow = ({
                       }}
                     />
                   </div>
-                  <div className="my-[7px] flex justify-center text-[#c5c4c49d]">
-                    ---- OR ----
-                  </div>
-                  <input
-                    type="text"
-                    maxLength={500}
-                    placeholder="Insert your CRON expression"
-                    name="cronExpression"
-                    value={cronExpression}
-                    onChange={(event) => {
-                      setHasChanges(true)
-                      setCronExpression(event.target.value)
-                    }}
-                    className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51] ${
-                      cronExpression && '!border-primary'
-                    }`}
-                  />
                 </div>
               )}
               {(hasChanges ||
