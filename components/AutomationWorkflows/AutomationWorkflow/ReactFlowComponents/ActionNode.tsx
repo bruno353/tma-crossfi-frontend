@@ -4,8 +4,9 @@ import React, { memo, useState, useContext } from 'react'
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow'
 import withProps from './withProps'
 import { AccountContext } from '@/contexts/AccountContext'
-import { triggerOptions } from '../AutomationWorkflowPage'
+import { actionOptions, triggerOptions } from '../AutomationWorkflowPage'
 import cronstrue from 'cronstrue'
+import { NodeActionWorkflowProps } from '@/types/automation'
 
 function ActionNode({
   id,
@@ -34,10 +35,11 @@ function ActionNode({
     }
   }
 
-  const nodeValueIndex = triggerOptions?.findIndex(
-    (opt) =>
-      opt.triggerType ===
-      String(automationWorkflowSelected?.nodeTriggerWorkflow?.type),
+  const nodeData: NodeActionWorkflowProps =
+    automationWorkflowSelected.nodeActionWorkflow.find((nd) => nd.id === id)
+
+  const nodeValueIndex = actionOptions?.findIndex(
+    (opt) => opt.actionType === String(nodeData?.type),
   )
 
   if (!automationWorkflowSelected?.nodeTriggerWorkflow) {
@@ -82,32 +84,29 @@ function ActionNode({
         <div className="flex justify-between gap-x-[10px]">
           <div className="flex gap-x-[5px]">
             <img
-              src={triggerOptions?.at(nodeValueIndex)?.imgSource}
+              src={actionOptions?.at(nodeValueIndex)?.imgSource}
               alt="image"
-              className={triggerOptions?.at(nodeValueIndex)?.imgStyleBoard}
+              className={actionOptions?.at(nodeValueIndex)?.imgStyleBoard}
             />
             <div className=" text-[#fff]">
-              {triggerOptions?.at(nodeValueIndex)?.name}
+              {actionOptions?.at(nodeValueIndex)?.name}
             </div>
           </div>
           <div className="text-[7px] 2xl:text-[10px]">
-            {triggerOptions?.at(nodeValueIndex)?.type}
+            {actionOptions?.at(nodeValueIndex)?.abbreviationType}
           </div>
         </div>
         <div className="my-[5px] h-[0.5px] w-full bg-[#c5c4c45f]"></div>
         <div className="text-[7px] text-[#c5c4c49d] 2xl:text-[10px]">
-          {triggerOptions?.at(nodeValueIndex)?.description}
+          {actionOptions?.at(nodeValueIndex)?.description}
         </div>
-        {automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
+        {nodeData?.value && (
           <div className="mt-[5px] text-[7px] text-[#c5c4c49d] 2xl:text-[12px]">
             {' '}
-            {automationWorkflowSelected?.nodeTriggerWorkflow?.value} -{' '}
-            {getCronDescription(
-              automationWorkflowSelected.nodeTriggerWorkflow.value,
-            )}
+            {nodeData?.value}
           </div>
         )}
-        {!automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
+        {!nodeData?.value && (
           <img
             alt="ethereum avatar"
             src="/images/workflows/warning.svg"

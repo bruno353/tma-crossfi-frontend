@@ -77,7 +77,7 @@ const SidebarActionNodeWorkflow = ({
 
   const node: NodeActionWorkflowProps =
     automationWorkflowSelected.nodeActionWorkflow.find(
-      (nd) => nd?.id === automationWorkflowNodeSelected,
+      (nd) => nd.id === automationWorkflowNodeSelected,
     )
 
   useEffect(() => {
@@ -130,7 +130,7 @@ const SidebarActionNodeWorkflow = ({
                       // if the node was already created, either edit it or go back to the node
                       if (node) {
                         if (
-                          option.triggerType ===
+                          option.actionType ===
                           String(
                             automationWorkflowSelected?.nodeTriggerWorkflow
                               ?.type,
@@ -139,12 +139,12 @@ const SidebarActionNodeWorkflow = ({
                           setIsEditingTriggerNode(false)
                           handleSetTriggerOptionInfo('')
                         } else {
-                          handleEditTrigger(option.triggerType)
+                          handleEditTrigger(option.actionType)
                         }
                       }
                       // if not, create the node
                       else {
-                        handleCreateNode(option.triggerType)
+                        handleCreateNode(option.actionType)
                       }
                     }}
                     className={`relative mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#e6e5e51e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
@@ -164,7 +164,7 @@ const SidebarActionNodeWorkflow = ({
                     )}
                     {String(
                       automationWorkflowSelected?.nodeTriggerWorkflow?.type,
-                    ) === option.triggerType && (
+                    ) === option.actionType && (
                       <div className="absolute right-4 my-auto h-[8px] w-[8px] rounded-full bg-[#642EE7]"></div>
                     )}
                   </div>

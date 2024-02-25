@@ -34,6 +34,7 @@ import {
   NodeActionWorkflowProps,
 } from '@/types/automation'
 import {
+  createWorkflowActionNode,
   createWorkflowTrigger,
   editWorkflowTrigger,
   getAutomationWorkflow,
@@ -81,7 +82,8 @@ export const actionOptions = [
     imgStyle: 'w-[18px]',
     imgStyleBoard: 'w-[11px]',
     type: 'Internet Computer Protocol',
-    triggerType: 'CALL_CANISTER',
+    abbreviationType: 'ICP',
+    actionType: 'CALL_CANISTER',
     pathSegment: '',
   },
 ]
@@ -247,7 +249,12 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     }
 
     try {
-      const res = await createWorkflowTrigger(data, userSessionToken)
+      const res = await createWorkflowActionNode(data, userSessionToken)
+
+      // removing the "newNode" node
+      const newNodes = nodes.filter((nd) => nd.id !== 'newNode')
+      setNodes(newNodes)
+
       const newAutomatedWorkflowSet = {
         ...automationWorkflowSelected,
         nodeActionWorkflow: [
@@ -260,10 +267,6 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
         ],
       }
       setAutomationWorkflowSelected(newAutomatedWorkflowSet)
-
-      // removing the "newNode" node
-      const newNodes = nodes.filter((nd) => nd.id !== 'newNode')
-      setNodes(newNodes)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
