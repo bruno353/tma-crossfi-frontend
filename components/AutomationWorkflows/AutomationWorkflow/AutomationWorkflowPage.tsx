@@ -55,6 +55,7 @@ import 'reactflow/dist/style.css'
 import SidebarWorkflow from './SidebarWorkflow'
 import { ValueObject } from '@/components/Modals/Dropdown'
 import ActionNode from './ReactFlowComponents/ActionNode'
+import SidebarActionNodeWorkflow from './SidebarActionNodeWorkflow'
 
 const onInit = (reactFlowInstance) =>
   console.log('flow loaded:', reactFlowInstance)
@@ -68,6 +69,19 @@ export const triggerOptions = [
     imgStyleBoard: 'w-[11px]',
     type: 'Jobs',
     triggerType: 'CRON',
+    pathSegment: '',
+  },
+]
+
+export const actionOptions = [
+  {
+    name: 'Call canister',
+    description: 'Interact with a canister through the wallet select',
+    imgSource: '/images/workflows/paper.svg',
+    imgStyle: 'w-[18px]',
+    imgStyleBoard: 'w-[11px]',
+    type: 'Internet Computer Protocol',
+    triggerType: 'CALL_CANISTER',
     pathSegment: '',
   },
 ]
@@ -118,19 +132,35 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
   }
 
   const handleNewNode = () => {
+    setAutomationWorkflowNodeSelected('newNode')
+
     console.log('handleNewNode')
     const newNodes = [...nodes]
     newNodes.push({
       id: 'newNode',
       type: 'newNode',
       position: {
-        x: newNodes[newNodes.length - 1].position.x + 350,
+        x:
+          newNodes.length > 0
+            ? newNodes[newNodes.length - 1].position.x + 230
+            : 500,
         y: 200,
       },
       data: {},
       sourcePosition: Position.Right,
     })
     setNodes(newNodes)
+
+    const edges = [
+      {
+        id: 'trigger-newNode',
+        source: '1',
+        target: 'newNode',
+        animated: true,
+        style: { stroke: '#000' },
+      },
+    ]
+    setEdges(edges)
   }
 
   const nodeTypes = useMemo(
@@ -207,6 +237,40 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setNodeIsLoading('')
   }
 
+  async function createActionNode(nodeActionType: string) {
+    setNodeIsLoading('newNode')
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id,
+      type: nodeActionType,
+    }
+
+    try {
+      const res = await createWorkflowTrigger(data, userSessionToken)
+      const newAutomatedWorkflowSet = {
+        ...automationWorkflowSelected,
+        nodeActionWorkflow: [
+          ...automationWorkflowSelected.nodeActionWorkflow,
+          res,
+        ],
+        nodesActionPosition: [
+          ...automationWorkflowSelected.nodesActionPosition,
+          res.id,
+        ],
+      }
+      setAutomationWorkflowSelected(newAutomatedWorkflowSet)
+
+      // removing the "newNode" node
+      const newNodes = nodes.filter((nd) => nd.id !== 'newNode')
+      setNodes(newNodes)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setNodeIsLoading('')
+  }
+
   async function editTrigger(triggerType: string) {
     setNodeIsLoading('trigger')
     const { userSessionToken } = parseCookies()
@@ -229,14 +293,6 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     const actionNodes = data.nodeActionWorkflow
     const position = data.nodesActionPosition
 
-    const triggerDefault = {
-      id: '1',
-      type: 'trigger',
-      position: { x: 500, y: 350 },
-      data: {},
-      sourcePosition: Position.Right,
-    }
-
     const newNodeOrder = [triggerDefault]
 
     for (let i = 0; i < position.length; i++) {
@@ -248,7 +304,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
           id: node.id,
           type: 'action',
           position: {
-            x: newNodeOrder[newNodeOrder.length - 1].position.x + 200,
+            x: newNodeOrder[newNodeOrder.length - 1].position.x + 230,
             y: 200,
           },
           data: {},
@@ -375,7 +431,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                   <div className="relative flex h-full w-full rounded-md  border-[0.5px] border-[#c5c4c45f] bg-[#1D2144]">
                     <ReactFlow
                       nodes={nodes}
-                      edges={[]}
+                      edges={edges}
                       proOptions={{
                         hideAttribution: true,
                       }}
@@ -404,20 +460,38 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                       </div>
                       <Background gap={16} />
                     </ReactFlow>
-                    <SidebarWorkflow
-                      automationWorkflowSelected={automationWorkflowSelected}
-                      automationWorkflowNodeSelected={
-                        automationWorkflowNodeSelected
-                      }
-                      handleEditTrigger={editTrigger}
-                      handleCreateTrigger={createTrigger}
-                      handleSetTriggerOptionInfo={setTriggerOptionInfo}
-                      triggerOptionInfo={triggerOptionInfo}
-                      isLoading={!!nodeIsLoading}
-                      handleSaveChangesCronTrigger={
-                        handleSaveChangesCronTrigger
-                      }
-                    />
+                    {automationWorkflowNodeSelected === 'trigger' && (
+                      <SidebarWorkflow
+                        automationWorkflowSelected={automationWorkflowSelected}
+                        automationWorkflowNodeSelected={
+                          automationWorkflowNodeSelected
+                        }
+                        handleEditTrigger={editTrigger}
+                        handleCreateTrigger={createTrigger}
+                        handleSetTriggerOptionInfo={setTriggerOptionInfo}
+                        triggerOptionInfo={triggerOptionInfo}
+                        isLoading={!!nodeIsLoading}
+                        handleSaveChangesCronTrigger={
+                          handleSaveChangesCronTrigger
+                        }
+                      />
+                    )}
+                    {automationWorkflowNodeSelected === 'newNode' && (
+                      <SidebarActionNodeWorkflow
+                        automationWorkflowSelected={automationWorkflowSelected}
+                        automationWorkflowNodeSelected={
+                          automationWorkflowNodeSelected
+                        }
+                        handleEditTrigger={editTrigger}
+                        handleCreateNode={createActionNode}
+                        handleSetTriggerOptionInfo={setTriggerOptionInfo}
+                        triggerOptionInfo={triggerOptionInfo}
+                        isLoading={!!nodeIsLoading}
+                        handleSaveChangesCronTrigger={
+                          handleSaveChangesCronTrigger
+                        }
+                      />
+                    )}
                   </div>
                 </div>
               )}
