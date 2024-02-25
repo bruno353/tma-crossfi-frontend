@@ -72,10 +72,10 @@ function ActionNode({
     <>
       <div
         onClick={() => {
-          handleNodeSelect('trigger')
+          handleNodeSelect(id)
         }}
         className={`relative rounded-[5px]  border-[0.5px] border-[#c5c4c45f] ${
-          automationWorkflowNodeSelected === 'trigger' &&
+          automationWorkflowNodeSelected === id &&
           'border-dashed !border-[#642EE7] '
         } ${
           nodeIsLoading === 'trigger' && 'animate-pulse '
@@ -114,23 +114,18 @@ function ActionNode({
           ></img>
         )}
 
-        <div
-          onMouseEnter={() => setIsPlusNode(true)}
-          onMouseLeave={() => setIsPlusNode(false)}
-          className=""
-        >
-          <Handle type="source" position={Position.Right} id={'1'} />
-          {isPlusNode && (
-            <div
-              onMouseEnter={() => setIsPlusNode(true)}
-              onMouseLeave={() => setIsPlusNode(false)}
-              className={`translate absolute right-0 top-[32%] my-auto flex w-[100px] translate-x-[103%] pl-[6px] text-[#fff]`}
-            >
-              <div className="cursor-pointer text-[14px] hover:text-[#642EE7]">
-                +
-              </div>
+        <div className="">
+          <Handle type="target" position={Position.Left} id={'1'} />
+          <Handle type="source" position={Position.Right} id={'2'} />
+          <div
+            onMouseEnter={() => setIsPlusNode(true)}
+            onMouseLeave={() => setIsPlusNode(false)}
+            className={`translate absolute right-0 top-[32%] my-auto flex w-[100px] translate-x-[103%] pl-[6px] text-[#fff]`}
+          >
+            <div className="cursor-pointer text-[14px] font-light hover:text-[#642EE7]">
+              +
             </div>
-          )}
+          </div>
         </div>
       </div>
     </>

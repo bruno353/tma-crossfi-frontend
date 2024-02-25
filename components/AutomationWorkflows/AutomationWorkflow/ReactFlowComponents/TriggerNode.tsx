@@ -115,26 +115,18 @@ function TriggerNode({
           ></img>
         )}
 
-        <div
-          onMouseEnter={() => setIsPlusNode(true)}
-          onMouseLeave={() => setIsPlusNode(false)}
-          className=""
-        >
+        <div className="">
           <Handle type="source" position={Position.Right} id={'1'} />
-          {isPlusNode && (
+          <div
+            className={`translate absolute right-0 top-[32%] my-auto flex w-[100px] translate-x-[103%] pl-[6px] text-[#fff]`}
+          >
             <div
-              onMouseEnter={() => setIsPlusNode(true)}
-              onMouseLeave={() => setIsPlusNode(false)}
-              className={`translate absolute right-0 top-[32%] my-auto flex w-[100px] translate-x-[103%] pl-[6px] text-[#fff]`}
+              onClick={handleNewNode}
+              className="cursor-pointer text-[14px] font-light hover:text-[#642EE7]"
             >
-              <div
-                onClick={handleNewNode}
-                className="cursor-pointer text-[14px] hover:text-[#642EE7]"
-              >
-                +
-              </div>
+              +
             </div>
-          )}
+          </div>
         </div>
       </div>
     </>

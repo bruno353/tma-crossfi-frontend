@@ -60,8 +60,7 @@ const SidebarActionNodeWorkflow = ({
   isLoading,
   triggerOptionInfo,
 }: ModalI) => {
-  const [isEditingTriggerNode, setIsEditingTriggerNode] =
-    useState<boolean>(false)
+  const [isEditingNode, setIsEditingNode] = useState<boolean>(false)
   const [selectedCronExpressionTemplate, setSelectedCronExpressionTemplate] =
     useState<ValueObject>(optionsCRONType[0])
   const [cronExpression, setCronExpression] = useState<string>(
@@ -69,16 +68,14 @@ const SidebarActionNodeWorkflow = ({
   )
   const [hasChanges, setHasChanges] = useState<boolean>(false)
 
-  const nodeValueIndex = triggerOptions?.findIndex(
-    (opt) =>
-      opt.triggerType ===
-      String(automationWorkflowSelected?.nodeTriggerWorkflow?.type),
-  )
-
   const node: NodeActionWorkflowProps =
     automationWorkflowSelected.nodeActionWorkflow.find(
       (nd) => nd.id === automationWorkflowNodeSelected,
     )
+
+  const nodeValueIndex = actionOptions?.findIndex(
+    (opt) => opt.actionType === String(node?.type),
+  )
 
   useEffect(() => {
     if (automationWorkflowSelected?.nodeTriggerWorkflow?.value) {
@@ -95,8 +92,7 @@ const SidebarActionNodeWorkflow = ({
 
   return (
     <>
-      {(automationWorkflowNodeSelected === 'newNode' ||
-        isEditingTriggerNode) && (
+      {(automationWorkflowNodeSelected === 'newNode' || isEditingNode) && (
         <div className="relative h-full w-[30%] overflow-y-auto rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
           <div>
             <div className="">Next action</div>
@@ -136,7 +132,7 @@ const SidebarActionNodeWorkflow = ({
                               ?.type,
                           )
                         ) {
-                          setIsEditingTriggerNode(false)
+                          setIsEditingNode(false)
                           handleSetTriggerOptionInfo('')
                         } else {
                           handleEditTrigger(option.actionType)
@@ -172,10 +168,10 @@ const SidebarActionNodeWorkflow = ({
               ))}
             </div>
           </div>
-          {isEditingTriggerNode && (
+          {isEditingNode && (
             <img
               onClick={() => {
-                setIsEditingTriggerNode(false)
+                setIsEditingNode(false)
               }}
               alt="ethereum avatar"
               src="/images/blockchain/arrow-left-black.svg"
@@ -184,104 +180,100 @@ const SidebarActionNodeWorkflow = ({
           )}
         </div>
       )}
-      {automationWorkflowNodeSelected === 'trigger' &&
-        automationWorkflowSelected?.nodeTriggerWorkflow &&
-        !isEditingTriggerNode && (
-          <div className="h-full w-[30%] overflow-y-auto  rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-            <div className="flex justify-between gap-x-[5px]">
-              <div className="flex gap-x-[5px] text-center">
-                <img
-                  src={triggerOptions?.at(nodeValueIndex)?.imgSource}
-                  alt="image"
-                  className={triggerOptions?.at(nodeValueIndex)?.imgStyle}
-                />
-                <div className="flex items-center">
-                  {' '}
-                  {triggerOptions?.at(nodeValueIndex)?.name}
-                </div>
-              </div>
-              <div
-                onClick={() => {
-                  setIsEditingTriggerNode(true)
-                }}
-                className="cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[12px] hover:bg-[#47474727]"
-              >
-                Edit
+      {automationWorkflowNodeSelected !== 'newNode' && !isEditingNode && (
+        <div className="h-full w-[30%] overflow-y-auto  rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+          <div className="flex justify-between gap-x-[5px]">
+            <div className="flex gap-x-[5px] text-center">
+              <img
+                src={actionOptions?.at(nodeValueIndex)?.imgSource}
+                alt="image"
+                className={actionOptions?.at(nodeValueIndex)?.imgStyle}
+              />
+              <div className="flex items-center">
+                {' '}
+                {actionOptions?.at(nodeValueIndex)?.name}
               </div>
             </div>
-
-            <div className="mt-[25px]">
-              <div className="text-[12px]">
-                <div className="">Value</div>
-                {!automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
-                  <div className="text-[11px] text-[#cc5563]">
-                    Save the value input to finish the node setup
-                  </div>
-                )}
-                {String(
-                  automationWorkflowSelected?.nodeTriggerWorkflow?.type,
-                ) === 'CRON' && (
-                  <div className="mt-[15px]">
-                    <div>
-                      <Dropdown
-                        optionSelected={selectedCronExpressionTemplate}
-                        options={optionsCRONType}
-                        onValueChange={(value) => {
-                          setHasChanges(true)
-                          setCronExpression('')
-                          setSelectedCronExpressionTemplate(value)
-                        }}
-                      />
-                    </div>
-                    <div className="my-[7px] flex justify-center text-[#c5c4c49d]">
-                      ---- OR ----
-                    </div>
-                    <input
-                      type="text"
-                      maxLength={500}
-                      placeholder="Insert your CRON expression"
-                      name="cronExpression"
-                      value={cronExpression}
-                      onChange={(event) => {
-                        setHasChanges(true)
-                        setCronExpression(event.target.value)
-                      }}
-                      className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51] ${
-                        cronExpression && '!border-primary'
-                      }`}
-                    />
-                  </div>
-                )}
-                {(hasChanges ||
-                  !automationWorkflowSelected?.nodeTriggerWorkflow?.value) && (
-                  <div
-                    className={`${
-                      isLoading
-                        ? 'animate-pulse !bg-[#35428a]'
-                        : 'cursor-pointer  hover:bg-[#35428a]'
-                    }  mt-[25px] w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[12px] text-[#fff] `}
-                    onClick={() => {
-                      if (
-                        !isLoading &&
-                        (hasChanges ||
-                          !automationWorkflowSelected?.nodeTriggerWorkflow
-                            ?.value)
-                      ) {
-                        handleSaveChangesCronTrigger(
-                          selectedCronExpressionTemplate,
-                          cronExpression,
-                        )
-                        setHasChanges(false)
-                      }
-                    }}
-                  >
-                    Save
-                  </div>
-                )}
-              </div>
+            <div
+              onClick={() => {
+                setIsEditingNode(true)
+              }}
+              className="cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[12px] hover:bg-[#47474727]"
+            >
+              Edit
             </div>
           </div>
-        )}
+
+          <div className="mt-[25px]">
+            <div className="text-[12px]">
+              <div className="">Value</div>
+              {!automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
+                <div className="text-[11px] text-[#cc5563]">
+                  Save the value input to finish the node setup
+                </div>
+              )}
+              {String(automationWorkflowSelected?.nodeTriggerWorkflow?.type) ===
+                'CRON' && (
+                <div className="mt-[15px]">
+                  <div>
+                    <Dropdown
+                      optionSelected={selectedCronExpressionTemplate}
+                      options={optionsCRONType}
+                      onValueChange={(value) => {
+                        setHasChanges(true)
+                        setCronExpression('')
+                        setSelectedCronExpressionTemplate(value)
+                      }}
+                    />
+                  </div>
+                  <div className="my-[7px] flex justify-center text-[#c5c4c49d]">
+                    ---- OR ----
+                  </div>
+                  <input
+                    type="text"
+                    maxLength={500}
+                    placeholder="Insert your CRON expression"
+                    name="cronExpression"
+                    value={cronExpression}
+                    onChange={(event) => {
+                      setHasChanges(true)
+                      setCronExpression(event.target.value)
+                    }}
+                    className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51] ${
+                      cronExpression && '!border-primary'
+                    }`}
+                  />
+                </div>
+              )}
+              {(hasChanges ||
+                !automationWorkflowSelected?.nodeTriggerWorkflow?.value) && (
+                <div
+                  className={`${
+                    isLoading
+                      ? 'animate-pulse !bg-[#35428a]'
+                      : 'cursor-pointer  hover:bg-[#35428a]'
+                  }  mt-[25px] w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[12px] text-[#fff] `}
+                  onClick={() => {
+                    if (
+                      !isLoading &&
+                      (hasChanges ||
+                        !automationWorkflowSelected?.nodeTriggerWorkflow?.value)
+                    ) {
+                      handleSaveChangesCronTrigger(
+                        selectedCronExpressionTemplate,
+                        cronExpression,
+                      )
+                      setHasChanges(false)
+                    }
+                  }}
+                >
+                  Save
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

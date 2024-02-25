@@ -479,22 +479,25 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                         }
                       />
                     )}
-                    {automationWorkflowNodeSelected === 'newNode' && (
-                      <SidebarActionNodeWorkflow
-                        automationWorkflowSelected={automationWorkflowSelected}
-                        automationWorkflowNodeSelected={
-                          automationWorkflowNodeSelected
-                        }
-                        handleEditTrigger={editTrigger}
-                        handleCreateNode={createActionNode}
-                        handleSetTriggerOptionInfo={setTriggerOptionInfo}
-                        triggerOptionInfo={triggerOptionInfo}
-                        isLoading={!!nodeIsLoading}
-                        handleSaveChangesCronTrigger={
-                          handleSaveChangesCronTrigger
-                        }
-                      />
-                    )}
+                    {automationWorkflowNodeSelected !== 'trigger' &&
+                      automationWorkflowNodeSelected?.length > 0 && (
+                        <SidebarActionNodeWorkflow
+                          automationWorkflowSelected={
+                            automationWorkflowSelected
+                          }
+                          automationWorkflowNodeSelected={
+                            automationWorkflowNodeSelected
+                          }
+                          handleEditTrigger={editTrigger}
+                          handleCreateNode={createActionNode}
+                          handleSetTriggerOptionInfo={setTriggerOptionInfo}
+                          triggerOptionInfo={triggerOptionInfo}
+                          isLoading={!!nodeIsLoading}
+                          handleSaveChangesCronTrigger={
+                            handleSaveChangesCronTrigger
+                          }
+                        />
+                      )}
                   </div>
                 </div>
               )}

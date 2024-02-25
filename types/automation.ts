@@ -27,7 +27,7 @@ export interface NodeTriggerWorkflowProps {
 }
 
 export interface NodeActionWorkflowProps {
-  id: string
+  id: any
   type: NodeActionWorkflowType
   value: string
   workflowId: string
