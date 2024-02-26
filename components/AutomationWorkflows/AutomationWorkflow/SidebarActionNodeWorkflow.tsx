@@ -19,6 +19,8 @@ import {
 import { editAutomationWorkflow } from '@/utils/api-automation'
 import { actionOptions, triggerOptions } from './AutomationWorkflowPage'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
+import { actionTypeToClass } from '../../../types/consts/automation-workflow'
+import RenderActionNodeInputs from './WorkflowComponents/RenderActionNodeInputs'
 
 export interface ModalI {
   automationWorkflowSelected: AutomationWorkflowProps
@@ -26,29 +28,10 @@ export interface ModalI {
   handleSetTriggerOptionInfo(value: string): void
   handleCreateNode(value: string): void
   handleEditTrigger(value: string): void
-  handleSaveChangesCronTrigger(
-    selectedCronExpressionTemplate?: ValueObject,
-    cronExpression?: string,
-  ): void
+  handleSaveChangesActionNode(data?: any): void
   isLoading: boolean
   triggerOptionInfo: string
 }
-
-export const optionsCRONType = [
-  { name: 'Select a value', value: '' },
-  {
-    name: 'Every 1 hour',
-    value: '0 * * * *',
-  },
-  {
-    name: 'Every day at midnight',
-    value: '0 0 * * *',
-  },
-  {
-    name: 'Every month at 1st',
-    value: '0 0 1 * *',
-  },
-]
 
 const SidebarActionNodeWorkflow = ({
   automationWorkflowSelected,
@@ -56,20 +39,15 @@ const SidebarActionNodeWorkflow = ({
   handleSetTriggerOptionInfo,
   handleCreateNode,
   handleEditTrigger,
-  handleSaveChangesCronTrigger,
+  handleSaveChangesActionNode,
   isLoading,
   triggerOptionInfo,
 }: ModalI) => {
+  const [selectedData, setSelectedData] = useState<any>({})
+
   const [isEditingNode, setIsEditingNode] = useState<boolean>(false)
-  const [selectedCronExpressionTemplate, setSelectedCronExpressionTemplate] =
-    useState<ValueObject>(optionsCRONType[0])
-  const [cronExpression, setCronExpression] = useState<string>(
-    automationWorkflowSelected?.nodeTriggerWorkflow?.value || '',
-  )
+
   const [hasChanges, setHasChanges] = useState<boolean>(false)
-  const [isInfoCanisterId, setIsInfoCanisterId] = useState<boolean>(false)
-  const [isInfoICPCanisterWallet, setIsInfoICPCanisterWallet] =
-    useState<boolean>(false)
 
   const node: NodeActionWorkflowProps =
     automationWorkflowSelected.nodeActionWorkflow.find(
@@ -80,28 +58,20 @@ const SidebarActionNodeWorkflow = ({
     (opt) => opt.actionType === String(node?.type),
   )
 
-  const optionWallet = automationWorkflowSelected?.icpWallets?.map(
-    (icpWallet) => {
-      const newValue = {
-        name: `${icpWallet.walletId}`,
-        value: icpWallet.id,
-      }
-      return newValue
-    },
-  )
+  let optionWallet = []
+  // optionWallet = automationWorkflowSelected?.icpWallets?.map((icpWallet) => {
+  //   const newValue = {
+  //     name: `${icpWallet.walletId}`,
+  //     value: icpWallet.id,
+  //   }
+  //   return newValue
+  // })
 
   useEffect(() => {
-    if (automationWorkflowSelected?.nodeTriggerWorkflow?.value) {
-      setCronExpression(automationWorkflowSelected?.nodeTriggerWorkflow?.value)
-      const findValue = optionsCRONType.findIndex(
-        (opt) =>
-          opt.value === automationWorkflowSelected?.nodeTriggerWorkflow?.value,
-      )
-      if (findValue !== -1) {
-        setSelectedCronExpressionTemplate(optionsCRONType[findValue])
-      }
+    if (node?.value) {
+      setSelectedData(JSON.parse(node?.value))
     }
-  }, [automationWorkflowSelected])
+  }, [node])
 
   return (
     <>
@@ -217,95 +187,20 @@ const SidebarActionNodeWorkflow = ({
             </div>
           </div>
 
-          <div className="mt-[25px]">
-            <div className="text-[12px]">
-              <div className="">Inputs</div>
-              {!automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
-                <div className="text-[11px] text-[#cc5563]">
-                  Save the inputs to finish the node setup
-                </div>
-              )}
-              {String(node.type) === 'CALL_CANISTER' && (
-                <div className="mt-[15px] grid gap-y-[12px] text-[#c5c4c49d]">
-                  <div>
-                    <div className="relative mb-[5px] flex items-center gap-x-[7px]">
-                      <div className="">Canister Id</div>
-                      <img
-                        alt="ethereum avatar"
-                        src="/images/header/help.svg"
-                        className="w-[15px] cursor-pointer rounded-full"
-                        onMouseEnter={() => setIsInfoCanisterId(true)}
-                        onMouseLeave={() => setIsInfoCanisterId(false)}
-                      ></img>
-                      {isInfoCanisterId && (
-                        <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
-                          Set the canister pub id that will be called
-                        </div>
-                      )}
-                    </div>
-                    <input
-                      type="text"
-                      maxLength={500}
-                      placeholder=""
-                      name="cronExpression"
-                      value={cronExpression}
-                      onChange={(event) => {
-                        setHasChanges(true)
-                        setCronExpression(event.target.value)
-                      }}
-                      className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51] ${
-                        cronExpression && '!border-primary'
-                      }`}
-                    />
-                  </div>
-                  <div>
-                    <div className="relative mb-[5px] flex items-center gap-x-[7px]">
-                      <div className="">ICP canister-wallet</div>
-                      <img
-                        alt="ethereum avatar"
-                        src="/images/header/help.svg"
-                        className="w-[15px] cursor-pointer rounded-full"
-                        onMouseEnter={() => setIsInfoICPCanisterWallet(true)}
-                        onMouseLeave={() => setIsInfoICPCanisterWallet(false)}
-                      ></img>
-                      {isInfoICPCanisterWallet && (
-                        <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
-                          Select the ICP wallet that will be deploying this
-                          canister. Ensure it's enough cycles{' '}
-                        </div>
-                      )}
-                    </div>
-                    {optionWallet?.length === 0 ? (
-                      <div className="text-[#cc5563]">
-                        You have no wallets.{' '}
-                        <span
-                          // onClick={() => {
-                          //   const basePath = pathname.split('/')[1]
-                          //   const workspaceId = pathname.split('/')[2]
-                          //   const newPath = `/${basePath}/${workspaceId}` // Constrói o novo caminho
-
-                          //   push(newPath)
-                          // }}
-                          className="cursor-pointer underline underline-offset-2 hover:text-[#0354EC]"
-                        >
-                          Deploy your first ICP wallet
-                        </span>{' '}
-                        to continue with a canister creation.
-                      </div>
-                    ) : (
-                      <Dropdown
-                        optionSelected={selectedCronExpressionTemplate}
-                        options={optionsCRONType}
-                        onValueChange={(value) => {
-                          setHasChanges(true)
-                          setCronExpression('')
-                          setSelectedCronExpressionTemplate(value)
-                        }}
-                      />
-                    )}
-                  </div>
-                </div>
-              )}
+          <div className="">
+            <div className="">
+              <RenderActionNodeInputs
+                handleChange={() => {
+                  console.log()
+                }}
+                nodeData={selectedData}
+                nodeType={String(node.type)}
+                optionWallet={[
+                  { name: 'Select a value', value: '' },
+                  ...optionWallet,
+                ]}
+                automationWorkflowSelected={automationWorkflowSelected}
+              />
               {(hasChanges ||
                 !automationWorkflowSelected?.nodeTriggerWorkflow?.value) && (
                 <div
@@ -320,10 +215,7 @@ const SidebarActionNodeWorkflow = ({
                       (hasChanges ||
                         !automationWorkflowSelected?.nodeTriggerWorkflow?.value)
                     ) {
-                      handleSaveChangesCronTrigger(
-                        selectedCronExpressionTemplate,
-                        cronExpression,
-                      )
+                      handleSaveChangesActionNode()
                       setHasChanges(false)
                     }
                   }}

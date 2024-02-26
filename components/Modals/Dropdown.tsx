@@ -56,7 +56,7 @@ const Dropdown = ({
         className={`flex justify-between ${!isDisable && 'cursor-pointer'}`}
       >
         <div className="flex justify-between gap-x-[10px]">
-          {optionSelected.imageSrc && (
+          {optionSelected?.imageSrc && (
             <img
               src={optionSelected.imageSrc}
               alt="image"
@@ -64,7 +64,7 @@ const Dropdown = ({
             />
           )}
 
-          <div>{optionSelected.name}</div>
+          <div>{optionSelected?.name}</div>
         </div>
         <img
           alt="ethereum avatar"
@@ -78,7 +78,7 @@ const Dropdown = ({
       {isOpen && (
         <div className="absolute left-0 top-0 z-50 w-full translate-y-[45px] rounded-md  bg-[#242B51] transition">
           <div className="grid gap-y-[5px] px-1 py-1">
-            {options.map((option, index) => (
+            {options?.map((option, index) => (
               <div
                 key={index}
                 onClick={() => {

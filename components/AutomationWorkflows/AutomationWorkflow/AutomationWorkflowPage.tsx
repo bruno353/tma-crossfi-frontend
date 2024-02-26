@@ -318,6 +318,32 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setNodes(newNodeOrder)
   }
 
+  async function handleSaveChangesActionNode(dataNode: any) {
+    setNodeIsLoading('trigger')
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id,
+      value: dataNode,
+    }
+
+    try {
+      const res = await editWorkflowTrigger(data, userSessionToken)
+      const newAutomatedWorkflowSet = {
+        ...automationWorkflowSelected,
+        nodeTriggerWorkflow: {
+          ...automationWorkflowSelected.nodeTriggerWorkflow,
+          value: dataNode,
+        },
+      }
+      setAutomationWorkflowSelected(newAutomatedWorkflowSet)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setNodeIsLoading(null)
+  }
+
   async function handleSaveChangesCronTrigger(
     selectedCronExpressionTemplate?: ValueObject,
     cronExpression?: string,
@@ -493,7 +519,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                           handleSetTriggerOptionInfo={setTriggerOptionInfo}
                           triggerOptionInfo={triggerOptionInfo}
                           isLoading={!!nodeIsLoading}
-                          handleSaveChangesCronTrigger={
+                          handleSaveChangesActionNode={
                             handleSaveChangesCronTrigger
                           }
                         />
