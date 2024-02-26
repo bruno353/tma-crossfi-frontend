@@ -9,6 +9,9 @@
 //   llmApp: LLMAppProps
 //   createdAt: string
 //   updatedAt: string
+
+import { ICPWalletsProps } from './blockchain-app'
+
 // }
 enum NodeActionWorkflowType {
   CALL_CANISTER,
@@ -41,6 +44,7 @@ export interface AutomationWorkflowProps {
   nodeTriggerWorkflow?: NodeTriggerWorkflowProps
   nodeActionWorkflow: NodeActionWorkflowProps[] | []
   nodesActionPosition: string[]
+  icpWallets: ICPWalletsProps[]
   createdAt: string
   updatedAt: string
 }

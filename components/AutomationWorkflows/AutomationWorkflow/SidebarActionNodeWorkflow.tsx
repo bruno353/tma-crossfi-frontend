@@ -80,6 +80,16 @@ const SidebarActionNodeWorkflow = ({
     (opt) => opt.actionType === String(node?.type),
   )
 
+  const optionWallet = automationWorkflowSelected?.icpWallets?.map(
+    (icpWallet) => {
+      const newValue = {
+        name: `${icpWallet.walletId}`,
+        value: icpWallet.id,
+      }
+      return newValue
+    },
+  )
+
   useEffect(() => {
     if (automationWorkflowSelected?.nodeTriggerWorkflow?.value) {
       setCronExpression(automationWorkflowSelected?.nodeTriggerWorkflow?.value)
@@ -265,15 +275,34 @@ const SidebarActionNodeWorkflow = ({
                         </div>
                       )}
                     </div>
-                    <Dropdown
-                      optionSelected={selectedCronExpressionTemplate}
-                      options={optionsCRONType}
-                      onValueChange={(value) => {
-                        setHasChanges(true)
-                        setCronExpression('')
-                        setSelectedCronExpressionTemplate(value)
-                      }}
-                    />
+                    {optionWallet?.length === 0 ? (
+                      <div className="text-[#cc5563]">
+                        You have no wallets.{' '}
+                        <span
+                          // onClick={() => {
+                          //   const basePath = pathname.split('/')[1]
+                          //   const workspaceId = pathname.split('/')[2]
+                          //   const newPath = `/${basePath}/${workspaceId}` // Constrói o novo caminho
+
+                          //   push(newPath)
+                          // }}
+                          className="cursor-pointer underline underline-offset-2 hover:text-[#0354EC]"
+                        >
+                          Deploy your first ICP wallet
+                        </span>{' '}
+                        to continue with a canister creation.
+                      </div>
+                    ) : (
+                      <Dropdown
+                        optionSelected={selectedCronExpressionTemplate}
+                        options={optionsCRONType}
+                        onValueChange={(value) => {
+                          setHasChanges(true)
+                          setCronExpression('')
+                          setSelectedCronExpressionTemplate(value)
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
               )}
