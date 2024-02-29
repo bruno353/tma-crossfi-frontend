@@ -41,7 +41,7 @@ function NewNode({
       }  bg-[#060621] px-[50px] py-[15px] text-[10px] 2xl:text-[14px]`}
     >
       <div className="mx-auto text-[#c5c4c49d]">+</div>
-      <Handle type="target" position={Position.Left} id={'1'} />
+      <Handle type="target" position={Position.Top} id={'1'} />
     </div>
   )
 }

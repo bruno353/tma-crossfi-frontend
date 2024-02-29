@@ -36,7 +36,9 @@ function ActionNode({
   }
 
   const nodeData: NodeActionWorkflowProps =
-    automationWorkflowSelected.nodeActionWorkflow.find((nd) => nd.id === id)
+    automationWorkflowSelected.nodeActionWorkflow.find((nd) => {
+      return nd.id === id
+    })
 
   const nodeValueIndex = actionOptions?.findIndex(
     (opt) => opt.actionType === String(nodeData?.type),

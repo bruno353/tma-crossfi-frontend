@@ -142,11 +142,11 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
       id: 'newNode',
       type: 'newNode',
       position: {
-        x:
+        x: 500,
+        y:
           newNodes.length > 0
-            ? newNodes[newNodes.length - 1].position.x + 230
-            : 500,
-        y: 200,
+            ? newNodes[newNodes.length - 1].position.y + 90
+            : 200,
       },
       data: {},
       sourcePosition: Position.Right,
@@ -297,6 +297,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     const position = data.nodesActionPosition
 
     const newNodeOrder = [triggerDefault]
+    const newEdges = []
 
     for (let i = 0; i < position.length; i++) {
       const node = actionNodes.find(
@@ -307,14 +308,33 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
           id: node.id,
           type: 'action',
           position: {
-            x: newNodeOrder[newNodeOrder.length - 1].position.x + 230,
-            y: 200,
+            x: 500,
+            y:
+              newNodeOrder.length > 0
+                ? newNodeOrder[newNodeOrder.length - 1].position.y + 90
+                : 200,
           },
           data: {},
           sourcePosition: Position.Right,
         })
+
+        // create edge connection
+        const lengthNode = newNodeOrder.length
+        const edgeObj = {
+          id: `${newNodeOrder[lengthNode - 2].id}-${
+            newNodeOrder[lengthNode - 1].id
+          }`,
+          source: `${newNodeOrder[lengthNode - 2].id}`,
+          target: `${newNodeOrder[lengthNode - 1].id}`,
+          animated: true,
+          style: { stroke: '#000' },
+        }
+        newEdges.push(edgeObj)
       }
     }
+    console.log('new edges to set')
+    console.log(newEdges)
+    setEdges(newEdges)
     setNodes(newNodeOrder)
   }
 
