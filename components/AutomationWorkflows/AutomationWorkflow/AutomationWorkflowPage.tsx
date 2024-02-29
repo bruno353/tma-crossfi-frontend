@@ -141,7 +141,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setAutomationWorkflowNodeSelected('newNode')
 
     const newNodes = [...nodes]
-    const newEdges = [...reactFlowEdges]
+    const newEdges = []
 
     console.log('nodes')
     console.log(newNodes)
@@ -180,7 +180,19 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
       newNodes[i].position.y += newSpacingY
     }
 
+    for (let i = 0; i < newNodes.length - 1; i++) {
+      const edgeObj = {
+        id: `${newNodes[i].id}-${newNodes[i + 1].id}`,
+        source: `${newNodes[i].id}`,
+        target: `${newNodes[i + 1].id}`,
+        animated: true,
+        style: { stroke: '#000' },
+      }
+      newEdges.push(edgeObj)
+    }
+
     setNodes(newNodes)
+    setReactFlowEdges(newEdges)
   }
 
   const nodeTypes = useMemo(

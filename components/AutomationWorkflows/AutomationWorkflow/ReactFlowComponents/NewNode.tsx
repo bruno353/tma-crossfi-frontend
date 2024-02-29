@@ -42,6 +42,7 @@ function NewNode({
     >
       <div className="mx-auto text-[#c5c4c49d]">+</div>
       <Handle type="target" position={Position.Top} id={'1'} />
+      <Handle type="source" position={Position.Bottom} id={'2'} />
     </div>
   )
 }
