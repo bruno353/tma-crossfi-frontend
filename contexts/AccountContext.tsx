@@ -40,8 +40,11 @@ interface CreateUserContextProps {
   nodeIsLoading: string | undefined
   setNodeIsLoading: (nodeIsLoading: string | undefined) => void
 
-  reactFlowEdges: any[] | undefined
-  setReactFlowEdges: (reactFlowEdges: any[] | undefined) => void
+  nodeHasChange: string | undefined
+  setNodeHasChange: (nodeHasChange: string | undefined) => void
+
+  reactFlowEdges: any | undefined
+  setReactFlowEdges: (reactFlowEdges: any | undefined) => void
 
   workspace: WorkspaceProps | undefined
   setWorkspace: (workspace: WorkspaceProps | undefined) => void
@@ -62,7 +65,8 @@ export default function AccountContextProvider({
   const [automationWorkflowSelected, setAutomationWorkflowSelected] =
     useState<AutomationWorkflowProps>()
   const [nodeIsLoading, setNodeIsLoading] = useState<string>('')
-  const [reactFlowEdges, setReactFlowEdges] = useState<any[]>([])
+  const [nodeHasChange, setNodeHasChange] = useState<string>('')
+  const [reactFlowEdges, setReactFlowEdges] = useState<any>([])
 
   const [dm, setDm] = useState<ChannelProps>()
   const [workspace, setWorkspace] = useState<WorkspaceProps>()
@@ -72,6 +76,8 @@ export default function AccountContextProvider({
       value={{
         user,
         setUser,
+        nodeHasChange,
+        setNodeHasChange,
         automationWorkflowSelected,
         setAutomationWorkflowSelected,
         dm,

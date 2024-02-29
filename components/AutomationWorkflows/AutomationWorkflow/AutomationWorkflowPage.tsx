@@ -113,12 +113,15 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     automationWorkflowSelected,
     setAutomationWorkflowSelected,
     nodeIsLoading,
+    reactFlowEdges,
+    setReactFlowEdges,
+    nodeHasChange,
   } = useContext(AccountContext)
   const [triggerOptionInfo, setTriggerOptionInfo] = useState<any>()
 
   const onConnect = useCallback(
     (params) =>
-      setEdges((eds) =>
+      setReactFlowEdges((eds) =>
         addEdge({ ...params, animated: true, style: { stroke: '#000' } }, eds),
       ),
     [],
@@ -133,36 +136,51 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setAutomationWorkflowNodeSelected(nodeIdToSelect)
   }
 
-  const handleNewNode = () => {
+  const handleNewNode = (id) => {
+    console.log('id: ' + id)
     setAutomationWorkflowNodeSelected('newNode')
 
-    console.log('handleNewNode')
     const newNodes = [...nodes]
-    newNodes.push({
-      id: 'newNode',
+    const newEdges = [...reactFlowEdges]
+
+    console.log('nodes')
+    console.log(newNodes)
+
+    const nodeIndex = newNodes.findIndex((nd) => {
+      return nd.id === id
+    })
+
+    if (nodeIndex === -1) {
+      return
+    }
+    // Define a distância padrão entre os nós.
+    const spacingY = 80 // Espaçamento padrão.
+
+    // Calcula a posição Y do novo nó. Se for o último nó, usa o espaçamento definido acima.
+    // Caso contrário, coloca no meio do nó atual e do próximo (se aplicável).
+    const newYPosition = newNodes[nodeIndex].position.y + spacingY
+
+    // Cria o novo nó a ser inserido.
+    const newNode = {
+      id: 'newNode', // Garanta que este ID seja único.
       type: 'newNode',
-      position: {
-        x: 500,
-        y:
-          newNodes.length > 0
-            ? newNodes[newNodes.length - 1].position.y + 90
-            : 200,
-      },
+      position: { x: 500, y: newYPosition },
       data: {},
       sourcePosition: Position.Right,
-    })
-    setNodes(newNodes)
+    }
 
-    const edges = [
-      {
-        id: 'trigger-newNode',
-        source: '1',
-        target: 'newNode',
-        animated: true,
-        style: { stroke: '#000' },
-      },
-    ]
-    setEdges(edges)
+    // Insere o novo nó na posição 'nodeIndex + 1'.
+    newNodes.splice(nodeIndex + 1, 0, newNode)
+
+    const newSpacingY = 55
+
+    // // Atualiza a posição Y dos nós subsequentes para garantir que não haja sobreposição.
+    // // Começa a ajustar do nó após o recém inserido.
+    for (let i = nodeIndex + 2; i < newNodes.length; i++) {
+      newNodes[i].position.y += newSpacingY
+    }
+
+    setNodes(newNodes)
   }
 
   const nodeTypes = useMemo(
@@ -334,7 +352,9 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     }
     console.log('new edges to set')
     console.log(newEdges)
-    setEdges(newEdges)
+    console.log('new nodes to set - here')
+    console.log(nodes)
+    setReactFlowEdges(newEdges)
     setNodes(newNodeOrder)
   }
 
@@ -409,6 +429,12 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
   }, [automationWorkflowSelected])
 
   useEffect(() => {
+    if (nodeHasChange) {
+      handleNewNode(nodeHasChange)
+    }
+  }, [nodeHasChange])
+
+  useEffect(() => {
     setIsLoading(true)
     getData()
   }, [id])
@@ -480,7 +506,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                   <div className="relative flex h-full w-full rounded-md  border-[0.5px] border-[#c5c4c45f] bg-[#1D2144]">
                     <ReactFlow
                       nodes={nodes}
-                      edges={edges}
+                      edges={reactFlowEdges}
                       proOptions={{
                         hideAttribution: true,
                       }}

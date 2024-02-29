@@ -1,13 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-unused-vars */
 import React, { memo, useState, useContext } from 'react'
-import {
-  Handle,
-  useReactFlow,
-  useStoreApi,
-  useEdgesState,
-  Position,
-} from 'reactflow'
+import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow'
 import withProps from './withProps'
 import { AccountContext } from '@/contexts/AccountContext'
 import { triggerOptions } from '../AutomationWorkflowPage'
@@ -24,10 +18,11 @@ function TriggerNode({
     automationWorkflowNodeSelected,
     nodeIsLoading,
     automationWorkflowSelected,
+    reactFlowEdges,
+    setNodeHasChange,
   } = useContext(AccountContext)
 
   const [isPlusNode, setIsPlusNode] = useState(false)
-  const [edges, setEdges, onEdgesChange] = useEdgesState([])
 
   const handleClick = () => {
     handleNodeRemove(id)
@@ -47,7 +42,7 @@ function TriggerNode({
       String(automationWorkflowSelected?.nodeTriggerWorkflow?.type),
   )
 
-  const hasEdgeConn = edges?.find((edg) => edg.source === id)
+  const hasEdgeConn = reactFlowEdges?.find((edg) => edg.source === id)
 
   if (!automationWorkflowSelected?.nodeTriggerWorkflow) {
     return (
@@ -129,10 +124,10 @@ function TriggerNode({
           <div
             className={`translate absolute left-0 flex  pt-[2px]  text-[#fff]`}
           >
-            {!hasEdgeConn && (
+            {(!hasEdgeConn || automationWorkflowNodeSelected === 'trigger') && (
               <div
                 onClick={() => {
-                  console.log(edges)
+                  setNodeHasChange(id)
                 }}
                 className="cursor-pointer text-[14px] font-light hover:text-[#642EE7]"
               >

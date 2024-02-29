@@ -18,10 +18,10 @@ function ActionNode({
   const {
     automationWorkflowNodeSelected,
     nodeIsLoading,
+    reactFlowEdges,
     automationWorkflowSelected,
+    setNodeHasChange,
   } = useContext(AccountContext)
-
-  const [isPlusNode, setIsPlusNode] = useState(false)
 
   const handleClick = () => {
     handleNodeRemove(id)
@@ -43,6 +43,8 @@ function ActionNode({
   const nodeValueIndex = actionOptions?.findIndex(
     (opt) => opt.actionType === String(nodeData?.type),
   )
+
+  const hasEdgeConn = reactFlowEdges?.find((edg) => edg.source === id)
 
   if (!automationWorkflowSelected?.nodeTriggerWorkflow) {
     return (
@@ -120,13 +122,18 @@ function ActionNode({
           <Handle type="target" position={Position.Top} id={'1'} />
           <Handle type="source" position={Position.Bottom} id={'2'} />
           <div
-            onMouseEnter={() => setIsPlusNode(true)}
-            onMouseLeave={() => setIsPlusNode(false)}
-            className={`translate absolute right-0 top-[32%] my-auto flex w-[100px] translate-x-[103%] pl-[6px] text-[#fff]`}
+            className={`translate absolute left-0 flex  pt-[2px]  text-[#fff]`}
           >
-            <div className="cursor-pointer text-[14px] font-light hover:text-[#642EE7]">
-              +
-            </div>
+            {(!hasEdgeConn || automationWorkflowNodeSelected === id) && (
+              <div
+                onClick={() => {
+                  setNodeHasChange(id)
+                }}
+                className="cursor-pointer text-[14px] font-light hover:text-[#642EE7]"
+              >
+                +
+              </div>
+            )}
           </div>
         </div>
       </div>
