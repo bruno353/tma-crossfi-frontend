@@ -25,6 +25,7 @@ export interface ModalI {
   optionWallet: ValueObject[]
   nodeData: any
   handleChange(value: any): void
+  inputsFilled(value: boolean): void
 }
 
 const RenderActionNodeInputs = ({
@@ -33,8 +34,11 @@ const RenderActionNodeInputs = ({
   optionWallet,
   nodeData,
   handleChange,
+  inputsFilled,
 }: ModalI) => {
   const [isInfoCanisterId, setIsInfoCanisterId] = useState<boolean>(false)
+  const [isInfoMethodNameId, setIsInfoMethodNameId] = useState<boolean>(false)
+  const [callArgumentsInfo, setCallArgumentsInfo] = useState<boolean>(false)
   const [isInfoICPCanisterWallet, setIsInfoICPCanisterWallet] =
     useState<boolean>(false)
   const [selectedOptionWallet, setSelectedOptionWallet] = useState<ValueObject>(
@@ -49,6 +53,13 @@ const RenderActionNodeInputs = ({
       setSelectedOptionWallet(selectedOptionWallet)
     }
   }, [nodeData])
+
+  function inputsFilledTreatment(data: any) {
+    const input1 = data.canisterId?.length > 0
+    if (input1) {
+      inputsFilled(true)
+    }
+  }
 
   if (nodeType === 'CALL_CANISTER') {
     return (
@@ -88,6 +99,7 @@ const RenderActionNodeInputs = ({
                     const newData = { ...nodeData }
                     newData.canisterId = event.target.value
                     handleChange(newData)
+                    inputsFilledTreatment(newData)
                   }}
                   className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51]`}
                 />
@@ -135,6 +147,69 @@ const RenderActionNodeInputs = ({
                     }}
                   />
                 )}
+              </div>
+              <div>
+                <div className="relative mb-[5px] flex items-center gap-x-[7px]">
+                  <div className="">Method name</div>
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/header/help.svg"
+                    className="w-[15px] cursor-pointer rounded-full"
+                    onMouseEnter={() => setIsInfoMethodNameId(true)}
+                    onMouseLeave={() => setIsInfoMethodNameId(false)}
+                  ></img>
+                  {isInfoMethodNameId && (
+                    <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                      Set the method name. Ex: "greet"
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="text"
+                  maxLength={500}
+                  placeholder=""
+                  name="cronExpression"
+                  value={nodeData?.methodName}
+                  onChange={(event) => {
+                    const newData = { ...nodeData }
+                    newData.methodName = event.target.value
+                    handleChange(newData)
+                    inputsFilledTreatment(newData)
+                  }}
+                  className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51]`}
+                />
+              </div>
+              <div>
+                <div className="relative mb-[5px] flex items-center gap-x-[7px]">
+                  <div className="">Call arguments</div>
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/header/help.svg"
+                    className="w-[15px] cursor-pointer rounded-full"
+                    onMouseEnter={() => setCallArgumentsInfo(true)}
+                    onMouseLeave={() => setCallArgumentsInfo(false)}
+                  ></img>
+                  {callArgumentsInfo && (
+                    <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                      Ex: If the function accept a text and a number: "('bruno',
+                      21)"
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="text"
+                  maxLength={500}
+                  placeholder=""
+                  name="cronExpression"
+                  value={nodeData?.callArguments}
+                  onChange={(event) => {
+                    const newData = { ...nodeData }
+                    newData.callArguments = event.target.value
+                    handleChange(newData)
+                    inputsFilledTreatment(newData)
+                  }}
+                  className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51]`}
+                />
               </div>
             </div>
           </div>

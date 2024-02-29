@@ -48,6 +48,7 @@ const SidebarActionNodeWorkflow = ({
   const [isEditingNode, setIsEditingNode] = useState<boolean>(false)
 
   const [hasChanges, setHasChanges] = useState<boolean>(false)
+  const [inputsFilled, setInputsFilled] = useState<boolean>(false)
 
   const node: NodeActionWorkflowProps =
     automationWorkflowSelected.nodeActionWorkflow.find(
@@ -59,13 +60,13 @@ const SidebarActionNodeWorkflow = ({
   )
 
   let optionWallet = []
-  // optionWallet = automationWorkflowSelected?.icpWallets?.map((icpWallet) => {
-  //   const newValue = {
-  //     name: `${icpWallet.walletId}`,
-  //     value: icpWallet.id,
-  //   }
-  //   return newValue
-  // })
+  optionWallet = automationWorkflowSelected?.icpWallets?.map((icpWallet) => {
+    const newValue = {
+      name: `${icpWallet.walletId}`,
+      value: icpWallet.id,
+    }
+    return newValue
+  })
 
   useEffect(() => {
     if (node?.value) {
@@ -190,8 +191,9 @@ const SidebarActionNodeWorkflow = ({
           <div className="">
             <div className="">
               <RenderActionNodeInputs
-                handleChange={() => {
-                  console.log()
+                handleChange={(value) => {
+                  setHasChanges(true)
+                  setSelectedData(value)
                 }}
                 nodeData={selectedData}
                 nodeType={String(node.type)}
@@ -200,29 +202,28 @@ const SidebarActionNodeWorkflow = ({
                   ...optionWallet,
                 ]}
                 automationWorkflowSelected={automationWorkflowSelected}
+                inputsFilled={(value) => {
+                  setInputsFilled(value)
+                }}
               />
-              {(hasChanges ||
-                !automationWorkflowSelected?.nodeTriggerWorkflow?.value) && (
-                <div
-                  className={`${
-                    isLoading
-                      ? 'animate-pulse !bg-[#35428a]'
-                      : 'cursor-pointer  hover:bg-[#35428a]'
-                  }  mt-[25px] w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[12px] text-[#fff] `}
-                  onClick={() => {
-                    if (
-                      !isLoading &&
-                      (hasChanges ||
-                        !automationWorkflowSelected?.nodeTriggerWorkflow?.value)
-                    ) {
-                      handleSaveChangesActionNode()
-                      setHasChanges(false)
-                    }
-                  }}
-                >
-                  Save
-                </div>
-              )}
+              <div
+                className={`${
+                  (!inputsFilled || !hasChanges) &&
+                  'cursor-auto !bg-[#c5c4c45f]'
+                } ${
+                  isLoading
+                    ? 'animate-pulse !bg-[#35428a]'
+                    : 'cursor-pointer  hover:bg-[#35428a]'
+                }  mt-[18px] w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[12px] text-[#fff] `}
+                onClick={() => {
+                  if (!isLoading && hasChanges && inputsFilled) {
+                    handleSaveChangesActionNode()
+                    setHasChanges(false)
+                  }
+                }}
+              >
+                Save
+              </div>
             </div>
           </div>
         </div>

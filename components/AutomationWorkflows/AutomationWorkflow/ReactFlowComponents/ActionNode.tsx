@@ -115,8 +115,8 @@ function ActionNode({
         )}
 
         <div className="">
-          <Handle type="target" position={Position.Left} id={'1'} />
-          <Handle type="source" position={Position.Right} id={'2'} />
+          <Handle type="target" position={Position.Top} id={'1'} />
+          <Handle type="source" position={Position.Bottom} id={'2'} />
           <div
             onMouseEnter={() => setIsPlusNode(true)}
             onMouseLeave={() => setIsPlusNode(false)}
