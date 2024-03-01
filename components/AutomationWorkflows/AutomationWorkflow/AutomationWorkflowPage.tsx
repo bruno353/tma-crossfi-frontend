@@ -38,6 +38,7 @@ import {
   createWorkflowTrigger,
   editWorkflowTrigger,
   getAutomationWorkflow,
+  updateNodeAction,
 } from '@/utils/api-automation'
 import ReactFlow, {
   Controls,
@@ -370,24 +371,34 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setNodes(newNodeOrder)
   }
 
-  async function handleSaveChangesActionNode(dataNode: any) {
+  async function handleSaveChangesActionNode(
+    dataNode: any,
+    nodeId: string,
+    nodeType: string,
+  ) {
     setNodeIsLoading('trigger')
     const { userSessionToken } = parseCookies()
 
     const data = {
-      id,
+      id: nodeId,
       value: dataNode,
+      type: nodeType,
     }
 
     try {
-      const res = await editWorkflowTrigger(data, userSessionToken)
+      const res = await updateNodeAction(data, userSessionToken)
       const newAutomatedWorkflowSet = {
         ...automationWorkflowSelected,
-        nodeTriggerWorkflow: {
-          ...automationWorkflowSelected.nodeTriggerWorkflow,
-          value: dataNode,
-        },
       }
+      const nodeActionIndex =
+        newAutomatedWorkflowSet.nodeActionWorkflow.findIndex((nd) => {
+          return nd['id'] === nodeId
+        })
+
+      newAutomatedWorkflowSet.nodeActionWorkflow[nodeActionIndex].value =
+        JSON.stringify(dataNode)
+      newAutomatedWorkflowSet.nodeActionWorkflow[nodeActionIndex].value =
+        nodeType
       setAutomationWorkflowSelected(newAutomatedWorkflowSet)
     } catch (err) {
       console.log(err)
@@ -578,7 +589,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                           triggerOptionInfo={triggerOptionInfo}
                           isLoading={!!nodeIsLoading}
                           handleSaveChangesActionNode={
-                            handleSaveChangesCronTrigger
+                            handleSaveChangesActionNode
                           }
                         />
                       )}

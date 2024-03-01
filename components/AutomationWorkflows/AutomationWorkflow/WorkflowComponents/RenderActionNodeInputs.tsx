@@ -55,8 +55,18 @@ const RenderActionNodeInputs = ({
   }, [nodeData])
 
   function inputsFilledTreatment(data: any) {
+    console.log('fazendo validacao filled')
+    console.log(data)
     const input1 = data.canisterId?.length > 0
-    if (input1) {
+    const input2 = data.icpWalletId?.length > 0
+    const input3 = data.methodName?.length > 0
+    const input4 = data.callArguments?.length > 0
+    console.log(input1)
+    console.log(input2)
+    console.log(input3)
+    console.log(input4)
+    if (input1 && input2 && input3 && input4) {
+      console.log('mudando filled pra true')
       inputsFilled(true)
     }
   }
@@ -143,6 +153,10 @@ const RenderActionNodeInputs = ({
                     optionSelected={selectedOptionWallet}
                     options={optionWallet}
                     onValueChange={(value) => {
+                      const newData = { ...nodeData }
+                      newData.icpWalletId = value.value
+                      handleChange(newData)
+                      inputsFilledTreatment(newData)
                       setSelectedOptionWallet(value)
                     }}
                   />

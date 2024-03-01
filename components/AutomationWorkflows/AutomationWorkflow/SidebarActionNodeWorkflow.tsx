@@ -28,7 +28,7 @@ export interface ModalI {
   handleSetTriggerOptionInfo(value: string): void
   handleCreateNode(value: string): void
   handleEditTrigger(value: string): void
-  handleSaveChangesActionNode(data?: any): void
+  handleSaveChangesActionNode(data: any, nodeId: string, nodeType: string): void
   isLoading: boolean
   triggerOptionInfo: string
 }
@@ -208,8 +208,9 @@ const SidebarActionNodeWorkflow = ({
               />
               <div
                 className={`${
-                  (!inputsFilled || !hasChanges) &&
-                  'cursor-auto !bg-[#c5c4c45f]'
+                  !inputsFilled || !hasChanges
+                    ? '!cursor-auto !bg-[#c5c4c45f]'
+                    : ''
                 } ${
                   isLoading
                     ? 'animate-pulse !bg-[#35428a]'
@@ -217,7 +218,11 @@ const SidebarActionNodeWorkflow = ({
                 }  mt-[18px] w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[12px] text-[#fff] `}
                 onClick={() => {
                   if (!isLoading && hasChanges && inputsFilled) {
-                    handleSaveChangesActionNode()
+                    handleSaveChangesActionNode(
+                      selectedData,
+                      node.id,
+                      String(node.type),
+                    )
                     setHasChanges(false)
                   }
                 }}

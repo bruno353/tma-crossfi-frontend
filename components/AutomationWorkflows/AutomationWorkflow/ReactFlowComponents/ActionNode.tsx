@@ -51,7 +51,7 @@ function ActionNode({
     return (
       <>
         <div
-          className={`relative rounded-[5px]  border-[0.5px] border-[#c5c4c45f] ${
+          className={`relative rounded-[5px] border-[0.5px] border-[#c5c4c45f] ${
             automationWorkflowNodeSelected === 'trigger' &&
             'border-dashed !border-[#642EE7] '
           } ${
@@ -105,12 +105,12 @@ function ActionNode({
         <div className="text-[7px] text-[#c5c4c49d] 2xl:text-[10px]">
           {actionOptions?.at(nodeValueIndex)?.description}
         </div>
-        {nodeData?.value && (
+        {/* {nodeData?.value && (
           <div className="mt-[5px] text-[7px] text-[#c5c4c49d] 2xl:text-[12px]">
             {' '}
             {nodeData?.value}
           </div>
-        )}
+        )} */}
         {!nodeData?.value && (
           <img
             alt="ethereum avatar"
