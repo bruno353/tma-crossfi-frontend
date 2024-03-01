@@ -36,6 +36,7 @@ import {
 import {
   createWorkflowActionNode,
   createWorkflowTrigger,
+  deleteNodeAction,
   editWorkflowTrigger,
   getAutomationWorkflow,
   updateNodeAction,
@@ -407,6 +408,24 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setNodeIsLoading(null)
   }
 
+  async function handleDeleteNode(nodeId: string) {
+    setNodeIsLoading('trigger')
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id: nodeId,
+    }
+
+    try {
+      const res = await deleteNodeAction(data, userSessionToken)
+      setAutomationWorkflowSelected(res)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setNodeIsLoading(null)
+  }
+
   async function handleSaveChangesCronTrigger(
     selectedCronExpressionTemplate?: ValueObject,
     cronExpression?: string,
@@ -577,6 +596,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                     {automationWorkflowNodeSelected !== 'trigger' &&
                       automationWorkflowNodeSelected?.length > 0 && (
                         <SidebarActionNodeWorkflow
+                          key={automationWorkflowNodeSelected}
                           automationWorkflowSelected={
                             automationWorkflowSelected
                           }
@@ -591,6 +611,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                           handleSaveChangesActionNode={
                             handleSaveChangesActionNode
                           }
+                          handleDeleteNode={handleDeleteNode}
                         />
                       )}
                   </div>

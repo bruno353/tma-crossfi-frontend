@@ -21,6 +21,7 @@ import { actionOptions, triggerOptions } from './AutomationWorkflowPage'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { actionTypeToClass } from '../../../types/consts/automation-workflow'
 import RenderActionNodeInputs from './WorkflowComponents/RenderActionNodeInputs'
+import DeleteNodeModal from './Modals/DeleteNodeModal'
 
 export interface ModalI {
   automationWorkflowSelected: AutomationWorkflowProps
@@ -28,6 +29,7 @@ export interface ModalI {
   handleSetTriggerOptionInfo(value: string): void
   handleCreateNode(value: string): void
   handleEditTrigger(value: string): void
+  handleDeleteNode(value: string): void
   handleSaveChangesActionNode(data: any, nodeId: string, nodeType: string): void
   isLoading: boolean
   triggerOptionInfo: string
@@ -40,6 +42,7 @@ const SidebarActionNodeWorkflow = ({
   handleCreateNode,
   handleEditTrigger,
   handleSaveChangesActionNode,
+  handleDeleteNode,
   isLoading,
   triggerOptionInfo,
 }: ModalI) => {
@@ -47,8 +50,12 @@ const SidebarActionNodeWorkflow = ({
 
   const [isEditingNode, setIsEditingNode] = useState<boolean>(false)
 
+  const [isDeleteNodeOpen, setIsDeleteNodeOpen] = useState(false)
+
   const [hasChanges, setHasChanges] = useState<boolean>(false)
   const [inputsFilled, setInputsFilled] = useState<boolean>(false)
+
+  const deleteNodeRef = useRef(null)
 
   const node: NodeActionWorkflowProps =
     automationWorkflowSelected.nodeActionWorkflow.find(
@@ -73,6 +80,27 @@ const SidebarActionNodeWorkflow = ({
       setSelectedData(JSON.parse(node?.value))
     }
   }, [node])
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        deleteNodeRef.current &&
+        !deleteNodeRef.current.contains(event.target)
+      ) {
+        setIsDeleteNodeOpen(false)
+      }
+    }
+
+    if (isDeleteNodeOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isDeleteNodeOpen])
 
   return (
     <>
@@ -178,13 +206,41 @@ const SidebarActionNodeWorkflow = ({
                 {actionOptions?.at(nodeValueIndex)?.name}
               </div>
             </div>
-            <div
-              onClick={() => {
-                setIsEditingNode(true)
-              }}
-              className="cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[12px] hover:bg-[#47474727]"
-            >
-              Edit
+            <div className="relative flex gap-x-[7px]">
+              <div
+                onClick={() => {
+                  setIsEditingNode(true)
+                }}
+                className="cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[11px] hover:bg-[#47474727]"
+              >
+                Edit
+              </div>
+              <div
+                onClick={() => {
+                  setIsDeleteNodeOpen(true)
+                }}
+                className="cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[11px] hover:bg-[#47474727]"
+              >
+                Delete
+              </div>
+              {isDeleteNodeOpen && (
+                <div
+                  ref={deleteNodeRef}
+                  className="absolute z-50 -translate-x-[50%]  translate-y-[35%]"
+                >
+                  <DeleteNodeModal
+                    id={node['id']}
+                    onUpdateModal={() => {
+                      handleDeleteNode(node['id'])
+                      setIsDeleteNodeOpen(false)
+                    }}
+                    onDelete={() => {
+                      handleDeleteNode(node['id'])
+                      setIsDeleteNodeOpen(false)
+                    }}
+                  />{' '}
+                </div>
+              )}
             </div>
           </div>
 
