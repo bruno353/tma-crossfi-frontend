@@ -68,6 +68,9 @@ const RenderActionNodeInputs = ({
     if (input1 && input2 && input3 && input4) {
       console.log('mudando filled pra true')
       inputsFilled(true)
+      return true
+    } else {
+      return false
     }
   }
 
@@ -77,7 +80,7 @@ const RenderActionNodeInputs = ({
         <div className="mt-[25px]">
           <div className="text-[12px]">
             <div className="">Inputs</div>
-            {!nodeData?.value && (
+            {!inputsFilledTreatment(nodeData) && (
               <div className="text-[11px] text-[#cc5563]">
                 Save the inputs to finish the node setup
               </div>
