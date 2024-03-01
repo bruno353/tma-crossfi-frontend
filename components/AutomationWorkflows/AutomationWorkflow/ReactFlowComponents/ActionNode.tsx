@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-unused-vars */
 import React, { memo, useState, useContext } from 'react'
@@ -37,7 +38,7 @@ function ActionNode({
 
   const nodeData: NodeActionWorkflowProps =
     automationWorkflowSelected.nodeActionWorkflow.find((nd) => {
-      return nd.id === id
+      return nd['id'] === id
     })
 
   const nodeValueIndex = actionOptions?.findIndex(

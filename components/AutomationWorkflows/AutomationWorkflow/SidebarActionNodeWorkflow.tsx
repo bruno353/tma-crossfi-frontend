@@ -52,7 +52,7 @@ const SidebarActionNodeWorkflow = ({
 
   const node: NodeActionWorkflowProps =
     automationWorkflowSelected.nodeActionWorkflow.find(
-      (nd) => nd.id === automationWorkflowNodeSelected,
+      (nd) => nd['id'] === automationWorkflowNodeSelected,
     )
 
   const nodeValueIndex = actionOptions?.findIndex(
