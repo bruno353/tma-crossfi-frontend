@@ -283,20 +283,27 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     try {
       const res = await createWorkflowActionNode(data, userSessionToken)
 
+      // finding the node that was before the newNode
+      const newNodeIndex = nodes.findIndex((nd) => nd.id === 'newNode')
+
       // removing the "newNode" node
       const newNodes = nodes.filter((nd) => nd.id !== 'newNode')
       setNodes(newNodes)
 
+      const newNodesActionPosition = [
+        ...automationWorkflowSelected.nodesActionPosition,
+      ]
+      newNodesActionPosition.splice(newNodeIndex, 0, res.id)
+
+      const newNodeActionWorkflow = [
+        ...automationWorkflowSelected.nodeActionWorkflow,
+      ]
+      newNodeActionWorkflow.splice(newNodeIndex, 0, res)
+
       const newAutomatedWorkflowSet = {
         ...automationWorkflowSelected,
-        nodeActionWorkflow: [
-          ...automationWorkflowSelected.nodeActionWorkflow,
-          res,
-        ],
-        nodesActionPosition: [
-          ...automationWorkflowSelected.nodesActionPosition,
-          res.id,
-        ],
+        nodeActionWorkflow: newNodeActionWorkflow,
+        nodesActionPosition: newNodesActionPosition,
       }
       setAutomationWorkflowSelected(newAutomatedWorkflowSet)
     } catch (err) {
@@ -419,6 +426,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     try {
       const res = await deleteNodeAction(data, userSessionToken)
       setAutomationWorkflowSelected(res)
+      setAutomationWorkflowNodeSelected(null)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)

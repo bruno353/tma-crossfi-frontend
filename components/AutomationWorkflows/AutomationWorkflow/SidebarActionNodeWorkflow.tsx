@@ -252,7 +252,7 @@ const SidebarActionNodeWorkflow = ({
                   setSelectedData(value)
                 }}
                 nodeData={selectedData}
-                nodeType={String(node.type)}
+                nodeType={String(node?.type)}
                 optionWallet={[
                   { name: 'Select a value', value: '' },
                   ...optionWallet,
@@ -277,7 +277,7 @@ const SidebarActionNodeWorkflow = ({
                     handleSaveChangesActionNode(
                       selectedData,
                       node.id,
-                      String(node.type),
+                      String(node?.type),
                     )
                     setHasChanges(false)
                   }
