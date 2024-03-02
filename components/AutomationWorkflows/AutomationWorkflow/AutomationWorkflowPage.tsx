@@ -272,33 +272,35 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
   }
 
   async function createActionNode(nodeActionType: string) {
-    setNodeIsLoading('newNode')
+    setNodeIsLoading('trigger')
     const { userSessionToken } = parseCookies()
+
+    // finding the node that was before the newNode
+    const newNodeIndex = nodes.findIndex((nd) => nd.id === 'newNode')
 
     const data = {
       id,
       type: nodeActionType,
+      positionIndex: newNodeIndex - 1,
     }
 
     try {
       const res = await createWorkflowActionNode(data, userSessionToken)
 
-      // finding the node that was before the newNode
-      const newNodeIndex = nodes.findIndex((nd) => nd.id === 'newNode')
-
       // removing the "newNode" node
       const newNodes = nodes.filter((nd) => nd.id !== 'newNode')
       setNodes(newNodes)
 
+      // fazer o split no -1 pois o node de trigger nao é contado no node position, ja que sempre ele sera oprimeiro
       const newNodesActionPosition = [
         ...automationWorkflowSelected.nodesActionPosition,
       ]
-      newNodesActionPosition.splice(newNodeIndex, 0, res.id)
+      newNodesActionPosition.splice(newNodeIndex - 1, 0, res.id)
 
       const newNodeActionWorkflow = [
         ...automationWorkflowSelected.nodeActionWorkflow,
       ]
-      newNodeActionWorkflow.splice(newNodeIndex, 0, res)
+      newNodeActionWorkflow.splice(newNodeIndex - 1, 0, res)
 
       const newAutomatedWorkflowSet = {
         ...automationWorkflowSelected,
@@ -306,6 +308,12 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
         nodesActionPosition: newNodesActionPosition,
       }
       setAutomationWorkflowSelected(newAutomatedWorkflowSet)
+      console.log('the new node id')
+      console.log(res.id)
+      console.log('the new node pos')
+      console.log(newNodesActionPosition)
+      console.log('the new node')
+      console.log(newNodeActionWorkflow)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
