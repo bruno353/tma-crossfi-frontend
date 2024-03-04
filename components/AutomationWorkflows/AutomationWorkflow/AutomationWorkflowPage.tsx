@@ -101,6 +101,7 @@ const triggerDefault = {
 
 const AutomationWorkflowPage = ({ id, workspaceId }) => {
   const [isLoading, setIsLoading] = useState(true)
+  const [workflowReadyToPublish, setWorkflowReadyToPublish] = useState(false)
   const [navBarSelected, setNavBarSelected] = useState('Board')
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -396,6 +397,21 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setNodes(newNodeOrder)
   }
 
+  function verifyNodesValue(data: AutomationWorkflowProps) {
+    console.log('entrei para vali')
+    const actionNodes = data.nodeActionWorkflow
+    const invalidNodes = actionNodes.find((nd) => !nd['value'])
+    const invalidTrigger = !!data.nodeTriggerWorkflow?.value
+
+    if (invalidNodes || invalidTrigger) {
+      console.log('invalido')
+      setWorkflowReadyToPublish(false)
+    } else {
+      console.log('tudo valido')
+      setWorkflowReadyToPublish(true)
+    }
+  }
+
   async function handleSaveChangesActionNode(
     dataNode: any,
     nodeId: string,
@@ -511,6 +527,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
   useEffect(() => {
     if (automationWorkflowSelected) {
       arrangeNodes(automationWorkflowSelected)
+      verifyNodesValue(automationWorkflowSelected)
     }
   }, [automationWorkflowSelected])
 
@@ -665,12 +682,15 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                     {!automationWorkflowSelected?.activated && (
                       <div className="absolute top-0 ml-5 mt-2 flex h-fit cursor-pointer justify-between gap-x-[20px] rounded-md border-[0.5px]  border-[#c5c4c45f]  bg-[#242B51] px-3 py-2 text-[11px] 2xl:text-[13px]">
                         <div className="flex items-center">
-                          The workflow had changes, publish it to get it running
-                          live
+                          The workflow had changes, finish the nodes setup and
+                          publish it to get the workflow running live
                         </div>
                         <div
                           onClick={() => {
-                            if (nodeIsLoading !== 'trigger') {
+                            if (
+                              nodeIsLoading !== 'trigger' &&
+                              workflowReadyToPublish
+                            ) {
                               publishWorkflow()
                             }
                           }}
@@ -678,6 +698,9 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                             nodeIsLoading === 'trigger'
                               ? 'animate-pulse cursor-auto'
                               : 'hover:bg-[#35428a]'
+                          } ${
+                            !workflowReadyToPublish &&
+                            '!cursor-auto !bg-[#c5c4c45f] hover:!bg-[#c5c4c45f]'
                           }`}
                         >
                           Publish
