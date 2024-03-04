@@ -102,7 +102,7 @@ function TriggerNode({
         <div className="text-[7px] text-[#c5c4c49d] 2xl:text-[10px]">
           {triggerOptions?.at(nodeValueIndex)?.description}
         </div>
-        {automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
+        {/* {automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
           <div className="mt-[5px] text-[7px] text-[#c5c4c49d] 2xl:text-[12px]">
             {' '}
             {automationWorkflowSelected?.nodeTriggerWorkflow?.value} -{' '}
@@ -110,7 +110,7 @@ function TriggerNode({
               automationWorkflowSelected.nodeTriggerWorkflow.value,
             )}
           </div>
-        )}
+        )} */}
         {!automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
           <img
             alt="ethereum avatar"

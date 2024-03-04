@@ -106,6 +106,24 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   const [nodes, setNodes] = useNodesState([triggerDefault])
 
+  const [spacingY, setSpacingY] = useState(90)
+
+  useEffect(() => {
+    const calculateSpacing = () => {
+      // Exemplo de cálculo: ajustar o espaçamento baseado na altura da tela - useeffect para calcular espaçamento dos nodes baseado em screen size
+      const screenHeight = window.innerHeight
+      const newSpacingY =
+        screenHeight < 600 ? 70 : screenHeight < 900 ? 90 : 120
+      setSpacingY(newSpacingY)
+    }
+
+    // Calcular o espaçamento inicialmente e adicionar o listener
+    calculateSpacing()
+    window.addEventListener('resize', calculateSpacing)
+
+    return () => window.removeEventListener('resize', calculateSpacing)
+  }, [])
+
   const {
     workspace,
     user,
@@ -308,12 +326,6 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
         nodesActionPosition: newNodesActionPosition,
       }
       setAutomationWorkflowSelected(newAutomatedWorkflowSet)
-      console.log('the new node id')
-      console.log(res.id)
-      console.log('the new node pos')
-      console.log(newNodesActionPosition)
-      console.log('the new node')
-      console.log(newNodeActionWorkflow)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -358,7 +370,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
             x: 500,
             y:
               newNodeOrder.length > 0
-                ? newNodeOrder[newNodeOrder.length - 1].position.y + 90
+                ? newNodeOrder[newNodeOrder.length - 1].position.y + spacingY
                 : 200,
           },
           data: {},
@@ -560,7 +572,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
             />
             <div className="mt-[20px] h-full 2xl:mt-[40px]">
               {navBarSelected === 'Board' && (
-                <div className="h-full overflow-y-auto pb-[20px] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+                <div className="h-full overflow-y-auto pb-[20px] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:pb-[40px]">
                   <div className="relative flex h-full w-full rounded-md  border-[0.5px] border-[#c5c4c45f] bg-[#1D2144]">
                     <ReactFlow
                       nodes={nodes}
