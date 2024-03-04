@@ -34,6 +34,7 @@ import {
   NodeActionWorkflowProps,
 } from '@/types/automation'
 import {
+  activateWorkflow,
   createWorkflowActionNode,
   createWorkflowTrigger,
   deleteNodeAction,
@@ -431,6 +432,25 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setNodeIsLoading(null)
   }
 
+  async function publishWorkflow() {
+    setNodeIsLoading('trigger')
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id: automationWorkflowSelected?.id,
+    }
+
+    try {
+      const res = await activateWorkflow(data, userSessionToken)
+      setAutomationWorkflowSelected(res)
+      setAutomationWorkflowNodeSelected(null)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setNodeIsLoading(null)
+  }
+
   async function handleDeleteNode(nodeId: string) {
     setNodeIsLoading('trigger')
     const { userSessionToken } = parseCookies()
@@ -642,6 +662,28 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                           handleDeleteNode={handleDeleteNode}
                         />
                       )}
+                    {!automationWorkflowSelected?.activated && (
+                      <div className="absolute top-0 ml-5 mt-2 flex h-fit cursor-pointer justify-between gap-x-[20px] rounded-md border-[0.5px]  border-[#c5c4c45f]  bg-[#242B51] px-3 py-2 text-[11px] 2xl:text-[13px]">
+                        <div className="flex items-center">
+                          The workflow had changes, publish it to get it running
+                          live
+                        </div>
+                        <div
+                          onClick={() => {
+                            if (nodeIsLoading !== 'trigger') {
+                              publishWorkflow()
+                            }
+                          }}
+                          className={`cursor-pointer rounded-[5px]  bg-[#273687] p-[2px] px-[15px] text-[#fff]  ${
+                            nodeIsLoading === 'trigger'
+                              ? 'animate-pulse cursor-auto'
+                              : 'hover:bg-[#35428a]'
+                          }`}
+                        >
+                          Publish
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

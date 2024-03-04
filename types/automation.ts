@@ -47,4 +47,5 @@ export interface AutomationWorkflowProps {
   icpWallets: ICPWalletsProps[]
   createdAt: string
   updatedAt: string
+  activated: boolean
 }
