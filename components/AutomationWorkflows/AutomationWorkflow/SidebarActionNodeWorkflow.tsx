@@ -107,11 +107,11 @@ const SidebarActionNodeWorkflow = ({
   return (
     <>
       {(automationWorkflowNodeSelected === 'newNode' || isEditingNode) && (
-        <div className="relative h-full w-[30%] overflow-y-auto rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+        <div className="relative h-full w-[30%] overflow-y-auto rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:text-[16px]">
           <div className="flex justify-between gap-x-[5px]">
             <div>
               <div className="">Next action</div>
-              <div className="mt-[5px] text-[11px] text-[#c5c4c49d]">
+              <div className="mt-[5px] text-[11px] text-[#c5c4c49d] 2xl:text-[12px]">
                 Set the workflow`s next action
               </div>
             </div>
@@ -126,7 +126,7 @@ const SidebarActionNodeWorkflow = ({
           </div>
           <div className="mt-[25px]">
             <div>
-              <div className="mb-[7px] text-[12px]">
+              <div className="mb-[7px] text-[12px] 2xl:text-[13px]">
                 Internet Computer Protocol
               </div>
               {actionOptions.map((option, index) => (
@@ -174,11 +174,11 @@ const SidebarActionNodeWorkflow = ({
                       alt="image"
                       className={option.imgStyle}
                     />
-                    <div className="text-center text-[13px] font-light">
+                    <div className="text-center text-[13px] font-light 2xl:text-[14px]">
                       {option.name}
                     </div>
                     {triggerOptionInfo === option.name && (
-                      <div className=" absolute left-0 top-0 w-[200px] -translate-y-[120%] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px] font-normal text-[#c5c4c4]">
+                      <div className=" absolute left-0 top-0 w-[200px] -translate-y-[120%] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px]  font-normal text-[#c5c4c4]">
                         <div>{option.description}</div>
                       </div>
                     )}
@@ -205,7 +205,7 @@ const SidebarActionNodeWorkflow = ({
         </div>
       )}
       {automationWorkflowNodeSelected !== 'newNode' && !isEditingNode && (
-        <div className="h-full w-[30%] overflow-y-auto  rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+        <div className="h-full w-[30%] overflow-y-auto  rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:text-[16px]">
           <div className="flex justify-between gap-x-[5px]">
             <div className="flex gap-x-[5px] text-center">
               <img

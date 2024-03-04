@@ -90,7 +90,7 @@ const SidebarWorkflow = ({
       {((automationWorkflowNodeSelected === 'trigger' &&
         !automationWorkflowSelected?.nodeTriggerWorkflow) ||
         isEditingTriggerNode) && (
-        <div className="relative h-full w-[30%] overflow-y-auto rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+        <div className="relative h-full w-[30%] overflow-y-auto rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:text-[16px]">
           <div>
             <div className="">Select your trigger</div>
             <div className="mt-[5px] text-[11px] text-[#c5c4c49d]">
@@ -99,7 +99,7 @@ const SidebarWorkflow = ({
           </div>
           <div className="mt-[25px]">
             <div>
-              <div className="mb-[7px] text-[12px]">Jobs</div>
+              <div className="mb-[7px] text-[12px] 2xl:text-[13px]">Jobs</div>
               {triggerOptions.map((option, index) => (
                 <div
                   onClick={() => {
@@ -176,7 +176,7 @@ const SidebarWorkflow = ({
       {automationWorkflowNodeSelected === 'trigger' &&
         automationWorkflowSelected?.nodeTriggerWorkflow &&
         !isEditingTriggerNode && (
-          <div className="h-full w-[30%] overflow-y-auto  rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+          <div className="h-full w-[30%] overflow-y-auto  rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:text-[16px]">
             <div className="flex justify-between gap-x-[5px]">
               <div className="flex gap-x-[5px] text-center">
                 <img
@@ -193,14 +193,14 @@ const SidebarWorkflow = ({
                 onClick={() => {
                   setIsEditingTriggerNode(true)
                 }}
-                className="cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[12px] hover:bg-[#47474727]"
+                className="cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[11px] hover:bg-[#47474727]"
               >
                 Edit
               </div>
             </div>
 
             <div className="mt-[25px]">
-              <div className="text-[12px]">
+              <div className="text-[12px] 2xl:text-[13px]">
                 <div className="">Value</div>
                 {!automationWorkflowSelected?.nodeTriggerWorkflow?.value && (
                   <div className="text-[11px] text-[#cc5563]">
