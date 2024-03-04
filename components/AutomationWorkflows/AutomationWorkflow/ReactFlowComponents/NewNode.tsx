@@ -38,7 +38,7 @@ function NewNode({
         'border-dashed !border-[#642EE7] '
       } ${
         nodeIsLoading === 'trigger' && 'animate-pulse '
-      }  bg-[#060621] px-[50px] py-[15px] text-[10px] 2xl:text-[14px]`}
+      }  cursor-pointer bg-[#060621] px-[50px] py-[15px] text-[10px] hover:bg-[#060621d3] 2xl:text-[14px]`}
     >
       <div className="mx-auto text-[#c5c4c49d]">+</div>
       <Handle type="target" position={Position.Top} id={'1'} />

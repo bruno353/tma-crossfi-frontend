@@ -99,7 +99,6 @@ const triggerDefault = {
 }
 
 const AutomationWorkflowPage = ({ id, workspaceId }) => {
-  const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [navBarSelected, setNavBarSelected] = useState('Board')
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
@@ -174,7 +173,6 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
       return
     }
     // Define a distância padrão entre os nós.
-    const spacingY = 80 // Espaçamento padrão.
 
     // Calcula a posição Y do novo nó. Se for o último nó, usa o espaçamento definido acima.
     // Caso contrário, coloca no meio do nó atual e do próximo (se aplicável).
@@ -192,12 +190,10 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     // Insere o novo nó na posição 'nodeIndex + 1'.
     newNodes.splice(nodeIndex + 1, 0, newNode)
 
-    const newSpacingY = 55
-
     // // Atualiza a posição Y dos nós subsequentes para garantir que não haja sobreposição.
     // // Começa a ajustar do nó após o recém inserido.
     for (let i = nodeIndex + 2; i < newNodes.length; i++) {
-      newNodes[i].position.y += newSpacingY
+      newNodes[i].position.y += spacingY
     }
 
     for (let i = 0; i < newNodes.length - 1; i++) {
@@ -633,6 +629,10 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                           }
                           handleEditTrigger={editTrigger}
                           handleCreateNode={createActionNode}
+                          handleCancelNewNode={() => {
+                            arrangeNodes(automationWorkflowSelected)
+                            setAutomationWorkflowNodeSelected('')
+                          }}
                           handleSetTriggerOptionInfo={setTriggerOptionInfo}
                           triggerOptionInfo={triggerOptionInfo}
                           isLoading={!!nodeIsLoading}

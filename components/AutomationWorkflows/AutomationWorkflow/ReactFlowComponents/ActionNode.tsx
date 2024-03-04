@@ -84,7 +84,7 @@ function ActionNode({
           'border-dashed !border-[#642EE7] '
         } ${
           nodeIsLoading === 'trigger' && 'animate-pulse '
-        }  relative w-[200px] bg-[#060621] px-[10px] py-[5px] text-[10px] 2xl:text-[14px]`}
+        }  relative w-[200px] cursor-pointer bg-[#060621] px-[10px] py-[5px] text-[10px] hover:bg-[#060621d3] 2xl:text-[14px]`}
       >
         <div className="flex justify-between gap-x-[10px]">
           <div className="flex gap-x-[5px]">

@@ -31,6 +31,7 @@ export interface ModalI {
   handleEditTrigger(value: string): void
   handleDeleteNode(value: string): void
   handleSaveChangesActionNode(data: any, nodeId: string, nodeType: string): void
+  handleCancelNewNode(): void
   isLoading: boolean
   triggerOptionInfo: string
 }
@@ -43,6 +44,7 @@ const SidebarActionNodeWorkflow = ({
   handleEditTrigger,
   handleSaveChangesActionNode,
   handleDeleteNode,
+  handleCancelNewNode,
   isLoading,
   triggerOptionInfo,
 }: ModalI) => {
@@ -106,10 +108,20 @@ const SidebarActionNodeWorkflow = ({
     <>
       {(automationWorkflowNodeSelected === 'newNode' || isEditingNode) && (
         <div className="relative h-full w-[30%] overflow-y-auto rounded-r-md bg-[#060621] p-[20px] text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-          <div>
-            <div className="">Next action</div>
-            <div className="mt-[5px] text-[11px] text-[#c5c4c49d]">
-              Set the workflow`s next action
+          <div className="flex justify-between gap-x-[5px]">
+            <div>
+              <div className="">Next action</div>
+              <div className="mt-[5px] text-[11px] text-[#c5c4c49d]">
+                Set the workflow`s next action
+              </div>
+            </div>
+            <div
+              onClick={() => {
+                handleCancelNewNode()
+              }}
+              className="h-fit cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[11px] hover:bg-[#47474727]"
+            >
+              Cancel
             </div>
           </div>
           <div className="mt-[25px]">
@@ -211,7 +223,7 @@ const SidebarActionNodeWorkflow = ({
                 onClick={() => {
                   setIsEditingNode(true)
                 }}
-                className="cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[11px] hover:bg-[#47474727]"
+                className="h-fit cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[11px] hover:bg-[#47474727]"
               >
                 Edit
               </div>
@@ -219,7 +231,7 @@ const SidebarActionNodeWorkflow = ({
                 onClick={() => {
                   setIsDeleteNodeOpen(true)
                 }}
-                className="cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[11px] hover:bg-[#47474727]"
+                className="h-fit cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[11px] hover:bg-[#47474727]"
               >
                 Delete
               </div>
