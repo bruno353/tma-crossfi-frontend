@@ -584,7 +584,24 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                 className="w-[35px]"
               ></img>
               <div className="mt-auto text-[24px] font-medium">
-                {automationWorkflowSelected?.name}
+                <div>{automationWorkflowSelected?.name}</div>
+                <div className="mt-[5px] flex gap-x-[5px] text-[13px] font-normal">
+                  <div>Status:</div>
+                  <div className="flex items-center gap-x-[5px]">
+                    <div
+                      className={`h-[9px] w-[9px] rounded-full ${
+                        automationWorkflowSelected?.activated
+                          ? 'bg-[#39a029]'
+                          : 'bg-[#c5c4c4]'
+                      }`}
+                    ></div>
+                    <div className="text-[#c5c4c4]">
+                      {automationWorkflowSelected?.activated
+                        ? 'Live'
+                        : 'Unpublished'}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             {workspace?.isUserAdmin && (
@@ -682,7 +699,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                           handleDeleteNode={handleDeleteNode}
                         />
                       )}
-                    {!automationWorkflowSelected?.activated && (
+                    {!automationWorkflowSelected?.activated ? (
                       <div className="absolute top-0 ml-5 mt-2 flex h-fit justify-between gap-x-[20px] rounded-md border-[0.5px]  border-[#c5c4c45f]  bg-[#242B51] px-3 py-2 text-[11px] 2xl:text-[13px]">
                         <div className="flex items-center">
                           The workflow had changes, finish the nodes setup and
@@ -707,6 +724,29 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                           }`}
                         >
                           Publish
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="absolute top-0 ml-5 mt-2 flex h-fit justify-between gap-x-[20px] rounded-md px-3 py-2 text-[11px] 2xl:text-[13px]">
+                        <div
+                          onClick={() => {
+                            if (
+                              nodeIsLoading !== 'trigger' &&
+                              workflowReadyToPublish
+                            ) {
+                              publishWorkflow()
+                            }
+                          }}
+                          className={`cursor-pointer rounded-[5px]  bg-[#273687] p-[2px] px-[15px] text-[#fff]  ${
+                            nodeIsLoading === 'trigger'
+                              ? 'animate-pulse cursor-auto'
+                              : 'hover:bg-[#35428a]'
+                          } ${
+                            !workflowReadyToPublish &&
+                            '!cursor-auto !bg-[#c5c4c45f] hover:!bg-[#c5c4c45f]'
+                          }`}
+                        >
+                          Unpublish
                         </div>
                       </div>
                     )}
