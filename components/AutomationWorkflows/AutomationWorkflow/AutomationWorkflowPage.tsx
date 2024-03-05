@@ -400,11 +400,14 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
   function verifyNodesValue(data: AutomationWorkflowProps) {
     console.log('entrei para vali')
     const actionNodes = data.nodeActionWorkflow
-    const invalidNodes = actionNodes.find((nd) => !nd['value'])
-    const invalidTrigger = !!data.nodeTriggerWorkflow?.value
+    const invalidNodes = !!actionNodes.find((nd) => !nd['value'])
+    const invalidTrigger = !data.nodeTriggerWorkflow?.value
 
     if (invalidNodes || invalidTrigger) {
       console.log('invalido')
+      console.log(invalidNodes)
+      console.log(invalidTrigger)
+      console.log(data.nodeTriggerWorkflow?.value)
       setWorkflowReadyToPublish(false)
     } else {
       console.log('tudo valido')
@@ -680,7 +683,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                         />
                       )}
                     {!automationWorkflowSelected?.activated && (
-                      <div className="absolute top-0 ml-5 mt-2 flex h-fit cursor-pointer justify-between gap-x-[20px] rounded-md border-[0.5px]  border-[#c5c4c45f]  bg-[#242B51] px-3 py-2 text-[11px] 2xl:text-[13px]">
+                      <div className="absolute top-0 ml-5 mt-2 flex h-fit justify-between gap-x-[20px] rounded-md border-[0.5px]  border-[#c5c4c45f]  bg-[#242B51] px-3 py-2 text-[11px] 2xl:text-[13px]">
                         <div className="flex items-center">
                           The workflow had changes, finish the nodes setup and
                           publish it to get the workflow running live
