@@ -14,7 +14,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { parseCookies } from 'nookies'
 import { AutomationWorkflowProps } from '@/types/automation'
 import { editAutomationWorkflow } from '@/utils/api-automation'
-import { triggerOptions } from './AutomationWorkflowPage'
+import { triggerOptions } from '../AutomationWorkflowPage'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 
 export interface ModalI {

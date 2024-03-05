@@ -17,11 +17,11 @@ import {
   NodeActionWorkflowProps,
 } from '@/types/automation'
 import { editAutomationWorkflow } from '@/utils/api-automation'
-import { actionOptions, triggerOptions } from './AutomationWorkflowPage'
+import { actionOptions, triggerOptions } from '../AutomationWorkflowPage'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
-import { actionTypeToClass } from '../../../types/consts/automation-workflow'
-import RenderActionNodeInputs from './WorkflowComponents/RenderActionNodeInputs'
-import DeleteNodeModal from './Modals/DeleteNodeModal'
+import { actionTypeToClass } from '../../../../types/consts/automation-workflow'
+import RenderActionNodeInputs from './RenderActionNodeInputs'
+import DeleteNodeModal from '../Modals/DeleteNodeModal'
 
 export interface ModalI {
   automationWorkflowSelected: AutomationWorkflowProps
@@ -60,7 +60,7 @@ const SidebarActionNodeWorkflow = ({
   const deleteNodeRef = useRef(null)
 
   const node: NodeActionWorkflowProps =
-    automationWorkflowSelected.nodeActionWorkflow.find(
+    automationWorkflowSelected?.nodeActionWorkflow.find(
       (nd) => nd['id'] === automationWorkflowNodeSelected,
     )
 
@@ -117,14 +117,16 @@ const SidebarActionNodeWorkflow = ({
                 Set the workflow`s next action
               </div>
             </div>
-            <div
-              onClick={() => {
-                handleCancelNewNode()
-              }}
-              className="h-fit cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[11px] hover:bg-[#47474727]"
-            >
-              Cancel
-            </div>
+            {automationWorkflowNodeSelected === 'newNode' && (
+              <div
+                onClick={() => {
+                  handleCancelNewNode()
+                }}
+                className="h-fit cursor-pointer rounded-md border-[0.5px] border-[#c5c4c45f] px-[8px] py-[3px] text-[11px] hover:bg-[#47474727]"
+              >
+                Cancel
+              </div>
+            )}
           </div>
           <div className="mt-[25px]">
             <div>

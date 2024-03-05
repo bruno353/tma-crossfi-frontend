@@ -97,7 +97,7 @@ const RenderActionNodeInputs = ({
                     onMouseLeave={() => setIsInfoCanisterId(false)}
                   ></img>
                   {isInfoCanisterId && (
-                    <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px] 2xl:text-[13px]">
+                    <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px] ">
                       Set the canister pub id that will be called
                     </div>
                   )}

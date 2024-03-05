@@ -37,7 +37,7 @@ function ActionNode({
   }
 
   const nodeData: NodeActionWorkflowProps =
-    automationWorkflowSelected.nodeActionWorkflow.find((nd) => {
+    automationWorkflowSelected?.nodeActionWorkflow.find((nd) => {
       return nd['id'] === id
     })
 

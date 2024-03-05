@@ -38,6 +38,14 @@ export interface NodeActionWorkflowProps {
   updatedAt: string
 }
 
+export interface TransactionHistoryWorkflow {
+  id: string
+  description?: string
+  success: boolean
+  createdAt: string
+  updatedAt: string
+}
+
 export interface AutomationWorkflowProps {
   id: string
   name: string
@@ -45,6 +53,7 @@ export interface AutomationWorkflowProps {
   nodeActionWorkflow: NodeActionWorkflowProps[] | []
   nodesActionPosition: string[]
   icpWallets: ICPWalletsProps[]
+  transactionsHistory: TransactionHistoryWorkflow[]
   createdAt: string
   updatedAt: string
   activated: boolean

@@ -37,6 +37,7 @@ import {
   activateWorkflow,
   createWorkflowActionNode,
   createWorkflowTrigger,
+  deactivateWorkflow,
   deleteNodeAction,
   editWorkflowTrigger,
   getAutomationWorkflow,
@@ -56,10 +57,11 @@ import ReactFlow, {
   Position,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
-import SidebarWorkflow from './SidebarWorkflow'
+import SidebarWorkflow from './WorkflowComponents/SidebarWorkflow'
 import { ValueObject } from '@/components/Modals/Dropdown'
 import ActionNode from './ReactFlowComponents/ActionNode'
-import SidebarActionNodeWorkflow from './SidebarActionNodeWorkflow'
+import SidebarActionNodeWorkflow from './WorkflowComponents/SidebarActionNodeWorkflow'
+import TransacitonsHistoryRender from './WorkflowComponents/TransactionsHistoryRender'
 
 const onInit = (reactFlowInstance) =>
   console.log('flow loaded:', reactFlowInstance)
@@ -279,7 +281,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     }
 
     try {
-      const res = await createWorkflowTrigger(data, userSessionToken)
+      await createWorkflowTrigger(data, userSessionToken)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -309,17 +311,18 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
 
       // fazer o split no -1 pois o node de trigger nao é contado no node position, ja que sempre ele sera oprimeiro
       const newNodesActionPosition = [
-        ...automationWorkflowSelected.nodesActionPosition,
+        ...automationWorkflowSelected?.nodesActionPosition,
       ]
       newNodesActionPosition.splice(newNodeIndex - 1, 0, res.id)
 
       const newNodeActionWorkflow = [
-        ...automationWorkflowSelected.nodeActionWorkflow,
+        ...automationWorkflowSelected?.nodeActionWorkflow,
       ]
       newNodeActionWorkflow.splice(newNodeIndex - 1, 0, res)
 
       const newAutomatedWorkflowSet = {
         ...automationWorkflowSelected,
+        activated: false,
         nodeActionWorkflow: newNodeActionWorkflow,
         nodesActionPosition: newNodesActionPosition,
       }
@@ -443,6 +446,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
         JSON.stringify(dataNode)
       newAutomatedWorkflowSet.nodeActionWorkflow[nodeActionIndex].value =
         nodeType
+      newAutomatedWorkflowSet.activated = false
       setAutomationWorkflowSelected(newAutomatedWorkflowSet)
     } catch (err) {
       console.log(err)
@@ -460,8 +464,35 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     }
 
     try {
-      const res = await activateWorkflow(data, userSessionToken)
-      setAutomationWorkflowSelected(res)
+      await activateWorkflow(data, userSessionToken)
+      const newAutomatedWorkflowSet = {
+        ...automationWorkflowSelected,
+      }
+      newAutomatedWorkflowSet.activated = true
+      setAutomationWorkflowSelected(newAutomatedWorkflowSet)
+      setAutomationWorkflowNodeSelected(null)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setNodeIsLoading(null)
+  }
+
+  async function unpublishWorkflow() {
+    setNodeIsLoading('trigger')
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id: automationWorkflowSelected?.id,
+    }
+
+    try {
+      await deactivateWorkflow(data, userSessionToken)
+      const newAutomatedWorkflowSet = {
+        ...automationWorkflowSelected,
+      }
+      newAutomatedWorkflowSet.activated = false
+      setAutomationWorkflowSelected(newAutomatedWorkflowSet)
       setAutomationWorkflowNodeSelected(null)
     } catch (err) {
       console.log(err)
@@ -514,8 +545,9 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
       const res = await editWorkflowTrigger(data, userSessionToken)
       const newAutomatedWorkflowSet = {
         ...automationWorkflowSelected,
+        activated: false,
         nodeTriggerWorkflow: {
-          ...automationWorkflowSelected.nodeTriggerWorkflow,
+          ...automationWorkflowSelected?.nodeTriggerWorkflow,
           value: expression,
         },
       }
@@ -621,11 +653,11 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                 setNavBarSelected(value)
               }}
               selected={navBarSelected}
-              itensList={['Board', 'Analytics']}
+              itensList={['Board', 'History']}
             />
             <div className="mt-[20px] h-full 2xl:mt-[40px]">
               {navBarSelected === 'Board' && (
-                <div className="h-full overflow-y-auto pb-[20px] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:pb-[40px]">
+                <div className="h-full overflow-y-auto pb-[20px] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:pb-[70px]">
                   <div className="relative flex h-full w-full rounded-md  border-[0.5px] border-[#c5c4c45f] bg-[#1D2144]">
                     <ReactFlow
                       nodes={nodes}
@@ -633,20 +665,8 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                       proOptions={{
                         hideAttribution: true,
                       }}
-                      onNodesChange={(value) => {
-                        console.log('chamado fuii')
-                        // if (xnodeType !== 'validator') {
-                        //   onNodesChange(value)
-                        // }
-                      }}
-                      onEdgesChange={(value) => {
-                        // validator type of nodes cannot be edited
-                        console.log('chamado fuii')
-                        // if (xnodeType !== 'validator') {
-                        //   console.log('entrei nao')
-                        //   onEdgesChange(value)
-                        // }
-                      }}
+                      // onNodesChange={}
+                      // onEdgesChange={}
                       onConnect={onConnect}
                       onInit={onInit}
                       fitView
@@ -734,7 +754,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                               nodeIsLoading !== 'trigger' &&
                               workflowReadyToPublish
                             ) {
-                              publishWorkflow()
+                              unpublishWorkflow()
                             }
                           }}
                           className={`cursor-pointer rounded-[5px]  bg-[#273687] p-[2px] px-[15px] text-[#fff]  ${
@@ -752,6 +772,13 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
                     )}
                   </div>
                 </div>
+              )}
+              {navBarSelected === 'History' && (
+                <TransacitonsHistoryRender
+                  transactionsHistory={
+                    automationWorkflowSelected?.transactionsHistory
+                  }
+                />
               )}
             </div>
           </div>
