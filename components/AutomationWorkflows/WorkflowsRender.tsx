@@ -92,7 +92,7 @@ const WorkflowsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
                 <div className="w-full max-w-[60%]">Workflow name</div>
                 <div className="w-full max-w-[30%]">created at</div>
               </div>
-              <div className="max-h-[calc(100vh-26rem)] overflow-y-auto rounded-b-md  border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-32rem)] ">
+              <div className="max-h-[calc(100vh-26rem)] overflow-y-auto rounded-b-md  border border-[#c5c4c41a] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-32rem)] ">
                 {' '}
                 {apps?.map((app, index) => (
                   <div
@@ -102,7 +102,7 @@ const WorkflowsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
                     key={index}
                     className={`flex items-center  ${
                       index !== apps?.length - 1 &&
-                      'border-b-[1px] border-[#c5c4c40e]'
+                      'border-b-[1px] border-[#c5c4c41a]'
                     } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
                     <div className="w-full max-w-[60%] overflow-hidden truncate text-ellipsis whitespace-nowrap">

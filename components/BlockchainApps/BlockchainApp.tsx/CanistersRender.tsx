@@ -122,7 +122,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                 <div className="w-full max-w-[17%]">Type</div>
                 <div className="w-full max-w-[10%]">Created at</div>
               </div>
-              <div className="max-h-[calc(100vh-26rem)] overflow-y-auto rounded-b-md  border border-[#c5c4c40e] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-32rem)] ">
+              <div className="max-h-[calc(100vh-26rem)] overflow-y-auto rounded-b-md  border border-[#c5c4c41a] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-32rem)] ">
                 {' '}
                 {canisters?.map((canister, index) => (
                   <div
@@ -132,7 +132,7 @@ const CanistersRender = ({ app, canisters, onUpdate, isUserAdmin }: ModalI) => {
                     key={index}
                     className={`flex items-center  ${
                       index !== canisters?.length - 1 &&
-                      'border-b-[1px] border-[#c5c4c40e]'
+                      'border-b-[1px] border-[#c5c4c41a]'
                     } cursor-pointer gap-x-[5px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
                     <div className="flex w-full max-w-[20%] gap-x-[7px]">
