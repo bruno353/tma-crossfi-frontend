@@ -36,6 +36,7 @@ const Sidebar = (id: any) => {
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
 
   const openModal = () => {
+    setMenuOpen(false)
     setIsCreatingNewWorkspace(true)
   }
 
@@ -128,8 +129,8 @@ const Sidebar = (id: any) => {
     {
       name: 'Workflows',
       option: `/${id.id}/automation-workflows`,
-      imgSource: '/images/sidebar/1.svg',
-      imgStyle: 'w-[25px] rounded-full',
+      imgSource: '/images/sidebar/app.svg',
+      imgStyle: 'w-[18px]',
       type: 'automation',
       pathSegment: 'automation-workflows',
     },

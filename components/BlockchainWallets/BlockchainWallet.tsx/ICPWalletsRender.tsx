@@ -168,10 +168,10 @@ const ICPWalletsRender = ({
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {formatDate(wallet.createdAt)}
                     </div>
-                    <div className="ml-auto w-full max-w-[5%]">
+                    <div className="relative ml-auto w-full max-w-[5%]">
                       {' '}
                       {isFundInfoOpen === wallet.id && (
-                        <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                        <div className="absolute flex w-[120px] -translate-x-[105%] -translate-y-[20%]   items-center   justify-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
                           Fund wallet
                         </div>
                       )}
@@ -190,10 +190,10 @@ const ICPWalletsRender = ({
                         ></img>
                       )}
                     </div>
-                    <div className="ml-auto w-full max-w-[5%]">
+                    <div className="relative ml-auto w-full max-w-[5%]">
                       {' '}
                       {isEditInfoOpen === wallet.id && (
-                        <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                        <div className="absolute flex w-[100px] -translate-x-[105%] -translate-y-[20%] items-center   justify-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
                           Edit wallet
                         </div>
                       )}

@@ -136,10 +136,10 @@ const AppsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {formatDate(app.createdAt)}
                     </div>
-                    <div className="ml-auto w-full max-w-[5%]">
+                    <div className="relative ml-auto w-full max-w-[5%]">
                       {' '}
                       {isEditInfoOpen === app.id && (
-                        <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                        <div className="absolute flex w-[100px] -translate-x-[100%] -translate-y-[20%]  items-center   justify-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
                           Edit app
                         </div>
                       )}

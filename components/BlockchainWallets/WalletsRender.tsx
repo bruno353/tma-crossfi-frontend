@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable dot-notation */
@@ -180,10 +181,10 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {formatDate(wallet.createdAt)}
                     </div>
-                    <div className="ml-auto w-full max-w-[5%]">
+                    <div className="relative ml-auto w-full max-w-[5%]">
                       {' '}
                       {isEditInfoOpen === wallet.id && (
-                        <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                        <div className="absolute flex w-[100px] -translate-x-[100%]  -translate-y-[20%]  items-center   justify-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
                           Edit wallet
                         </div>
                       )}
