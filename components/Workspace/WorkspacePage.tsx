@@ -137,6 +137,7 @@ const WorkspacePage = ({ id }) => {
               {workspaceNavBarSelected === 'Settings' && (
                 <WorkspaceSettings
                   id={id}
+                  workspace={workspace}
                   isUserAdmin={workspace?.isUserAdmin}
                   onUpdate={getData}
                 />

@@ -23,21 +23,24 @@ import {
   updateWorkspace,
   updateWorkspaceLogo,
 } from '@/utils/api'
-import { UserWorkspaceProps } from '@/types/workspace'
+import { UserWorkspaceProps, WorkspaceProps } from '@/types/workspace'
 import UserWorkspaceInfoModal from './UserWorkspaceInfoModal'
 import DeleteUserWorkspaceModal from './DeleteUserWorkspaceModal'
 import DeleteWorkspace from './DeleteWorkspaceModal'
 import LeaveWorkspace from './LeaveWorkspaceModal'
+import { workflowTypeToOptions } from '@/utils/consts'
 
 export interface WorkspaceSettingsI {
   id: string
   isUserAdmin: boolean
+  workspace: WorkspaceProps
   onUpdate(): void
 }
 
 const WorkspaceSettings = ({
   id,
   isUserAdmin,
+  workspace,
   onUpdate,
 }: WorkspaceSettingsI) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -77,9 +80,19 @@ const WorkspaceSettings = ({
   }, [isDeleteWorkspaceOpen, isLeaveWorkspaceOpen])
 
   return (
-    <div className="max-h-[calc(100vh-30rem)] items-start justify-start overflow-y-auto text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+    <div className="max-h-[calc(100vh-30rem)] items-start justify-start overflow-y-auto text-[14px] text-[#C5C4C4] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-28rem)] ">
       <div className="mt-[10px] text-[18px] font-medium">
         <div className="grid gap-y-[50px]">
+          <div>
+            <div>Worskpace type</div>
+            <input
+              type="text"
+              id="workspaceName"
+              name="workspaceName"
+              value={workflowTypeToOptions[workspace?.type].name}
+              className="mt-[10px] w-fit rounded-md border border-transparent px-6 py-2 text-[14px] text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+            />
+          </div>
           <div>
             <div>Leave workspace</div>
             <div className="mt-[10px] max-w-[600px] rounded-md border-[1px] border-[#cc5563] p-[20px] text-[14px] font-normal text-[#cc5563]">
