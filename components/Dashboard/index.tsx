@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable dot-notation */
 /* eslint-disable react/no-unescaped-entities */
@@ -24,6 +25,7 @@ import NewWorkspaceModal from './NewWorkspace'
 import { getUserWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
 import { Logo } from '../Sidebar/Logo'
+import { workflowTypeToOptions } from '@/utils/consts'
 
 const Dashboard = () => {
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
@@ -88,7 +90,7 @@ const Dashboard = () => {
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]">
             {workspaces.map((workspace, index) => (
               <a key={index} href={`/workspace/${workspace.id}`}>
-                <div className="grid h-40 w-full cursor-pointer rounded-[5px]  border-[0.6px] border-[#c5c4c45e] bg-transparent  p-[20px] text-[#fff] hover:bg-[#13132c]">
+                <div className="relative grid h-40 w-full cursor-pointer rounded-[5px]  border-[0.6px] border-[#c5c4c45e] bg-transparent  p-[20px] text-[#fff] hover:bg-[#13132c]">
                   <div className="flex items-start gap-x-[20px] overflow-hidden ">
                     <Logo
                       name={workspace.name}
@@ -105,6 +107,13 @@ const Dashboard = () => {
                   <div className="mt-auto text-[12px] text-[#C5C4C4]">
                     Created at: {workspace.createdAt}
                   </div>
+                  <img
+                    src={workflowTypeToOptions[workspace?.type].imgSource}
+                    alt="image"
+                    className={`absolute right-2 top-2 ${
+                      workflowTypeToOptions[workspace?.type].imgStyleTitle
+                    }`}
+                  />
                 </div>
               </a>
             ))}

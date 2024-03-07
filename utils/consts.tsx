@@ -23,6 +23,11 @@ export const workflowOptions = [
   },
 ]
 
+export const workflowTypeToOptions = {
+  DEVELOPMENT: workflowOptions[0],
+  FINANCIAL: workflowOptions[1],
+}
+
 export const optionsStandardFinancial = [
   {
     name: 'Brazil',
