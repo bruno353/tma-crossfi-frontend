@@ -85,6 +85,7 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
     const formData = new FormData()
     formData.append('name', workspaceName)
     formData.append('files', selectedFile)
+    formData.append('WorkspaceType', workspaceTemplate.type)
 
     try {
       const res = await createWorkspace(formData, userSessionToken)
@@ -138,7 +139,6 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
               >
                 <div
                   onClick={() => {
-                    // if the node was already created, either edit it or go back to the node
                     setWorkspaceTemplate(option)
                     setTriggerOptionInfo('')
                     setNextStep(true)
@@ -177,9 +177,13 @@ const NewWorkspaceModal = ({ isOpen, onClose }) => {
           </div>
           <div className="mb-6 flex items-center gap-x-[8px] ">
             <img
-              src={workspaceTemplate.imgSource}
+              src={workspaceTemplate?.imgSource}
               alt="image"
-              className={workspaceTemplate.imgStyleTitle}
+              className={`${
+                workspaceTemplate.type === 'DEVELOPMENT'
+                  ? 'w-[25px]'
+                  : 'w-[28px]'
+              }`}
             />
             <h2 className="text-lg">New Workspace</h2>
           </div>

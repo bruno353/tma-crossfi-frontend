@@ -1,5 +1,10 @@
 import { UserProps } from './user'
 
+export enum WorkspaceType {
+  DEVELOPMENT = 'DEVELOPMENT',
+  FINANCIAL = 'FINANCIAL',
+}
+
 export interface UserWorkspaceProps {
   id: string
   workspaceId: string
@@ -16,6 +21,7 @@ export interface WorkspaceProps {
   name: string
   logoURL?: string
   finalURL?: string
+  type: WorkspaceType
   createdAt: string
   updatedAt: string
   icpWalletPubKPrincipal: string
