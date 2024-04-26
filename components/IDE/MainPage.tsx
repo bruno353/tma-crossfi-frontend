@@ -4,7 +4,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 // import { useState } from 'react'
-import { useEffect, useState, ChangeEvent, FC, useContext } from 'react'
+import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -26,10 +26,14 @@ import { Logo } from '../Sidebar/Logo'
 import { BlockchainWalletProps } from '@/types/blockchain-app'
 import { getBlockchainWallets } from '@/utils/api-blockchain'
 // import NewAppModal from './Modals/NewAppModal'
+import Editor from '@monaco-editor/react'
+import SelectLanguageModal from './Modals/SelectLanguage'
 
 const MainPage = ({ id }) => {
-  const [isCreatingNewWallet, setIsCreatingNewWallet] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [value, setValue] = useState('// start your code here')
+  const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
+
   const [navBarSelected, setNavBarSelected] = useState('General')
   const [blockchainWallets, setBlockchainWallets] = useState<
     BlockchainWalletProps[]
@@ -39,6 +43,15 @@ const MainPage = ({ id }) => {
 
   const { push } = useRouter()
   const pathname = usePathname()
+
+  const editorRef = useRef()
+  const [language, setLanguage] = useState('javascript')
+
+  const onMount = (editor) => {
+    editorRef.current = editor
+    editor.focus()
+  }
+  const menuRef = useRef(null)
 
   async function getData() {
     setIsLoading(true)
@@ -59,6 +72,24 @@ const MainPage = ({ id }) => {
   }
 
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setLanguageSelectorOpen(false)
+      }
+    }
+
+    if (languageSelectorOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [languageSelectorOpen])
+
+  useEffect(() => {
     setIsLoading(true)
     getData()
   }, [id])
@@ -75,7 +106,38 @@ const MainPage = ({ id }) => {
   return (
     <>
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
-        <div className="container text-[#fff]"></div>
+        <div className="container text-[#fff]">
+          <div
+            onClick={() => setLanguageSelectorOpen(true)}
+            className="mb-4 w-fit cursor-pointer rounded-md py-1 pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
+          >
+            {language}
+          </div>
+          <div className="w-[50%]">
+            <Editor
+              height="75vh"
+              theme="vs-dark"
+              defaultLanguage="javascript"
+              value={value}
+              language={language}
+              onMount={onMount}
+              onChange={(value) => setValue(value)}
+            />
+          </div>
+        </div>
+        {languageSelectorOpen && (
+          <div
+            className="absolute top-[35px] !z-[999999] translate-x-[80px] translate-y-[40px]"
+            ref={menuRef}
+          >
+            <SelectLanguageModal
+              onUpdateM={(value) => {
+                setLanguage(value)
+                setLanguageSelectorOpen(false)
+              }}
+            />{' '}
+          </div>
+        )}
       </section>
     </>
   )
