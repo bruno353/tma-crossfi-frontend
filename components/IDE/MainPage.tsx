@@ -26,13 +26,14 @@ import { Logo } from '../Sidebar/Logo'
 import { BlockchainWalletProps } from '@/types/blockchain-app'
 import { getBlockchainWallets } from '@/utils/api-blockchain'
 // import NewAppModal from './Modals/NewAppModal'
-import Editor from '@monaco-editor/react'
+import Editor, { useMonaco } from '@monaco-editor/react'
 import SelectLanguageModal from './Modals/SelectLanguage'
 
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [value, setValue] = useState('// start your code here')
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
+  const monaco = useMonaco()
 
   const [navBarSelected, setNavBarSelected] = useState('General')
   const [blockchainWallets, setBlockchainWallets] = useState<
@@ -94,6 +95,25 @@ const MainPage = ({ id }) => {
     getData()
   }, [id])
 
+  useEffect(() => {
+    if (monaco) {
+      monaco.editor.defineTheme('vs-dark', {
+        base: 'vs-dark', // base theme (can also be 'vs' for light theme)
+        inherit: true,
+        rules: [
+          // optional: define additional styling for specific tokens
+        ],
+        colors: {
+          'editor.background': '#1D2144',
+          'editor.foreground': '#FFFFFF',
+          'editor.lineHighlightBackground': '#dbdbdb1e',
+          'editorLineNumber.foreground': '#858585',
+          'editor.selectionBackground': '#0000FF20',
+        },
+      })
+    }
+  }, [monaco])
+
   if (isLoading) {
     return (
       <div className="container grid w-full gap-y-[30px]  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
@@ -122,6 +142,11 @@ const MainPage = ({ id }) => {
               language={language}
               onMount={onMount}
               onChange={(value) => setValue(value)}
+              options={{
+                minimap: {
+                  enabled: false,
+                },
+              }}
             />
           </div>
         </div>
