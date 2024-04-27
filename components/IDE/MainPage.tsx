@@ -28,6 +28,7 @@ import { getBlockchainWallets } from '@/utils/api-blockchain'
 // import NewAppModal from './Modals/NewAppModal'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import SelectLanguageModal from './Modals/SelectLanguage'
+import './EditorStyles.css'
 
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -133,9 +134,9 @@ const MainPage = ({ id }) => {
           >
             {language}
           </div>
-          <div className="w-[50%]">
+          <div className="editor-container w-[60%]">
             <Editor
-              height="75vh"
+              height="70vh"
               theme="vs-dark"
               defaultLanguage="javascript"
               value={value}

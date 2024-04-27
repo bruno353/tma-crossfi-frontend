@@ -1,0 +1,6 @@
+/* EditorStyles.css */
+.editor-container {
+    border-radius: 12px; /* Ajuste conforme necessário */
+    overflow: hidden; /* Assegura que o conteúdo interno também respeite o arredondamento */
+  }
+  
