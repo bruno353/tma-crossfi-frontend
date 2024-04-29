@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable dot-notation */
 /* eslint-disable react/no-unescaped-entities */
@@ -47,7 +48,7 @@ const MainPage = ({ id }) => {
   const pathname = usePathname()
 
   const editorRef = useRef()
-  const [language, setLanguage] = useState('javascript')
+  const [language, setLanguage] = useState('')
 
   const onMount = (editor) => {
     editorRef.current = editor
@@ -99,11 +100,9 @@ const MainPage = ({ id }) => {
   useEffect(() => {
     if (monaco) {
       monaco.editor.defineTheme('vs-dark', {
-        base: 'vs-dark', // base theme (can also be 'vs' for light theme)
+        base: 'vs-dark',
         inherit: true,
-        rules: [
-          // optional: define additional styling for specific tokens
-        ],
+        rules: [],
         colors: {
           'editor.background': '#1D2144',
           'editor.foreground': '#FFFFFF',
@@ -112,6 +111,9 @@ const MainPage = ({ id }) => {
           'editor.selectionBackground': '#0000FF20',
         },
       })
+      setTimeout(() => {
+        setLanguage('rust')
+      }, 5000)
     }
   }, [monaco])
 
@@ -130,13 +132,18 @@ const MainPage = ({ id }) => {
         <div className="container text-[#fff]">
           <div
             onClick={() => setLanguageSelectorOpen(true)}
-            className="mb-4 w-fit cursor-pointer rounded-md py-1 pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
+            className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
           >
-            {language}
+            <div>{language}</div>
+            <img
+              alt="ethereum avatar"
+              src="/images/header/arrow.svg"
+              className="w-[7px]"
+            ></img>
           </div>
           <div className="editor-container w-[60%]">
             <Editor
-              height="70vh"
+              height="72vh"
               theme="vs-dark"
               defaultLanguage="javascript"
               value={value}
@@ -153,7 +160,7 @@ const MainPage = ({ id }) => {
         </div>
         {languageSelectorOpen && (
           <div
-            className="absolute top-[35px] !z-[999999] translate-x-[80px] translate-y-[40px]"
+            className="absolute top-[35px] !z-[999999] translate-x-[30px] translate-y-[40px] 2xl:translate-x-[80px]"
             ref={menuRef}
           >
             <SelectLanguageModal
