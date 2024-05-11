@@ -176,7 +176,12 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                       {wallet.name}
                     </div>
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {wallet.balance} {wallet.network}
+                      {wallet.balance}{' '}
+                      {
+                        optionsNetwork.find((op) => {
+                          return op.value === wallet.network
+                        })?.token
+                      }
                     </div>
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {formatDate(wallet.createdAt)}

@@ -19,8 +19,16 @@ export const optionsNetwork = [
   {
     name: 'Internet computer protocol',
     value: 'ICP',
+    token: 'ICP',
     imageSrc: '/images/workspace/icp.png',
     imageStyle: 'w-[25px]',
+  },
+  {
+    name: 'Stellar / Soroban',
+    value: 'STELLAR',
+    token: 'XLM',
+    imageSrc: '/images/workspace/stellar-new.svg',
+    imageStyle: 'w-[22px]',
   },
 ]
 

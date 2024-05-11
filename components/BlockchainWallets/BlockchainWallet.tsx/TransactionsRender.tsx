@@ -109,12 +109,16 @@ const TransactionsRender = ({
             }}
             className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
           >
-            Transfer ICP
+            Transfer tokens
           </div>
         </div>
         <div className="mx-auto flex w-full">
           <a
-            href={`https://dashboard.internetcomputer.org/account/${blockchainWallet.icpWalletPubKId}`}
+            href={`${
+              blockchainWallet?.network === 'ICP'
+                ? `https://dashboard.internetcomputer.org/account/${blockchainWallet.icpWalletPubKId}`
+                : `https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
+            } `}
             target="_blank"
             rel="noreferrer"
             className="mx-auto"

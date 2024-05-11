@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable dot-notation */
 /* eslint-disable react/no-unescaped-entities */
@@ -24,16 +25,16 @@ import { BlockchainWalletProps } from '@/types/blockchain-app'
 import { AccountContext } from '@/contexts/AccountContext'
 import { getBlockchainWallet } from '@/utils/api-blockchain'
 import SubNavBar from '@/components/Modals/SubNavBar'
-import { optionsNetwork } from '../Modals/NewWalletModal'
 import ICPWalletsRender from './ICPWalletsRender'
 import EditWalletModal from '../Modals/EditWalletModal'
 import TransactionsRender from './TransactionsRender'
+import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
 
 const BlockchainWalletPage = ({ id, workspaceId }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isInfoBalanceOpen, setIsInfoBalanceOpen] = useState(false)
 
-  const [navBarSelected, setNavBarSelected] = useState('Canister-wallets')
+  const [navBarSelected, setNavBarSelected] = useState('Transactions')
   const [blockchainWallet, setBlockchainWallet] =
     useState<BlockchainWalletProps>()
   const [isEditWalletOpen, setIsEditWalletOpen] = useState<boolean>(false)
@@ -117,37 +118,84 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   {blockchainWallet?.name}
                 </div>
               </div>
-              <a
-                href={`https://dashboard.internetcomputer.org/account/${blockchainWallet?.icpWalletPubKId}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div className="mt-2 text-[14px] ">
-                  Identity public Id:{' '}
-                  <span className="hover:text-[#0354EC]">
-                    {blockchainWallet?.icpWalletPubKId}
-                  </span>
-                </div>
-              </a>
-              <div className="relative flex w-fit gap-x-[5px]">
-                <div className="mt-2 text-[14px] ">
-                  Identity balance: <span>{blockchainWallet?.balance} ICP</span>
-                </div>
-                <img
-                  alt="ethereum avatar"
-                  src="/images/header/help.svg"
-                  className="w-[17px] cursor-pointer rounded-full"
-                  onMouseEnter={() => setIsInfoBalanceOpen(true)}
-                  onMouseLeave={() => setIsInfoBalanceOpen(false)}
-                ></img>
-                {isInfoBalanceOpen && (
-                  <div className="absolute right-0 flex w-fit -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
-                    To fund your Identity, its necessary to transfer ICP tokens
-                    to your Identity public Id. You can buy ICP tokens in
-                    exchanges as Binance
+              {blockchainWallet?.network === 'ICP' ? (
+                <a
+                  href={`https://dashboard.internetcomputer.org/account/${blockchainWallet?.icpWalletPubKId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="mt-2 text-[14px] ">
+                    Identity public Id:{' '}
+                    <span className="hover:text-[#0354EC]">
+                      {blockchainWallet?.icpWalletPubKId}
+                    </span>
                   </div>
-                )}
-              </div>
+                </a>
+              ) : (
+                <a
+                  href={`https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="mt-2 text-[14px] ">
+                    Public Key:{' '}
+                    <span className="hover:text-[#0354EC]">
+                      {blockchainWallet?.stellarWalletPubK}
+                    </span>
+                  </div>
+                </a>
+              )}
+              {blockchainWallet?.network === 'ICP' ? (
+                <div className="relative flex w-fit gap-x-[5px]">
+                  <div className="mt-2 text-[14px] ">
+                    Identity balance:{' '}
+                    <span>{blockchainWallet?.balance} ICP</span>
+                  </div>
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/header/help.svg"
+                    className="w-[17px] cursor-pointer rounded-full"
+                    onMouseEnter={() => setIsInfoBalanceOpen(true)}
+                    onMouseLeave={() => setIsInfoBalanceOpen(false)}
+                  ></img>
+                  {isInfoBalanceOpen && (
+                    <div className="absolute right-0 flex w-fit -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                      To fund your Identity, its necessary to transfer ICP
+                      tokens to your Identity public Id. You can buy ICP tokens
+                      in exchanges as Binance
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <div className="relative flex w-fit gap-x-[5px]">
+                    <div className="mt-2 text-[14px] ">
+                      Wallet balance:{' '}
+                      <span>{blockchainWallet?.balance} XLM</span>
+                    </div>
+                    <img
+                      alt="ethereum avatar"
+                      src="/images/header/help.svg"
+                      className="w-[17px] cursor-pointer rounded-full"
+                      onMouseEnter={() => setIsInfoBalanceOpen(true)}
+                      onMouseLeave={() => setIsInfoBalanceOpen(false)}
+                    ></img>
+                    {isInfoBalanceOpen && (
+                      <div className="absolute right-0 flex w-fit -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                        To fund your wallet, its necessary to transfer XLM
+                        tokens to your address. You can buy XLM tokens in
+                        exchanges as Binance
+                      </div>
+                    )}
+                  </div>
+                  {Number(blockchainWallet?.balance) === 0 && (
+                    <div className="mt-2 w-fit rounded-md border-[1px] border-[#a53333] bg-[#e7c567ac] px-[10px] text-[14px] text-[#fff]">
+                      Make sure to fund the wallet with at least 1 XLM to
+                      activate it!
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             {workspace?.isUserAdmin && (
               <div
@@ -166,7 +214,11 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                 setNavBarSelected(value)
               }}
               selected={navBarSelected}
-              itensList={['Canister-wallets', 'Transactions']}
+              itensList={
+                blockchainWallet?.network === 'ICP'
+                  ? ['Canister-wallets', 'Transactions']
+                  : ['Transactions']
+              }
             />
             <div className="mt-[20px] 2xl:mt-[40px]">
               {navBarSelected === 'Canister-wallets' && (

@@ -15,8 +15,8 @@ import { parseCookies } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { editWallet } from '@/utils/api-blockchain'
 import { BlockchainWalletProps } from '@/types/blockchain-app'
-import { optionsNetwork } from './NewWalletModal'
 import DeleteAppModal from './DeleteAppModal'
+import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
 
 export interface ModalI {
   wallet: BlockchainWalletProps

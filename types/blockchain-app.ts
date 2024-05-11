@@ -31,6 +31,8 @@ export interface BlockchainWalletProps {
   icpWalletId: string
   icpWalletPubKId: string
   icpWalletPubKPrincipal: string
+  stellarWalletPubK: string
+  stellarWalletPrivK: string
   balance: string
   name: string
   network: string

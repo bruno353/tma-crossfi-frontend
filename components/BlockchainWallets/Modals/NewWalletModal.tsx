@@ -15,15 +15,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { parseCookies } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { createBlockchainApps, createWallet } from '@/utils/api-blockchain'
-
-export const optionsNetwork = [
-  {
-    name: 'Internet computer protocol',
-    value: 'ICP',
-    imageSrc: '/images/workspace/icp.png',
-    imageStyle: 'w-[25px]',
-  },
-]
+import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
 
 const NewWalletModal = ({ isOpen, onUpdateM, onClose, workspaceId }) => {
   const [appName, setAppName] = useState('')

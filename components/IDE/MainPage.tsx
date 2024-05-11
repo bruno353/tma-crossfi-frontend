@@ -130,16 +130,19 @@ const MainPage = ({ id }) => {
     <>
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="container text-[#fff]">
-          <div
-            onClick={() => setLanguageSelectorOpen(true)}
-            className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
-          >
-            <div>{language}</div>
-            <img
-              alt="ethereum avatar"
-              src="/images/header/arrow.svg"
-              className="w-[7px]"
-            ></img>
+          <div className="flex w-[60%] justify-between">
+            <div
+              onClick={() => setLanguageSelectorOpen(true)}
+              className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
+            >
+              <div>{language}</div>
+              <img
+                alt="ethereum avatar"
+                src="/images/header/arrow.svg"
+                className="w-[7px]"
+              ></img>
+            </div>
+            <div className="cursor-pointer text-[14px]">Deploy</div>
           </div>
           <div className="editor-container w-[60%]">
             <Editor
