@@ -127,6 +127,14 @@ const Sidebar = (id: any) => {
       pathSegment: 'blockchain-ide',
     },
     {
+      name: 'DePin',
+      option: `/${id.id}/depin`,
+      imgSource: '/images/sidebar/app.svg',
+      imgStyle: 'w-[18px]',
+      type: 'blockchain',
+      pathSegment: 'blockchain-ide',
+    },
+    {
       name: 'Apps',
       option: `/${id.id}/llm-apps`,
       imgSource: '/images/sidebar/1.svg',

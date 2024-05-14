@@ -28,15 +28,18 @@ import { BlockchainWalletProps } from '@/types/blockchain-app'
 import { callPostAPI, getBlockchainWallets } from '@/utils/api-blockchain'
 // import NewAppModal from './Modals/NewAppModal'
 import Editor, { useMonaco } from '@monaco-editor/react'
-import SelectLanguageModal from './Modals/SelectLanguage'
-import './EditorStyles.css'
+import { DePinProps } from '@/types/automation'
+import DeploymentsRender from './DeploymentsRender'
 
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingCompilation, setIsLoadingCompilation] = useState(false)
+  const [isInfoBalanceOpen, setIsInfoBalanceOpen] = useState(false)
   const [value, setValue] = useState('// start your code here')
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
+  const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const monaco = useMonaco()
+  const [dePins, setDePins] = useState<DePinProps[]>([])
 
   const [navBarSelected, setNavBarSelected] = useState('General')
   const [blockchainWallets, setBlockchainWallets] = useState<
@@ -153,65 +156,60 @@ const MainPage = ({ id }) => {
     <>
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="container text-[#fff]">
-          <div className="flex w-[60%] justify-between">
-            <div
-              onClick={() => setLanguageSelectorOpen(true)}
-              className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
-            >
-              <div>{language}</div>
+          <div className="flex items-center justify-between gap-x-[20px]">
+            <div className="flex gap-x-[3px]">
+              <div className="mt-auto text-[24px] font-medium">
+                Depin Deployment
+              </div>
               <img
                 alt="ethereum avatar"
-                src="/images/header/arrow.svg"
-                className="w-[7px]"
+                src="/images/header/help.svg"
+                className="w-[17px] cursor-pointer rounded-full"
+                onMouseEnter={() => setIsInfoBalanceOpen(true)}
+                onMouseLeave={() => setIsInfoBalanceOpen(false)}
               ></img>
+              {isInfoBalanceOpen && (
+                <div className="absolute right-0 flex w-fit -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                  Create descentralized infrastructure deployments by using the
+                  Internet Computer Protocol {'<>'} Akash integration
+                </div>
+              )}
             </div>
-            <div
-              onClick={() => {
-                compileContract()
-              }}
-              className="cursor-pointer text-[14px]"
-            >
-              Deploy
-            </div>
+            {workspace?.isUserAdmin && (
+              <div
+                onClick={() => {
+                  setIsCreatingNewApp(true)
+                }}
+                className={`${
+                  dePins.length === 0 && 'animate-bounce'
+                } cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
+              >
+                New Deployment
+              </div>
+            )}
           </div>
-          <div
-            className={`editor-container w-[60%] ${
-              isLoadingCompilation && 'animate-pulse'
-            }`}
-          >
-            <Editor
-              height="72vh"
-              theme="vs-dark"
-              defaultLanguage="javascript"
-              value={value}
-              language={language}
-              onMount={onMount}
+          <div className="mt-[45px]">
+            <SubNavBar
               onChange={(value) => {
-                if (!isLoadingCompilation) {
-                  setValue(value)
-                }
+                setNavBarSelected(value)
               }}
-              options={{
-                minimap: {
-                  enabled: false,
-                },
-              }}
+              selected={navBarSelected}
+              itensList={['General']}
             />
+            <div className="mt-[50px]">
+              {navBarSelected === 'General' && (
+                <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+                  <DeploymentsRender
+                    apps={dePins}
+                    isUserAdmin={workspace?.isUserAdmin}
+                    onUpdate={getData}
+                  />
+                </div>
+              )}
+            </div>
           </div>
+          <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
-        {languageSelectorOpen && (
-          <div
-            className="absolute top-[35px] !z-[999999] translate-x-[30px] translate-y-[40px] 2xl:translate-x-[80px]"
-            ref={menuRef}
-          >
-            <SelectLanguageModal
-              onUpdateM={(value) => {
-                setLanguage(value)
-                setLanguageSelectorOpen(false)
-              }}
-            />{' '}
-          </div>
-        )}
       </section>
     </>
   )
