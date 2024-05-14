@@ -132,7 +132,7 @@ const Sidebar = (id: any) => {
       imgSource: '/images/sidebar/app.svg',
       imgStyle: 'w-[18px]',
       type: 'blockchain',
-      pathSegment: 'blockchain-ide',
+      pathSegment: 'depin',
     },
     {
       name: 'Apps',

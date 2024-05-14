@@ -62,6 +62,7 @@ export interface AutomationWorkflowProps {
 export interface DePinProps {
   id: string
   name: string
+  sdl: string
   createdAt: string
   updatedAt: string
   activated: boolean

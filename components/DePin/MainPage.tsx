@@ -30,6 +30,7 @@ import { callPostAPI, getBlockchainWallets } from '@/utils/api-blockchain'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { DePinProps } from '@/types/automation'
 import DeploymentsRender from './DeploymentsRender'
+import NewWorkflowModal from './Modals/NewWorkflowModal'
 
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -157,7 +158,7 @@ const MainPage = ({ id }) => {
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
-            <div className="flex gap-x-[3px]">
+            <div className="relative flex gap-x-[8px]">
               <div className="mt-auto text-[24px] font-medium">
                 Depin Deployment
               </div>
@@ -169,7 +170,7 @@ const MainPage = ({ id }) => {
                 onMouseLeave={() => setIsInfoBalanceOpen(false)}
               ></img>
               {isInfoBalanceOpen && (
-                <div className="absolute right-0 flex w-fit -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                <div className="absolute right-0 flex w-fit -translate-y-[20%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
                   Create descentralized infrastructure deployments by using the
                   Internet Computer Protocol {'<>'} Akash integration
                 </div>
@@ -210,6 +211,25 @@ const MainPage = ({ id }) => {
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
+        <NewWorkflowModal
+          isOpen={isCreatingNewApp}
+          onClose={() => {
+            setIsCreatingNewApp(false)
+          }}
+          onUpdateM={(data: any) => {
+            setIsCreatingNewApp(false)
+            const newDeployment = {
+              id: '123',
+              name: 'Websocket test',
+              sdl: '---version: "2.0"services:  service-1:    image: ""    expose:      - port: 80        as: 80        to:          - global: trueprofiles:  compute:    service-1:      resources:        cpu:          units: 0.1        memory:          size: 512Mi        storage:          - size: 1Gi  placement:    dcloud:      pricing:        service-1:          denom: uakt          amount: 1000deployment:  service-1:    dcloud:      profile: service-1      count: 1',
+              createdAt: String(new Date()),
+              updatedAt: String(new Date()),
+              activated: true,
+            }
+            setDePins([newDeployment])
+          }}
+          workspaceId={workspace?.id}
+        />
       </section>
     </>
   )

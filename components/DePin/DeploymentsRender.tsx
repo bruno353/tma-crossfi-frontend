@@ -75,7 +75,7 @@ const WorkflowsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
     return (
       <div className="mx-auto w-fit items-center justify-center text-[15px] font-light">
         <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
-        <span>No Workflows found, create your first Workflow</span>
+        <span>No deployments found, create your first deployment</span>
       </div>
     )
   }
@@ -89,8 +89,9 @@ const WorkflowsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
           ) : (
             <div className="">
               <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
-                <div className="w-full max-w-[60%]">Workflow name</div>
-                <div className="w-full max-w-[30%]">created at</div>
+                <div className="w-full max-w-[20%]">Workflow name</div>
+                <div className="w-full max-w-[40%]">SDL</div>
+                <div className="w-full max-w-[25%]">created at</div>
               </div>
               <div className="max-h-[calc(100vh-26rem)] overflow-y-auto rounded-b-md  border border-[#c5c4c41a] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-32rem)] ">
                 {' '}
@@ -105,8 +106,11 @@ const WorkflowsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
                       'border-b-[1px] border-[#c5c4c41a]'
                     } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
                   >
-                    <div className="w-full max-w-[60%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {app.name}
+                    </div>
+                    <div className="w-full max-w-[40%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                      {app.sdl.slice(0, 40)}...
                     </div>
                     <div className="w-full max-w-[30%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {formatDate(app.createdAt)}
