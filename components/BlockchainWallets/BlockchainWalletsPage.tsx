@@ -27,6 +27,7 @@ import { BlockchainWalletProps } from '@/types/blockchain-app'
 import WalletsRender from './WalletsRender'
 import { getBlockchainWallets } from '@/utils/api-blockchain'
 import NewWalletModal from './Modals/NewWalletModal'
+import { callAxiosBackend } from '@/utils/general-api'
 // import NewAppModal from './Modals/NewAppModal'
 
 const BlockchainWalletsPage = ({ id }) => {
@@ -46,12 +47,12 @@ const BlockchainWalletsPage = ({ id }) => {
     setIsLoading(true)
     const { userSessionToken } = parseCookies()
 
-    const data = {
-      id,
-    }
-
     try {
-      const res = await getBlockchainWallets(data, userSessionToken)
+      const res = await callAxiosBackend(
+        'get',
+        `/blockchain/functions/getWorkspaceWallets?id=${id}`,
+        userSessionToken,
+      )
       setBlockchainWallets(res)
     } catch (err) {
       console.log(err)

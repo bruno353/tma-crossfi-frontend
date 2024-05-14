@@ -132,7 +132,9 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                           </div>
                         )}
                         <div className=" overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                          {transformString(wallet.icpWalletPubKId)}
+                          {transformString(
+                            wallet.icpWalletPubKId || wallet.stellarWalletPubK,
+                          )}
                         </div>
                         <img
                           ref={copyRef}
@@ -144,7 +146,8 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                           onClick={(event) => {
                             event.stopPropagation()
                             navigator.clipboard.writeText(
-                              wallet.icpWalletPubKId,
+                              wallet.icpWalletPubKId ||
+                                wallet.stellarWalletPubK,
                             )
                           }}
                         ></img>
@@ -172,7 +175,7 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                         }
                       </div>
                     </div>
-                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                    <div className="ml-2 w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {wallet.name}
                     </div>
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">

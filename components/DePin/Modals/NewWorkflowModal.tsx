@@ -11,7 +11,10 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { parseCookies } from 'nookies'
-import { createAutomationWorkflow } from '@/utils/api-automation'
+import {
+  createAutomationWorkflow,
+  editAutomationWorkflow,
+} from '@/utils/api-automation'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { wait } from '@/utils/functions'
 
@@ -51,6 +54,7 @@ const NewDeploymentModal = ({ isOpen, onUpdateM, onClose, workspaceId }) => {
     }
 
     try {
+      // await editAutomationWorkflow(sdlValue, userSessionToken)
       onUpdateM()
     } catch (err) {
       console.log(err)

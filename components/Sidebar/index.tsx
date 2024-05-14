@@ -23,7 +23,8 @@ import { Logo } from './Logo'
 const Sidebar = (id: any) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true)
   const [sidebarOption, setSidebarOption] = useState<string>('')
-  const { workspace, setWorkspace, user } = useContext(AccountContext)
+  const { workspace, setWorkspace, user, minimize, setMinimize } =
+    useContext(AccountContext)
 
   const [isBlockchainSidebarOpen, setIsBlockchainSidebarOpen] =
     useState<boolean>(true)
@@ -252,11 +253,18 @@ const Sidebar = (id: any) => {
   return (
     <div className="relative">
       <div
+        onClick={() => {
+          if (minimize) {
+            setMinimize(!minimize)
+          }
+        }}
         // onMouseEnter={() => setIsSidebarOpen(true)}
         // onMouseLeave={() => setIsSidebarOpen(false)}
-        className="relative !z-[9999] ml-[15px] mt-[40px] flex h-[calc(100vh-10rem)] w-[210px] overflow-y-auto rounded-[10px] bg-[#1D2144]  px-[10px]  py-36 text-[16px] scrollbar-thin scrollbar-track-[#1D2144]  scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md lg:py-[30px]"
+        className={`relative !z-[9999] ml-[15px] mt-[40px] flex h-[calc(100vh-10rem)] w-[210px] overflow-y-auto rounded-[10px] bg-[#1D2144]  px-[10px]  py-36 text-[16px] scrollbar-thin scrollbar-track-[#1D2144]  scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md lg:py-[30px] ${
+          minimize && '!h-[33px] !w-[33px] rounded-full !p-0'
+        }`}
       >
-        <div className="w-full">
+        <div className={`w-full ${minimize && 'hidden'}`}>
           {workspace && (
             <div
               onClick={toggleHandler}
@@ -515,6 +523,15 @@ const Sidebar = (id: any) => {
           isOpen={isCreatingNewWorkspace}
           onClose={closeModal}
         />
+        <div
+          onClick={() => setMinimize(!minimize)}
+          title="Minimize"
+          className={`absolute cursor-pointer  text-[22px] text-[#fff] ${
+            minimize ? '-top-[1px] left-[10px]' : 'left-4 top-0'
+          }`}
+        >
+          {minimize ? '+' : '-'}
+        </div>
       </div>
       {menuOpen && (
         <div

@@ -25,11 +25,11 @@ import { WorkspaceProps } from '@/types/workspace'
 import SubNavBar from '../Modals/SubNavBar'
 import { Logo } from '../Sidebar/Logo'
 import { BlockchainWalletProps } from '@/types/blockchain-app'
-import { callPostAPI, getBlockchainWallets } from '@/utils/api-blockchain'
 // import NewAppModal from './Modals/NewAppModal'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import SelectLanguageModal from './Modals/SelectLanguage'
 import './EditorStyles.css'
+import { callAxiosBackend } from '@/utils/general-api'
 
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -67,10 +67,11 @@ const MainPage = ({ id }) => {
     }
 
     try {
-      const res = await callPostAPI(
+      const res = await callAxiosBackend(
+        'post',
         '/blockchain/functions/compileSorobanContract',
-        data,
         userSessionToken,
+        data,
       )
     } catch (err) {
       console.log(err)
@@ -83,12 +84,12 @@ const MainPage = ({ id }) => {
     setIsLoading(true)
     const { userSessionToken } = parseCookies()
 
-    const data = {
-      id,
-    }
-
     try {
-      const res = await getBlockchainWallets(data, userSessionToken)
+      const res = await callAxiosBackend(
+        'get',
+        `/blockchain/functions/getWorkspaceWallets?id=${id}&sorobanRPC=https://horizon-testnet.stellar.org&network=STELLAR`,
+        userSessionToken,
+      )
       setBlockchainWallets(res)
     } catch (err) {
       console.log(err)
@@ -152,51 +153,54 @@ const MainPage = ({ id }) => {
   return (
     <>
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
-        <div className="container text-[#fff]">
-          <div className="flex w-[60%] justify-between">
-            <div
-              onClick={() => setLanguageSelectorOpen(true)}
-              className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
-            >
-              <div>{language}</div>
-              <img
-                alt="ethereum avatar"
-                src="/images/header/arrow.svg"
-                className="w-[7px]"
-              ></img>
+        <div className="container flex gap-x-[10px] text-[#fff]">
+          <div className="h-[76vh] w-[200px] rounded-xl bg-[#1D2144]"></div>
+          <div className="w-full">
+            <div className="flex w-[60%] justify-between">
+              <div
+                onClick={() => setLanguageSelectorOpen(true)}
+                className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
+              >
+                <div>{language}</div>
+                <img
+                  alt="ethereum avatar"
+                  src="/images/header/arrow.svg"
+                  className="w-[7px]"
+                ></img>
+              </div>
+              <div
+                onClick={() => {
+                  compileContract()
+                }}
+                className="cursor-pointer text-[14px]"
+              >
+                Deploy
+              </div>
             </div>
             <div
-              onClick={() => {
-                compileContract()
-              }}
-              className="cursor-pointer text-[14px]"
+              className={`editor-container w-[60%] ${
+                isLoadingCompilation && 'animate-pulse'
+              }`}
             >
-              Deploy
+              <Editor
+                height="72vh"
+                theme="vs-dark"
+                defaultLanguage="javascript"
+                value={value}
+                language={language}
+                onMount={onMount}
+                onChange={(value) => {
+                  if (!isLoadingCompilation) {
+                    setValue(value)
+                  }
+                }}
+                options={{
+                  minimap: {
+                    enabled: false,
+                  },
+                }}
+              />
             </div>
-          </div>
-          <div
-            className={`editor-container w-[60%] ${
-              isLoadingCompilation && 'animate-pulse'
-            }`}
-          >
-            <Editor
-              height="72vh"
-              theme="vs-dark"
-              defaultLanguage="javascript"
-              value={value}
-              language={language}
-              onMount={onMount}
-              onChange={(value) => {
-                if (!isLoadingCompilation) {
-                  setValue(value)
-                }
-              }}
-              options={{
-                minimap: {
-                  enabled: false,
-                },
-              }}
-            />
           </div>
         </div>
         {languageSelectorOpen && (

@@ -43,6 +43,9 @@ interface CreateUserContextProps {
   nodeHasChange: string | undefined
   setNodeHasChange: (nodeHasChange: string | undefined) => void
 
+  minimize: boolean | undefined
+  setMinimize: (minimize: boolean | undefined) => void
+
   reactFlowEdges: any | undefined
   setReactFlowEdges: (reactFlowEdges: any | undefined) => void
 
@@ -57,6 +60,7 @@ export default function AccountContextProvider({
 }: CreateContextProps) {
   const [user, setUser] = useState<UserProps>()
   const [channels, setChannels] = useState<ChannelProps[]>()
+  const [minimize, setMinimize] = useState<boolean>(false)
   const [channel, setChannel] = useState<ChannelProps>()
   const [conversation, setConversation] = useState<ConversationProps>()
   const [conversations, setConversations] = useState<ConversationProps[]>()
@@ -80,6 +84,8 @@ export default function AccountContextProvider({
         setNodeHasChange,
         automationWorkflowSelected,
         setAutomationWorkflowSelected,
+        minimize,
+        setMinimize,
         dm,
         setDm,
         channel,

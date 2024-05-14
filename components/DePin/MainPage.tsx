@@ -25,7 +25,7 @@ import { WorkspaceProps } from '@/types/workspace'
 import SubNavBar from '../Modals/SubNavBar'
 import { Logo } from '../Sidebar/Logo'
 import { BlockchainWalletProps } from '@/types/blockchain-app'
-import { callPostAPI, getBlockchainWallets } from '@/utils/api-blockchain'
+import { getBlockchainWallets } from '@/utils/api-blockchain'
 // import NewAppModal from './Modals/NewAppModal'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { DePinProps } from '@/types/automation'
@@ -60,28 +60,6 @@ const MainPage = ({ id }) => {
     editor.focus()
   }
   const menuRef = useRef(null)
-
-  async function compileContract() {
-    setIsLoadingCompilation(true)
-    const { userSessionToken } = parseCookies()
-
-    const data = {
-      walletId: '123',
-      code: value,
-    }
-
-    try {
-      const res = await callPostAPI(
-        '/blockchain/functions/compileSorobanContract',
-        data,
-        userSessionToken,
-      )
-    } catch (err) {
-      console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
-    }
-    setIsLoadingCompilation(false)
-  }
 
   async function getData() {
     setIsLoading(true)
