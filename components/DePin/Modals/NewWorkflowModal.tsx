@@ -41,7 +41,7 @@ const NewDeploymentModal = ({ isOpen, onUpdateM, onClose, workspaceId }) => {
 
   const handleCreateChannel = async () => {
     setIsLoading(true)
-    await wait(3500)
+    await wait(30500)
 
     const { userSessionToken } = parseCookies()
 
