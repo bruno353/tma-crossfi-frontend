@@ -159,8 +159,13 @@ const MainPage = ({ id }) => {
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="relative flex gap-x-[8px]">
-              <div className="mt-auto text-[24px] font-medium">
-                Depin Deployment
+              <div className="mt-auto flex gap-x-[8px] text-[24px] font-medium">
+                <img
+                  alt="ethereum avatar"
+                  src="/images/depin/akash.svg"
+                  className="w-[25px] 2xl:w-[25px]"
+                ></img>
+                <div>Depin Deployment</div>
               </div>
               <img
                 alt="ethereum avatar"
