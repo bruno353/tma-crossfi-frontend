@@ -6,7 +6,6 @@
 'use client'
 // import { useState } from 'react'
 import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
-import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
@@ -15,8 +14,6 @@ import { parseCookies } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { fundICPWallet, transferICP } from '@/utils/api-blockchain'
 import { ICPWalletsProps, BlockchainWalletProps } from '@/types/blockchain-app'
-import { optionsNetwork } from './NewWalletModal'
-import DeleteAppModal from './DeleteAppModal'
 import ConfirmFundICPWalletModal from './ConfirmFundICPWalletModal'
 import { wait } from '@/utils/functions'
 

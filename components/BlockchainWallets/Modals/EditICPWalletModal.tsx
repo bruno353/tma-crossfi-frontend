@@ -14,7 +14,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { parseCookies } from 'nookies'
 import { editICPWallet, editWallet } from '@/utils/api-blockchain'
 import { ICPWalletsProps } from '@/types/blockchain-app'
-import { optionsNetwork } from './NewWalletModal'
 import DeleteAppModal from './DeleteAppModal'
 
 export interface ModalI {
