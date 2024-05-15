@@ -30,6 +30,19 @@ import Editor, { useMonaco } from '@monaco-editor/react'
 import SelectLanguageModal from './Modals/SelectLanguage'
 import './EditorStyles.css'
 import { callAxiosBackend } from '@/utils/general-api'
+import Dropdown, { ValueObject } from '../Modals/Dropdown'
+import { transformString } from '@/utils/functions'
+
+export const optionsNetwork = [
+  {
+    name: 'Testnet',
+    value: 'Testnet',
+  },
+  {
+    name: 'Mainnet',
+    value: 'Mainnet',
+  },
+]
 
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -37,11 +50,20 @@ const MainPage = ({ id }) => {
   const [value, setValue] = useState('// start your code here')
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
   const monaco = useMonaco()
+  const [selected, setSelected] = useState<ValueObject>(optionsNetwork[0])
+  const [openCode, setOpenCode] = useState(true)
+  const [openContracts, setOpenContracts] = useState(true)
+  const [openConsole, setOpenConsole] = useState(true)
 
   const [navBarSelected, setNavBarSelected] = useState('General')
+
   const [blockchainWallets, setBlockchainWallets] = useState<
     BlockchainWalletProps[]
   >([])
+  const [blockchainWalletsDropdown, setBlockchainWalletsDropdown] =
+    useState<ValueObject[]>()
+  const [blockchainWalletsSelected, setBlockchainWalletsSelected] =
+    useState<ValueObject>()
 
   const { workspace, user } = useContext(AccountContext)
 
@@ -49,7 +71,7 @@ const MainPage = ({ id }) => {
   const pathname = usePathname()
 
   const editorRef = useRef()
-  const [language, setLanguage] = useState('')
+  const [language, setLanguage] = useState('rust')
 
   const onMount = (editor) => {
     editorRef.current = editor
@@ -90,7 +112,18 @@ const MainPage = ({ id }) => {
         `/blockchain/functions/getWorkspaceWallets?id=${id}&sorobanRPC=https://horizon-testnet.stellar.org&network=STELLAR`,
         userSessionToken,
       )
+      const walletsToSet = []
+      for (let i = 0; i < res.length; i++) {
+        walletsToSet.push({
+          name: transformString(res[i].stellarWalletPubK, 5),
+          value: res[i].id,
+        })
+      }
+      setBlockchainWalletsDropdown(walletsToSet)
       setBlockchainWallets(res)
+      if (walletsToSet?.length > 0) {
+        setBlockchainWalletsSelected(walletsToSet[0])
+      }
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -154,54 +187,191 @@ const MainPage = ({ id }) => {
     <>
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="container flex gap-x-[10px] text-[#fff]">
-          <div className="h-[76vh] w-[200px] rounded-xl bg-[#1D2144]"></div>
-          <div className="w-full">
-            <div className="flex w-[60%] justify-between">
-              <div
-                onClick={() => setLanguageSelectorOpen(true)}
-                className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
-              >
-                <div>{language}</div>
+          <div className="relative h-[76vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light">
+            <div className="relative flex gap-x-[5px]">
+              <img
+                alt="ethereum avatar"
+                src="/images/workspace/stellar-new.svg"
+                className="w-[16px]"
+              ></img>
+              <div className="font-medium">Soroban</div>
+            </div>
+            <div className="mt-4 h-[1px] w-full bg-[#c5c4c41a]"></div>
+            <div className="mt-5 w-fit">
+              <div className="mb-2 flex gap-x-[5px]">
                 <img
                   alt="ethereum avatar"
-                  src="/images/header/arrow.svg"
-                  className="w-[7px]"
+                  src="/images/depin/settings.svg"
+                  className="w-[16px]"
                 ></img>
+                <div>Environment</div>
               </div>
-              <div
-                onClick={() => {
-                  compileContract()
+              <Dropdown
+                optionSelected={selected}
+                options={optionsNetwork}
+                onValueChange={(value) => {
+                  setSelected(value)
                 }}
-                className="cursor-pointer text-[14px]"
-              >
-                Deploy
-              </div>
-            </div>
-            <div
-              className={`editor-container w-[60%] ${
-                isLoadingCompilation && 'animate-pulse'
-              }`}
-            >
-              <Editor
-                height="72vh"
-                theme="vs-dark"
-                defaultLanguage="javascript"
-                value={value}
-                language={language}
-                onMount={onMount}
-                onChange={(value) => {
-                  if (!isLoadingCompilation) {
-                    setValue(value)
-                  }
-                }}
-                options={{
-                  minimap: {
-                    enabled: false,
-                  },
-                }}
+                classNameForDropdown="!px-1 !pr-2 !py-1"
+                classNameForPopUp="!px-1 !pr-2 !py-1"
               />
             </div>
+            <div className="mt-4">
+              <div className="mb-2 flex gap-x-[5px]">
+                <img
+                  alt="ethereum avatar"
+                  src="/images/depin/card.svg"
+                  className="w-[16px]"
+                ></img>
+                <div>Wallet</div>
+              </div>
+              <div className="flex items-center gap-x-1">
+                {blockchainWallets?.length > 0 ? (
+                  <Dropdown
+                    optionSelected={blockchainWalletsSelected}
+                    options={blockchainWalletsDropdown}
+                    onValueChange={(value) => {
+                      setBlockchainWalletsSelected(value)
+                    }}
+                    classNameForDropdown="!px-1 !pr-2 !py-1 !flex-grow !min-w-[130px]"
+                    classNameForPopUp="!px-1 !pr-2 !py-1"
+                  />
+                ) : (
+                  <div className="text-[#c5c4c4]">create a wallet </div>
+                )}
+
+                <a href={`/workspace/${id}/blockchain-wallets`}>
+                  <div
+                    title="Create wallet"
+                    className="flex-grow-0 cursor-pointer text-[16px]"
+                  >
+                    +
+                  </div>
+                </a>
+              </div>
+              {blockchainWalletsSelected && (
+                <div className="mt-2 text-[12px] text-[#c5c4c4]">
+                  {' '}
+                  Balance:{' '}
+                  {
+                    blockchainWallets.find(
+                      (obj) => obj.id === blockchainWalletsSelected.value,
+                    ).balance
+                  }
+                </div>
+              )}
+            </div>
+            <div className="absolute bottom-4 flex gap-x-3">
+              <img
+                onClick={() => setOpenCode(!openCode)}
+                src={
+                  openCode
+                    ? '/images/depin/write.svg'
+                    : '/images/depin/write-grey.svg'
+                }
+                alt="ethereum avatar"
+                className="w-[17px] cursor-pointer"
+              ></img>
+              <img
+                onClick={() => setOpenContracts(!openContracts)}
+                alt="ethereum avatar"
+                src={
+                  openContracts
+                    ? '/images/depin/documents.svg'
+                    : '/images/depin/documents-grey.svg'
+                }
+                className="w-[16px] cursor-pointer"
+              ></img>
+              <img
+                onClick={() => setOpenConsole(!openConsole)}
+                alt="ethereum avatar"
+                src={
+                  openConsole
+                    ? '/images/depin/terminal.svg'
+                    : '/images/depin/terminal-grey.svg'
+                }
+                className="w-[18px] cursor-pointer"
+              ></img>
+            </div>
           </div>
+          {openCode && (
+            <div className="w-full min-w-[60%] max-w-[80%]">
+              <div className="flex w-full justify-between">
+                <div
+                  onClick={() => setLanguageSelectorOpen(true)}
+                  className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
+                >
+                  <div>{language}</div>
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/header/arrow.svg"
+                    className="w-[7px]"
+                  ></img>
+                </div>
+                <div
+                  onClick={() => {
+                    compileContract()
+                  }}
+                  className="cursor-pointer text-[14px]"
+                >
+                  Deploy
+                </div>
+              </div>
+              <div
+                className={`editor-container w-full ${
+                  isLoadingCompilation && 'animate-pulse'
+                }`}
+              >
+                <Editor
+                  height="72vh"
+                  theme="vs-dark"
+                  defaultLanguage="javascript"
+                  value={value}
+                  language={language}
+                  onMount={onMount}
+                  onChange={(value) => {
+                    if (!isLoadingCompilation) {
+                      setValue(value)
+                    }
+                  }}
+                  options={{
+                    minimap: {
+                      enabled: false,
+                    },
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {(openContracts || openConsole) && (
+            <div className="grid h-[76vh] w-full gap-y-[1vh] text-[13px]">
+              {openContracts && (
+                <div className="h-full w-full  rounded-xl bg-[#1D2144] px-4 py-4">
+                  <div className="flex gap-x-[5px]">
+                    <img
+                      alt="ethereum avatar"
+                      src="/images/depin/documents.svg"
+                      className="w-[16px]"
+                    ></img>
+                    <div className="font-medium">Contracts</div>
+                  </div>
+                </div>
+              )}
+              {openConsole && (
+                <div className="h-full w-full rounded-xl bg-[#1D2144] px-4 py-4">
+                  <div className="flex gap-x-[5px]">
+                    <img
+                      alt="ethereum avatar"
+                      src="/images/depin/terminal.svg"
+                      className="w-[16px]"
+                    ></img>
+                    <div className="font-medium">Console</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         {languageSelectorOpen && (
           <div

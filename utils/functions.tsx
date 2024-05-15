@@ -164,13 +164,13 @@ export function getDifferenceInSeconds(date1, date2): number {
   return Math.floor(difference / 1000)
 }
 
-export function transformString(str) {
+export function transformString(str, number?: number) {
   if (str?.length <= 6) {
     return str
   }
 
-  const firstThree = str?.substring(0, 9)
-  const lastThree = str?.substring(str?.length - 9)
+  const firstThree = str?.substring(0, number || 9)
+  const lastThree = str?.substring(str?.length - (number || 9))
 
   return firstThree + '...' + lastThree
 }

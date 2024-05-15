@@ -14,6 +14,8 @@ interface ModalI {
   options: ValueObject[]
   onValueChange(value: ValueObject): void
   isDisable?: boolean
+  classNameForDropdown?: string
+  classNameForPopUp?: string
 }
 
 const Dropdown = ({
@@ -21,6 +23,8 @@ const Dropdown = ({
   options,
   onValueChange,
   isDisable,
+  classNameForDropdown,
+  classNameForPopUp,
 }: ModalI) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -43,7 +47,7 @@ const Dropdown = ({
     <div
       className={`relative ${
         isOpen && 'border-primary'
-      } w-full rounded-md  border  border-transparent  bg-[#242B51] px-6 py-2 text-body-color`}
+      } w-full rounded-md  border  border-transparent  bg-[#242B51] px-6 py-2 text-body-color ${classNameForDropdown}`}
       ref={dropdownRef}
     >
       <div
@@ -58,9 +62,9 @@ const Dropdown = ({
         <div className="flex justify-between gap-x-[10px]">
           {optionSelected?.imageSrc && (
             <img
-              src={optionSelected.imageSrc}
+              src={optionSelected?.imageSrc}
               alt="image"
-              className={optionSelected.imageStyle}
+              className={optionSelected?.imageStyle}
             />
           )}
 
@@ -86,18 +90,18 @@ const Dropdown = ({
                   onValueChange(option)
                 }}
                 className={`flex cursor-pointer gap-x-[10px] rounded-md px-6 py-2  hover:bg-[#dbdbdb1e] ${
-                  optionSelected.value === option.value && 'bg-[#dbdbdb1e]'
-                }`}
+                  optionSelected?.value === option?.value && 'bg-[#dbdbdb1e]'
+                } ${classNameForPopUp}`}
               >
-                {option.imageSrc && (
+                {option?.imageSrc && (
                   <img
-                    src={option.imageSrc}
+                    src={option?.imageSrc}
                     alt="image"
-                    className={option.imageStyle}
+                    className={option?.imageStyle}
                   />
                 )}
 
-                <div>{option.name}</div>
+                <div>{option?.name}</div>
               </div>
             ))}
           </div>
