@@ -54,6 +54,7 @@ const MainPage = ({ id }) => {
   const [openCode, setOpenCode] = useState(true)
   const [openContracts, setOpenContracts] = useState(true)
   const [openConsole, setOpenConsole] = useState(true)
+  const [isContractsListOpen, setIsContractsListOpen] = useState(true)
 
   const [navBarSelected, setNavBarSelected] = useState('General')
 
@@ -71,7 +72,7 @@ const MainPage = ({ id }) => {
   const pathname = usePathname()
 
   const editorRef = useRef()
-  const [language, setLanguage] = useState('rust')
+  const [language, setLanguage] = useState('')
 
   const onMount = (editor) => {
     editorRef.current = editor
@@ -187,7 +188,7 @@ const MainPage = ({ id }) => {
     <>
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="container flex gap-x-[10px] text-[#fff]">
-          <div className="relative h-[76vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light">
+          <div className="relative h-[76vh] max-h-[76vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light">
             <div className="relative flex gap-x-[5px]">
               <img
                 alt="ethereum avatar"
@@ -261,6 +262,67 @@ const MainPage = ({ id }) => {
                 </div>
               )}
             </div>
+            <div className="mt-4">
+              <div
+                onClick={() => {
+                  console.log(value)
+                  setIsContractsListOpen(true)
+                }}
+                className="mb-2 flex cursor-pointer items-center gap-x-[8px]"
+              >
+                <div className="flex gap-x-[5px]">
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/depin/documents.svg"
+                    className="w-[16px]"
+                  ></img>
+                  <div>Contracts</div>
+                </div>
+                <img
+                  alt="ethereum avatar"
+                  src="/images/header/arrow-gray.svg"
+                  className={`w-[8px] rounded-full transition-transform duration-150 ${
+                    !isContractsListOpen && 'rotate-180'
+                  }`}
+                ></img>
+              </div>
+
+              <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+                {blockchainWallets?.length > 0 ? (
+                  <Dropdown
+                    optionSelected={blockchainWalletsSelected}
+                    options={blockchainWalletsDropdown}
+                    onValueChange={(value) => {
+                      setBlockchainWalletsSelected(value)
+                    }}
+                    classNameForDropdown="!px-1 !pr-2 !py-1 !flex-grow !min-w-[130px]"
+                    classNameForPopUp="!px-1 !pr-2 !py-1"
+                  />
+                ) : (
+                  <div className="text-[#c5c4c4]">create a wallet </div>
+                )}
+
+                <a href={`/workspace/${id}/blockchain-wallets`}>
+                  <div
+                    title="Create wallet"
+                    className="flex-grow-0 cursor-pointer text-[16px]"
+                  >
+                    +
+                  </div>
+                </a>
+              </div>
+              {blockchainWalletsSelected && (
+                <div className="mt-2 text-[12px] text-[#c5c4c4]">
+                  {' '}
+                  Balance:{' '}
+                  {
+                    blockchainWallets.find(
+                      (obj) => obj.id === blockchainWalletsSelected.value,
+                    ).balance
+                  }
+                </div>
+              )}
+            </div>
             <div className="absolute bottom-4 flex gap-x-3">
               <img
                 onClick={() => setOpenCode(!openCode)}
@@ -277,8 +339,8 @@ const MainPage = ({ id }) => {
                 alt="ethereum avatar"
                 src={
                   openContracts
-                    ? '/images/depin/documents.svg'
-                    : '/images/depin/documents-grey.svg'
+                    ? '/images/depin/document.svg'
+                    : '/images/depin/document-grey.svg'
                 }
                 className="w-[16px] cursor-pointer"
               ></img>
@@ -301,7 +363,7 @@ const MainPage = ({ id }) => {
                   onClick={() => setLanguageSelectorOpen(true)}
                   className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
                 >
-                  <div>{language}</div>
+                  <div>{language?.length > 0 ? language : 'Loading'}</div>
                   <img
                     alt="ethereum avatar"
                     src="/images/header/arrow.svg"
@@ -351,10 +413,10 @@ const MainPage = ({ id }) => {
                   <div className="flex gap-x-[5px]">
                     <img
                       alt="ethereum avatar"
-                      src="/images/depin/documents.svg"
+                      src="/images/depin/document.svg"
                       className="w-[16px]"
                     ></img>
-                    <div className="font-medium">Contracts</div>
+                    <div className="font-medium">Contract</div>
                   </div>
                 </div>
               )}
