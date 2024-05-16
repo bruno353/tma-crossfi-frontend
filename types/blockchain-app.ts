@@ -51,3 +51,12 @@ export interface BlockchainAppProps {
   createdAt: string
   updatedAt: string
 }
+
+export interface BlockchainContractProps {
+  id: string | undefined
+  name?: string
+  network: string
+  code?: string
+  createdAt?: string
+  updatedAt?: string
+}

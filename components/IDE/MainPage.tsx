@@ -24,7 +24,10 @@ import { getBlockchainApps, getUserWorkspace, getWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
 import SubNavBar from '../Modals/SubNavBar'
 import { Logo } from '../Sidebar/Logo'
-import { BlockchainWalletProps } from '@/types/blockchain-app'
+import {
+  BlockchainContractProps,
+  BlockchainWalletProps,
+} from '@/types/blockchain-app'
 // import NewAppModal from './Modals/NewAppModal'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import SelectLanguageModal from './Modals/SelectLanguage'
@@ -46,6 +49,8 @@ export const optionsNetwork = [
 
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingContracts, setIsLoadingContracts] = useState(true)
+  const [isLoadingNewContract, setIsLoadingNewContract] = useState(false)
   const [isLoadingCompilation, setIsLoadingCompilation] = useState(false)
   const [value, setValue] = useState('// start your code here')
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
@@ -57,6 +62,17 @@ const MainPage = ({ id }) => {
   const [isContractsListOpen, setIsContractsListOpen] = useState(true)
 
   const [navBarSelected, setNavBarSelected] = useState('General')
+
+  const [blockchainContracts, setBlockchainContracts] = useState<
+    BlockchainContractProps[]
+  >([])
+  const [blockchainContractHovered, setBlockchainContractHovered] =
+    useState<BlockchainContractProps | null>()
+  const [contractSubMenuOpen, setContractSubMenuOpen] =
+    useState<BlockchainContractProps | null>()
+  const [contractRename, setContractRename] =
+    useState<BlockchainContractProps | null>()
+  const [contractName, setContractName] = useState<string>('')
 
   const [blockchainWallets, setBlockchainWallets] = useState<
     BlockchainWalletProps[]
@@ -132,6 +148,107 @@ const MainPage = ({ id }) => {
     setIsLoading(false)
   }
 
+  async function getContracts() {
+    setIsLoadingContracts(true)
+    const { userSessionToken } = parseCookies()
+
+    try {
+      const res = await callAxiosBackend(
+        'get',
+        `/blockchain/functions/getContracts?id=${id}`,
+        userSessionToken,
+      )
+      setBlockchainContracts(res)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setIsLoadingContracts(false)
+  }
+
+  async function createNewContract() {
+    setIsLoadingNewContract(true)
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      workspaceId: id,
+      network: 'STELLAR',
+      code: '// write your code here',
+      name: 'untitled',
+    }
+    try {
+      const res = await callAxiosBackend(
+        'post',
+        `/blockchain/functions/createContract`,
+        userSessionToken,
+        data,
+      )
+      setIsLoadingNewContract(false)
+      return res
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+    setIsLoadingNewContract(false)
+  }
+
+  async function handleDeleteContract(cnt: BlockchainContractProps) {
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id: cnt.id,
+    }
+
+    const newCnts = blockchainContracts?.filter((item) => item.id !== cnt.id)
+    setBlockchainContracts(newCnts)
+    try {
+      await callAxiosBackend(
+        'delete',
+        `/blockchain/functions/deleteContract`,
+        userSessionToken,
+        data,
+      )
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+  }
+
+  async function handleRenameContract() {
+    const { userSessionToken } = parseCookies()
+
+    if (contractNameRef?.current?.length === 0 || !contractNameRef.current) {
+      return
+    }
+
+    const idToSet = contractRename.id
+
+    const data = {
+      id: idToSet,
+      name: contractNameRef.current,
+    }
+
+    try {
+      const newCnts = [...blockchainContracts]
+
+      const cntIndex = blockchainContracts?.findIndex(
+        (item) => item.id === idToSet,
+      )
+      newCnts[cntIndex].name = contractNameRef.current
+      setBlockchainContracts(newCnts)
+
+      await callAxiosBackend(
+        'put',
+        `/blockchain/functions/renameContract`,
+        userSessionToken,
+        data,
+      )
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
+    }
+  }
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -153,6 +270,7 @@ const MainPage = ({ id }) => {
   useEffect(() => {
     setIsLoading(true)
     getData()
+    getContracts()
   }, [id])
 
   useEffect(() => {
@@ -174,6 +292,46 @@ const MainPage = ({ id }) => {
       }, 5000)
     }
   }, [monaco])
+
+  const contractNameRef = useRef(contractName)
+  const nameRef = useRef(null)
+
+  useEffect(() => {
+    contractNameRef.current = contractName
+  }, [contractName])
+
+  const handleKeyPress = (event) => {
+    if (
+      event.key === 'Enter' &&
+      !event.ctrlKey &&
+      !event.shiftKey &&
+      !event.altKey
+    ) {
+      handleRenameContract()
+      setContractRename(null)
+    }
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (nameRef.current && !nameRef.current.contains(event.target)) {
+        setContractRename(null)
+      }
+    }
+
+    if (contractRename) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    document.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [contractRename])
 
   if (isLoading) {
     return (
@@ -266,7 +424,7 @@ const MainPage = ({ id }) => {
               <div
                 onClick={() => {
                   console.log(value)
-                  setIsContractsListOpen(true)
+                  setIsContractsListOpen(!isContractsListOpen)
                 }}
                 className="mb-2 flex cursor-pointer items-center gap-x-[8px]"
               >
@@ -274,9 +432,11 @@ const MainPage = ({ id }) => {
                   <img
                     alt="ethereum avatar"
                     src="/images/depin/documents.svg"
-                    className="w-[16px]"
+                    className="w-[14px]"
                   ></img>
-                  <div>Contracts</div>
+                  <div className={`${isLoadingContracts && 'animate-pulse'}`}>
+                    Contracts
+                  </div>
                 </div>
                 <img
                   alt="ethereum avatar"
@@ -286,40 +446,79 @@ const MainPage = ({ id }) => {
                   }`}
                 ></img>
               </div>
+              {isContractsListOpen && (
+                <div>
+                  <div className="grid gap-y-[2px] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                    {blockchainContracts?.map((cnt, index) => (
+                      <div
+                        onMouseEnter={() => setBlockchainContractHovered(cnt)}
+                        onMouseLeave={() => setBlockchainContractHovered(null)}
+                        className="relative cursor-pointer rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e]"
+                        key={index}
+                      >
+                        {contractRename?.id === cnt?.id ? (
+                          <input
+                            value={contractName}
+                            ref={nameRef}
+                            className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary"
+                            onChange={(e) => {
+                              if (e.target.value.length < 50) {
+                                setContractName(e.target.value)
+                              }
+                            }}
+                            autoFocus
+                          />
+                        ) : (
+                          <div className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary">
+                            {' '}
+                            {cnt?.name}{' '}
+                          </div>
+                        )}
 
-              <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                {blockchainWallets?.length > 0 ? (
-                  <Dropdown
-                    optionSelected={blockchainWalletsSelected}
-                    options={blockchainWalletsDropdown}
-                    onValueChange={(value) => {
-                      setBlockchainWalletsSelected(value)
-                    }}
-                    classNameForDropdown="!px-1 !pr-2 !py-1 !flex-grow !min-w-[130px]"
-                    classNameForPopUp="!px-1 !pr-2 !py-1"
-                  />
-                ) : (
-                  <div className="text-[#c5c4c4]">create a wallet </div>
-                )}
-
-                <a href={`/workspace/${id}/blockchain-wallets`}>
-                  <div
-                    title="Create wallet"
-                    className="flex-grow-0 cursor-pointer text-[16px]"
-                  >
-                    +
+                        {blockchainContractHovered?.id === cnt.id && (
+                          <div className="absolute right-0 top-0 flex h-full px-[10px] text-[10px] backdrop-blur-sm">
+                            <div className="flex items-center gap-x-2">
+                              <img
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  setContractRename(cnt)
+                                  setContractName(cnt.name)
+                                  setContractSubMenuOpen(null)
+                                }}
+                                src={`/images/depin/pencil.svg`}
+                                alt="image"
+                                className="my-auto w-[18px] cursor-pointer"
+                              />
+                              <img
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleDeleteContract(cnt)
+                                }}
+                                src={`/images/depin/garbage.svg`}
+                                alt="image"
+                                className="my-auto w-[11px] cursor-pointer"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                </a>
-              </div>
-              {blockchainWalletsSelected && (
-                <div className="mt-2 text-[12px] text-[#c5c4c4]">
-                  {' '}
-                  Balance:{' '}
-                  {
-                    blockchainWallets.find(
-                      (obj) => obj.id === blockchainWalletsSelected.value,
-                    ).balance
-                  }
+                  <div
+                    onClick={async () => {
+                      if (!isLoadingNewContract) {
+                        const newContract: BlockchainContractProps =
+                          await createNewContract()
+                        const newCnts = [...blockchainContracts, newContract]
+                        setBlockchainContracts(newCnts)
+                      }
+                    }}
+                    className={`mt-1 w-fit cursor-pointer rounded-[7px] px-[6px] py-[2px] text-[12px] text-[#c5c4c4] hover:bg-[#dbdbdb1e] ${
+                      isLoadingNewContract && 'animate-pulse'
+                    }`}
+                  >
+                    + New contract
+                  </div>
                 </div>
               )}
             </div>
