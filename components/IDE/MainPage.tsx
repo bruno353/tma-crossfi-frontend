@@ -5,7 +5,15 @@
 /* eslint-disable no-unused-vars */
 'use client'
 // import { useState } from 'react'
-import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
+import {
+  useEffect,
+  useState,
+  useReducer,
+  ChangeEvent,
+  FC,
+  useContext,
+  useRef,
+} from 'react'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -47,6 +55,21 @@ export const optionsNetwork = [
   },
 ]
 
+const contractReducer = (state, action) => {
+  switch (action.type) {
+    case 'ADD_CONTRACT':
+      if (state.includes(action.payload)) {
+        toast.success('Já incluído')
+        return state
+      }
+      return [...state, action.payload]
+    case 'REMOVE_CONTRACT':
+      return state.filter((contract) => contract !== action.payload)
+    default:
+      return state
+  }
+}
+
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingContracts, setIsLoadingContracts] = useState(true)
@@ -82,11 +105,13 @@ const MainPage = ({ id }) => {
     useState<ValueObject[]>()
   const [blockchainWalletsSelected, setBlockchainWalletsSelected] =
     useState<ValueObject>()
-
+  const [contractsToBeSaved, dispatch] = useReducer(contractReducer, [])
   const { workspace, user } = useContext(AccountContext)
 
   const { push } = useRouter()
   const pathname = usePathname()
+
+  const saveTimeoutRef = useRef(null)
 
   const editorRef = useRef()
   const [language, setLanguage] = useState('')
@@ -116,29 +141,6 @@ const MainPage = ({ id }) => {
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
-    }
-    setIsLoadingCompilation(false)
-  }
-
-  async function saveContract(code: string) {
-    setIsSavingContract(true)
-    const { userSessionToken } = parseCookies()
-
-    const data = {
-      id: blockchainContractSelected?.id,
-      code: value,
-    }
-
-    try {
-      const res = await callAxiosBackend(
-        'put',
-        '/blockchain/functions/saveContractCode',
-        userSessionToken,
-        data,
-      )
-    } catch (err) {
-      console.log(err)
-      toast.error(`Error saving contract: ${err.response.data.message}`)
     }
     setIsLoadingCompilation(false)
   }
@@ -357,6 +359,53 @@ const MainPage = ({ id }) => {
     }
   }, [contractRename])
 
+  async function saveContract(id: string) {
+    setIsSavingContract(true)
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id: id,
+      code: blockchainContracts?.find((cntc) => cntc?.id === id).code,
+    }
+
+    try {
+      const res = await callAxiosBackend(
+        'put',
+        '/blockchain/functions/saveContractCode',
+        userSessionToken,
+        data,
+      )
+      const contracts = [...blockchainContracts]
+      const contractInx = contracts.findIndex((item) => item.id === id)
+      contracts[contractInx].updatedAt = String(new Date())
+      setBlockchainContracts(contracts)
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error saving contract: ${err.response.data.message}`)
+    }
+    setIsSavingContract(false)
+  }
+
+  const saveContracts = (contractId) => {
+    dispatch({ type: 'ADD_CONTRACT', payload: contractId })
+    clearTimeout(saveTimeoutRef.current)
+    saveTimeoutRef.current = setTimeout(() => {
+      saveContractsUpdate()
+    }, 1500)
+  }
+
+  const saveContractsUpdate = () => {
+    contractsToBeSaved.forEach((contractId) => {
+      saveContract(contractId)
+    })
+  }
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(saveTimeoutRef.current)
+    }
+  }, [])
+
   if (isLoading) {
     return (
       <div className="container grid w-full gap-y-[30px]  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
@@ -480,7 +529,10 @@ const MainPage = ({ id }) => {
                         }}
                         onMouseEnter={() => setBlockchainContractHovered(cnt)}
                         onMouseLeave={() => setBlockchainContractHovered(null)}
-                        className="relative cursor-pointer rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e]"
+                        className={`relative cursor-pointer rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
+                          blockchainContractSelected?.id === cnt?.id &&
+                          '!bg-[#dbdbdb1e]'
+                        }`}
                         key={index}
                       >
                         {contractRename?.id === cnt?.id ? (
@@ -581,98 +633,143 @@ const MainPage = ({ id }) => {
               ></img>
             </div>
           </div>
-          {openCode && (
-            <div className="w-full min-w-[60%] max-w-[80%]">
-              <div className="flex w-full justify-between">
-                <div className="flex gap-x-4 text-[14px]">
-                  <div>{blockchainContractSelected?.name}</div>
+          {blockchainContracts?.length > 0 ? (
+            <>
+              {openCode && (
+                <div className="w-full min-w-[60%] max-w-[80%]">
+                  <div className="flex w-full justify-between">
+                    <div className="flex gap-x-4 text-[14px]">
+                      <div>{blockchainContractSelected?.name}</div>
+                      <div
+                        onClick={() => setLanguageSelectorOpen(true)}
+                        className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
+                      >
+                        <div>{language?.length > 0 ? language : 'Loading'}</div>
+                        <img
+                          alt="ethereum avatar"
+                          src="/images/header/arrow.svg"
+                          className="w-[7px]"
+                        ></img>
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => {
+                        // compileContract()
+                        toast.success('contracts ' + contractsToBeSaved)
+                      }}
+                      className="cursor-pointer text-[14px]"
+                    >
+                      Deploy
+                    </div>
+                  </div>
                   <div
-                    onClick={() => setLanguageSelectorOpen(true)}
-                    className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
+                    className={`editor-container relative w-full ${
+                      isLoadingCompilation && 'animate-pulse'
+                    }`}
                   >
-                    <div>{language?.length > 0 ? language : 'Loading'}</div>
-                    <img
-                      alt="ethereum avatar"
-                      src="/images/header/arrow.svg"
-                      className="w-[7px]"
-                    ></img>
+                    <Editor
+                      height="72vh"
+                      theme="vs-dark"
+                      defaultLanguage="javascript"
+                      value={blockchainContractSelected?.code}
+                      language={language}
+                      onMount={onMount}
+                      onChange={(value) => {
+                        if (!isLoadingCompilation) {
+                          const newBlockchainContracts = [
+                            ...blockchainContracts,
+                          ]
+                          const index = newBlockchainContracts.findIndex(
+                            (blc) => blc.id === blockchainContractSelected?.id,
+                          )
+                          newBlockchainContracts[index].code = value
+                          setBlockchainContracts(newBlockchainContracts)
+                          setBlockchainContractSelected(
+                            newBlockchainContracts[index],
+                          )
+                          saveContracts(blockchainContractSelected?.id)
+                        }
+                      }}
+                      options={{
+                        minimap: {
+                          enabled: false,
+                        },
+                      }}
+                    />
+                    {isSavingContract ? (
+                      <img
+                        alt="ethereum avatar"
+                        src="/images/depin/spin.svg"
+                        className="absolute bottom-2 left-4 w-[16px] animate-spin"
+                      ></img>
+                    ) : (
+                      <div className="absolute bottom-2 left-4 text-[12px] text-[#c5c4c4]">
+                        Last save:{' '}
+                        {String(
+                          new Date(blockchainContractSelected?.updatedAt),
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
+              )}
 
-                <div
-                  onClick={() => {
-                    compileContract()
-                  }}
-                  className="cursor-pointer text-[14px]"
-                >
-                  Deploy
+              {(openContracts || openConsole) && (
+                <div className="grid h-[76vh] w-full gap-y-[1vh] text-[13px]">
+                  {openContracts && (
+                    <div className="h-full w-full  rounded-xl bg-[#1D2144] px-4 py-4">
+                      <div className="flex gap-x-[5px]">
+                        <img
+                          alt="ethereum avatar"
+                          src="/images/depin/document.svg"
+                          className="w-[16px]"
+                        ></img>
+                        <div className="font-medium">Contract</div>
+                      </div>
+                    </div>
+                  )}
+                  {openConsole && (
+                    <div className="h-full w-full rounded-xl bg-[#1D2144] px-4 py-4">
+                      <div className="flex gap-x-[5px]">
+                        <img
+                          alt="ethereum avatar"
+                          src="/images/depin/terminal.svg"
+                          className="w-[16px]"
+                        ></img>
+                        <div className="font-medium">Console</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-              <div
-                className={`editor-container relative w-full ${
-                  isLoadingCompilation && 'animate-pulse'
-                }`}
-              >
-                <Editor
-                  height="72vh"
-                  theme="vs-dark"
-                  defaultLanguage="javascript"
-                  value={value}
-                  language={language}
-                  onMount={onMount}
-                  onChange={(value) => {
-                    if (!isLoadingCompilation) {
-                      setValue(value)
-                      saveContract(value)
+              )}
+            </>
+          ) : (
+            <div className="mx-auto flex w-full items-center">
+              <div className="mx-auto pb-14">
+                <img
+                  alt="ethereum avatar"
+                  src="/images/depin/documents.svg"
+                  className="mx-auto mb-5 w-[30px]"
+                ></img>
+                <div
+                  onClick={async () => {
+                    if (!isLoadingNewContract) {
+                      const newContract: BlockchainContractProps =
+                        await createNewContract()
+                      const newCnts = [...blockchainContracts, newContract]
+                      setBlockchainContracts(newCnts)
                     }
                   }}
-                  options={{
-                    minimap: {
-                      enabled: false,
-                    },
-                  }}
-                />
-                {isSavingContract ? (
-                  <img
-                    alt="ethereum avatar"
-                    src="/images/depin/spin.svg"
-                    className="absolute bottom-2 left-4 w-[16px] animate-spin"
-                  ></img>
-                ) : (
-                  <div className="absolute bottom-2 left-4 text-[12px] text-[#c5c4c4]">
-                    Last updated: {blockchainContractSelected?.updatedAt}
-                  </div>
-                )}
+                  className={`mx-auto ${
+                    isLoadingNewContract
+                      ? 'animate-pulse'
+                      : 'animate-bounce cursor-pointer'
+                  }  rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
+                >
+                  Create a new contract
+                </div>
               </div>
-            </div>
-          )}
-
-          {(openContracts || openConsole) && (
-            <div className="grid h-[76vh] w-full gap-y-[1vh] text-[13px]">
-              {openContracts && (
-                <div className="h-full w-full  rounded-xl bg-[#1D2144] px-4 py-4">
-                  <div className="flex gap-x-[5px]">
-                    <img
-                      alt="ethereum avatar"
-                      src="/images/depin/document.svg"
-                      className="w-[16px]"
-                    ></img>
-                    <div className="font-medium">Contract</div>
-                  </div>
-                </div>
-              )}
-              {openConsole && (
-                <div className="h-full w-full rounded-xl bg-[#1D2144] px-4 py-4">
-                  <div className="flex gap-x-[5px]">
-                    <img
-                      alt="ethereum avatar"
-                      src="/images/depin/terminal.svg"
-                      className="w-[16px]"
-                    ></img>
-                    <div className="font-medium">Console</div>
-                  </div>
-                </div>
-              )}
             </div>
           )}
         </div>
