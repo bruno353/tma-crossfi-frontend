@@ -59,7 +59,6 @@ const contractReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_CONTRACT':
       if (state.includes(action.payload)) {
-        toast.success('Já incluído')
         return state
       }
       return [...state, action.payload]
@@ -406,6 +405,12 @@ const MainPage = ({ id }) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (blockchainContracts?.length > 0) {
+      setBlockchainContractSelected(blockchainContracts[0])
+    }
+  }, [isLoadingContracts])
+
   if (isLoading) {
     return (
       <div className="container grid w-full gap-y-[30px]  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
@@ -521,7 +526,7 @@ const MainPage = ({ id }) => {
               </div>
               {isContractsListOpen && (
                 <div>
-                  <div className="grid gap-y-[2px] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                  <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                     {blockchainContracts?.map((cnt, index) => (
                       <div
                         onClick={() => {
@@ -587,8 +592,9 @@ const MainPage = ({ id }) => {
                       if (!isLoadingNewContract) {
                         const newContract: BlockchainContractProps =
                           await createNewContract()
-                        const newCnts = [...blockchainContracts, newContract]
+                        const newCnts = [newContract, ...blockchainContracts]
                         setBlockchainContracts(newCnts)
+                        setBlockchainContractSelected(newContract)
                       }
                     }}
                     className={`mt-1 w-fit cursor-pointer rounded-[7px] px-[6px] py-[2px] text-[12px] text-[#c5c4c4] hover:bg-[#dbdbdb1e] ${
