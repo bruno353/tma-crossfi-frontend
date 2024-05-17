@@ -63,12 +63,13 @@ const MainPage = ({ id }) => {
 
   const [navBarSelected, setNavBarSelected] = useState('General')
 
+  const [isSavingContract, setIsSavingContract] = useState(false)
   const [blockchainContracts, setBlockchainContracts] = useState<
     BlockchainContractProps[]
   >([])
+  const [blockchainContractSelected, setBlockchainContractSelected] =
+    useState<BlockchainContractProps>()
   const [blockchainContractHovered, setBlockchainContractHovered] =
-    useState<BlockchainContractProps | null>()
-  const [contractSubMenuOpen, setContractSubMenuOpen] =
     useState<BlockchainContractProps | null>()
   const [contractRename, setContractRename] =
     useState<BlockchainContractProps | null>()
@@ -115,6 +116,29 @@ const MainPage = ({ id }) => {
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
+    }
+    setIsLoadingCompilation(false)
+  }
+
+  async function saveContract(code: string) {
+    setIsSavingContract(true)
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      id: blockchainContractSelected?.id,
+      code: value,
+    }
+
+    try {
+      const res = await callAxiosBackend(
+        'put',
+        '/blockchain/functions/saveContractCode',
+        userSessionToken,
+        data,
+      )
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error saving contract: ${err.response.data.message}`)
     }
     setIsLoadingCompilation(false)
   }
@@ -451,6 +475,9 @@ const MainPage = ({ id }) => {
                   <div className="grid gap-y-[2px] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                     {blockchainContracts?.map((cnt, index) => (
                       <div
+                        onClick={() => {
+                          setBlockchainContractSelected(cnt)
+                        }}
                         onMouseEnter={() => setBlockchainContractHovered(cnt)}
                         onMouseLeave={() => setBlockchainContractHovered(null)}
                         className="relative cursor-pointer rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e]"
@@ -483,7 +510,6 @@ const MainPage = ({ id }) => {
                                   e.stopPropagation()
                                   setContractRename(cnt)
                                   setContractName(cnt.name)
-                                  setContractSubMenuOpen(null)
                                 }}
                                 src={`/images/depin/pencil.svg`}
                                 alt="image"
@@ -558,17 +584,21 @@ const MainPage = ({ id }) => {
           {openCode && (
             <div className="w-full min-w-[60%] max-w-[80%]">
               <div className="flex w-full justify-between">
-                <div
-                  onClick={() => setLanguageSelectorOpen(true)}
-                  className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
-                >
-                  <div>{language?.length > 0 ? language : 'Loading'}</div>
-                  <img
-                    alt="ethereum avatar"
-                    src="/images/header/arrow.svg"
-                    className="w-[7px]"
-                  ></img>
+                <div className="flex gap-x-4 text-[14px]">
+                  <div>{blockchainContractSelected?.name}</div>
+                  <div
+                    onClick={() => setLanguageSelectorOpen(true)}
+                    className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
+                  >
+                    <div>{language?.length > 0 ? language : 'Loading'}</div>
+                    <img
+                      alt="ethereum avatar"
+                      src="/images/header/arrow.svg"
+                      className="w-[7px]"
+                    ></img>
+                  </div>
                 </div>
+
                 <div
                   onClick={() => {
                     compileContract()
@@ -579,7 +609,7 @@ const MainPage = ({ id }) => {
                 </div>
               </div>
               <div
-                className={`editor-container w-full ${
+                className={`editor-container relative w-full ${
                   isLoadingCompilation && 'animate-pulse'
                 }`}
               >
@@ -593,6 +623,7 @@ const MainPage = ({ id }) => {
                   onChange={(value) => {
                     if (!isLoadingCompilation) {
                       setValue(value)
+                      saveContract(value)
                     }
                   }}
                   options={{
@@ -601,6 +632,17 @@ const MainPage = ({ id }) => {
                     },
                   }}
                 />
+                {isSavingContract ? (
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/depin/spin.svg"
+                    className="absolute bottom-2 left-4 w-[16px] animate-spin"
+                  ></img>
+                ) : (
+                  <div className="absolute bottom-2 left-4 text-[12px] text-[#c5c4c4]">
+                    Last updated: {blockchainContractSelected?.updatedAt}
+                  </div>
+                )}
               </div>
             </div>
           )}
