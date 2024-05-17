@@ -16,6 +16,7 @@ interface ModalI {
   isDisable?: boolean
   classNameForDropdown?: string
   classNameForPopUp?: string
+  classNameForPopUpBox?: string
 }
 
 const Dropdown = ({
@@ -25,6 +26,7 @@ const Dropdown = ({
   isDisable,
   classNameForDropdown,
   classNameForPopUp,
+  classNameForPopUpBox,
 }: ModalI) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -80,7 +82,9 @@ const Dropdown = ({
       </div>
 
       {isOpen && (
-        <div className="absolute left-0 top-0 z-50 w-full translate-y-[45px] rounded-md  bg-[#242B51] transition">
+        <div
+          className={`absolute left-0 top-0 z-50 w-full translate-y-[45px] rounded-md  bg-[#242B51] transition ${classNameForPopUpBox}`}
+        >
           <div className="grid gap-y-[5px] px-1 py-1">
             {options?.map((option, index) => (
               <div

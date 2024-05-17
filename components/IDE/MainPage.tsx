@@ -27,11 +27,6 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { parseCookies } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
-// import NewWorkspaceModal from './NewWorkspace'
-import { getBlockchainApps, getUserWorkspace, getWorkspace } from '@/utils/api'
-import { WorkspaceProps } from '@/types/workspace'
-import SubNavBar from '../Modals/SubNavBar'
-import { Logo } from '../Sidebar/Logo'
 import {
   BlockchainContractProps,
   BlockchainWalletProps,
@@ -43,6 +38,7 @@ import './EditorStyles.css'
 import { callAxiosBackend } from '@/utils/general-api'
 import Dropdown, { ValueObject } from '../Modals/Dropdown'
 import { transformString } from '@/utils/functions'
+import Sidebar from './Modals/Sidebar'
 
 export const optionsNetwork = [
   {
@@ -81,7 +77,6 @@ const MainPage = ({ id }) => {
   const [openCode, setOpenCode] = useState(true)
   const [openContracts, setOpenContracts] = useState(true)
   const [openConsole, setOpenConsole] = useState(true)
-  const [isContractsListOpen, setIsContractsListOpen] = useState(true)
 
   const [navBarSelected, setNavBarSelected] = useState('General')
 
@@ -91,8 +86,6 @@ const MainPage = ({ id }) => {
   >([])
   const [blockchainContractSelected, setBlockchainContractSelected] =
     useState<BlockchainContractProps>()
-  const [blockchainContractHovered, setBlockchainContractHovered] =
-    useState<BlockchainContractProps | null>()
   const [contractRename, setContractRename] =
     useState<BlockchainContractProps | null>()
   const [contractName, setContractName] = useState<string>('')
@@ -215,28 +208,6 @@ const MainPage = ({ id }) => {
       toast.error(`Error: ${err.response.data.message}`)
     }
     setIsLoadingNewContract(false)
-  }
-
-  async function handleDeleteContract(cnt: BlockchainContractProps) {
-    const { userSessionToken } = parseCookies()
-
-    const data = {
-      id: cnt.id,
-    }
-
-    const newCnts = blockchainContracts?.filter((item) => item.id !== cnt.id)
-    setBlockchainContracts(newCnts)
-    try {
-      await callAxiosBackend(
-        'delete',
-        `/blockchain/functions/deleteContract`,
-        userSessionToken,
-        data,
-      )
-    } catch (err) {
-      console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
-    }
   }
 
   async function handleRenameContract() {
@@ -424,227 +395,40 @@ const MainPage = ({ id }) => {
     <>
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="container flex gap-x-[10px] text-[#fff]">
-          <div className="relative h-[76vh] max-h-[76vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light">
-            <div className="relative flex gap-x-[5px]">
-              <img
-                alt="ethereum avatar"
-                src="/images/workspace/stellar-new.svg"
-                className="w-[16px]"
-              ></img>
-              <div className="font-medium">Soroban</div>
-            </div>
-            <div className="mt-4 h-[1px] w-full bg-[#c5c4c41a]"></div>
-            <div className="mt-5 w-fit">
-              <div className="mb-2 flex gap-x-[5px]">
-                <img
-                  alt="ethereum avatar"
-                  src="/images/depin/settings.svg"
-                  className="w-[16px]"
-                ></img>
-                <div>Environment</div>
-              </div>
-              <Dropdown
-                optionSelected={selected}
-                options={optionsNetwork}
-                onValueChange={(value) => {
-                  setSelected(value)
-                }}
-                classNameForDropdown="!px-1 !pr-2 !py-1"
-                classNameForPopUp="!px-1 !pr-2 !py-1"
-              />
-            </div>
-            <div className="mt-4">
-              <div className="mb-2 flex gap-x-[5px]">
-                <img
-                  alt="ethereum avatar"
-                  src="/images/depin/card.svg"
-                  className="w-[16px]"
-                ></img>
-                <div>Wallet</div>
-              </div>
-              <div className="flex items-center gap-x-1">
-                {blockchainWallets?.length > 0 ? (
-                  <Dropdown
-                    optionSelected={blockchainWalletsSelected}
-                    options={blockchainWalletsDropdown}
-                    onValueChange={(value) => {
-                      setBlockchainWalletsSelected(value)
-                    }}
-                    classNameForDropdown="!px-1 !pr-2 !py-1 !flex-grow !min-w-[130px]"
-                    classNameForPopUp="!px-1 !pr-2 !py-1"
-                  />
-                ) : (
-                  <div className="text-[#c5c4c4]">create a wallet </div>
-                )}
-
-                <a href={`/workspace/${id}/blockchain-wallets`}>
-                  <div
-                    title="Create wallet"
-                    className="flex-grow-0 cursor-pointer text-[16px]"
-                  >
-                    +
-                  </div>
-                </a>
-              </div>
-              {blockchainWalletsSelected && (
-                <div className="mt-2 text-[12px] text-[#c5c4c4]">
-                  {' '}
-                  Balance:{' '}
-                  {
-                    blockchainWallets.find(
-                      (obj) => obj.id === blockchainWalletsSelected.value,
-                    ).balance
-                  }
-                </div>
-              )}
-            </div>
-            <div className="mt-4">
-              <div
-                onClick={() => {
-                  console.log(value)
-                  setIsContractsListOpen(!isContractsListOpen)
-                }}
-                className="mb-2 flex cursor-pointer items-center gap-x-[8px]"
-              >
-                <div className="flex gap-x-[5px]">
-                  <img
-                    alt="ethereum avatar"
-                    src="/images/depin/documents.svg"
-                    className="w-[14px]"
-                  ></img>
-                  <div className={`${isLoadingContracts && 'animate-pulse'}`}>
-                    Contracts
-                  </div>
-                </div>
-                <img
-                  alt="ethereum avatar"
-                  src="/images/header/arrow-gray.svg"
-                  className={`w-[8px] rounded-full transition-transform duration-150 ${
-                    !isContractsListOpen && 'rotate-180'
-                  }`}
-                ></img>
-              </div>
-              {isContractsListOpen && (
-                <div>
-                  <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
-                    {blockchainContracts?.map((cnt, index) => (
-                      <div
-                        onClick={() => {
-                          setBlockchainContractSelected(cnt)
-                        }}
-                        onMouseEnter={() => setBlockchainContractHovered(cnt)}
-                        onMouseLeave={() => setBlockchainContractHovered(null)}
-                        className={`relative cursor-pointer rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
-                          blockchainContractSelected?.id === cnt?.id &&
-                          '!bg-[#dbdbdb1e]'
-                        }`}
-                        key={index}
-                      >
-                        {contractRename?.id === cnt?.id ? (
-                          <input
-                            value={contractName}
-                            ref={nameRef}
-                            className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary"
-                            onChange={(e) => {
-                              if (e.target.value.length < 50) {
-                                setContractName(e.target.value)
-                              }
-                            }}
-                            autoFocus
-                          />
-                        ) : (
-                          <div className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary">
-                            {' '}
-                            {cnt?.name}{' '}
-                          </div>
-                        )}
-
-                        {blockchainContractHovered?.id === cnt.id && (
-                          <div className="absolute right-0 top-0 flex h-full px-[10px] text-[10px] backdrop-blur-sm">
-                            <div className="flex items-center gap-x-2">
-                              <img
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  setContractRename(cnt)
-                                  setContractName(cnt.name)
-                                }}
-                                src={`/images/depin/pencil.svg`}
-                                alt="image"
-                                className="my-auto w-[18px] cursor-pointer"
-                              />
-                              <img
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleDeleteContract(cnt)
-                                }}
-                                src={`/images/depin/garbage.svg`}
-                                alt="image"
-                                className="my-auto w-[11px] cursor-pointer"
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <div
-                    onClick={async () => {
-                      if (!isLoadingNewContract) {
-                        const newContract: BlockchainContractProps =
-                          await createNewContract()
-                        const newCnts = [newContract, ...blockchainContracts]
-                        setBlockchainContracts(newCnts)
-                        setBlockchainContractSelected(newContract)
-                      }
-                    }}
-                    className={`mt-1 w-fit cursor-pointer rounded-[7px] px-[6px] py-[2px] text-[12px] text-[#c5c4c4] hover:bg-[#dbdbdb1e] ${
-                      isLoadingNewContract && 'animate-pulse'
-                    }`}
-                  >
-                    + New contract
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="absolute bottom-4 flex gap-x-3">
-              <img
-                onClick={() => setOpenCode(!openCode)}
-                src={
-                  openCode
-                    ? '/images/depin/write.svg'
-                    : '/images/depin/write-grey.svg'
-                }
-                alt="ethereum avatar"
-                className="w-[17px] cursor-pointer"
-              ></img>
-              <img
-                onClick={() => setOpenContracts(!openContracts)}
-                alt="ethereum avatar"
-                src={
-                  openContracts
-                    ? '/images/depin/document.svg'
-                    : '/images/depin/document-grey.svg'
-                }
-                className="w-[16px] cursor-pointer"
-              ></img>
-              <img
-                onClick={() => setOpenConsole(!openConsole)}
-                alt="ethereum avatar"
-                src={
-                  openConsole
-                    ? '/images/depin/terminal.svg'
-                    : '/images/depin/terminal-grey.svg'
-                }
-                className="w-[18px] cursor-pointer"
-              ></img>
-            </div>
-          </div>
+          <Sidebar
+            blockchainContractSelected={blockchainContractSelected}
+            blockchainContracts={blockchainContracts}
+            blockchainWallets={blockchainWallets}
+            blockchainWalletsDropdown={blockchainWalletsDropdown}
+            blockchainWalletsSelected={blockchainWalletsSelected}
+            contractName={contractName}
+            contractRename={contractRename}
+            id={id}
+            isLoadingContracts={isLoadingContracts}
+            isLoadingNewContract={isLoadingNewContract}
+            nameRef={nameRef}
+            openCode={openCode}
+            openConsole={openConsole}
+            openContracts={openContracts}
+            selected={selected}
+            setBlockchainContractSelected={setBlockchainContractSelected}
+            setBlockchainContracts={setBlockchainContracts}
+            setBlockchainWalletsSelected={setBlockchainWalletsSelected}
+            setContractName={setContractName}
+            setContractRename={setContractRename}
+            setIsLoadingContracts={setIsLoadingContracts}
+            setIsLoadingNewContract={setIsLoadingNewContract}
+            setOpenCode={setOpenCode}
+            setOpenConsole={setOpenConsole}
+            setOpenContracts={setOpenContracts}
+            setSelected={setSelected}
+          />
           {blockchainContracts?.length > 0 ? (
             <>
               {openCode && (
                 <div className="w-full min-w-[60%] max-w-[80%]">
                   <div className="flex w-full justify-between">
-                    <div className="flex gap-x-4 text-[14px]">
+                    <div className="relative flex gap-x-4 text-[14px]">
                       <div>{blockchainContractSelected?.name}</div>
                       <div
                         onClick={() => setLanguageSelectorOpen(true)}
@@ -657,6 +441,19 @@ const MainPage = ({ id }) => {
                           className="w-[7px]"
                         ></img>
                       </div>
+                      {languageSelectorOpen && (
+                        <div
+                          className="absolute top-[35px] !z-[999999]"
+                          ref={menuRef}
+                        >
+                          <SelectLanguageModal
+                            onUpdateM={(value) => {
+                              setLanguage(value)
+                              setLanguageSelectorOpen(false)
+                            }}
+                          />{' '}
+                        </div>
+                      )}
                     </div>
 
                     <div
@@ -779,19 +576,6 @@ const MainPage = ({ id }) => {
             </div>
           )}
         </div>
-        {languageSelectorOpen && (
-          <div
-            className="absolute top-[35px] !z-[999999] translate-x-[30px] translate-y-[40px] 2xl:translate-x-[80px]"
-            ref={menuRef}
-          >
-            <SelectLanguageModal
-              onUpdateM={(value) => {
-                setLanguage(value)
-                setLanguageSelectorOpen(false)
-              }}
-            />{' '}
-          </div>
-        )}
       </section>
     </>
   )
