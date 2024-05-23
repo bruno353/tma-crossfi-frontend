@@ -2,6 +2,7 @@
 import { formatDistanceToNow } from 'date-fns'
 import DOMPurify from 'dompurify'
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser'
+import AnsiToHtml from 'ansi-to-html'
 
 export function formatDeadline(timestamp) {
   console.log(timestamp)
@@ -177,4 +178,66 @@ export function transformString(str, number?: number) {
 
 export async function wait(milliseconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
+}
+
+// funcao para cortar texto de uma string
+export function extractTextMessage(
+  log: string,
+  firstItem: string,
+  lastItem: string,
+) {
+  const errorStartIndex = log.indexOf(firstItem)
+  const buildingIndex = log.indexOf(lastItem, errorStartIndex)
+
+  if (errorStartIndex !== -1 && buildingIndex !== -1) {
+    return log.substring(errorStartIndex, buildingIndex)
+  }
+
+  return ''
+}
+
+export function extractTextMessageSecondOcorrency(
+  log: string,
+  firstItem: string,
+  lastItem: string,
+) {
+  // Encontra a primeira ocorrência do firstItem
+  const firstOccurrenceIndex = log.indexOf(firstItem)
+
+  // Encontra a segunda ocorrência do firstItem, começando após a primeira ocorrência
+  const errorStartIndex = log.indexOf(
+    firstItem,
+    firstOccurrenceIndex + firstItem.length,
+  )
+
+  // Encontra a ocorrência do lastItem após a segunda ocorrência do firstItem
+  const buildingIndex = log.indexOf(lastItem, errorStartIndex)
+
+  // Se ambos os índices forem encontrados, retorna a substring correspondente
+  if (errorStartIndex !== -1 && buildingIndex !== -1) {
+    return log.substring(errorStartIndex, buildingIndex)
+  }
+
+  // Se não encontrar as ocorrências desejadas, retorna uma string vazia
+  return ''
+}
+
+export function extractAllErrorMessages(log) {
+  const errorMessages = []
+  const errorRegex = /error\[[\s\S]*?Building/g
+  let match
+
+  while ((match = errorRegex.exec(log)) !== null) {
+    errorMessages.push(match[0])
+  }
+
+  return errorMessages
+}
+
+// Função para converter ANSI para HTML
+const ansiToHtml = new AnsiToHtml()
+
+export function convertAnsiToHtml(str) {
+  // eslint-disable-next-line prettier/prettier
+  return ansiToHtml.toHtml(str);
 }

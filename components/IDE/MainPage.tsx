@@ -37,8 +37,20 @@ import SelectLanguageModal from './Modals/SelectLanguage'
 import './EditorStyles.css'
 import { callAxiosBackend } from '@/utils/general-api'
 import Dropdown, { ValueObject } from '../Modals/Dropdown'
-import { transformString } from '@/utils/functions'
+import {
+  convertAnsiToHtml,
+  extractAllErrorMessages,
+  extractTextMessage,
+  extractTextMessageSecondOcorrency,
+  transformString,
+} from '@/utils/functions'
 import Sidebar from './Modals/Sidebar'
+
+export interface CompileErrors {
+  errorDescription: string
+  errorMessage: string
+  isOpen?: boolean
+}
 
 export const optionsNetwork = [
   {
@@ -77,6 +89,8 @@ const MainPage = ({ id }) => {
   const [openCode, setOpenCode] = useState(true)
   const [openContracts, setOpenContracts] = useState(true)
   const [openConsole, setOpenConsole] = useState(true)
+
+  const [consoleError, setConsoleError] = useState<CompileErrors[]>([])
 
   const [navBarSelected, setNavBarSelected] = useState('General')
 
@@ -120,7 +134,7 @@ const MainPage = ({ id }) => {
 
     const data = {
       walletId: '123',
-      code: value,
+      code: blockchainContractSelected?.code,
     }
 
     try {
@@ -132,7 +146,42 @@ const MainPage = ({ id }) => {
       )
     } catch (err) {
       console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
+      toast.error(`Error: ${err.response.data.error}`)
+      console.log('Error: ' + err.response.data.message)
+      // let errorDescription = extractTextMessage(
+      //   err.response.data.message,
+      //   'error[',
+      //   'Building',
+      // )
+      // let errorMessage = extractTextMessage(errorDescription, 'error[', '\n')
+
+      // errorMessage = convertAnsiToHtml(errorMessage)
+      // errorDescription = convertAnsiToHtml(errorDescription)
+
+      // console.log('response tratado: ' + errorMessage)
+
+      const out = extractAllErrorMessages(err.response.data.message)
+
+      console.log('out prisma')
+      console.log(out)
+
+      const finalOut = []
+      for (let i = 0; i < out?.length; i++) {
+        let errorDescription = extractTextMessageSecondOcorrency(
+          out[i],
+          '\u001b[0m\r\n\u001b[0m',
+          'Building',
+        )
+        let errorMessage = extractTextMessage(out[i], 'error[', '\n')
+        errorMessage = convertAnsiToHtml(errorMessage)
+        errorDescription = convertAnsiToHtml(errorDescription)
+        console.log('message here 123123123')
+        console.log({ errorDescription, errorMessage })
+        finalOut.push({ errorDescription, errorMessage })
+      }
+      console.log('outs:')
+      console.log(finalOut)
+      setConsoleError(finalOut)
     }
     setIsLoadingCompilation(false)
   }
@@ -458,8 +507,8 @@ const MainPage = ({ id }) => {
 
                     <div
                       onClick={() => {
-                        // compileContract()
-                        toast.success('contracts ' + contractsToBeSaved)
+                        compileContract()
+                        // toast.success('contracts ' + contractsToBeSaved)
                       }}
                       className="cursor-pointer text-[14px]"
                     >
@@ -541,6 +590,50 @@ const MainPage = ({ id }) => {
                           className="w-[16px]"
                         ></img>
                         <div className="font-medium">Console</div>
+                      </div>
+                      <div className="mt-[20px] grid gap-y-[12px]">
+                        {consoleError?.map((cnslError, index) => (
+                          <div
+                            key={index}
+                            onClick={() => {
+                              const newConsoles = [...consoleError]
+                              newConsoles[index].isOpen =
+                                !newConsoles[index].isOpen
+                              setConsoleError(newConsoles)
+                            }}
+                            className="cursor-pointer rounded-lg bg-[#dbdbdb1e] px-[10px] py-[5px]"
+                          >
+                            <div className="flex gap-x-[8px]">
+                              <img
+                                alt="ethereum avatar"
+                                src="/images/depin/warning.svg"
+                                className="w-[20px]"
+                              ></img>
+                              <div
+                                className="whitespace-pre-wrap"
+                                dangerouslySetInnerHTML={{
+                                  __html: cnslError?.errorMessage,
+                                }}
+                              />
+
+                              <img
+                                alt="ethereum avatar"
+                                src="/images/header/arrow-gray.svg"
+                                className={`w-[12px] rounded-full transition-transform duration-150 ${
+                                  cnslError?.isOpen && 'rotate-180'
+                                }`}
+                              ></img>
+                            </div>
+                            {cnslError?.isOpen && (
+                              <div
+                                className="whitespace-pre-wrap"
+                                dangerouslySetInnerHTML={{
+                                  __html: cnslError?.errorDescription,
+                                }}
+                              />
+                            )}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
