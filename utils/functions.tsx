@@ -196,6 +196,24 @@ export function extractTextMessage(
   return ''
 }
 
+export function extractTextMessageAndRemoveItems(
+  log: string,
+  firstItem: string,
+  lastItem: string,
+) {
+  const errorStartIndex = log.indexOf(firstItem)
+  const buildingIndex = log.indexOf(lastItem, errorStartIndex)
+
+  if (errorStartIndex !== -1 && buildingIndex !== -1) {
+    const startIndex = errorStartIndex + firstItem.length
+    const endIndex = buildingIndex
+    const fi = endIndex - lastItem.length + 1
+    return log.substring(startIndex, fi).trim()
+  }
+
+  return 0
+}
+
 export function extractTextMessageSecondOcorrency(
   log: string,
   firstItem: string,
@@ -240,4 +258,27 @@ const ansiToHtml = new AnsiToHtml()
 export function convertAnsiToHtml(str) {
   // eslint-disable-next-line prettier/prettier
   return ansiToHtml.toHtml(str);
+}
+
+export function getValueBetweenStrings(stringMain, stringInicio, stringFim) {
+  // Encontrando as posições das strings de início e fim
+  const posInicio = stringMain.indexOf(stringInicio)
+  console.log(`Posição de início: ${posInicio}`)
+  if (posInicio === -1) {
+    return null
+  }
+
+  const posFim = stringMain.indexOf(stringFim, posInicio + stringInicio.length)
+  console.log(`Posição de fim: ${posFim}`)
+  if (posFim === -1) {
+    return null
+  }
+
+  // Calculando a posição inicial do texto desejado
+  const inicioTexto = posInicio + stringInicio.length
+
+  // Extraindo o texto entre as strings de início e fim
+  const resultado = stringMain.substring(inicioTexto, posFim)
+
+  return resultado
 }

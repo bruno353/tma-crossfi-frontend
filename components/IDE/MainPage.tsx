@@ -41,7 +41,9 @@ import {
   convertAnsiToHtml,
   extractAllErrorMessages,
   extractTextMessage,
+  extractTextMessageAndRemoveItems,
   extractTextMessageSecondOcorrency,
+  getValueBetweenStrings,
   transformString,
 } from '@/utils/functions'
 import Sidebar from './Modals/Sidebar'
@@ -49,6 +51,7 @@ import Sidebar from './Modals/Sidebar'
 export interface CompileErrors {
   errorDescription: string
   errorMessage: string
+  lineError: number
   isOpen?: boolean
 }
 
@@ -113,6 +116,7 @@ const MainPage = ({ id }) => {
     useState<ValueObject>()
   const [contractsToBeSaved, dispatch] = useReducer(contractReducer, [])
   const { workspace, user } = useContext(AccountContext)
+  const [decorationIds, setDecorationIds] = useState([])
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -121,10 +125,31 @@ const MainPage = ({ id }) => {
 
   const editorRef = useRef()
   const [language, setLanguage] = useState('')
+  const [highlightLine, setHighlightLine] = useState(false)
 
-  const onMount = (editor) => {
+  const onMount = (editor, highlightLine?: number) => {
     editorRef.current = editor
     editor.focus()
+
+    if (highlightLine) {
+      // Add the decoration to highlight line 10
+      const newDecorationIds = editor.deltaDecorations(
+        [],
+        [
+          {
+            range: new monaco.Range(highlightLine, 1, highlightLine, 1),
+            options: {
+              isWholeLine: true,
+              className: 'myLineDecoration',
+            },
+          },
+        ],
+      )
+      setDecorationIds(newDecorationIds)
+    } else {
+      editor.deltaDecorations(decorationIds, [])
+      setDecorationIds([])
+    }
   }
   const menuRef = useRef(null)
 
@@ -146,7 +171,6 @@ const MainPage = ({ id }) => {
       )
     } catch (err) {
       console.log(err)
-      toast.error(`Error: ${err.response.data.error}`)
       console.log('Error: ' + err.response.data.message)
       // let errorDescription = extractTextMessage(
       //   err.response.data.message,
@@ -175,9 +199,19 @@ const MainPage = ({ id }) => {
         let errorMessage = extractTextMessage(out[i], 'error[', '\n')
         errorMessage = convertAnsiToHtml(errorMessage)
         errorDescription = convertAnsiToHtml(errorDescription)
-        console.log('message here 123123123')
-        console.log({ errorDescription, errorMessage })
-        finalOut.push({ errorDescription, errorMessage })
+
+        console.log('mesnagem enviando pra pegar')
+        console.log(out[i])
+        let lineError = extractTextMessageAndRemoveItems(
+          out[i],
+          '[0m\r\n\u001b[0m\u001b[1m\u001b[38;5;12m',
+          '\u001b[0m ',
+        )
+        lineError = Number(lineError)
+        console.log('lineError')
+
+        console.log({ errorDescription, errorMessage, lineError })
+        finalOut.push({ errorDescription, errorMessage, lineError })
       }
       console.log('outs:')
       console.log(finalOut)
@@ -526,7 +560,9 @@ const MainPage = ({ id }) => {
                       defaultLanguage="javascript"
                       value={blockchainContractSelected?.code}
                       language={language}
-                      onMount={onMount}
+                      onMount={(editor) => {
+                        onMount(editor)
+                      }}
                       onChange={(value) => {
                         if (!isLoadingCompilation) {
                           const newBlockchainContracts = [
@@ -570,7 +606,7 @@ const MainPage = ({ id }) => {
               {(openContracts || openConsole) && (
                 <div className="grid h-[76vh] w-full gap-y-[1vh] text-[13px]">
                   {openContracts && (
-                    <div className="h-full w-full  rounded-xl bg-[#1D2144] px-4 py-4">
+                    <div className="h-[38vh] max-h-[38vh] w-full  rounded-xl bg-[#1D2144] px-4 py-4">
                       <div className="flex gap-x-[5px]">
                         <img
                           alt="ethereum avatar"
@@ -582,7 +618,7 @@ const MainPage = ({ id }) => {
                     </div>
                   )}
                   {openConsole && (
-                    <div className="h-full w-full rounded-xl bg-[#1D2144] px-4 py-4">
+                    <div className="h-[38vh] max-h-[38vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                       <div className="flex gap-x-[5px]">
                         <img
                           alt="ethereum avatar"
@@ -594,14 +630,24 @@ const MainPage = ({ id }) => {
                       <div className="mt-[20px] grid gap-y-[12px]">
                         {consoleError?.map((cnslError, index) => (
                           <div
+                            onMouseEnter={() => {
+                              onMount(editorRef.current, cnslError?.lineError)
+                            }}
+                            onMouseLeave={() => {
+                              onMount(editorRef.current)
+                            }}
                             key={index}
                             onClick={() => {
-                              const newConsoles = [...consoleError]
-                              newConsoles[index].isOpen =
-                                !newConsoles[index].isOpen
-                              setConsoleError(newConsoles)
+                              if (!cnslError?.isOpen) {
+                                const newConsoles = [...consoleError]
+                                newConsoles[index].isOpen =
+                                  !newConsoles[index].isOpen
+                                setConsoleError(newConsoles)
+                              }
                             }}
-                            className="cursor-pointer rounded-lg bg-[#dbdbdb1e] px-[10px] py-[5px]"
+                            className={`${
+                              !cnslError?.isOpen && 'cursor-pointer'
+                            } rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
                           >
                             <div className="flex gap-x-[8px]">
                               <img
@@ -615,11 +661,17 @@ const MainPage = ({ id }) => {
                                   __html: cnslError?.errorMessage,
                                 }}
                               />
-
                               <img
                                 alt="ethereum avatar"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  const newConsoles = [...consoleError]
+                                  newConsoles[index].isOpen =
+                                    !newConsoles[index].isOpen
+                                  setConsoleError(newConsoles)
+                                }}
                                 src="/images/header/arrow-gray.svg"
-                                className={`w-[12px] rounded-full transition-transform duration-150 ${
+                                className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
                                   cnslError?.isOpen && 'rotate-180'
                                 }`}
                               ></img>
