@@ -14,6 +14,7 @@ import {
   useContext,
   useRef,
 } from 'react'
+
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -47,12 +48,26 @@ import {
   transformString,
 } from '@/utils/functions'
 import Sidebar from './Modals/Sidebar'
+import * as StellarSdk from '@stellar/stellar-sdk'
 
 export interface CompileErrors {
   errorDescription: string
   errorMessage: string
   lineError: number
   isOpen?: boolean
+}
+
+export interface ContractInspectionInputsI {
+  name: string
+  type: string
+}
+
+export interface ContractInspectionI {
+  functionName: string
+  inputs: ContractInspectionInputsI[]
+  outputsArray: string[]
+  isOpen?: boolean
+  docs?: string
 }
 
 export const optionsNetwork = [
@@ -94,6 +109,10 @@ const MainPage = ({ id }) => {
   const [openConsole, setOpenConsole] = useState(true)
 
   const [consoleError, setConsoleError] = useState<CompileErrors[]>([])
+
+  const [contractInspections, setContractInspections] = useState<
+    ContractInspectionI[]
+  >([])
 
   const [navBarSelected, setNavBarSelected] = useState('General')
 
@@ -153,12 +172,48 @@ const MainPage = ({ id }) => {
   }
   const menuRef = useRef(null)
 
+  function convertToBuffer(data) {
+    return new Uint8Array(data).buffer
+  }
+
+  async function loadWasmModuleFromBuffer(buffer) {
+    // Aqui, assumimos que 'buffer' é um ArrayBuffer do WASM compilado.
+    const wasmModule = await WebAssembly.instantiate(buffer)
+    return wasmModule.instance.exports
+  }
+
+  const executeFunction = (wasmExports) => {
+    // const argsArray = [BigInt('bruno'.trim())]
+    console.log('chamando')
+    const func = wasmExports['add']
+    if (!func) {
+      toast.error('Function not found!')
+      return
+    }
+    try {
+      const funcResult = func()
+      return funcResult
+    } catch (error) {
+      console.error('Error executing WASM function:', error)
+      toast.error('Error executing function!')
+    }
+  }
+
+  function listWasmFunctions(exports) {
+    return Object.keys(exports).filter(
+      (key) => typeof exports[key] === 'function',
+    )
+  }
+
   async function compileContract() {
     setIsLoadingCompilation(true)
+
+    setConsoleError([])
     const { userSessionToken } = parseCookies()
 
     const data = {
       walletId: '123',
+      contractId: blockchainContractSelected?.id,
       code: blockchainContractSelected?.code,
     }
 
@@ -169,6 +224,7 @@ const MainPage = ({ id }) => {
         userSessionToken,
         data,
       )
+      setContractInspections(res.contractInspection)
     } catch (err) {
       console.log(err)
       console.log('Error: ' + err.response.data.message)
@@ -546,7 +602,7 @@ const MainPage = ({ id }) => {
                       }}
                       className="cursor-pointer text-[14px]"
                     >
-                      Deploy
+                      Compile
                     </div>
                   </div>
                   <div
@@ -606,7 +662,7 @@ const MainPage = ({ id }) => {
               {(openContracts || openConsole) && (
                 <div className="grid h-[76vh] w-full gap-y-[1vh] text-[13px]">
                   {openContracts && (
-                    <div className="h-[38vh] max-h-[38vh] w-full  rounded-xl bg-[#1D2144] px-4 py-4">
+                    <div className="h-[38vh] max-h-[38vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                       <div className="flex gap-x-[5px]">
                         <img
                           alt="ethereum avatar"
@@ -614,6 +670,54 @@ const MainPage = ({ id }) => {
                           className="w-[16px]"
                         ></img>
                         <div className="font-medium">Contract</div>
+                      </div>
+                      <div className="mt-[20px] grid gap-y-[12px]">
+                        {contractInspections?.map((cntIns, index) => (
+                          <div
+                            key={index}
+                            onClick={() => {
+                              if (!cntIns?.isOpen) {
+                                const newContractInspects = [
+                                  ...contractInspections,
+                                ]
+                                newContractInspects[index].isOpen =
+                                  !newContractInspects[index].isOpen
+                                setContractInspections(newContractInspects)
+                              }
+                            }}
+                            className={`${
+                              !cntIns?.isOpen && 'cursor-pointer'
+                            } rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
+                          >
+                            <div className="flex gap-x-[8px]">
+                              <img
+                                alt="ethereum avatar"
+                                src="/images/depin/warning.svg"
+                                className="w-[20px]"
+                              ></img>
+                              <div>{cntIns?.functionName}</div>
+                              <img
+                                alt="ethereum avatar"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  const newContractInspects = [
+                                    ...contractInspections,
+                                  ]
+                                  newContractInspects[index].isOpen =
+                                    !newContractInspects[index].isOpen
+                                  setContractInspections(newContractInspects)
+                                }}
+                                src="/images/header/arrow-gray.svg"
+                                className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                  cntIns?.isOpen && 'rotate-180'
+                                }`}
+                              ></img>
+                            </div>
+                            {cntIns?.isOpen && (
+                              <div>{cntIns?.functionName}</div>
+                            )}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
