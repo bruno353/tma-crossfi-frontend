@@ -49,6 +49,7 @@ import {
 } from '@/utils/functions'
 import Sidebar from './Modals/Sidebar'
 import * as StellarSdk from '@stellar/stellar-sdk'
+import NewCallFunctionModal from './Modals/CallFunctionModal'
 
 export interface CompileErrors {
   errorDescription: string
@@ -60,6 +61,7 @@ export interface CompileErrors {
 export interface ContractInspectionInputsI {
   name: string
   type: string
+  value?: any
 }
 
 export interface ContractInspectionI {
@@ -68,6 +70,10 @@ export interface ContractInspectionI {
   outputsArray: string[]
   isOpen?: boolean
   docs?: string
+}
+
+export const cleanDocs = (docs) => {
+  return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
 }
 
 export const optionsNetwork = [
@@ -97,6 +103,8 @@ const contractReducer = (state, action) => {
 
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
+  const [isCallingFunctionModal, setIsCallingFunctionModal] =
+    useState<number>(-1)
   const [isLoadingContracts, setIsLoadingContracts] = useState(true)
   const [isLoadingNewContract, setIsLoadingNewContract] = useState(false)
   const [isLoadingCompilation, setIsLoadingCompilation] = useState(false)
@@ -686,16 +694,14 @@ const MainPage = ({ id }) => {
                               }
                             }}
                             className={`${
-                              !cntIns?.isOpen && 'cursor-pointer'
-                            } rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
+                              !cntIns?.isOpen &&
+                              'w-fit cursor-pointer !py-[5px]'
+                            } relative rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[10px] hover:border-[#dbdbdb42]`}
                           >
                             <div className="flex gap-x-[8px]">
-                              <img
-                                alt="ethereum avatar"
-                                src="/images/depin/warning.svg"
-                                className="w-[20px]"
-                              ></img>
-                              <div>{cntIns?.functionName}</div>
+                              <div className="2xl:text-sm">
+                                {cntIns?.functionName}
+                              </div>
                               <img
                                 alt="ethereum avatar"
                                 onClick={(e) => {
@@ -712,13 +718,94 @@ const MainPage = ({ id }) => {
                                   cntIns?.isOpen && 'rotate-180'
                                 }`}
                               ></img>
+                              {cntIns?.isOpen && (
+                                <img
+                                  alt="ethereum avatar"
+                                  src="/images/depin/open.svg"
+                                  onClick={() => {
+                                    setIsCallingFunctionModal(index)
+                                  }}
+                                  className="absolute right-2 top-2 w-[21px] cursor-pointer"
+                                ></img>
+                              )}
                             </div>
                             {cntIns?.isOpen && (
-                              <div>{cntIns?.functionName}</div>
+                              <div className="mb-1 w-full px-2">
+                                <div
+                                  className="mt-2 whitespace-pre-wrap text-[#c5c4c4]"
+                                  dangerouslySetInnerHTML={{
+                                    __html: cleanDocs(cntIns?.docs),
+                                  }}
+                                />
+                                <div className="mb-4 mt-2 grid gap-y-3 ">
+                                  {cntIns?.inputs?.map(
+                                    (cntInsInput, indexInput) => (
+                                      <div key={indexInput}>
+                                        <div className="mb-1 flex items-center justify-between text-base font-light">
+                                          <div className="">
+                                            {cntInsInput?.name}
+                                          </div>
+                                          <div className="text-xs text-[#c5c4c4]">
+                                            {cntInsInput?.type}
+                                          </div>
+                                        </div>
+
+                                        <input
+                                          type="text"
+                                          id="workspaceName"
+                                          name="workspaceName"
+                                          value={cntInsInput?.value}
+                                          onChange={(e) => {
+                                            if (!isLoading) {
+                                              const newContractInspections = [
+                                                ...contractInspections,
+                                              ]
+                                              newContractInspections[
+                                                index
+                                              ].inputs[indexInput].value =
+                                                e.target.value
+                                              setContractInspections(
+                                                newContractInspections,
+                                              )
+                                            }
+                                          }}
+                                          className="w-full rounded-md border border-transparent px-3 py-1 text-base placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
+                                        />
+                                      </div>
+                                    ),
+                                  )}
+                                </div>
+                                <div
+                                  className={`${
+                                    isLoading
+                                      ? 'animate-pulse !bg-[#35428a]'
+                                      : 'cursor-pointer  hover:bg-[#35428a]'
+                                  }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                                >
+                                  Transact
+                                </div>
+                              </div>
                             )}
                           </div>
                         ))}
                       </div>
+                      <NewCallFunctionModal
+                        isOpen={isCallingFunctionModal >= 0}
+                        onUpdateM={() => {}}
+                        onClose={() => {
+                          setIsCallingFunctionModal(-1)
+                        }}
+                        contractFunction={
+                          contractInspections[isCallingFunctionModal]
+                        }
+                        onUpdateContractFunction={(value) => {
+                          const newContractInspections = [
+                            ...contractInspections,
+                          ]
+                          newContractInspections[isCallingFunctionModal] = value
+                          setContractInspections(newContractInspections)
+                        }}
+                      />
                     </div>
                   )}
                   {openConsole && (
