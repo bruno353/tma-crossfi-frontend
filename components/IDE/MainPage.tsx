@@ -51,12 +51,25 @@ import Sidebar from './Modals/Sidebar'
 import * as StellarSdk from '@stellar/stellar-sdk'
 import NewCallFunctionModal from './Modals/CallFunctionModal'
 
-export interface CompileErrors {
+export interface ConsoleError {
+  type: 'error'
   errorDescription: string
   errorMessage: string
+  string: string
   lineError: number
   isOpen?: boolean
 }
+
+export interface ConsoleCompile {
+  type: 'compile'
+  contractName: string
+  wasm: string
+  createdAt: string
+  desc?: string
+  isOpen?: boolean
+}
+
+export type ConsoleLog = ConsoleError | ConsoleCompile
 
 export interface ContractInspectionInputsI {
   name: string
@@ -116,7 +129,9 @@ const MainPage = ({ id }) => {
   const [openContracts, setOpenContracts] = useState(true)
   const [openConsole, setOpenConsole] = useState(true)
 
-  const [consoleError, setConsoleError] = useState<CompileErrors[]>([])
+  const [consoleLogs, setConsoleLogs] = useState<ConsoleLog[]>([])
+
+  const [consoleCompile, setConsoleCompile] = useState<ConsoleCompile[]>([])
 
   const [contractInspections, setContractInspections] = useState<
     ContractInspectionI[]
@@ -216,7 +231,6 @@ const MainPage = ({ id }) => {
   async function compileContract() {
     setIsLoadingCompilation(true)
 
-    setConsoleError([])
     const { userSessionToken } = parseCookies()
 
     const data = {
@@ -233,6 +247,14 @@ const MainPage = ({ id }) => {
         data,
       )
       setContractInspections(res.contractInspection)
+      const newLogs = [...consoleLogs]
+      newLogs.unshift({
+        type: 'compile',
+        contractName: blockchainContractSelected?.name,
+        wasm: JSON.stringify(res.contractWasm.data),
+        createdAt: String(new Date()),
+      })
+      setConsoleLogs(newLogs)
     } catch (err) {
       console.log(err)
       console.log('Error: ' + err.response.data.message)
@@ -275,11 +297,16 @@ const MainPage = ({ id }) => {
         console.log('lineError')
 
         console.log({ errorDescription, errorMessage, lineError })
-        finalOut.push({ errorDescription, errorMessage, lineError })
+        finalOut.unshift({
+          errorDescription,
+          errorMessage,
+          lineError,
+          type: 'error',
+        })
       }
       console.log('outs:')
       console.log(finalOut)
-      setConsoleError(finalOut)
+      setConsoleLogs(finalOut)
     }
     setIsLoadingCompilation(false)
   }
@@ -819,63 +846,145 @@ const MainPage = ({ id }) => {
                         <div className="font-medium">Console</div>
                       </div>
                       <div className="mt-[20px] grid gap-y-[12px]">
-                        {consoleError?.map((cnslError, index) => (
-                          <div
-                            onMouseEnter={() => {
-                              onMount(editorRef.current, cnslError?.lineError)
-                            }}
-                            onMouseLeave={() => {
-                              onMount(editorRef.current)
-                            }}
-                            key={index}
-                            onClick={() => {
-                              if (!cnslError?.isOpen) {
-                                const newConsoles = [...consoleError]
-                                newConsoles[index].isOpen =
-                                  !newConsoles[index].isOpen
-                                setConsoleError(newConsoles)
-                              }
-                            }}
-                            className={`${
-                              !cnslError?.isOpen && 'cursor-pointer'
-                            } rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
-                          >
-                            <div className="flex gap-x-[8px]">
-                              <img
-                                alt="ethereum avatar"
-                                src="/images/depin/warning.svg"
-                                className="w-[20px]"
-                              ></img>
+                        {consoleLogs?.map((cnslLog, index) => (
+                          <>
+                            {cnslLog?.type === 'error' && (
                               <div
-                                className="whitespace-pre-wrap"
-                                dangerouslySetInnerHTML={{
-                                  __html: cnslError?.errorMessage,
+                                onMouseEnter={() => {
+                                  onMount(editorRef.current, cnslLog?.lineError)
                                 }}
-                              />
-                              <img
-                                alt="ethereum avatar"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  const newConsoles = [...consoleError]
-                                  newConsoles[index].isOpen =
-                                    !newConsoles[index].isOpen
-                                  setConsoleError(newConsoles)
+                                onMouseLeave={() => {
+                                  onMount(editorRef.current)
                                 }}
-                                src="/images/header/arrow-gray.svg"
-                                className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
-                                  cnslError?.isOpen && 'rotate-180'
-                                }`}
-                              ></img>
-                            </div>
-                            {cnslError?.isOpen && (
-                              <div
-                                className="whitespace-pre-wrap"
-                                dangerouslySetInnerHTML={{
-                                  __html: cnslError?.errorDescription,
+                                key={index}
+                                onClick={() => {
+                                  if (!cnslLog?.isOpen) {
+                                    const newConsoles = [...consoleLogs]
+                                    newConsoles[index].isOpen =
+                                      !newConsoles[index].isOpen
+                                    setConsoleLogs(newConsoles)
+                                  }
                                 }}
-                              />
+                                className={`${
+                                  !cnslLog?.isOpen && 'cursor-pointer'
+                                } rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
+                              >
+                                <div className="flex  justify-between">
+                                  <div className="flex gap-x-[8px]">
+                                    <img
+                                      alt="ethereum avatar"
+                                      src="/images/depin/warning.svg"
+                                      className="w-[20px]"
+                                    ></img>
+                                    <div
+                                      className="whitespace-pre-wrap"
+                                      dangerouslySetInnerHTML={{
+                                        __html: cnslLog?.errorMessage,
+                                      }}
+                                    />
+                                  </div>
+
+                                  <img
+                                    alt="ethereum avatar"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      const newConsoles = [...consoleLogs]
+                                      newConsoles[index].isOpen =
+                                        !newConsoles[index].isOpen
+                                      setConsoleLogs(newConsoles)
+                                    }}
+                                    src="/images/header/arrow-gray.svg"
+                                    className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                      cnslLog?.isOpen && 'rotate-180'
+                                    }`}
+                                  ></img>
+                                </div>
+                                {cnslLog?.isOpen && (
+                                  <div
+                                    className="whitespace-pre-wrap"
+                                    dangerouslySetInnerHTML={{
+                                      __html: cnslLog?.errorDescription,
+                                    }}
+                                  />
+                                )}
+                              </div>
                             )}
-                          </div>
+                            {cnslLog?.type === 'compile' && (
+                              <div
+                                key={index}
+                                onClick={() => {
+                                  if (!cnslLog?.isOpen) {
+                                    const newConsoles = [...consoleLogs]
+                                    newConsoles[index].isOpen =
+                                      !newConsoles[index].isOpen
+                                    setConsoleLogs(newConsoles)
+                                  }
+                                }}
+                                className={`${
+                                  !cnslLog?.isOpen && 'cursor-pointer'
+                                } rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
+                              >
+                                <div className="flex justify-between">
+                                  <div>
+                                    Contract {cnslLog?.contractName} compiled
+                                  </div>
+                                  <img
+                                    alt="ethereum avatar"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      const newConsoles = [...consoleLogs]
+                                      newConsoles[index].isOpen =
+                                        !newConsoles[index].isOpen
+                                      setConsoleLogs(newConsoles)
+                                    }}
+                                    src="/images/header/arrow-gray.svg"
+                                    className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                      cnslLog?.isOpen && 'rotate-180'
+                                    }`}
+                                  ></img>
+                                </div>
+                                {cnslLog?.isOpen && (
+                                  <div className="mt-3">
+                                    <div className="flex items-center gap-x-3">
+                                      <div className="mt-[1px] text-[#c5c4c4]">
+                                        Wasm:{' '}
+                                        {cnslLog.wasm.substring(0, 10) +
+                                          '...' +
+                                          cnslLog.wasm.slice(-10)}
+                                      </div>
+                                      <img
+                                        // ref={editRef}
+                                        alt="ethereum avatar"
+                                        src="/images/workspace/copy.svg"
+                                        className="w-[18px] cursor-pointer rounded-full"
+                                        // onMouseEnter={() => setIsCopyInfoOpen(canister.id)}
+                                        // onMouseLeave={() => setIsCopyInfoOpen(null)}
+                                        onClick={(event) => {
+                                          event.stopPropagation()
+                                          navigator.clipboard.writeText(
+                                            cnslLog.wasm,
+                                          )
+                                        }}
+                                      ></img>
+                                    </div>
+                                    <div className="mt-3 flex items-center gap-x-3">
+                                      <div className="mt-[1px] text-[#c5c4c4]">
+                                        Compiled at:{' '}
+                                        {String(
+                                          new Date(
+                                            cnslLog?.createdAt,
+                                          ).toLocaleTimeString([], {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                          }),
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </>
                         ))}
                       </div>
                     </div>

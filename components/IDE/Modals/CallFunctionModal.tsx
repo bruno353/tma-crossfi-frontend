@@ -98,62 +98,46 @@ const NewCallFunctionModal = ({
             {contractFunction?.functionName}
           </label>
         </div>
-        <div>
-          <div
-            className="mb-6 whitespace-pre-wrap text-[#c5c4c4]"
-            dangerouslySetInnerHTML={{
-              __html: cleanDocs(contractFunction?.docs),
-            }}
-          />
-        </div>
-        <div className="mb-6">
-          <label
-            htmlFor="workspaceName"
-            className="mb-2 block text-[14px] text-[#C5C4C4]"
-          >
-            Wallet description
-          </label>
-          <input
-            type="text"
-            maxLength={50}
-            id="workspaceName"
-            name="workspaceName"
-            value={appName}
-            onChange={handleInputChange}
-            className="w-full rounded-md border border-transparent px-6 py-2 text-base placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
-          />
-        </div>
-
-        <div className="mb-4 mt-2 grid gap-y-3 ">
-          {contractFunction?.inputs?.map((cntInsInput, indexInput) => (
-            <div key={indexInput}>
-              <div className="mb-1 flex items-center justify-between text-base font-light">
-                <div className="">{cntInsInput?.name}</div>
-                <div className="text-xs text-[#c5c4c4]">
-                  {cntInsInput?.type}
+        <div className="max-h-[35vh] overflow-y-auto px-1 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+          <div>
+            <div
+              className="mb-4 whitespace-pre-wrap text-[#c5c4c4]"
+              dangerouslySetInnerHTML={{
+                __html: cleanDocs(contractFunction?.docs),
+              }}
+            />
+          </div>
+          <div className="mb-4 grid gap-y-3 ">
+            {contractFunction?.inputs?.map((cntInsInput, indexInput) => (
+              <div key={indexInput}>
+                <div className="mb-1 flex items-center justify-between text-base font-light">
+                  <div className="">{cntInsInput?.name}</div>
+                  <div className="text-xs text-[#c5c4c4]">
+                    {cntInsInput?.type}
+                  </div>
                 </div>
-              </div>
 
-              <input
-                type="text"
-                id="workspaceName"
-                name="workspaceName"
-                value={cntInsInput?.value}
-                onChange={(e) => {
-                  if (!isLoading) {
-                    const newContractFunction = { ...contractFunction }
-                    newContractFunction.inputs[indexInput].value =
-                      e.target.value
-                    onUpdateContractFunction(newContractFunction)
-                  }
-                }}
-                className="w-full rounded-md border border-transparent px-3 py-1 text-base placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
-              />
-            </div>
-          ))}
+                <input
+                  type="text"
+                  id="workspaceName"
+                  name="workspaceName"
+                  value={cntInsInput?.value}
+                  onChange={(e) => {
+                    if (!isLoading) {
+                      const newContractFunction = { ...contractFunction }
+                      newContractFunction.inputs[indexInput].value =
+                        e.target.value
+                      onUpdateContractFunction(newContractFunction)
+                    }
+                  }}
+                  className="w-full rounded-md border border-transparent px-6 py-2 text-base placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="mt-10 flex justify-start">
+        <div className="mt-5 flex justify-start">
           <div
             className={`${
               isLoading
