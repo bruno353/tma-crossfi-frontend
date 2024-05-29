@@ -57,6 +57,8 @@ export interface BlockchainContractProps {
   name?: string
   network: string
   code?: string
+  address?: string
+  chain?: string
   createdAt?: string
   updatedAt?: string
 }

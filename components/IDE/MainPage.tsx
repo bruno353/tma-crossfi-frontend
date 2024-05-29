@@ -340,14 +340,16 @@ const MainPage = ({ id }) => {
   }
 
   async function deployContract() {
+    setOpenModalDeploy(false)
     setIsLoadingCompilation(true)
 
+    const chain = selected.value
     const { userSessionToken } = parseCookies()
 
     const data = {
       walletId: blockchainWalletsSelected.value,
       contractId: blockchainContractSelected?.id,
-      environment: selected.value,
+      environment: selected.value.toLowerCase(),
     }
 
     try {
@@ -357,13 +359,25 @@ const MainPage = ({ id }) => {
         userSessionToken,
         data,
       )
+
       const newLogs = [...consoleLogs]
       newLogs.unshift({
         type: 'deploy',
         contractName: blockchainContractSelected?.name,
+        desc: `Address ${res.contractAddress}`,
         createdAt: String(new Date()),
       })
       setConsoleLogs(newLogs)
+
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      newContracts[cntIndex].address = res.contractAddress
+      newContracts[cntIndex].chain = chain
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
     } catch (err) {
       console.log(err)
       console.log('Error: ' + err.response.data.message)
@@ -808,13 +822,43 @@ const MainPage = ({ id }) => {
                 <div className="grid h-[76vh] w-full gap-y-[1vh] text-[13px]">
                   {openContracts && (
                     <div className="h-[38vh] max-h-[38vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
-                      <div className="flex gap-x-[5px]">
-                        <img
-                          alt="ethereum avatar"
-                          src="/images/depin/document.svg"
-                          className="w-[16px]"
-                        ></img>
-                        <div className="font-medium">Contract</div>
+                      <div className="flex justify-between">
+                        <div className="flex gap-x-[5px]">
+                          <img
+                            alt="ethereum avatar"
+                            src="/images/depin/document.svg"
+                            className="w-[16px]"
+                          ></img>
+                          <div className="font-medium">Contract</div>
+                        </div>
+                        {blockchainContractSelected?.address && (
+                          <div className="flex items-center gap-x-5">
+                            <div
+                              className="cursor-pointer"
+                              onClick={() => {
+                                navigator.clipboard.writeText(
+                                  blockchainContractSelected?.address,
+                                )
+                                toast.success('Address copied')
+                              }}
+                            >
+                              {transformString(
+                                blockchainContractSelected?.address,
+                                7,
+                              )}
+                            </div>
+                            <div className="flex items-center gap-x-1">
+                              <img
+                                alt="ethereum avatar"
+                                src="/images/depin/chain.svg"
+                                className="my-auto w-[20px]"
+                              ></img>
+                              <div className="text-[#c5c4c4]">
+                                {blockchainContractSelected?.chain}
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className="mt-[20px] grid gap-y-[12px]">
                         {contractInspections?.map((cntIns, index) => (

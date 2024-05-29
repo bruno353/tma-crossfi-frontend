@@ -147,7 +147,7 @@ const Sidebar = ({
           onValueChange={(value) => {
             setSelected(value)
           }}
-          classNameForDropdown="!px-1 !pr-2 !py-1"
+          classNameForDropdown="!px-1 !pr-2 !py-1 !font-medium"
           classNameForPopUp="!px-1 !pr-2 !py-1"
           classNameForPopUpBox="!translate-y-[35px]"
         />
@@ -169,7 +169,7 @@ const Sidebar = ({
               onValueChange={(value) => {
                 setBlockchainWalletsSelected(value)
               }}
-              classNameForDropdown="!px-1 !pr-2 !py-1 !flex-grow !min-w-[130px]"
+              classNameForDropdown="!px-1 !pr-2 !py-1 !flex-grow !min-w-[130px] !font-medium"
               classNameForPopUp="!px-1 !pr-2 !py-1"
               classNameForPopUpBox="!translate-y-[35px]"
             />
