@@ -28,7 +28,13 @@ import SubNavBar from '@/components/Modals/SubNavBar'
 import ICPWalletsRender from './ICPWalletsRender'
 import EditWalletModal from '../Modals/EditWalletModal'
 import TransactionsRender from './TransactionsRender'
+import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
+import {
+  sorobanNetworkToRpc,
+  optionsNetwork as sorobanOption,
+} from '@/components/IDE/MainPage'
 import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
+import { callAxiosBackend } from '@/utils/general-api'
 
 const BlockchainWalletPage = ({ id, workspaceId }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -39,12 +45,16 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
     useState<BlockchainWalletProps>()
   const [isEditWalletOpen, setIsEditWalletOpen] = useState<boolean>(false)
 
+  const [sorobanEnvironment, setSorobanEnvironment] = useState<ValueObject>(
+    sorobanOption[1],
+  )
+
   const { workspace, user } = useContext(AccountContext)
 
   const pathname = usePathname()
   const { push } = useRouter()
 
-  async function getData() {
+  async function getData(sorobanRpc?: string) {
     setIsLoading(true)
     const { userSessionToken } = parseCookies()
 
@@ -52,8 +62,17 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
       id,
     }
 
+    if (sorobanRpc) {
+      data['sorobanRPC'] = sorobanRpc
+    }
+
     try {
-      const res = await getBlockchainWallet(data, userSessionToken)
+      const res = await callAxiosBackend(
+        'post',
+        '/blockchain/functions/getWallet',
+        userSessionToken,
+        data,
+      )
       setBlockchainWallet(res)
     } catch (err) {
       console.log(err)
@@ -169,7 +188,7 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
               ) : (
                 <div>
                   <div className="relative flex w-fit gap-x-[5px]">
-                    <div className="mt-2 text-[14px] ">
+                    <div className="mt-3 text-[14px] ">
                       Wallet balance:{' '}
                       <span>{blockchainWallet?.balance} XLM</span>
                     </div>
@@ -189,7 +208,7 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     )}
                   </div>
                   {Number(blockchainWallet?.balance) === 0 && (
-                    <div className="mt-2 w-fit rounded-md border-[1px] border-[#a53333] bg-[#e7c567ac] px-[10px] text-[14px] text-[#fff]">
+                    <div className="mt-3 w-fit rounded-md border-[1px] border-[#a53333] bg-[#e7c567ac] px-[10px] text-[14px] text-[#fff]">
                       Make sure to fund the wallet with at least 1 XLM to
                       activate it!
                     </div>
@@ -198,13 +217,30 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
               )}
             </div>
             {workspace?.isUserAdmin && (
-              <div
-                onClick={() => {
-                  setIsEditWalletOpen(true)
-                }}
-                className="cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
-              >
-                Edit identity
+              <div className="grid gap-y-6">
+                <div
+                  onClick={() => {
+                    setIsEditWalletOpen(true)
+                  }}
+                  className="cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
+                >
+                  Edit identity
+                </div>
+                {blockchainWallet?.network === 'STELLAR' && (
+                  <div>
+                    <Dropdown
+                      optionSelected={sorobanEnvironment}
+                      options={sorobanOption}
+                      onValueChange={(value) => {
+                        getData(sorobanNetworkToRpc[value.value])
+                        setSorobanEnvironment(value)
+                      }}
+                      classNameForDropdown="!px-4 !pr-2 !py-1 !text-[#fff] !text-[14px]"
+                      classNameForPopUp="!px-1 !pr-2 !py-1"
+                      classNameForPopUpBox="!translate-y-[35px]"
+                    />
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -240,6 +276,7 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     onUpdate={getData}
                     blockchainWalletId={blockchainWallet?.id}
                     blockchainWallet={blockchainWallet}
+                    sorobanEnvironment={sorobanEnvironment.value}
                   />
                 </div>
               )}

@@ -39,6 +39,7 @@ export interface ModalI {
   blockchainWalletId: string
   isUserAdmin: boolean
   onUpdate(): void
+  sorobanEnvironment?: string
 }
 
 const TransactionsRender = ({
@@ -47,6 +48,7 @@ const TransactionsRender = ({
   isUserAdmin,
   blockchainWalletId,
   blockchainWallet,
+  sorobanEnvironment,
 }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
@@ -117,7 +119,9 @@ const TransactionsRender = ({
             href={`${
               blockchainWallet?.network === 'ICP'
                 ? `https://dashboard.internetcomputer.org/account/${blockchainWallet.icpWalletPubKId}`
-                : `https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
+                : sorobanEnvironment === 'Mainnet'
+                ? `https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
+                : `https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
             } `}
             target="_blank"
             rel="noreferrer"

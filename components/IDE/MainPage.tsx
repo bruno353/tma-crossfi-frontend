@@ -110,6 +110,11 @@ export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
 }
 
+export const sorobanNetworkToRpc = {
+  Testnet: 'https://horizon-testnet.stellar.org',
+  Mainnet: 'https://horizon.stellar.org',
+}
+
 export const optionsNetwork = [
   {
     name: 'Testnet',
