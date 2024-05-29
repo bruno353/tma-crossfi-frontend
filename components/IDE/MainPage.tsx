@@ -50,6 +50,7 @@ import {
 import Sidebar from './Modals/Sidebar'
 import * as StellarSdk from '@stellar/stellar-sdk'
 import NewCallFunctionModal from './Modals/CallFunctionModal'
+import DeployContractModal from './Modals/DeployContractModal'
 
 export interface ConsoleError {
   type: 'error'
@@ -125,6 +126,8 @@ const MainPage = ({ id }) => {
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
   const monaco = useMonaco()
   const [selected, setSelected] = useState<ValueObject>(optionsNetwork[0])
+  const [openModalDeploy, setOpenModalDeploy] = useState(false)
+
   const [openCode, setOpenCode] = useState(true)
   const [openContracts, setOpenContracts] = useState(true)
   const [openConsole, setOpenConsole] = useState(true)
@@ -630,14 +633,33 @@ const MainPage = ({ id }) => {
                       )}
                     </div>
 
-                    <div
-                      onClick={() => {
-                        compileContract()
-                        // toast.success('contracts ' + contractsToBeSaved)
-                      }}
-                      className="cursor-pointer text-[14px]"
-                    >
-                      Compile
+                    <div className="mb-2 flex items-center gap-x-3">
+                      <div
+                        onClick={() => {
+                          compileContract()
+                          // toast.success('contracts ' + contractsToBeSaved)
+                        }}
+                        className={`${
+                          isLoading
+                            ? 'animate-pulse !bg-[#35428a]'
+                            : 'cursor-pointer  hover:bg-[#35428a]'
+                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                      >
+                        Compile
+                      </div>
+
+                      <div
+                        onClick={() => {
+                          setOpenModalDeploy(true)
+                        }}
+                        className={`${
+                          isLoading
+                            ? 'animate-pulse !bg-[#35428a]'
+                            : 'cursor-pointer  hover:bg-[#35428a]'
+                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                      >
+                        Deploy
+                      </div>
                     </div>
                   </div>
                   <div
@@ -690,6 +712,26 @@ const MainPage = ({ id }) => {
                         )}
                       </div>
                     )}
+                    <DeployContractModal
+                      isOpen={openModalDeploy}
+                      onUpdateM={() => {}}
+                      onClose={() => {
+                        setOpenModalDeploy(false)
+                      }}
+                      contract={blockchainContractSelected}
+                      environment={selected.value}
+                      wallet={blockchainWalletsSelected.value}
+                      walletBalance={
+                        blockchainWallets.find(
+                          (obj) => obj.id === blockchainWalletsSelected.value,
+                        ).balance
+                      }
+                      onUpdateContractFunction={(value) => {
+                        const newContractInspections = [...contractInspections]
+                        newContractInspections[isCallingFunctionModal] = value
+                        setContractInspections(newContractInspections)
+                      }}
+                    />
                   </div>
                 </div>
               )}
