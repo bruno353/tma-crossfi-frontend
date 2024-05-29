@@ -39,43 +39,14 @@ const DeployContractModal = ({
   onUpdateM,
   onClose,
   contract,
-  onUpdateContractFunction,
 }: ModalI) => {
-  const [appName, setAppName] = useState('')
   const [isLoading, setIsLoading] = useState(null)
-
-  const [selected, setSelected] = useState<ValueObject>(optionsNetwork[0])
 
   const [isConfirmTransactionOpen, setIsConfirmTransactionOpen] =
     useState<boolean>(false)
 
   const confirmTransactionRef = useRef(null)
 
-  const handleInputChange = (e) => {
-    if (!isLoading) {
-      setAppName(e.target.value)
-    }
-  }
-
-  const handleCreateChannel = async () => {
-    setIsLoading(true)
-
-    const { userSessionToken } = parseCookies()
-
-    const final = {
-      name: appName,
-      walletNetwork: selected.value,
-    }
-
-    try {
-      const wallet = await createWallet(final, userSessionToken)
-      setIsLoading(false)
-    } catch (err) {
-      console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
-      setIsLoading(false)
-    }
-  }
   const modalRef = useRef<HTMLDivElement>(null)
 
   const handleOverlayClick = (event) => {
@@ -166,6 +137,7 @@ const DeployContractModal = ({
               wallet={wallet}
               environment={environment}
               onConfirmTransaction={() => {
+                onUpdateM()
                 setIsConfirmTransactionOpen(false)
                 // handleFund()
               }}

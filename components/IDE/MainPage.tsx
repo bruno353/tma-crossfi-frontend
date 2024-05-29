@@ -70,7 +70,27 @@ export interface ConsoleCompile {
   isOpen?: boolean
 }
 
-export type ConsoleLog = ConsoleError | ConsoleCompile
+export interface ConsoleDeploy {
+  type: 'deploy'
+  contractName: string
+  createdAt: string
+  desc?: string
+  isOpen?: boolean
+}
+
+export interface ConsoleDeployError {
+  type: 'deployError'
+  contractName: string
+  createdAt: string
+  desc?: string
+  isOpen?: boolean
+}
+
+export type ConsoleLog =
+  | ConsoleError
+  | ConsoleCompile
+  | ConsoleDeploy
+  | ConsoleDeployError
 
 export interface ContractInspectionInputsI {
   name: string
@@ -310,6 +330,47 @@ const MainPage = ({ id }) => {
       console.log('outs:')
       console.log(finalOut)
       setConsoleLogs(finalOut)
+    }
+    setIsLoadingCompilation(false)
+  }
+
+  async function deployContract() {
+    setIsLoadingCompilation(true)
+
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      walletId: blockchainWalletsSelected.value,
+      contractId: blockchainContractSelected?.id,
+      environment: selected.value,
+    }
+
+    try {
+      const res = await callAxiosBackend(
+        'post',
+        '/blockchain/functions/deploySorobanContract',
+        userSessionToken,
+        data,
+      )
+      const newLogs = [...consoleLogs]
+      newLogs.unshift({
+        type: 'deploy',
+        contractName: blockchainContractSelected?.name,
+        createdAt: String(new Date()),
+      })
+      setConsoleLogs(newLogs)
+    } catch (err) {
+      console.log(err)
+      console.log('Error: ' + err.response.data.message)
+
+      const newLogs = [...consoleLogs]
+      newLogs.unshift({
+        type: 'deployError',
+        desc: err.response.data.message,
+        contractName: blockchainContractSelected?.name,
+        createdAt: String(new Date()),
+      })
+      setConsoleLogs(newLogs)
     }
     setIsLoadingCompilation(false)
   }
@@ -714,7 +775,9 @@ const MainPage = ({ id }) => {
                     )}
                     <DeployContractModal
                       isOpen={openModalDeploy}
-                      onUpdateM={() => {}}
+                      onUpdateM={() => {
+                        deployContract()
+                      }}
                       onClose={() => {
                         setOpenModalDeploy(false)
                       }}
@@ -860,7 +923,9 @@ const MainPage = ({ id }) => {
                       </div>
                       <NewCallFunctionModal
                         isOpen={isCallingFunctionModal >= 0}
-                        onUpdateM={() => {}}
+                        onUpdateM={() => {
+                          console.log('')
+                        }}
                         onClose={() => {
                           setIsCallingFunctionModal(-1)
                         }}
