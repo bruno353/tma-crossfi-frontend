@@ -304,6 +304,97 @@ const Sidebar = ({
             </div>
           </div>
         )}
+      </div>{' '}
+      <div className="mt-4">
+        <div
+          onClick={() => {
+            setIsContractsListOpen(!isContractsListOpen)
+          }}
+          className="mb-2 flex cursor-pointer items-center gap-x-[8px]"
+        >
+          <div className="flex gap-x-[5px]">
+            <img
+              alt="ethereum avatar"
+              src="/images/depin/history.svg"
+              className="w-[16px]"
+            ></img>
+            <div className={`${isLoadingContracts && 'animate-pulse'}`}>
+              History
+            </div>
+          </div>
+          <img
+            alt="ethereum avatar"
+            src="/images/header/arrow-gray.svg"
+            className={`w-[8px] rounded-full transition-transform duration-150 ${
+              !isContractsListOpen && 'rotate-180'
+            }`}
+          ></img>
+        </div>
+        {isContractsListOpen && (
+          <div>
+            <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+              {blockchainContracts?.map((cnt, index) => (
+                <div
+                  onClick={() => {
+                    setBlockchainContractSelected(cnt)
+                  }}
+                  onMouseEnter={() => setBlockchainContractHovered(cnt)}
+                  onMouseLeave={() => setBlockchainContractHovered(null)}
+                  className={`relative cursor-pointer rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
+                    blockchainContractSelected?.id === cnt?.id &&
+                    '!bg-[#dbdbdb1e]'
+                  }`}
+                  key={index}
+                >
+                  {contractRename?.id === cnt?.id ? (
+                    <input
+                      value={contractName}
+                      ref={nameRef}
+                      className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary"
+                      onChange={(e) => {
+                        if (e.target.value.length < 50) {
+                          setContractName(e.target.value)
+                        }
+                      }}
+                      autoFocus
+                    />
+                  ) : (
+                    <div className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary">
+                      {' '}
+                      {cnt?.name}{' '}
+                    </div>
+                  )}
+
+                  {blockchainContractHovered?.id === cnt.id && (
+                    <div className="absolute right-0 top-0 flex h-full px-[10px] text-[10px] backdrop-blur-sm">
+                      <div className="flex items-center gap-x-2">
+                        <img
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setContractRename(cnt)
+                            setContractName(cnt.name)
+                          }}
+                          src={`/images/depin/pencil.svg`}
+                          alt="image"
+                          className="my-auto w-[18px] cursor-pointer"
+                        />
+                        <img
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDeleteContract(cnt)
+                          }}
+                          src={`/images/depin/garbage.svg`}
+                          alt="image"
+                          className="my-auto w-[11px] cursor-pointer"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <div className="absolute bottom-4 flex gap-x-3">
         <img

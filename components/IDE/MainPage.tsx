@@ -431,7 +431,8 @@ const MainPage = ({ id }) => {
       newLogs.unshift({
         type: 'contractCall',
         title: `${functionName} -> ${res}`,
-        contractAddress: blockchainContractSelected?.address,
+        contractAddress:
+          'CCN4QMR5U3YLBXXFFWKRYQGLYOWY6VAMU6BKC6FJFOHBBTCN6DJXPK55',
         desc: `Address ${res.contractAddress}`,
         createdAt: String(new Date()),
       })
