@@ -70,6 +70,15 @@ export interface ConsoleCompile {
   isOpen?: boolean
 }
 
+export interface ConsoleContractCall {
+  type: 'contractCall'
+  contractAddress: string
+  title: string
+  createdAt: string
+  desc?: string
+  isOpen?: boolean
+}
+
 export interface ConsoleDeploy {
   type: 'deploy'
   contractName: string
@@ -91,6 +100,7 @@ export type ConsoleLog =
   | ConsoleCompile
   | ConsoleDeploy
   | ConsoleDeployError
+  | ConsoleContractCall
 
 export interface ContractInspectionInputsI {
   name: string
@@ -102,6 +112,7 @@ export interface ContractInspectionI {
   functionName: string
   inputs: ContractInspectionInputsI[]
   outputsArray: string[]
+  transactError?: boolean
   isOpen?: boolean
   docs?: string
 }
@@ -158,6 +169,7 @@ const MainPage = ({ id }) => {
   const [openConsole, setOpenConsole] = useState(true)
 
   const [consoleLogs, setConsoleLogs] = useState<ConsoleLog[]>([])
+  const [isContractCallLoading, setIsContractCallLoading] = useState(false)
 
   const [consoleCompile, setConsoleCompile] = useState<ConsoleCompile[]>([])
 
@@ -378,6 +390,62 @@ const MainPage = ({ id }) => {
 
       setBlockchainContracts(newContracts)
       setBlockchainContractSelected(newContracts[cntIndex])
+    } catch (err) {
+      console.log(err)
+      console.log('Error: ' + err.response.data.message)
+
+      const newLogs = [...consoleLogs]
+      newLogs.unshift({
+        type: 'deployError',
+        desc: err.response.data.message,
+        contractName: blockchainContractSelected?.name,
+        createdAt: String(new Date()),
+      })
+      setConsoleLogs(newLogs)
+    }
+    setIsLoadingCompilation(false)
+  }
+
+  async function callContract(functionName: string, functionParams: string[]) {
+    setIsContractCallLoading(false)
+
+    const { userSessionToken } = parseCookies()
+
+    const data = {
+      walletId: blockchainWalletsSelected.value,
+      contractAddress: blockchainContractSelected?.address,
+      environment: selected.value.toLowerCase(),
+      functionName,
+      functionParams,
+    }
+
+    try {
+      const res = await callAxiosBackend(
+        'post',
+        '/blockchain/functions/callSorobanContract',
+        userSessionToken,
+        data,
+      )
+
+      const newLogs = [...consoleLogs]
+      newLogs.unshift({
+        type: 'contractCall',
+        title: `${functionName} -> ${res}`,
+        contractAddress: blockchainContractSelected?.address,
+        desc: `Address ${res.contractAddress}`,
+        createdAt: String(new Date()),
+      })
+      setConsoleLogs(newLogs)
+
+      // const newContracts = [...blockchainContracts]
+      // const cntIndex = newContracts.findIndex(
+      //   (cnt) => cnt.id === blockchainContractSelected?.id,
+      // )
+      // newContracts[cntIndex].address = res.contractAddress
+      // newContracts[cntIndex].chain = chain
+
+      // setBlockchainContracts(newContracts)
+      // setBlockchainContractSelected(newContracts[cntIndex])
     } catch (err) {
       console.log(err)
       console.log('Error: ' + err.response.data.message)
@@ -956,14 +1024,63 @@ const MainPage = ({ id }) => {
                                     ),
                                   )}
                                 </div>
-                                <div
-                                  className={`${
-                                    isLoading
-                                      ? 'animate-pulse !bg-[#35428a]'
-                                      : 'cursor-pointer  hover:bg-[#35428a]'
-                                  }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
-                                >
-                                  Transact
+                                <div className="flex gap-x-5">
+                                  <div
+                                    onClick={() => {
+                                      if (!blockchainContractSelected.address) {
+                                        const newContractInspections = [
+                                          ...contractInspections,
+                                        ]
+                                        newContractInspections[
+                                          index
+                                        ].transactError = true
+                                        setContractInspections(
+                                          newContractInspections,
+                                        )
+                                        return
+                                      } else {
+                                        const newContractInspections = [
+                                          ...contractInspections,
+                                        ]
+                                        newContractInspections[
+                                          index
+                                        ].transactError = false
+                                        setContractInspections(
+                                          newContractInspections,
+                                        )
+                                      }
+                                      if (!isContractCallLoading) {
+                                        const finalCntInsInput = []
+
+                                        for (
+                                          let i = 0;
+                                          i < cntIns?.inputs?.length;
+                                          i++
+                                        ) {
+                                          finalCntInsInput.push({
+                                            paramName: cntIns?.inputs[i].name,
+                                            value: cntIns?.inputs[i].value,
+                                          })
+                                        }
+                                        callContract(
+                                          cntIns?.functionName,
+                                          finalCntInsInput,
+                                        )
+                                      }
+                                    }}
+                                    className={`${
+                                      isContractCallLoading
+                                        ? 'animate-pulse !bg-[#35428a]'
+                                        : 'cursor-pointer  hover:bg-[#35428a]'
+                                    }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                                  >
+                                    Transact
+                                  </div>
+                                  {cntIns?.transactError && (
+                                    <div className="text-xs font-medium text-[#cc5563]">
+                                      Deploy your contract to call this function
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             )}
