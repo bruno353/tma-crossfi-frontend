@@ -1,4 +1,5 @@
 import { UserProps } from './user'
+import { UserWorkspaceProps } from './workspace'
 
 export interface ICPWalletsProps {
   id: string
@@ -52,6 +53,17 @@ export interface BlockchainAppProps {
   updatedAt: string
 }
 
+export interface BlockchainContractDeploymentHistoryProps {
+  id: string
+  contractAddress?: string
+  chain?: string
+  ideContractId?: string
+  userWorkspaceId?: string
+  userWorkspace?: UserWorkspaceProps
+  createdAt?: string
+  updatedAt?: string
+}
+
 export interface BlockchainContractProps {
   id: string | undefined
   name?: string
@@ -59,6 +71,7 @@ export interface BlockchainContractProps {
   code?: string
   address?: string
   chain?: string
+  ideContractDeploymentHistories: BlockchainContractDeploymentHistoryProps[]
   createdAt?: string
   updatedAt?: string
 }

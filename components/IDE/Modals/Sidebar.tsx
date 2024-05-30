@@ -11,6 +11,8 @@ import { callAxiosBackend } from '@/utils/general-api'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { parseCookies } from 'nookies'
+import CntDeploymentHistoryModal from './CntDeploymentHistoryModal'
+import { transformString } from '@/utils/functions'
 
 export interface MenuI {
   id: string
@@ -70,6 +72,14 @@ const Sidebar = ({
   setOpenConsole,
 }: MenuI) => {
   const [isContractsListOpen, setIsContractsListOpen] = useState(true)
+  const [
+    isContractsDeploymentHistoryListOpen,
+    setIsContractsDeploymentHistoryListOpen,
+  ] = useState(true)
+
+  const [isCntDeploymentHistoryModalOpen, setIsCntDeploymentHistoryModalOpen] =
+    useState<string>('')
+
   const [blockchainContractHovered, setBlockchainContractHovered] =
     useState<BlockchainContractProps | null>()
 
@@ -308,7 +318,9 @@ const Sidebar = ({
       <div className="mt-4">
         <div
           onClick={() => {
-            setIsContractsListOpen(!isContractsListOpen)
+            setIsContractsDeploymentHistoryListOpen(
+              !isContractsDeploymentHistoryListOpen,
+            )
           }}
           className="mb-2 flex cursor-pointer items-center gap-x-[8px]"
         >
@@ -326,73 +338,48 @@ const Sidebar = ({
             alt="ethereum avatar"
             src="/images/header/arrow-gray.svg"
             className={`w-[8px] rounded-full transition-transform duration-150 ${
-              !isContractsListOpen && 'rotate-180'
+              !isContractsDeploymentHistoryListOpen && 'rotate-180'
             }`}
           ></img>
         </div>
-        {isContractsListOpen && (
+        {isContractsDeploymentHistoryListOpen && (
           <div>
-            <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
-              {blockchainContracts?.map((cnt, index) => (
-                <div
-                  onClick={() => {
-                    setBlockchainContractSelected(cnt)
-                  }}
-                  onMouseEnter={() => setBlockchainContractHovered(cnt)}
-                  onMouseLeave={() => setBlockchainContractHovered(null)}
-                  className={`relative cursor-pointer rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
-                    blockchainContractSelected?.id === cnt?.id &&
-                    '!bg-[#dbdbdb1e]'
-                  }`}
-                  key={index}
-                >
-                  {contractRename?.id === cnt?.id ? (
-                    <input
-                      value={contractName}
-                      ref={nameRef}
-                      className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary"
-                      onChange={(e) => {
-                        if (e.target.value.length < 50) {
-                          setContractName(e.target.value)
-                        }
-                      }}
-                      autoFocus
-                    />
-                  ) : (
-                    <div className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary">
-                      {' '}
-                      {cnt?.name}{' '}
-                    </div>
-                  )}
-
-                  {blockchainContractHovered?.id === cnt.id && (
-                    <div className="absolute right-0 top-0 flex h-full px-[10px] text-[10px] backdrop-blur-sm">
-                      <div className="flex items-center gap-x-2">
-                        <img
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setContractRename(cnt)
-                            setContractName(cnt.name)
-                          }}
-                          src={`/images/depin/pencil.svg`}
-                          alt="image"
-                          className="my-auto w-[18px] cursor-pointer"
-                        />
-                        <img
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleDeleteContract(cnt)
-                          }}
-                          src={`/images/depin/garbage.svg`}
-                          alt="image"
-                          className="my-auto w-[11px] cursor-pointer"
-                        />
+            {blockchainContractSelected ? (
+              <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                {blockchainContractSelected?.ideContractDeploymentHistories.map(
+                  (cntHistory, index) => (
+                    <div
+                      onMouseEnter={() =>
+                        setIsCntDeploymentHistoryModalOpen(cntHistory.id)
+                      }
+                      onMouseLeave={() =>
+                        setIsCntDeploymentHistoryModalOpen('')
+                      }
+                      className={`relative rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
+                        isCntDeploymentHistoryModalOpen === cntHistory?.id &&
+                        '!bg-[#dbdbdb1e]'
+                      }`}
+                      key={index}
+                    >
+                      <div className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary">
+                        {' '}
+                        {transformString(cntHistory?.contractAddress, 7)}
                       </div>
+
+                      {isCntDeploymentHistoryModalOpen === cntHistory.id && (
+                        <div className="absolute -top-[10px] -translate-y-[100%] ">
+                          <CntDeploymentHistoryModal
+                            ideContractDeploymentHistories={cntHistory}
+                          />
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                  ),
+                )}
+              </div>
+            ) : (
+              <div> Select a contract to visualizate its history </div>
+            )}
           </div>
         )}
       </div>
