@@ -261,6 +261,7 @@ export function convertAnsiToHtml(str) {
 }
 
 export function isValidSorobanContractAddress(address: string) {
+  console.log(address)
   const regex = /^C[A-Z2-7]{55}$/
   return regex.test(address)
 }

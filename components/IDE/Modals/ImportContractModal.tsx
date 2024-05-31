@@ -124,7 +124,7 @@ const DeployContractModal = ({
           </div>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-7 mt-5">
           <label
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
@@ -133,7 +133,6 @@ const DeployContractModal = ({
           </label>
           <input
             type="text"
-            maxLength={50}
             id="workspaceName"
             name="workspaceName"
             value={contractAddress}

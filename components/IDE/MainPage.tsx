@@ -762,11 +762,11 @@ const MainPage = ({ id }) => {
               {openCode && (
                 <div className="w-full min-w-[60%] max-w-[80%]">
                   <div className="flex w-full justify-between">
-                    <div className="relative flex gap-x-4 text-[14px]">
+                    <div className="relative flex items-center gap-x-4 text-[14px]">
                       <div>{blockchainContractSelected?.name}</div>
                       <div
                         onClick={() => setLanguageSelectorOpen(true)}
-                        className="mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
+                        className="my-auto mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
                       >
                         <div>{language?.length > 0 ? language : 'Loading'}</div>
                         <img
@@ -816,7 +816,7 @@ const MainPage = ({ id }) => {
                           // toast.success('contracts ' + contractsToBeSaved)
                         }}
                         className={`${
-                          isLoading
+                          isLoading || isLoadingCompilation
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
@@ -831,7 +831,7 @@ const MainPage = ({ id }) => {
                           }
                         }}
                         className={`${
-                          isLoading
+                          isLoading || isLoadingCompilation
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
@@ -847,7 +847,7 @@ const MainPage = ({ id }) => {
                           setOpenModalImport(true)
                         }}
                         className={`${
-                          isLoading
+                          isLoading || isLoadingCompilation
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
@@ -942,6 +942,7 @@ const MainPage = ({ id }) => {
                         newContracts[cntIndex].currentChain = selected.value
                         setBlockchainContracts(newContracts)
                         setBlockchainContractSelected(newContracts[cntIndex])
+                        setOpenModalImport(false)
                       }}
                       onClose={() => {
                         setOpenModalImport(false)
@@ -1247,6 +1248,61 @@ const MainPage = ({ id }) => {
                                     className="whitespace-pre-wrap"
                                     dangerouslySetInnerHTML={{
                                       __html: cnslLog?.errorDescription,
+                                    }}
+                                  />
+                                )}
+                              </div>
+                            )}
+                            {cnslLog?.type === 'deployError' && (
+                              <div
+                                key={index}
+                                onClick={() => {
+                                  if (!cnslLog?.isOpen) {
+                                    const newConsoles = [...consoleLogs]
+                                    newConsoles[index].isOpen =
+                                      !newConsoles[index].isOpen
+                                    setConsoleLogs(newConsoles)
+                                  }
+                                }}
+                                className={`${
+                                  !cnslLog?.isOpen && 'cursor-pointer'
+                                } max-w-[90%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
+                              >
+                                <div className="flex  justify-between">
+                                  <div className="flex gap-x-[8px]">
+                                    <img
+                                      alt="ethereum avatar"
+                                      src="/images/depin/warning.svg"
+                                      className="w-[20px]"
+                                    ></img>
+                                    <div
+                                      className="line-clamp-1 whitespace-pre-wrap"
+                                      dangerouslySetInnerHTML={{
+                                        __html: cnslLog?.desc,
+                                      }}
+                                    />
+                                  </div>
+
+                                  <img
+                                    alt="ethereum avatar"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      const newConsoles = [...consoleLogs]
+                                      newConsoles[index].isOpen =
+                                        !newConsoles[index].isOpen
+                                      setConsoleLogs(newConsoles)
+                                    }}
+                                    src="/images/header/arrow-gray.svg"
+                                    className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                      cnslLog?.isOpen && 'rotate-180'
+                                    }`}
+                                  ></img>
+                                </div>
+                                {cnslLog?.isOpen && (
+                                  <div
+                                    className="whitespace-pre-wrap"
+                                    dangerouslySetInnerHTML={{
+                                      __html: cnslLog?.desc,
                                     }}
                                   />
                                 )}
