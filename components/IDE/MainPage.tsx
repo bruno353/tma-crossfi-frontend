@@ -73,8 +73,9 @@ export interface ConsoleCompile {
 
 export interface ConsoleContractCall {
   type: 'contractCall'
-  contractAddress: string
-  title: string
+  functionName: string
+  args: string[]
+  responseValue: any
   createdAt: string
   desc?: string
   isOpen?: boolean
@@ -378,7 +379,7 @@ const MainPage = ({ id }) => {
       newLogs.unshift({
         type: 'deploy',
         contractName: blockchainContractSelected?.name,
-        desc: `Address ${res.contractAddress}`,
+        desc: `${res.contractAddress}`,
         createdAt: String(new Date()),
       })
       setConsoleLogs(newLogs)
@@ -408,8 +409,13 @@ const MainPage = ({ id }) => {
     setIsLoadingCompilation(false)
   }
 
-  async function callContract(functionName: string, functionParams: string[]) {
+  async function callContract(
+    functionName: string,
+    functionParams: { paramName: string; value: string }[],
+  ) {
     setIsContractCallLoading(false)
+
+    const address = blockchainContractSelected?.currentAddress
 
     const { userSessionToken } = parseCookies()
 
@@ -432,10 +438,10 @@ const MainPage = ({ id }) => {
       const newLogs = [...consoleLogs]
       newLogs.unshift({
         type: 'contractCall',
-        title: `${functionName} -> ${res}`,
-        contractAddress:
-          'CCN4QMR5U3YLBXXFFWKRYQGLYOWY6VAMU6BKC6FJFOHBBTCN6DJXPK55',
-        desc: `Address ${res.contractAddress}`,
+        functionName,
+        args: functionParams.map((param) => param.value),
+        responseValue: JSON.parse(res.value),
+        desc: address,
         createdAt: String(new Date()),
       })
       setConsoleLogs(newLogs)
@@ -1204,7 +1210,7 @@ const MainPage = ({ id }) => {
                                 }}
                                 className={`${
                                   !cnslLog?.isOpen && 'cursor-pointer'
-                                } rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
+                                } max-w-[90%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
                               >
                                 <div className="flex  justify-between">
                                   <div className="flex gap-x-[8px]">
@@ -1259,7 +1265,7 @@ const MainPage = ({ id }) => {
                                 }}
                                 className={`${
                                   !cnslLog?.isOpen && 'cursor-pointer'
-                                } rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
+                                } max-w-[90%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
                               >
                                 <div className="flex justify-between">
                                   <div>
@@ -1308,6 +1314,162 @@ const MainPage = ({ id }) => {
                                     <div className="mt-3 flex items-center gap-x-3">
                                       <div className="mt-[1px] text-[#c5c4c4]">
                                         Compiled at:{' '}
+                                        {String(
+                                          new Date(
+                                            cnslLog?.createdAt,
+                                          ).toLocaleTimeString([], {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                          }),
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {cnslLog?.type === 'deploy' && (
+                              <div
+                                key={index}
+                                onClick={() => {
+                                  if (!cnslLog?.isOpen) {
+                                    const newConsoles = [...consoleLogs]
+                                    newConsoles[index].isOpen =
+                                      !newConsoles[index].isOpen
+                                    setConsoleLogs(newConsoles)
+                                  }
+                                }}
+                                className={`${
+                                  !cnslLog?.isOpen && 'cursor-pointer'
+                                } max-w-[90%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
+                              >
+                                <div className="flex justify-between">
+                                  <div>
+                                    Contract {cnslLog?.contractName} deployed
+                                  </div>
+                                  <img
+                                    alt="ethereum avatar"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      const newConsoles = [...consoleLogs]
+                                      newConsoles[index].isOpen =
+                                        !newConsoles[index].isOpen
+                                      setConsoleLogs(newConsoles)
+                                    }}
+                                    src="/images/header/arrow-gray.svg"
+                                    className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                      cnslLog?.isOpen && 'rotate-180'
+                                    }`}
+                                  ></img>
+                                </div>
+                                {cnslLog?.isOpen && (
+                                  <div className="mt-3">
+                                    <div className="flex items-center gap-x-3">
+                                      <div className="mt-[1px] text-[#c5c4c4]">
+                                        Address:{' '}
+                                        {transformString(cnslLog?.desc, 8)}
+                                      </div>
+                                      <img
+                                        // ref={editRef}
+                                        alt="ethereum avatar"
+                                        src="/images/workspace/copy.svg"
+                                        className="w-[18px] cursor-pointer rounded-full"
+                                        // onMouseEnter={() => setIsCopyInfoOpen(canister.id)}
+                                        // onMouseLeave={() => setIsCopyInfoOpen(null)}
+                                        onClick={(event) => {
+                                          event.stopPropagation()
+                                          navigator.clipboard.writeText(
+                                            cnslLog.desc,
+                                          )
+                                          toast.success('Address copied')
+                                        }}
+                                      ></img>
+                                    </div>
+                                    <div className="mt-3 flex items-center gap-x-3">
+                                      <div className="mt-[1px] text-[#c5c4c4]">
+                                        Deployed at:{' '}
+                                        {String(
+                                          new Date(
+                                            cnslLog?.createdAt,
+                                          ).toLocaleTimeString([], {
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                          }),
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {cnslLog?.type === 'contractCall' && (
+                              <div
+                                key={index}
+                                onClick={() => {
+                                  if (!cnslLog?.isOpen) {
+                                    const newConsoles = [...consoleLogs]
+                                    newConsoles[index].isOpen =
+                                      !newConsoles[index].isOpen
+                                    setConsoleLogs(newConsoles)
+                                  }
+                                }}
+                                className={`${
+                                  !cnslLog?.isOpen && 'cursor-pointer'
+                                } max-w-[90%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
+                              >
+                                <div className="flex justify-between gap-x-[20px]">
+                                  <div
+                                    className={`${
+                                      !cnslLog?.isOpen
+                                        ? 'line-clamp-2'
+                                        : ' max-w-[90%]'
+                                    }`}
+                                  >
+                                    {cnslLog?.functionName}(
+                                    {cnslLog?.args.join(', ')}) {'->'}{' '}
+                                    {JSON.stringify(cnslLog?.responseValue)}
+                                  </div>
+                                  <img
+                                    alt="ethereum avatar"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      const newConsoles = [...consoleLogs]
+                                      newConsoles[index].isOpen =
+                                        !newConsoles[index].isOpen
+                                      setConsoleLogs(newConsoles)
+                                    }}
+                                    src="/images/header/arrow-gray.svg"
+                                    className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                      cnslLog?.isOpen && 'rotate-180'
+                                    }`}
+                                  ></img>
+                                </div>
+                                {cnslLog?.isOpen && (
+                                  <div className="mt-3">
+                                    <div className="flex items-center gap-x-3">
+                                      <div className="mt-[1px] text-[#c5c4c4]">
+                                        Address:{' '}
+                                        {transformString(cnslLog?.desc, 8)}
+                                      </div>
+                                      <img
+                                        // ref={editRef}
+                                        alt="ethereum avatar"
+                                        src="/images/workspace/copy.svg"
+                                        className="w-[18px] cursor-pointer rounded-full"
+                                        // onMouseEnter={() => setIsCopyInfoOpen(canister.id)}
+                                        // onMouseLeave={() => setIsCopyInfoOpen(null)}
+                                        onClick={(event) => {
+                                          event.stopPropagation()
+                                          navigator.clipboard.writeText(
+                                            cnslLog.desc,
+                                          )
+                                          toast.success('Address copied')
+                                        }}
+                                      ></img>
+                                    </div>
+                                    <div className="mt-3 flex items-center gap-x-3">
+                                      <div className="mt-[1px] text-[#c5c4c4]">
+                                        Called at:{' '}
                                         {String(
                                           new Date(
                                             cnslLog?.createdAt,
