@@ -80,6 +80,8 @@ const Sidebar = ({
   const [isCntDeploymentHistoryModalOpen, setIsCntDeploymentHistoryModalOpen] =
     useState<string>('')
 
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+
   const [isMouseOverModal, setIsMouseOverModal] = useState<boolean>(false)
 
   const relativeDivRef = useRef<HTMLDivElement | null>(null)
@@ -363,43 +365,64 @@ const Sidebar = ({
             {blockchainContractSelected ? (
               <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                 {blockchainContractSelected?.ideContractDeploymentHistories.map(
-                  (cntHistory, index) => (
-                    <div
-                      ref={targetDivRef}
-                      onMouseEnter={() => {
-                        setIsMouseOverModal(true)
-                        setIsCntDeploymentHistoryModalOpen(cntHistory.id)
-                        if (relativeDivRef.current && targetDivRef.current) {
-                          const parentRect =
-                            relativeDivRef.current.getBoundingClientRect()
-                          const targetRect =
-                            targetDivRef.current.getBoundingClientRect()
-                          setDivPosition({
-                            top: targetRect.top - parentRect.top,
-                            left: targetRect.left - parentRect.left,
-                          })
-                        }
-                      }}
-                      className={`relative rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
-                        isCntDeploymentHistoryModalOpen === cntHistory?.id &&
-                        '!bg-[#dbdbdb1e]'
-                      }`}
-                      key={index}
-                    >
-                      <div className="w-[80%] max-w-[100%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary">
-                        {' '}
-                        {transformString(cntHistory?.contractAddress, 4)}
-                      </div>
+                  (cntHistory, index) => {
+                    return (
+                      <div
+                        ref={(el) => (itemRefs.current[index] = el)}
+                        onMouseEnter={() => {
+                          setIsMouseOverModal(true)
+                          setIsCntDeploymentHistoryModalOpen(cntHistory.id)
+                          if (
+                            relativeDivRef.current &&
+                            itemRefs.current[index]
+                          ) {
+                            const parentRect =
+                              relativeDivRef.current.getBoundingClientRect()
+                            const targetRect =
+                              itemRefs.current[index].getBoundingClientRect()
 
-                      {/* {isCntDeploymentHistoryModalOpen === cntHistory.id && (
-                        <div className="absolute -top-[10px] -translate-y-[100%] ">
-                          <CntDeploymentHistoryModal
-                            ideContractDeploymentHistories={cntHistory}
-                          />
+                            setDivPosition({
+                              top: targetRect.top - parentRect.top,
+                              left: targetRect.left - parentRect.left,
+                            })
+                            console.log({
+                              top: targetRect.top - parentRect.top,
+                              left: targetRect.left - parentRect.left,
+                            })
+                          }
+                        }}
+                        className={`relative  flex items-center rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
+                          isCntDeploymentHistoryModalOpen === cntHistory?.id &&
+                          '!bg-[#dbdbdb1e]'
+                        }`}
+                        key={index}
+                      >
+                        <div className="w-[80%] max-w-[100%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent text-[13px] outline-none focus:border-primary">
+                          {' '}
+                          {transformString(cntHistory?.contractAddress, 4)}
                         </div>
-                      )} */}
-                    </div>
-                  ),
+                        <div className="text-[12px] text-[#c5c4c4]">
+                          {String(
+                            new Date(cntHistory?.createdAt).toLocaleTimeString(
+                              [],
+                              {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              },
+                            ),
+                          )}
+                        </div>
+
+                        {/* {isCntDeploymentHistoryModalOpen === cntHistory.id && (
+                          <div className="absolute -top-[10px] -translate-y-[100%] ">
+                            <CntDeploymentHistoryModal
+                              ideContractDeploymentHistories={cntHistory}
+                            />
+                          </div>
+                        )} */}
+                      </div>
+                    )
+                  },
                 )}
               </div>
             ) : (
