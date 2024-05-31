@@ -826,7 +826,8 @@ const MainPage = ({ id }) => {
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
-                          contractInspections?.length === 0 && '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
+                          contractInspections?.length === 0 &&
+                          '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
                         }`}
                       >
                         Import
