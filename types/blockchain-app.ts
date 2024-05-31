@@ -69,8 +69,8 @@ export interface BlockchainContractProps {
   name?: string
   network: string
   code?: string
-  address?: string
-  chain?: string
+  currentAddress?: string
+  currentChain?: string
   ideContractDeploymentHistories: BlockchainContractDeploymentHistoryProps[]
   createdAt?: string
   updatedAt?: string

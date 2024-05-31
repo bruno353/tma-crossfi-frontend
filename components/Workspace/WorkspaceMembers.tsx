@@ -67,24 +67,25 @@ const WorkspaceMembers = ({
   }
 
   const handleInviteMember = async () => {
+    if (!memberEmailToAdd || memberEmailToAdd.length === 0) {
+      toast.error('Input a valid email')
+      return
+    }
     setIsLoading(true)
-
     const { userSessionToken } = parseCookies()
-    if (memberEmailToAdd.length > 0) {
-      const data = {
-        role: selected,
-        userEmail: memberEmailToAdd,
-        id,
-      }
+    const data = {
+      role: selected,
+      userEmail: memberEmailToAdd,
+      id,
+    }
 
-      try {
-        await inviteUserToWorkspace(data, userSessionToken)
-        toast.success(`Success`)
-        setMemberEmailToAdd('')
-      } catch (err) {
-        console.log(err)
-        toast.error(`Error: ${err.response.data.message}`)
-      }
+    try {
+      await inviteUserToWorkspace(data, userSessionToken)
+      toast.success(`Success`)
+      setMemberEmailToAdd('')
+    } catch (err) {
+      console.log(err)
+      toast.error(`Error: ${err.response.data.message}`)
     }
     setIsLoading(false)
   }

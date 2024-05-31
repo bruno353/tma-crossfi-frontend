@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import Dropdown, { ValueObject } from '../../Modals/Dropdown'
 import {
   BlockchainContractProps,
@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { parseCookies } from 'nookies'
 import CntDeploymentHistoryModal from './CntDeploymentHistoryModal'
-import { transformString } from '@/utils/functions'
+import { transformString, wait } from '@/utils/functions'
 
 export interface MenuI {
   id: string
@@ -80,6 +80,15 @@ const Sidebar = ({
   const [isCntDeploymentHistoryModalOpen, setIsCntDeploymentHistoryModalOpen] =
     useState<string>('')
 
+  const [isMouseOverModal, setIsMouseOverModal] = useState<boolean>(false)
+
+  const relativeDivRef = useRef<HTMLDivElement | null>(null)
+  const targetDivRef = useRef<HTMLDivElement | null>(null)
+  const [divPosition, setDivPosition] = useState<{
+    top: number
+    left: number
+  } | null>(null)
+
   const [blockchainContractHovered, setBlockchainContractHovered] =
     useState<BlockchainContractProps | null>()
 
@@ -132,7 +141,10 @@ const Sidebar = ({
   }
 
   return (
-    <div className="relative h-[76vh] max-h-[76vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light">
+    <div
+      ref={relativeDivRef}
+      className="relative h-[76vh] max-h-[76vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light"
+    >
       <div className="relative flex gap-x-[5px]">
         <img
           alt="ethereum avatar"
@@ -343,42 +355,71 @@ const Sidebar = ({
           ></img>
         </div>
         {isContractsDeploymentHistoryListOpen && (
-          <div>
+          <div
+            onMouseLeave={async () => {
+              setIsCntDeploymentHistoryModalOpen('')
+            }}
+          >
             {blockchainContractSelected ? (
               <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                 {blockchainContractSelected?.ideContractDeploymentHistories.map(
                   (cntHistory, index) => (
                     <div
-                      onMouseEnter={() =>
+                      ref={targetDivRef}
+                      onMouseEnter={() => {
+                        setIsMouseOverModal(true)
                         setIsCntDeploymentHistoryModalOpen(cntHistory.id)
-                      }
-                      onMouseLeave={() =>
-                        setIsCntDeploymentHistoryModalOpen('')
-                      }
+                        if (relativeDivRef.current && targetDivRef.current) {
+                          const parentRect =
+                            relativeDivRef.current.getBoundingClientRect()
+                          const targetRect =
+                            targetDivRef.current.getBoundingClientRect()
+                          setDivPosition({
+                            top: targetRect.top - parentRect.top,
+                            left: targetRect.left - parentRect.left,
+                          })
+                        }
+                      }}
                       className={`relative rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
                         isCntDeploymentHistoryModalOpen === cntHistory?.id &&
                         '!bg-[#dbdbdb1e]'
                       }`}
                       key={index}
                     >
-                      <div className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary">
+                      <div className="w-[80%] max-w-[100%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary">
                         {' '}
-                        {transformString(cntHistory?.contractAddress, 7)}
+                        {transformString(cntHistory?.contractAddress, 4)}
                       </div>
 
-                      {isCntDeploymentHistoryModalOpen === cntHistory.id && (
+                      {/* {isCntDeploymentHistoryModalOpen === cntHistory.id && (
                         <div className="absolute -top-[10px] -translate-y-[100%] ">
                           <CntDeploymentHistoryModal
                             ideContractDeploymentHistories={cntHistory}
                           />
                         </div>
-                      )}
+                      )} */}
                     </div>
                   ),
                 )}
               </div>
             ) : (
               <div> Select a contract to visualizate its history </div>
+            )}
+            {isCntDeploymentHistoryModalOpen?.length > 0 && divPosition && (
+              <div
+                className="absolute z-50"
+                style={{
+                  top: `${divPosition.top}px`,
+                  left: `${divPosition.left}px`,
+                  transform: 'translateY(10px) translateX(120px)',
+                }}
+              >
+                <CntDeploymentHistoryModal
+                  ideContractDeploymentHistories={blockchainContractSelected?.ideContractDeploymentHistories.find(
+                    (cn) => cn.id === isCntDeploymentHistoryModalOpen,
+                  )}
+                />
+              </div>
             )}
           </div>
         )}

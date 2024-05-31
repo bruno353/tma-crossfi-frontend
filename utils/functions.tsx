@@ -260,6 +260,11 @@ export function convertAnsiToHtml(str) {
   return ansiToHtml.toHtml(str);
 }
 
+export function isValidSorobanContractAddress(address: string) {
+  const regex = /^C[A-Z2-7]{55}$/
+  return regex.test(address)
+}
+
 export function getValueBetweenStrings(stringMain, stringInicio, stringFim) {
   // Encontrando as posições das strings de início e fim
   const posInicio = stringMain.indexOf(stringInicio)

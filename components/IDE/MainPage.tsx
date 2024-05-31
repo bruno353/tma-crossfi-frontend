@@ -51,6 +51,7 @@ import Sidebar from './Modals/Sidebar'
 import * as StellarSdk from '@stellar/stellar-sdk'
 import NewCallFunctionModal from './Modals/CallFunctionModal'
 import DeployContractModal from './Modals/DeployContractModal'
+import ImportContractModal from './Modals/ImportContractModal'
 
 export interface ConsoleError {
   type: 'error'
@@ -163,6 +164,7 @@ const MainPage = ({ id }) => {
   const monaco = useMonaco()
   const [selected, setSelected] = useState<ValueObject>(optionsNetwork[0])
   const [openModalDeploy, setOpenModalDeploy] = useState(false)
+  const [openModalImport, setOpenModalImport] = useState(false)
 
   const [openCode, setOpenCode] = useState(true)
   const [openContracts, setOpenContracts] = useState(true)
@@ -385,8 +387,8 @@ const MainPage = ({ id }) => {
       const cntIndex = newContracts.findIndex(
         (cnt) => cnt.id === blockchainContractSelected?.id,
       )
-      newContracts[cntIndex].address = res.contractAddress
-      newContracts[cntIndex].chain = chain
+      newContracts[cntIndex].currentAddress = res.contractAddress
+      newContracts[cntIndex].currentChain = chain
 
       setBlockchainContracts(newContracts)
       setBlockchainContractSelected(newContracts[cntIndex])
@@ -413,7 +415,7 @@ const MainPage = ({ id }) => {
 
     const data = {
       walletId: blockchainWalletsSelected.value,
-      contractAddress: blockchainContractSelected?.address,
+      contractAddress: blockchainContractSelected?.currentAddress,
       environment: selected.value.toLowerCase(),
       functionName,
       functionParams,
@@ -799,15 +801,35 @@ const MainPage = ({ id }) => {
 
                       <div
                         onClick={() => {
-                          setOpenModalDeploy(true)
+                          if (contractInspections?.length > 0) {
+                            setOpenModalDeploy(true)
+                          }
                         }}
                         className={`${
                           isLoading
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
-                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
+                          contractInspections?.length === 0 &&
+                          '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
+                        }`}
                       >
                         Deploy
+                      </div>
+
+                      <div
+                        onClick={() => {
+                          setOpenModalImport(true)
+                        }}
+                        className={`${
+                          isLoading
+                            ? 'animate-pulse !bg-[#35428a]'
+                            : 'cursor-pointer  hover:bg-[#35428a]'
+                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
+                          contractInspections?.length === 0 && '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
+                        }`}
+                      >
+                        Import
                       </div>
                     </div>
                   </div>
@@ -883,6 +905,24 @@ const MainPage = ({ id }) => {
                         setContractInspections(newContractInspections)
                       }}
                     />
+                    <ImportContractModal
+                      isOpen={openModalDeploy}
+                      onUpdateM={(value) => {
+                        const newContracts = [...blockchainContracts]
+                        const cntIndex = newContracts.findIndex(
+                          (cnt) => cnt.id === blockchainContractSelected?.id,
+                        )
+                        newContracts[cntIndex].currentAddress = value
+                        newContracts[cntIndex].currentChain = selected.value
+                        setBlockchainContracts(newContracts)
+                        setBlockchainContractSelected(newContracts[cntIndex])
+                      }}
+                      onClose={() => {
+                        setOpenModalDeploy(false)
+                      }}
+                      contract={blockchainContractSelected}
+                      environment={selected.value}
+                    />
                   </div>
                 </div>
               )}
@@ -900,19 +940,19 @@ const MainPage = ({ id }) => {
                           ></img>
                           <div className="font-medium">Contract</div>
                         </div>
-                        {blockchainContractSelected?.address && (
+                        {blockchainContractSelected?.currentAddress && (
                           <div className="flex items-center gap-x-5">
                             <div
                               className="cursor-pointer"
                               onClick={() => {
                                 navigator.clipboard.writeText(
-                                  blockchainContractSelected?.address,
+                                  blockchainContractSelected?.currentAddress,
                                 )
                                 toast.success('Address copied')
                               }}
                             >
                               {transformString(
-                                blockchainContractSelected?.address,
+                                blockchainContractSelected?.currentAddress,
                                 7,
                               )}
                             </div>
@@ -923,7 +963,7 @@ const MainPage = ({ id }) => {
                                 className="my-auto w-[20px]"
                               ></img>
                               <div className="text-[#c5c4c4]">
-                                {blockchainContractSelected?.chain}
+                                {blockchainContractSelected?.currentChain}
                               </div>
                             </div>
                           </div>
@@ -1028,7 +1068,9 @@ const MainPage = ({ id }) => {
                                 <div className="flex gap-x-5">
                                   <div
                                     onClick={() => {
-                                      if (!blockchainContractSelected.address) {
+                                      if (
+                                        !blockchainContractSelected.currentAddress
+                                      ) {
                                         const newContractInspections = [
                                           ...contractInspections,
                                         ]
@@ -1079,7 +1121,8 @@ const MainPage = ({ id }) => {
                                   </div>
                                   {cntIns?.transactError && (
                                     <div className="text-xs font-medium text-[#cc5563]">
-                                      Deploy your contract to call this function
+                                      Deploy / Import your contract to call this
+                                      function
                                     </div>
                                   )}
                                 </div>
@@ -1238,6 +1281,7 @@ const MainPage = ({ id }) => {
                                           navigator.clipboard.writeText(
                                             cnslLog.wasm,
                                           )
+                                          toast.success('Wasm copied')
                                         }}
                                       ></img>
                                     </div>
