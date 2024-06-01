@@ -271,6 +271,9 @@ const MainPage = ({ id }) => {
         (cnt) => cnt.id === blockchainContractSelected?.id,
       )
 
+      newContracts[cntIndex].consoleLogs =
+        newContracts[cntIndex].consoleLogs ?? []
+
       for (let i = 0; i < out?.length; i++) {
         let errorDescription = extractTextMessageSecondOcorrency(
           out[i],
@@ -888,7 +891,11 @@ const MainPage = ({ id }) => {
                       }}
                       contract={blockchainContractSelected}
                       environment={selected.value}
-                      wallet={blockchainWalletsSelected.value}
+                      wallet={
+                        blockchainWallets.find(
+                          (obj) => obj.id === blockchainWalletsSelected.value,
+                        ).stellarWalletPubK
+                      }
                       walletBalance={
                         blockchainWallets.find(
                           (obj) => obj.id === blockchainWalletsSelected.value,
@@ -1195,7 +1202,7 @@ const MainPage = ({ id }) => {
                                   }}
                                   className={`${
                                     !cnslLog?.isOpen && 'cursor-pointer'
-                                  } max-w-[90%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
+                                  } max-w-[100%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
                                 >
                                   <div className="flex  justify-between">
                                     <div className="flex gap-x-[8px]">
@@ -1272,7 +1279,7 @@ const MainPage = ({ id }) => {
                                   }}
                                   className={`${
                                     !cnslLog?.isOpen && 'cursor-pointer'
-                                  } max-w-[90%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
+                                  } max-w-[100%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
                                 >
                                   <div className="flex  justify-between">
                                     <div className="flex gap-x-[8px]">
@@ -1349,7 +1356,7 @@ const MainPage = ({ id }) => {
                                   }}
                                   className={`${
                                     !cnslLog?.isOpen && 'cursor-pointer'
-                                  } max-w-[90%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
+                                  } max-w-[100%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
                                 >
                                   <div className="flex justify-between">
                                     <div>
@@ -1447,7 +1454,7 @@ const MainPage = ({ id }) => {
                                   }}
                                   className={`${
                                     !cnslLog?.isOpen && 'cursor-pointer'
-                                  } max-w-[90%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
+                                  } max-w-[100%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
                                 >
                                   <div className="flex justify-between">
                                     <div>
@@ -1543,7 +1550,7 @@ const MainPage = ({ id }) => {
                                   }}
                                   className={`${
                                     !cnslLog?.isOpen && 'cursor-pointer'
-                                  } max-w-[90%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
+                                  } max-w-[100%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
                                 >
                                   <div className="flex justify-between gap-x-[20px]">
                                     <div

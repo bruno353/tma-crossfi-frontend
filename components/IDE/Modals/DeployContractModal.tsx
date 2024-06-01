@@ -16,9 +16,13 @@ import { parseCookies } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { createBlockchainApps, createWallet } from '@/utils/api-blockchain'
 import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
-import { ContractInspectionI, cleanDocs } from '../MainPage'
-import { BlockchainContractProps } from '@/types/blockchain-app'
+import { cleanDocs } from '../MainPage'
+import {
+  BlockchainContractProps,
+  ContractInspectionI,
+} from '@/types/blockchain-app'
 import ConfirmDeployContractModal from './ConfirmDeployContractModal'
+import { transformString } from '@/utils/functions'
 
 export interface ModalI {
   contract: BlockchainContractProps
@@ -108,7 +112,16 @@ const DeployContractModal = ({
             Environment: <span className="text-[#fff]">{environment}</span>
           </div>
           <div className="text-[#c5c4c4]">
-            Wallet: <span className="text-[#fff]">{wallet}</span>
+            Wallet:{' '}
+            <span
+              className="cursor-pointer text-[#fff]"
+              onClick={() => {
+                navigator.clipboard.writeText(wallet)
+                toast.success('Address copied')
+              }}
+            >
+              {transformString(wallet, 7)}
+            </span>
           </div>
           <div className="text-[#c5c4c4]">
             Balance: <span className="text-[#fff]">{walletBalance}</span>
