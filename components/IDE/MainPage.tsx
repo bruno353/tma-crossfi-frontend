@@ -103,18 +103,15 @@ const MainPage = ({ id }) => {
   const [selected, setSelected] = useState<ValueObject>(optionsNetwork[0])
   const [openModalDeploy, setOpenModalDeploy] = useState(false)
   const [openModalImport, setOpenModalImport] = useState(false)
+  const [isLoadingWallets, setIsLoadingWallets] = useState(false)
 
   const [openCode, setOpenCode] = useState(true)
   const [openContracts, setOpenContracts] = useState(true)
   const [openConsole, setOpenConsole] = useState(true)
 
-  const [isContractCallLoading, setIsContractCallLoading] = useState(false)
+  const [isContractCallLoading, setIsContractCallLoading] = useState<any>(false)
 
   const [consoleCompile, setConsoleCompile] = useState<ConsoleCompile[]>([])
-
-  const [contractInspections, setContractInspections] = useState<
-    ContractInspectionI[]
-  >([])
 
   const [navBarSelected, setNavBarSelected] = useState('General')
 
@@ -225,7 +222,6 @@ const MainPage = ({ id }) => {
         userSessionToken,
         data,
       )
-      setContractInspections(res.contractInspection)
       console.log('passei')
       const newContracts = [...blockchainContracts]
       const cntIndex = newContracts.findIndex(
@@ -235,6 +231,8 @@ const MainPage = ({ id }) => {
 
       newContracts[cntIndex].consoleLogs =
         newContracts[cntIndex].consoleLogs ?? []
+
+      newContracts[cntIndex].contractInspections = res.contractInspection
 
       newContracts[cntIndex].consoleLogs.unshift({
         type: 'compile',
@@ -369,7 +367,7 @@ const MainPage = ({ id }) => {
     functionName: string,
     functionParams: { paramName: string; value: string }[],
   ) {
-    setIsContractCallLoading(false)
+    setIsContractCallLoading(functionName)
 
     const address = blockchainContractSelected?.currentAddress
 
@@ -426,14 +424,19 @@ const MainPage = ({ id }) => {
     setIsContractCallLoading(false)
   }
 
-  async function getData() {
-    setIsLoading(true)
+  async function getData(environment?: string) {
+    setIsLoadingWallets(true)
     const { userSessionToken } = parseCookies()
+
+    let rpc = ''
+    if (environment === 'Testnet') {
+      rpc = '&sorobanRPC=https://horizon-testnet.stellar.org'
+    }
 
     try {
       const res = await callAxiosBackend(
         'get',
-        `/blockchain/functions/getWorkspaceWallets?id=${id}&sorobanRPC=https://horizon-testnet.stellar.org&network=STELLAR`,
+        `/blockchain/functions/getWorkspaceWallets?id=${id}&network=STELLAR${rpc}`,
         userSessionToken,
       )
       const walletsToSet = []
@@ -452,6 +455,7 @@ const MainPage = ({ id }) => {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
     }
+    setIsLoadingWallets(false)
     setIsLoading(false)
   }
 
@@ -728,6 +732,10 @@ const MainPage = ({ id }) => {
             setOpenConsole={setOpenConsole}
             setOpenContracts={setOpenContracts}
             setSelected={setSelected}
+            isLoadingWallets={isLoadingWallets}
+            getData={(value) => {
+              getData(value)
+            }}
           />
           {blockchainContracts?.length > 0 ? (
             <>
@@ -763,25 +771,24 @@ const MainPage = ({ id }) => {
                     </div>
 
                     <div className="mb-2 flex items-center gap-x-3">
-                      {isLoading ||
-                        (isLoadingCompilation && (
-                          <svg
-                            aria-hidden="true"
-                            className="mr-3 h-6 w-6 animate-spin fill-[#273687] text-[#fff]"
-                            viewBox="0 0 100 101"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                              fill="currentColor"
-                            />
-                            <path
-                              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                              fill="currentFill"
-                            />
-                          </svg>
-                        ))}
+                      {(isLoading || isLoadingCompilation) && (
+                        <svg
+                          aria-hidden="true"
+                          className="mr-3 h-6 w-6 animate-spin fill-[#273687] text-[#fff]"
+                          viewBox="0 0 100 101"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                            fill="currentFill"
+                          />
+                        </svg>
+                      )}
                       <div
                         onClick={() => {
                           compileContract()
@@ -798,7 +805,10 @@ const MainPage = ({ id }) => {
 
                       <div
                         onClick={() => {
-                          if (contractInspections?.length > 0) {
+                          if (
+                            blockchainContractSelected?.contractInspections
+                              ?.length > 0
+                          ) {
                             setOpenModalDeploy(true)
                           }
                         }}
@@ -807,7 +817,8 @@ const MainPage = ({ id }) => {
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
-                          contractInspections?.length === 0 &&
+                          blockchainContractSelected?.contractInspections
+                            ?.length === 0 &&
                           '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
                         }`}
                       >
@@ -823,7 +834,8 @@ const MainPage = ({ id }) => {
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
-                          contractInspections?.length === 0 &&
+                          blockchainContractSelected?.contractInspections
+                            ?.length === 0 &&
                           '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
                         }`}
                       >
@@ -901,11 +913,6 @@ const MainPage = ({ id }) => {
                           (obj) => obj.id === blockchainWalletsSelected.value,
                         ).balance
                       }
-                      onUpdateContractFunction={(value) => {
-                        const newContractInspections = [...contractInspections]
-                        newContractInspections[isCallingFunctionModal] = value
-                        setContractInspections(newContractInspections)
-                      }}
                     />
                     <ImportContractModal
                       isOpen={openModalImport}
@@ -973,166 +980,248 @@ const MainPage = ({ id }) => {
                         )}
                       </div>
                       <div className="mt-[20px] grid gap-y-[12px]">
-                        {contractInspections?.map((cntIns, index) => (
-                          <div
-                            key={index}
-                            onClick={() => {
-                              if (!cntIns?.isOpen) {
-                                const newContractInspects = [
-                                  ...contractInspections,
-                                ]
-                                newContractInspects[index].isOpen =
-                                  !newContractInspects[index].isOpen
-                                setContractInspections(newContractInspects)
-                              }
-                            }}
-                            className={`${
-                              !cntIns?.isOpen &&
-                              'w-fit cursor-pointer !py-[5px]'
-                            } relative rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[10px] hover:border-[#dbdbdb42]`}
-                          >
-                            <div className="flex gap-x-[8px]">
-                              <div className="2xl:text-sm">
-                                {cntIns?.functionName}
-                              </div>
-                              <img
-                                alt="ethereum avatar"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  const newContractInspects = [
-                                    ...contractInspections,
-                                  ]
-                                  newContractInspects[index].isOpen =
-                                    !newContractInspects[index].isOpen
-                                  setContractInspections(newContractInspects)
-                                }}
-                                src="/images/header/arrow-gray.svg"
-                                className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
-                                  cntIns?.isOpen && 'rotate-180'
-                                }`}
-                              ></img>
-                              {cntIns?.isOpen && (
+                        {blockchainContractSelected?.contractInspections?.map(
+                          (cntIns, index) => (
+                            <div
+                              key={index}
+                              onClick={() => {
+                                if (!cntIns?.isOpen) {
+                                  const newContracts = [...blockchainContracts]
+                                  const cntIndex = newContracts.findIndex(
+                                    (cnt) =>
+                                      cnt.id === blockchainContractSelected?.id,
+                                  )
+
+                                  newContracts[cntIndex].contractInspections[
+                                    index
+                                  ].isOpen =
+                                    !newContracts[cntIndex].contractInspections[
+                                      index
+                                    ].isOpen
+
+                                  setBlockchainContracts(newContracts)
+                                  setBlockchainContractSelected(
+                                    newContracts[cntIndex],
+                                  )
+                                }
+                              }}
+                              className={`${
+                                !cntIns?.isOpen &&
+                                'w-fit cursor-pointer !py-[5px]'
+                              } relative rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[10px] hover:border-[#dbdbdb42]`}
+                            >
+                              <div className="flex gap-x-[8px]">
+                                <div className="2xl:text-sm">
+                                  {cntIns?.functionName}
+                                </div>
                                 <img
                                   alt="ethereum avatar"
-                                  src="/images/depin/open.svg"
-                                  onClick={() => {
-                                    setIsCallingFunctionModal(index)
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+
+                                    const newContracts = [
+                                      ...blockchainContracts,
+                                    ]
+                                    const cntIndex = newContracts.findIndex(
+                                      (cnt) =>
+                                        cnt.id ===
+                                        blockchainContractSelected?.id,
+                                    )
+
+                                    newContracts[cntIndex].contractInspections[
+                                      index
+                                    ].isOpen =
+                                      !newContracts[cntIndex]
+                                        .contractInspections[index].isOpen
+
+                                    setBlockchainContracts(newContracts)
+                                    setBlockchainContractSelected(
+                                      newContracts[cntIndex],
+                                    )
                                   }}
-                                  className="absolute right-2 top-2 w-[21px] cursor-pointer"
+                                  src="/images/header/arrow-gray.svg"
+                                  className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                    cntIns?.isOpen && 'rotate-180'
+                                  }`}
                                 ></img>
+                                {cntIns?.isOpen && (
+                                  <img
+                                    alt="ethereum avatar"
+                                    src="/images/depin/open.svg"
+                                    onClick={() => {
+                                      setIsCallingFunctionModal(index)
+                                    }}
+                                    className="absolute right-2 top-2 w-[21px] cursor-pointer"
+                                  ></img>
+                                )}
+                              </div>
+                              {cntIns?.isOpen && (
+                                <div className="mb-1 w-full px-2">
+                                  <div
+                                    className="mt-2 whitespace-pre-wrap text-[#c5c4c4]"
+                                    dangerouslySetInnerHTML={{
+                                      __html: cleanDocs(cntIns?.docs),
+                                    }}
+                                  />
+                                  <div className="mb-4 mt-2 grid gap-y-3 ">
+                                    {cntIns?.inputs?.map(
+                                      (cntInsInput, indexInput) => (
+                                        <div key={indexInput}>
+                                          <div className="mb-1 flex items-center justify-between text-base font-light">
+                                            <div className="">
+                                              {cntInsInput?.name}
+                                            </div>
+                                            <div className="text-xs text-[#c5c4c4]">
+                                              {cntInsInput?.type}
+                                            </div>
+                                          </div>
+
+                                          <input
+                                            type="text"
+                                            id="workspaceName"
+                                            name="workspaceName"
+                                            value={cntInsInput?.value}
+                                            onChange={(e) => {
+                                              if (!isLoading) {
+                                                const newContracts = [
+                                                  ...blockchainContracts,
+                                                ]
+                                                const cntIndex =
+                                                  newContracts.findIndex(
+                                                    (cnt) =>
+                                                      cnt.id ===
+                                                      blockchainContractSelected?.id,
+                                                  )
+
+                                                newContracts[
+                                                  cntIndex
+                                                ].contractInspections[
+                                                  index
+                                                ].inputs[indexInput].value =
+                                                  e.target.value
+
+                                                setBlockchainContracts(
+                                                  newContracts,
+                                                )
+                                                setBlockchainContractSelected(
+                                                  newContracts[cntIndex],
+                                                )
+                                              }
+                                            }}
+                                            className="w-full rounded-md border border-transparent px-3 py-1 text-base placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
+                                          />
+                                        </div>
+                                      ),
+                                    )}
+                                  </div>
+                                  <div className="flex gap-x-5">
+                                    <div
+                                      onClick={() => {
+                                        if (
+                                          !blockchainContractSelected.currentAddress
+                                        ) {
+                                          const newContracts = [
+                                            ...blockchainContracts,
+                                          ]
+                                          const cntIndex =
+                                            newContracts.findIndex(
+                                              (cnt) =>
+                                                cnt.id ===
+                                                blockchainContractSelected?.id,
+                                            )
+
+                                          newContracts[
+                                            cntIndex
+                                          ].contractInspections[
+                                            index
+                                          ].transactError = true
+
+                                          setBlockchainContracts(newContracts)
+                                          setBlockchainContractSelected(
+                                            newContracts[cntIndex],
+                                          )
+
+                                          return
+                                        } else {
+                                          const newContracts = [
+                                            ...blockchainContracts,
+                                          ]
+                                          const cntIndex =
+                                            newContracts.findIndex(
+                                              (cnt) =>
+                                                cnt.id ===
+                                                blockchainContractSelected?.id,
+                                            )
+
+                                          newContracts[
+                                            cntIndex
+                                          ].contractInspections[
+                                            index
+                                          ].transactError = false
+
+                                          setBlockchainContracts(newContracts)
+                                          setBlockchainContractSelected(
+                                            newContracts[cntIndex],
+                                          )
+                                        }
+                                        if (!isContractCallLoading) {
+                                          const finalCntInsInput = []
+
+                                          for (
+                                            let i = 0;
+                                            i < cntIns?.inputs?.length;
+                                            i++
+                                          ) {
+                                            finalCntInsInput.push({
+                                              paramName: cntIns?.inputs[i].name,
+                                              value: cntIns?.inputs[i].value,
+                                            })
+                                          }
+                                          callContract(
+                                            cntIns?.functionName,
+                                            finalCntInsInput,
+                                          )
+                                        }
+                                      }}
+                                      className={`${
+                                        isContractCallLoading
+                                          ? 'animate-pulse !bg-[#35428a]'
+                                          : 'cursor-pointer  hover:bg-[#35428a]'
+                                      }  my-auto h-fit w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                                    >
+                                      Transact
+                                    </div>
+                                    {cntIns?.transactError && (
+                                      <div className="text-xs font-medium text-[#cc5563]">
+                                        Deploy or Import your contract to call
+                                        this function
+                                      </div>
+                                    )}
+                                    {isContractCallLoading ===
+                                      cntIns?.functionName && (
+                                      <svg
+                                        aria-hidden="true"
+                                        className="my-auto mr-3 h-5 w-5 animate-spin fill-[#273687] text-[#fff]"
+                                        viewBox="0 0 100 101"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                          fill="currentColor"
+                                        />
+                                        <path
+                                          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                          fill="currentFill"
+                                        />
+                                      </svg>
+                                    )}
+                                  </div>
+                                </div>
                               )}
                             </div>
-                            {cntIns?.isOpen && (
-                              <div className="mb-1 w-full px-2">
-                                <div
-                                  className="mt-2 whitespace-pre-wrap text-[#c5c4c4]"
-                                  dangerouslySetInnerHTML={{
-                                    __html: cleanDocs(cntIns?.docs),
-                                  }}
-                                />
-                                <div className="mb-4 mt-2 grid gap-y-3 ">
-                                  {cntIns?.inputs?.map(
-                                    (cntInsInput, indexInput) => (
-                                      <div key={indexInput}>
-                                        <div className="mb-1 flex items-center justify-between text-base font-light">
-                                          <div className="">
-                                            {cntInsInput?.name}
-                                          </div>
-                                          <div className="text-xs text-[#c5c4c4]">
-                                            {cntInsInput?.type}
-                                          </div>
-                                        </div>
-
-                                        <input
-                                          type="text"
-                                          id="workspaceName"
-                                          name="workspaceName"
-                                          value={cntInsInput?.value}
-                                          onChange={(e) => {
-                                            if (!isLoading) {
-                                              const newContractInspections = [
-                                                ...contractInspections,
-                                              ]
-                                              newContractInspections[
-                                                index
-                                              ].inputs[indexInput].value =
-                                                e.target.value
-                                              setContractInspections(
-                                                newContractInspections,
-                                              )
-                                            }
-                                          }}
-                                          className="w-full rounded-md border border-transparent px-3 py-1 text-base placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
-                                        />
-                                      </div>
-                                    ),
-                                  )}
-                                </div>
-                                <div className="flex gap-x-5">
-                                  <div
-                                    onClick={() => {
-                                      if (
-                                        !blockchainContractSelected.currentAddress
-                                      ) {
-                                        const newContractInspections = [
-                                          ...contractInspections,
-                                        ]
-                                        newContractInspections[
-                                          index
-                                        ].transactError = true
-                                        setContractInspections(
-                                          newContractInspections,
-                                        )
-                                        return
-                                      } else {
-                                        const newContractInspections = [
-                                          ...contractInspections,
-                                        ]
-                                        newContractInspections[
-                                          index
-                                        ].transactError = false
-                                        setContractInspections(
-                                          newContractInspections,
-                                        )
-                                      }
-                                      if (!isContractCallLoading) {
-                                        const finalCntInsInput = []
-
-                                        for (
-                                          let i = 0;
-                                          i < cntIns?.inputs?.length;
-                                          i++
-                                        ) {
-                                          finalCntInsInput.push({
-                                            paramName: cntIns?.inputs[i].name,
-                                            value: cntIns?.inputs[i].value,
-                                          })
-                                        }
-                                        callContract(
-                                          cntIns?.functionName,
-                                          finalCntInsInput,
-                                        )
-                                      }
-                                    }}
-                                    className={`${
-                                      isContractCallLoading
-                                        ? 'animate-pulse !bg-[#35428a]'
-                                        : 'cursor-pointer  hover:bg-[#35428a]'
-                                    }  my-auto h-fit w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
-                                  >
-                                    Transact
-                                  </div>
-                                  {cntIns?.transactError && (
-                                    <div className="text-xs font-medium text-[#cc5563]">
-                                      Deploy or Import your contract to call
-                                      this function
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                          ),
+                        )}
                       </div>
                       <NewCallFunctionModal
                         isOpen={isCallingFunctionModal >= 0}
@@ -1143,14 +1232,22 @@ const MainPage = ({ id }) => {
                           setIsCallingFunctionModal(-1)
                         }}
                         contractFunction={
-                          contractInspections[isCallingFunctionModal]
+                          blockchainContractSelected?.contractInspections?.[
+                            isCallingFunctionModal
+                          ]
                         }
                         onUpdateContractFunction={(value) => {
-                          const newContractInspections = [
-                            ...contractInspections,
-                          ]
-                          newContractInspections[isCallingFunctionModal] = value
-                          setContractInspections(newContractInspections)
+                          const newContracts = [...blockchainContracts]
+                          const cntIndex = newContracts.findIndex(
+                            (cnt) => cnt.id === blockchainContractSelected?.id,
+                          )
+
+                          newContracts[cntIndex].contractInspections[
+                            isCallingFunctionModal
+                          ] = value
+
+                          setBlockchainContracts(newContracts)
+                          setBlockchainContractSelected(newContracts[cntIndex])
                         }}
                       />
                     </div>

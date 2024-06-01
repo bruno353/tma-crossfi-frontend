@@ -16,7 +16,8 @@ import { parseCookies } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { createBlockchainApps, createWallet } from '@/utils/api-blockchain'
 import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
-import { ContractInspectionI, cleanDocs } from '../MainPage'
+import { cleanDocs } from '../MainPage'
+import { ContractInspectionI } from '@/types/blockchain-app'
 
 export interface ModalI {
   contractFunction: ContractInspectionI

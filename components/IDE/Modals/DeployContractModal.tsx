@@ -31,7 +31,6 @@ export interface ModalI {
   walletBalance: string
   onUpdateM(): void
   onClose(): void
-  onUpdateContractFunction(value: ContractInspectionI): void
   isOpen: boolean
 }
 

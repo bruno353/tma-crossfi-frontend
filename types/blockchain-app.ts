@@ -138,6 +138,7 @@ export interface BlockchainContractProps {
   currentChain?: string
   ideContractDeploymentHistories: BlockchainContractDeploymentHistoryProps[]
   consoleLogs: ConsoleLog[]
+  contractInspections: ContractInspectionI[]
   createdAt?: string
   updatedAt?: string
 }

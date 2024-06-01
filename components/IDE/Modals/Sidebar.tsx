@@ -41,6 +41,8 @@ export interface MenuI {
   setOpenContracts(value: boolean): void
   openConsole: boolean
   setOpenConsole(value: boolean): void
+  isLoadingWallets: boolean
+  getData(value: string): void
 }
 
 const Sidebar = ({
@@ -70,6 +72,8 @@ const Sidebar = ({
   setOpenContracts,
   openConsole,
   setOpenConsole,
+  getData,
+  isLoadingWallets,
 }: MenuI) => {
   const [isContractsListOpen, setIsContractsListOpen] = useState(true)
   const [
@@ -170,6 +174,7 @@ const Sidebar = ({
           options={optionsNetwork}
           onValueChange={(value) => {
             setSelected(value)
+            getData(value.value)
           }}
           classNameForDropdown="!px-1 !pr-2 !py-1 !font-medium"
           classNameForPopUp="!px-1 !pr-2 !py-1"
@@ -185,41 +190,47 @@ const Sidebar = ({
           ></img>
           <div>Wallet</div>
         </div>
-        <div className="flex items-center gap-x-1">
-          {blockchainWallets?.length > 0 ? (
-            <Dropdown
-              optionSelected={blockchainWalletsSelected}
-              options={blockchainWalletsDropdown}
-              onValueChange={(value) => {
-                setBlockchainWalletsSelected(value)
-              }}
-              classNameForDropdown="!px-1 !pr-2 !py-1 !flex-grow !min-w-[130px] !font-medium"
-              classNameForPopUp="!px-1 !pr-2 !py-1"
-              classNameForPopUpBox="!translate-y-[35px]"
-            />
-          ) : (
-            <div className="text-[#c5c4c4]">create a wallet </div>
-          )}
+        {isLoadingWallets ? (
+          <div className="mb-2 flex h-[25px] w-full animate-pulse rounded-md bg-[#dbdbdb1e]"></div>
+        ) : (
+          <>
+            <div className="flex items-center gap-x-1">
+              {blockchainWallets?.length > 0 ? (
+                <Dropdown
+                  optionSelected={blockchainWalletsSelected}
+                  options={blockchainWalletsDropdown}
+                  onValueChange={(value) => {
+                    setBlockchainWalletsSelected(value)
+                  }}
+                  classNameForDropdown="!px-1 !pr-2 !py-1 !flex-grow !min-w-[130px] !font-medium"
+                  classNameForPopUp="!px-1 !pr-2 !py-1"
+                  classNameForPopUpBox="!translate-y-[35px]"
+                />
+              ) : (
+                <div className="text-[#c5c4c4]">create a wallet </div>
+              )}
 
-          <a href={`/workspace/${id}/blockchain-wallets`}>
-            <div
-              title="Create wallet"
-              className="flex-grow-0 cursor-pointer text-[16px]"
-            >
-              +
+              <a href={`/workspace/${id}/blockchain-wallets`}>
+                <div
+                  title="Create wallet"
+                  className="flex-grow-0 cursor-pointer text-[16px]"
+                >
+                  +
+                </div>
+              </a>
             </div>
-          </a>
-        </div>
-        {blockchainWalletsSelected && (
-          <div className="mt-2 text-[12px] text-[#c5c4c4]">
-            {' '}
-            Balance:{' '}
-            {
-              blockchainWallets.find(
-                (obj) => obj.id === blockchainWalletsSelected.value,
-              ).balance
-            }
-          </div>
+            {blockchainWalletsSelected && (
+              <div className="mt-2 text-[12px] text-[#c5c4c4]">
+                {' '}
+                Balance:{' '}
+                {
+                  blockchainWallets.find(
+                    (obj) => obj.id === blockchainWalletsSelected.value,
+                  ).balance
+                }
+              </div>
+            )}
+          </>
         )}
       </div>
       <div className="mt-4">

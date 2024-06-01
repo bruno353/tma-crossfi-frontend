@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { deleteApp } from '@/utils/api-blockchain'
 import { ICPWalletsProps } from '@/types/blockchain-app'
+import { transformString } from '@/utils/functions'
 
 export interface MenuI {
   wallet: string
@@ -23,7 +24,8 @@ const ConfirmDeployContractModal = ({
       <div className="h-full w-fit max-w-[350px] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px] font-normal text-[#c5c4c4]">
         <div className="grid gap-y-[10px]">
           <div>
-            You are deploying the contract in the {environment} with {wallet}
+            You are deploying the contract in the {environment} with{' '}
+            {transformString(wallet, 9)}
           </div>
           <div className="mt-2 flex justify-between">
             <div
