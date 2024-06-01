@@ -27,6 +27,71 @@ export interface ICPCanisterProps {
   updatedAt: string
 }
 
+export interface ConsoleError {
+  type: 'error'
+  errorDescription: string
+  errorMessage: string
+  lineError: number
+  isOpen?: boolean
+}
+
+export interface ConsoleCompile {
+  type: 'compile'
+  contractName: string
+  wasm: string
+  createdAt: string
+  desc?: string
+  isOpen?: boolean
+}
+
+export interface ConsoleContractCall {
+  type: 'contractCall'
+  functionName: string
+  args: string[]
+  responseValue: any
+  createdAt: string
+  desc?: string
+  isOpen?: boolean
+}
+
+export interface ConsoleDeploy {
+  type: 'deploy'
+  contractName: string
+  createdAt: string
+  desc?: string
+  isOpen?: boolean
+}
+
+export interface ConsoleDeployError {
+  type: 'deployError'
+  contractName: string
+  createdAt: string
+  desc?: string
+  isOpen?: boolean
+}
+
+export type ConsoleLog =
+  | ConsoleError
+  | ConsoleCompile
+  | ConsoleDeploy
+  | ConsoleDeployError
+  | ConsoleContractCall
+
+export interface ContractInspectionInputsI {
+  name: string
+  type: string
+  value?: any
+}
+
+export interface ContractInspectionI {
+  functionName: string
+  inputs: ContractInspectionInputsI[]
+  outputsArray: string[]
+  transactError?: boolean
+  isOpen?: boolean
+  docs?: string
+}
+
 export interface BlockchainWalletProps {
   id: string
   icpWalletId: string
@@ -72,6 +137,7 @@ export interface BlockchainContractProps {
   currentAddress?: string
   currentChain?: string
   ideContractDeploymentHistories: BlockchainContractDeploymentHistoryProps[]
+  consoleLogs: ConsoleLog[]
   createdAt?: string
   updatedAt?: string
 }
