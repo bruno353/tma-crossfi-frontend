@@ -291,6 +291,7 @@ const MainPage = ({ id }) => {
         )
         lineError = Number(lineError)
         console.log('lineError')
+        console.log(errorDescription)
 
         console.log({ errorDescription, errorMessage, lineError })
         newContracts[cntIndex].consoleLogs.unshift({
@@ -350,9 +351,12 @@ const MainPage = ({ id }) => {
       const cntIndex = newContracts.findIndex(
         (cnt) => cnt.id === blockchainContractSelected?.id,
       )
+      const errorDescription = convertAnsiToHtml(err.response.data.message)
+      console.log(errorDescription)
+
       newContracts[cntIndex].consoleLogs.unshift({
         type: 'deployError',
-        desc: err.response.data.message,
+        desc: errorDescription,
         contractName: blockchainContractSelected?.name,
         createdAt: String(new Date()),
       })
@@ -1265,7 +1269,7 @@ const MainPage = ({ id }) => {
                       <div className="mt-[20px] grid gap-y-[12px]">
                         {blockchainContractSelected?.consoleLogs?.map(
                           (cnslLog, index) => (
-                            <>
+                            <div className="w-full max-w-[70%]" key={index}>
                               {cnslLog?.type === 'error' && (
                                 <div
                                   onMouseEnter={() => {
@@ -1376,21 +1380,24 @@ const MainPage = ({ id }) => {
                                   }}
                                   className={`${
                                     !cnslLog?.isOpen && 'cursor-pointer'
-                                  } max-w-[100%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
+                                  } w-full max-w-[100%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[5px] hover:border-[#dbdbdb42]`}
                                 >
                                   <div className="flex  justify-between">
-                                    <div className="flex gap-x-[8px]">
+                                    <div className="flex max-w-[80%] gap-x-[8px]">
                                       <img
                                         alt="ethereum avatar"
                                         src="/images/depin/warning.svg"
                                         className="w-[20px]"
                                       ></img>
                                       <div
-                                        className="line-clamp-1 whitespace-pre-wrap"
-                                        dangerouslySetInnerHTML={{
-                                          __html: cnslLog?.desc,
-                                        }}
-                                      />
+                                        className={`${
+                                          !cnslLog?.isOpen
+                                            ? 'line-clamp-2'
+                                            : 'max-w-[90%]'
+                                        }`}
+                                      >
+                                        {cnslLog?.desc}
+                                      </div>
                                     </div>
 
                                     <img
@@ -1419,14 +1426,11 @@ const MainPage = ({ id }) => {
                                       }`}
                                     ></img>
                                   </div>
-                                  {cnslLog?.isOpen && (
-                                    <div
-                                      className="whitespace-pre-wrap"
-                                      dangerouslySetInnerHTML={{
-                                        __html: cnslLog?.desc,
-                                      }}
-                                    />
-                                  )}
+                                  {/* {cnslLog?.isOpen && (
+                                    <div className="">
+                                      {cnslLog?.desc}
+                                    </div>
+                                  )} */}
                                 </div>
                               )}
                               {cnslLog?.type === 'compile' && (
@@ -1649,7 +1653,7 @@ const MainPage = ({ id }) => {
                                     !cnslLog?.isOpen && 'cursor-pointer'
                                   } max-w-[100%] rounded-lg border-[1px] border-transparent bg-[#dbdbdb1e] px-[10px] py-[8px] hover:border-[#dbdbdb42]`}
                                 >
-                                  <div className="flex justify-between gap-x-[20px]">
+                                  <div className="flex  justify-between gap-x-[20px]">
                                     <div
                                       className={`${
                                         !cnslLog?.isOpen
@@ -1727,7 +1731,7 @@ const MainPage = ({ id }) => {
                                   )}
                                 </div>
                               )}
-                            </>
+                            </div>
                           ),
                         )}
                       </div>

@@ -408,11 +408,11 @@ const Sidebar = ({
                         }`}
                         key={index}
                       >
-                        <div className="w-[80%] max-w-[100%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent text-[13px] outline-none focus:border-primary">
+                        <div className="my-auto w-[80%] max-w-[100%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent text-[13px] outline-none focus:border-primary">
                           {' '}
-                          {transformString(cntHistory?.contractAddress, 4)}
+                          {transformString(cntHistory?.contractAddress, 3)}
                         </div>
-                        <div className="text-[12px] text-[#c5c4c4]">
+                        <div className="my-auto text-[12px] text-[#c5c4c4]">
                           {String(
                             new Date(cntHistory?.createdAt).toLocaleTimeString(
                               [],
