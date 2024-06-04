@@ -55,6 +55,7 @@ import * as StellarSdk from '@stellar/stellar-sdk'
 import NewCallFunctionModal from './Modals/CallFunctionModal'
 import DeployContractModal from './Modals/DeployContractModal'
 import ImportContractModal from './Modals/ImportContractModal'
+import BotHelperModal from './Modals/BotHelperModal'
 
 export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
@@ -104,6 +105,8 @@ const MainPage = ({ id }) => {
   const [openModalDeploy, setOpenModalDeploy] = useState(false)
   const [openModalImport, setOpenModalImport] = useState(false)
   const [isLoadingWallets, setIsLoadingWallets] = useState(false)
+
+  const [openModalBotHelper, setOpenModalBotHelper] = useState(false)
 
   const [openCode, setOpenCode] = useState(true)
   const [openContracts, setOpenContracts] = useState(true)
@@ -170,6 +173,32 @@ const MainPage = ({ id }) => {
     }
   }
   const menuRef = useRef(null)
+
+  async function writeCode(cntIndex: number, finalV: string) {
+    if (cntIndex < 0 || cntIndex >= blockchainContracts.length) {
+      return
+    }
+
+    let index = 0
+    let textToBuild = ''
+
+    const intervalId = setInterval(() => {
+      if (index < finalV.length) {
+        textToBuild = textToBuild + finalV.charAt(index)
+
+        setBlockchainContracts((prevContracts) => {
+          const newContracts = [...prevContracts]
+          newContracts[cntIndex].code = textToBuild
+          setBlockchainContractSelected(newContracts[cntIndex])
+          return newContracts
+        })
+
+        index++
+      } else {
+        clearInterval(intervalId)
+      }
+    }, 5)
+  }
 
   function convertToBuffer(data) {
     return new Uint8Array(data).buffer
@@ -563,7 +592,7 @@ const MainPage = ({ id }) => {
 
   useEffect(() => {
     setIsLoading(true)
-    getData()
+    getData('Testnet')
     getContracts()
   }, [id])
 
@@ -708,7 +737,7 @@ const MainPage = ({ id }) => {
   return (
     <>
       <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
-        <div className="container flex gap-x-[10px] text-[#fff]">
+        <div className=" flex gap-x-[10px] text-[#fff]">
           <Sidebar
             blockchainContractSelected={blockchainContractSelected}
             blockchainContracts={blockchainContracts}
@@ -744,7 +773,7 @@ const MainPage = ({ id }) => {
           {blockchainContracts?.length > 0 ? (
             <>
               {openCode && (
-                <div className="w-full min-w-[60%] max-w-[80%]">
+                <div className="w-full min-w-[60%]">
                   <div className="flex w-full justify-between">
                     <div className="relative flex items-center gap-x-4 text-[14px]">
                       <div>{blockchainContractSelected?.name}</div>
@@ -853,7 +882,7 @@ const MainPage = ({ id }) => {
                     }`}
                   >
                     <Editor
-                      height="72vh"
+                      height="78vh"
                       theme="vs-dark"
                       defaultLanguage="javascript"
                       value={blockchainContractSelected?.code}
@@ -897,6 +926,15 @@ const MainPage = ({ id }) => {
                         )}
                       </div>
                     )}
+                    <img
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        setOpenModalBotHelper(true)
+                      }}
+                      alt="ethereum avatar"
+                      src="/images/depin/bot.svg"
+                      className="absolute bottom-4 right-6 w-[35px] cursor-pointer"
+                    ></img>
                     <DeployContractModal
                       isOpen={openModalDeploy}
                       onUpdateM={() => {
@@ -937,14 +975,34 @@ const MainPage = ({ id }) => {
                       contract={blockchainContractSelected}
                       environment={selected.value}
                     />
+                    <BotHelperModal
+                      isOpen={openModalBotHelper}
+                      onUpdateM={(response, contractId) => {
+                        const finalV = getValueBetweenStrings(
+                          response,
+                          '```rust\n',
+                          '```',
+                        )
+                        const newContracts = [...blockchainContracts]
+                        const cntIndex = newContracts.findIndex(
+                          (cnt) => cnt.id === contractId,
+                        )
+                        writeCode(cntIndex, finalV)
+                        setOpenModalBotHelper(false)
+                      }}
+                      onClose={() => {
+                        setOpenModalBotHelper(false)
+                      }}
+                      contract={blockchainContractSelected}
+                      environment={selected.value}
+                    />
                   </div>
                 </div>
               )}
-
               {(openContracts || openConsole) && (
-                <div className="grid h-[76vh] w-full gap-y-[1vh] text-[13px]">
+                <div className="grid h-[80vh] w-full max-w-[400px] gap-y-[1vh] text-[13px]">
                   {openContracts && (
-                    <div className="h-[38vh] max-h-[38vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                    <div className="h-[40vh] max-h-[40vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                       <div className="flex justify-between">
                         <div className="flex gap-x-[5px]">
                           <img
@@ -1257,7 +1315,7 @@ const MainPage = ({ id }) => {
                     </div>
                   )}
                   {openConsole && (
-                    <div className="h-[38vh] max-h-[38vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                    <div className="h-[40vh] max-h-[40vh] w-full max-w-[400px] overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                       <div className="flex gap-x-[5px]">
                         <img
                           alt="ethereum avatar"

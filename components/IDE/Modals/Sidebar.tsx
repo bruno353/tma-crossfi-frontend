@@ -149,7 +149,7 @@ const Sidebar = ({
   return (
     <div
       ref={relativeDivRef}
-      className="relative h-[76vh] max-h-[76vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light"
+      className="relative h-[82vh] max-h-[82vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light"
     >
       <div className="relative flex gap-x-[5px]">
         <img
@@ -188,7 +188,20 @@ const Sidebar = ({
             src="/images/depin/card.svg"
             className="w-[16px]"
           ></img>
-          <div>Wallet</div>
+          <div
+            title="Copy wallet address"
+            className={`${blockchainWallets?.length > 0 && 'cursor-pointer'}`}
+            onClick={(event) => {
+              event.stopPropagation()
+              const index = blockchainWallets.find(
+                (blc) => blc.id === blockchainWalletsSelected.value,
+              )
+              navigator.clipboard.writeText(index.stellarWalletPubK)
+              toast.success('Wallet copied')
+            }}
+          >
+            Wallet
+          </div>
         </div>
         {isLoadingWallets ? (
           <div className="mb-2 flex h-[25px] w-full animate-pulse rounded-md bg-[#dbdbdb1e]"></div>
