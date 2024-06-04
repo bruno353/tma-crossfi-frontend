@@ -112,6 +112,8 @@ const MainPage = ({ id }) => {
   const [openContracts, setOpenContracts] = useState(true)
   const [openConsole, setOpenConsole] = useState(true)
 
+  const [infoBotOpen, setInfoBotOpen] = useState(false)
+
   const [isContractCallLoading, setIsContractCallLoading] = useState<any>(false)
 
   const [consoleCompile, setConsoleCompile] = useState<ConsoleCompile[]>([])
@@ -937,15 +939,28 @@ const MainPage = ({ id }) => {
                       </div>
                     )}
                     <div className="absolute bottom-4 right-6 rounded-full p-1 pb-2 hover:bg-[#dbdbdb1e]">
-                      <img
-                        onClick={(event) => {
-                          event.stopPropagation()
-                          setOpenModalBotHelper(true)
-                        }}
-                        alt="ethereum avatar"
-                        src="/images/depin/bot.svg"
-                        className=" w-[35px] cursor-pointer"
-                      ></img>
+                      <div className="relative">
+                        <img
+                          onMouseEnter={() => {
+                            setInfoBotOpen(true)
+                          }}
+                          onMouseLeave={() => {
+                            setInfoBotOpen(false)
+                          }}
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            setOpenModalBotHelper(true)
+                          }}
+                          alt="ethereum avatar"
+                          src="/images/depin/bot.svg"
+                          className=" w-[35px] cursor-pointer"
+                        ></img>
+                        {infoBotOpen && (
+                          <div className="absolute top-0 flex w-[100px] -translate-x-[100%] -translate-y-[100%]  items-center  justify-center   rounded-[6px] bg-[#060621]  px-[10px]  py-[5px] text-center text-[14px]">
+                            Accelar Bot
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <DeployContractModal
                       isOpen={openModalDeploy}
@@ -1013,9 +1028,9 @@ const MainPage = ({ id }) => {
                 </div>
               )}
               {(openContracts || openConsole) && (
-                <div className="grid h-[80vh] w-full max-w-[400px] gap-y-[1vh] text-[13px]">
+                <div className="grid h-[82vh] w-full max-w-[400px] gap-y-[1vh] text-[13px]">
                   {openContracts && (
-                    <div className="h-[40vh] max-h-[40vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                    <div className="h-[40.5vh] max-h-[40.5vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                       <div className="flex justify-between">
                         <div className="flex gap-x-[5px]">
                           <img
@@ -1328,7 +1343,7 @@ const MainPage = ({ id }) => {
                     </div>
                   )}
                   {openConsole && (
-                    <div className="h-[40vh] max-h-[40vh] w-full max-w-[400px] overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                    <div className="h-[40.5vh] max-h-[40.5vh] w-full max-w-[400px] overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
                       <div className="flex gap-x-[5px]">
                         <img
                           alt="ethereum avatar"

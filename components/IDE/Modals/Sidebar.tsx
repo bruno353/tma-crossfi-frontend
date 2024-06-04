@@ -545,16 +545,6 @@ const Sidebar = ({
       </div>
       <div className="absolute bottom-4 flex gap-x-3">
         <img
-          onClick={() => setOpenCode(!openCode)}
-          src={
-            openCode
-              ? '/images/depin/write.svg'
-              : '/images/depin/write-grey.svg'
-          }
-          alt="ethereum avatar"
-          className="w-[17px] cursor-pointer"
-        ></img>
-        <img
           onClick={() => setOpenContracts(!openContracts)}
           alt="ethereum avatar"
           src={

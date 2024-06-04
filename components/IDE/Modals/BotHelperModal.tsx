@@ -137,7 +137,7 @@ const BotHelperModal = ({
         ref={modalRef}
         className="absolute inset-0 bg-[#1c1c3d] opacity-80"
       ></div>
-      <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-10 py-10 md:w-[800px]">
+      <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-10 py-10 md:w-[700px]">
         <div onClick={onClose} className="absolute right-5 top-5">
           <img
             alt="delete"
