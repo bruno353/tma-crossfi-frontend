@@ -85,13 +85,20 @@ const Sidebar = ({
   const [isCntDeploymentHistoryModalOpen, setIsCntDeploymentHistoryModalOpen] =
     useState<string>('')
 
+  const [cntIconHovered, setCntIconHovered] = useState<string>('')
+
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  const [isMouseOverModal, setIsMouseOverModal] = useState<boolean>(false)
-
   const relativeDivRef = useRef<HTMLDivElement | null>(null)
-  const targetDivRef = useRef<HTMLDivElement | null>(null)
   const [divPosition, setDivPosition] = useState<{
+    top: number
+    left: number
+  } | null>(null)
+
+  const [isCntModalOpen, setIsCntModalOpen] = useState<string>('')
+  const itemRefsCnt = useRef<(HTMLDivElement | null)[]>([])
+
+  const [divPositionContracts, setDivPositionContracts] = useState<{
     top: number
     left: number
   } | null>(null)
@@ -273,14 +280,37 @@ const Sidebar = ({
           ></img>
         </div>
         {isContractsListOpen && (
-          <div>
+          <div
+            onMouseLeave={async () => {
+              setIsCntModalOpen('')
+            }}
+          >
             <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
               {blockchainContracts?.map((cnt, index) => (
                 <div
                   onClick={() => {
                     setBlockchainContractSelected(cnt)
                   }}
-                  onMouseEnter={() => setBlockchainContractHovered(cnt)}
+                  ref={(el) => (itemRefsCnt.current[index] = el)}
+                  onMouseEnter={() => {
+                    setIsCntModalOpen(cnt.id)
+                    setBlockchainContractHovered(cnt)
+                    if (relativeDivRef.current && itemRefsCnt.current[index]) {
+                      const parentRect =
+                        relativeDivRef.current.getBoundingClientRect()
+                      const targetRect =
+                        itemRefsCnt.current[index].getBoundingClientRect()
+
+                      setDivPositionContracts({
+                        top: targetRect.top - parentRect.top,
+                        left: targetRect.left - parentRect.left,
+                      })
+                      console.log({
+                        top: targetRect.top - parentRect.top,
+                        left: targetRect.left - parentRect.left,
+                      })
+                    }
+                  }}
                   onMouseLeave={() => setBlockchainContractHovered(null)}
                   className={`relative cursor-pointer rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
                     blockchainContractSelected?.id === cnt?.id &&
@@ -316,6 +346,12 @@ const Sidebar = ({
                             setContractRename(cnt)
                             setContractName(cnt.name)
                           }}
+                          onMouseEnter={() => {
+                            setCntIconHovered('pencil')
+                          }}
+                          onMouseLeave={() => {
+                            setCntIconHovered('')
+                          }}
                           src={`/images/depin/pencil.svg`}
                           alt="image"
                           className="my-auto w-[18px] cursor-pointer"
@@ -324,6 +360,12 @@ const Sidebar = ({
                           onClick={(e) => {
                             e.stopPropagation()
                             handleDeleteContract(cnt)
+                          }}
+                          onMouseEnter={() => {
+                            setCntIconHovered('garbage')
+                          }}
+                          onMouseLeave={() => {
+                            setCntIconHovered('')
                           }}
                           src={`/images/depin/garbage.svg`}
                           alt="image"
@@ -398,7 +440,6 @@ const Sidebar = ({
                           <div
                             ref={(el) => (itemRefs.current[index] = el)}
                             onMouseEnter={() => {
-                              setIsMouseOverModal(true)
                               setIsCntDeploymentHistoryModalOpen(cntHistory.id)
                               if (
                                 relativeDivRef.current &&
@@ -483,6 +524,22 @@ const Sidebar = ({
                 />
               </div>
             )}
+            {isCntModalOpen?.length > 0 &&
+              divPositionContracts &&
+              cntIconHovered?.length > 0 && (
+                <div
+                  className="absolute z-50"
+                  style={{
+                    top: `${divPositionContracts.top}px`,
+                    left: `${divPositionContracts.left}px`,
+                    transform: 'translateY(30px) translateX(100px)',
+                  }}
+                >
+                  <div className="flex w-[80px] items-center   justify-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                    {cntIconHovered === 'pencil' ? 'Rename' : 'Delete'}
+                  </div>
+                </div>
+              )}
           </div>
         )}
       </div>

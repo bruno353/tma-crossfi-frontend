@@ -838,6 +838,9 @@ const MainPage = ({ id }) => {
 
                       <div
                         onClick={() => {
+                          console.log(
+                            blockchainContractSelected?.contractInspections,
+                          )
                           if (
                             blockchainContractSelected?.contractInspections
                               ?.length > 0
@@ -850,8 +853,9 @@ const MainPage = ({ id }) => {
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
-                          blockchainContractSelected?.contractInspections
-                            ?.length === 0 &&
+                          (!blockchainContractSelected?.contractInspections ||
+                            blockchainContractSelected?.contractInspections
+                              ?.length > 0) &&
                           '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
                         }`}
                       >
@@ -860,15 +864,21 @@ const MainPage = ({ id }) => {
 
                       <div
                         onClick={() => {
-                          setOpenModalImport(true)
+                          if (
+                            blockchainContractSelected?.contractInspections
+                              ?.length > 0
+                          ) {
+                            setOpenModalDeploy(true)
+                          }
                         }}
                         className={`${
                           isLoading || isLoadingCompilation
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
-                          blockchainContractSelected?.contractInspections
-                            ?.length === 0 &&
+                          (!blockchainContractSelected?.contractInspections ||
+                            blockchainContractSelected?.contractInspections
+                              ?.length > 0) &&
                           '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
                         }`}
                       >
