@@ -738,7 +738,7 @@ const MainPage = ({ id }) => {
 
   return (
     <>
-      <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
+      <section className="relative z-10 max-h-[calc(100vh-6rem)] overflow-hidden px-[20px] pb-16 text-[16px]  md:pb-20 lg:pb-28 lg:pt-[40px] 2xl:max-h-[calc(100vh-8rem)]">
         <div className=" flex gap-x-[10px] text-[#fff]">
           <Sidebar
             blockchainContractSelected={blockchainContractSelected}
@@ -889,12 +889,11 @@ const MainPage = ({ id }) => {
                     </div>
                   </div>
                   <div
-                    className={`editor-container relative w-full ${
+                    className={`editor-container relative h-[76vh] w-full 2xl:h-[78vh] ${
                       isLoadingCompilation && 'animate-pulse'
                     }`}
                   >
                     <Editor
-                      height="78vh"
                       theme="vs-dark"
                       defaultLanguage="javascript"
                       value={blockchainContractSelected?.code}
@@ -938,7 +937,7 @@ const MainPage = ({ id }) => {
                         )}
                       </div>
                     )}
-                    <div className="absolute bottom-4 right-6 rounded-full p-1 pb-2 hover:bg-[#dbdbdb1e]">
+                    <div className="absolute bottom-3 right-4 rounded-full px-[4px] pb-[4px] pt-[2px] hover:bg-[#dbdbdb1e] 2xl:bottom-4 2xl:right-6">
                       <div className="relative">
                         <img
                           onMouseEnter={() => {
@@ -1028,9 +1027,9 @@ const MainPage = ({ id }) => {
                 </div>
               )}
               {(openContracts || openConsole) && (
-                <div className="grid h-[82vh] w-full max-w-[400px] gap-y-[1vh] text-[13px]">
+                <div className="grid h-[81vh] w-full max-w-[400px] gap-y-[1vh] text-[13px] 2xl:h-[82vh]">
                   {openContracts && (
-                    <div className="h-[40.5vh] max-h-[40.5vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                    <div className="h-[40vh] max-h-[40vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4 py-4 scrollbar-thin   scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:h-[40.5vh] 2xl:max-h-[40.5vh] ">
                       <div className="flex justify-between">
                         <div className="flex gap-x-[5px]">
                           <img
@@ -1343,7 +1342,7 @@ const MainPage = ({ id }) => {
                     </div>
                   )}
                   {openConsole && (
-                    <div className="h-[40.5vh] max-h-[40.5vh] w-full max-w-[400px] overflow-y-auto rounded-xl bg-[#1D2144] px-4   py-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                    <div className="h-[40vh] max-h-[40vh] w-full max-w-[400px] overflow-y-auto rounded-xl bg-[#1D2144] px-4 py-4 scrollbar-thin   scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:h-[40.5vh] 2xl:max-h-[40.5vh] ">
                       <div className="flex gap-x-[5px]">
                         <img
                           alt="ethereum avatar"
