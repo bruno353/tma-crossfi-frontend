@@ -57,7 +57,7 @@ import NewCallFunctionModal from './Modals/CallFunctionModal'
 import DeployContractModal from './Modals/DeployContractModal'
 import ImportContractModal from './Modals/ImportContractModal'
 import BotHelperModal from './Modals/BotHelperModal'
-import { deploySmartContract } from './Funcs/soroban-contract-deployer'
+import { deploySmartContract, vote } from './Funcs/soroban-contract-deployer'
 
 export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
@@ -287,8 +287,21 @@ const MainPage = ({ id }) => {
       setBlockchainContractSelected(newContracts[cntIndex])
 
       console.log('starting deploy')
+      console.log(typeof res.contractWasm.data)
       console.log(res.contractWasm.data)
-      deploySmartContract(res.contractWasm.data)
+      console.log('tratamentw')
+      const contractWasmBuffer = Buffer.from(res.contractWasm.data)
+      console.log(contractWasmBuffer)
+      console.log(typeof contractWasmBuffer)
+      console.log('pr')
+      console.log(contractWasmBuffer.toString('hex')) // Exibir como string hexadecimal
+      console.log(typeof contractWasmBuffer.toString('hex'))
+      console.log('213453421')
+      console.log(contractWasmBuffer.toString('base64')) // Exibir como string base64
+      console.log(typeof contractWasmBuffer.toString('base64'))
+
+      await vote('YES', contractWasmBuffer)
+      // deploySmartContract(contractWasmBuffer)
     } catch (err) {
       console.log(err)
       console.log('Error: ' + err.response.data.message)

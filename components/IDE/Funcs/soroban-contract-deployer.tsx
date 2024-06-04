@@ -8,18 +8,29 @@ import {
   SorobanRpc,
   Networks,
   Address,
+  Contract,
+  nativeToScVal,
 } from '@stellar/stellar-sdk'
 import { userSignTransaction } from './freighter'
 import { getPublicKey } from '@stellar/freighter-api'
 
-const rpcUrl = 'https://soroban-testnet.stellar.org:443'
+const rpcUrl = 'https://soroban-testnet.stellar.org'
+
+const contractAddress =
+  'CAAN5X32XWBIX3Q52BR4AJDVBAXPC5M3MVVPAVE5HVES2VWJBPO573L2'
+
+const stringToSymbol = (value) => {
+  return nativeToScVal(value, { type: 'symbol' })
+}
+
+const accountToScVal = (account) => new Address(account).toScVal()
 
 const params = {
   fee: BASE_FEE,
   networkPassphrase: Networks.TESTNET,
 }
 
-async function deploySmartContract(wasm) {
+async function deploySmartContract(wasm: Buffer) {
   console.log('aquiii')
   const server = new SorobanRpc.Server(
     'https://soroban-testnet.stellar.org:443',
@@ -42,6 +53,8 @@ async function deploySmartContract(wasm) {
     //   )
     //   .setTimeout(30)
     //   .build();
+
+    // const contractWasm = await readFileSync('./hello_world.wasm')
 
     const opt = Operation.uploadContractWasm({
       wasm,
@@ -231,4 +244,74 @@ async function deploySmartContract(wasm) {
   }
 }
 
-export { deploySmartContract }
+async function contractInt(caller, functName, values, wasm) {
+  const provider = new SorobanRpc.Server(rpcUrl, { allowHttp: true })
+  const contract = new Contract(contractAddress)
+  const sourceAccount = await provider.getAccount(caller)
+  let buildTx
+  if (values) {
+    const opt = Operation.uploadContractWasm({
+      wasm,
+      source: sourceAccount.accountId(),
+    })
+    buildTx = new TransactionBuilder(sourceAccount, params)
+      .addOperation(opt)
+      .setTimeout(30)
+      .build()
+  }
+  const _buildTx = await provider.prepareTransaction(buildTx)
+  const prepareTx = _buildTx.toXDR()
+  const signedTx = await userSignTransaction(prepareTx, 'TESTNET', caller)
+  const tx = TransactionBuilder.fromXDR(signedTx, Networks.TESTNET)
+  try {
+    const sendTx = await provider.sendTransaction(tx).catch(function (err) {
+      return err
+    })
+    if (sendTx.errorResult) {
+      throw new Error('Unable to submit transaction')
+    }
+    if (sendTx.status === 'PENDING') {
+      let txResponse = await provider.getTransaction(sendTx.hash)
+      while (txResponse.status === 'NOT_FOUND') {
+        txResponse = await provider.getTransaction(sendTx.hash)
+        await new Promise((resolve) => setTimeout(resolve, 100))
+      }
+      if (txResponse.status === 'SUCCESS') {
+        const result = txResponse.returnValue
+        return result
+      }
+    }
+  } catch (err) {
+    return err
+  }
+}
+
+async function fetchPoll() {
+  const caller = await getPublicKey()
+  const result = await contractInt(caller, 'view_poll', null, 't')
+  const no = result._value[0]._attributes.val._value.toString()
+  const total = result._value[1]._attributes.val._value.toString()
+  const yes = result._value[2]._attributes.val._value.toString()
+  return [no, total, yes]
+}
+
+async function fetchVoter() {
+  const caller = await getPublicKey()
+  const voter = accountToScVal(caller)
+  const result = await contractInt(caller, 'view_voter', [voter], 't')
+  const selected = result._value[0]._attributes.val._value.toString()
+  const time = result._value[1]._attributes.val._value.toString()
+  const votes = result._value[2]._attributes.val._value.toString()
+  return [selected, time, votes]
+}
+
+async function vote(value, wasm) {
+  const caller = await getPublicKey()
+  const selected = stringToSymbol(value)
+  const voter = accountToScVal(caller)
+  const values = [voter, selected]
+  const result = await contractInt(caller, 'record_votes', values, wasm)
+  return result
+}
+
+export { fetchPoll, fetchVoter, vote, deploySmartContract }
