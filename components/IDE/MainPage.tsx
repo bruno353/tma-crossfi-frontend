@@ -926,15 +926,17 @@ const MainPage = ({ id }) => {
                         )}
                       </div>
                     )}
-                    <img
-                      onClick={(event) => {
-                        event.stopPropagation()
-                        setOpenModalBotHelper(true)
-                      }}
-                      alt="ethereum avatar"
-                      src="/images/depin/bot.svg"
-                      className="absolute bottom-4 right-6 w-[35px] cursor-pointer"
-                    ></img>
+                    <div className="absolute bottom-4 right-6 rounded-full p-1 pb-2 hover:bg-[#dbdbdb1e]">
+                      <img
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          setOpenModalBotHelper(true)
+                        }}
+                        alt="ethereum avatar"
+                        src="/images/depin/bot.svg"
+                        className=" w-[35px] cursor-pointer"
+                      ></img>
+                    </div>
                     <DeployContractModal
                       isOpen={openModalDeploy}
                       onUpdateM={() => {
@@ -988,6 +990,7 @@ const MainPage = ({ id }) => {
                           (cnt) => cnt.id === contractId,
                         )
                         writeCode(cntIndex, finalV)
+                        saveContracts(contractId)
                         setOpenModalBotHelper(false)
                       }}
                       onClose={() => {

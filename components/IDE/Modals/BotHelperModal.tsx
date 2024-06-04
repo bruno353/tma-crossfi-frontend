@@ -81,21 +81,26 @@ const BotHelperModal = ({
 
       // if its a json and has error, the user inputed a wrong input
       try {
-        const responseTreated = JSON.parse(res)
-        if (responseTreated?.error) {
+        console.log('farei o parse')
+        console.log('passei aqui 123')
+        if (res?.error) {
           toast.error(
             'Could not process your input. Please ensure you are concise and only refer to the contract building structure.',
           )
+          setIsLoading(false)
+          return
         }
       } catch (err) {
+        console.log(err)
         console.log('Inputed right')
       }
+      console.log('Passando pro update m')
 
       onUpdateM(res, contract?.id)
       console.log(res)
     } catch (err) {
       console.log(err)
-      console.log('Error: ' + err.response.data.message)
+      console.log('Error: ' + err)
     }
     setIsLoading(false)
   }
