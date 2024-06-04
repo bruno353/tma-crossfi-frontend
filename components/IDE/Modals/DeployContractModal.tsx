@@ -127,6 +127,19 @@ const DeployContractModal = ({
           </div>
         </div>
 
+        {Number(walletBalance) === 0 && (
+          <div className="mt-2 flex gap-x-3">
+            <img
+              alt="ethereum avatar"
+              src="/images/depin/warning.svg"
+              className="w-[15px]"
+            ></img>
+            <div className="text-[14px] text-[#cc5563]">
+              You have no balance, this transaction will likely fail
+            </div>
+          </div>
+        )}
+
         <div className="mt-5 flex justify-start">
           <div
             className={`${
