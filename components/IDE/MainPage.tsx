@@ -15,6 +15,7 @@ import {
   useRef,
 } from 'react'
 
+import { retrievePublicKey, checkConnection } from './Funcs/freighter'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -56,6 +57,7 @@ import NewCallFunctionModal from './Modals/CallFunctionModal'
 import DeployContractModal from './Modals/DeployContractModal'
 import ImportContractModal from './Modals/ImportContractModal'
 import BotHelperModal from './Modals/BotHelperModal'
+import { deploySmartContract } from './Funcs/soroban-contract-deployer'
 
 export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
@@ -107,6 +109,7 @@ const MainPage = ({ id }) => {
   const [isLoadingWallets, setIsLoadingWallets] = useState(false)
 
   const [openModalBotHelper, setOpenModalBotHelper] = useState(false)
+  const [publickey, getPublicKey] = useState('Wallet not Connected..')
 
   const [openCode, setOpenCode] = useState(true)
   const [openContracts, setOpenContracts] = useState(true)
@@ -206,6 +209,13 @@ const MainPage = ({ id }) => {
     return new Uint8Array(data).buffer
   }
 
+  async function connectWallet() {
+    if (await checkConnection()) {
+      const publicKey = await retrievePublicKey()
+      getPublicKey(publicKey)
+    }
+  }
+
   async function loadWasmModuleFromBuffer(buffer) {
     // Aqui, assumimos que 'buffer' é um ArrayBuffer do WASM compilado.
     const wasmModule = await WebAssembly.instantiate(buffer)
@@ -275,6 +285,10 @@ const MainPage = ({ id }) => {
 
       setBlockchainContracts(newContracts)
       setBlockchainContractSelected(newContracts[cntIndex])
+
+      console.log('starting deploy')
+      console.log(res.contractWasm.data)
+      deploySmartContract(res.contractWasm.data)
     } catch (err) {
       console.log(err)
       console.log('Error: ' + err.response.data.message)
@@ -824,6 +838,19 @@ const MainPage = ({ id }) => {
                           />
                         </svg>
                       )}
+                      <div
+                        onClick={() => {
+                          connectWallet()
+                          // toast.success('contracts ' + contractsToBeSaved)
+                        }}
+                        className={`${
+                          isLoading || isLoadingCompilation
+                            ? 'animate-pulse !bg-[#35428a]'
+                            : 'cursor-pointer  hover:bg-[#35428a]'
+                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                      >
+                        connectWallet
+                      </div>
                       <div
                         onClick={() => {
                           compileContract()

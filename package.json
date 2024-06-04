@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3333",
+    "dev": "next dev -p 3333 --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -21,7 +21,8 @@
     "@next/font": "13.1.6",
     "@radix-ui/react-dialog": "^1.0.4",
     "@rocketseat/eslint-config": "^1.2.0",
-    "@stellar/stellar-sdk": "^12.0.0-rc.3",
+    "@stellar/freighter-api": "^2.0.0",
+    "@stellar/stellar-sdk": "^12.0.1",
     "@tailwindcss/line-clamp": "^0.4.4",
     "ansi-to-html": "^0.7.2",
     "contentful": "^10.5.1",
