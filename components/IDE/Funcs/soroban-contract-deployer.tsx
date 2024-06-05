@@ -244,25 +244,22 @@ async function deploySmartContract(wasm: Buffer) {
 
 async function contractInt(caller, functName, values, wasm) {
   const provider = new SorobanRpc.Server(rpcUrl, { allowHttp: true })
-  const contract = new Contract(contractAddress)
   const sourceAccount = await provider.getAccount(caller)
-  let buildTx
-  if (values) {
-    console.log('vAI TER VALUES SIM')
-    const opt = Operation.uploadContractWasm({
-      wasm,
-      source: sourceAccount.accountId(),
-    })
-    buildTx = new TransactionBuilder(sourceAccount, params)
-      .addOperation(opt)
-      .setTimeout(30)
-      .build()
-  }
+  console.log('vAI TER VALUES SIM')
+  const opt = Operation.uploadContractWasm({
+    wasm,
+    source: sourceAccount.accountId(),
+  })
+  const buildTx = new TransactionBuilder(sourceAccount, params)
+    .setNetworkPassphrase(Networks.TESTNET)
+    .setTimeout(30)
+    .addOperation(opt)
+    .build()
   console.log(buildTx)
   const _buildTx = await provider.prepareTransaction(buildTx)
-  const prepareTx = _buildTx.toXDR()
+  const prepareTx = await _buildTx.toXDR()
   const signedTx = await userSignTransaction(prepareTx, 'TESTNET', caller)
-  const tx = TransactionBuilder.fromXDR(signedTx, Networks.TESTNET)
+  const tx = await TransactionBuilder.fromXDR(signedTx, Networks.TESTNET)
   try {
     const sendTx = await provider.sendTransaction(tx).catch(function (err) {
       return err

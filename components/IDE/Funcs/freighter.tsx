@@ -3,6 +3,7 @@ import {
   signTransaction,
   setAllowed,
 } from '@stellar/freighter-api'
+import { Networks } from '@stellar/stellar-sdk'
 
 async function checkConnection() {
   const isAllowed = await setAllowed()
@@ -31,6 +32,8 @@ const userSignTransaction = async (xdr, network, signWith) => {
   try {
     signedTransaction = await signTransaction(xdr, {
       accountToSign: signWith,
+      network: 'TESTNET',
+      networkPassphrase: Networks.TESTNET,
     })
   } catch (e) {
     console.log('error here')

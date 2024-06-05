@@ -58,7 +58,12 @@ import DeployContractModal from './Modals/DeployContractModal'
 import ImportContractModal from './Modals/ImportContractModal'
 import BotHelperModal from './Modals/BotHelperModal'
 import { deploySmartContract, vote } from './Funcs/soroban-contract-deployer'
-import { setAllowed, isAllowed, getUserInfo } from '@stellar/freighter-api'
+import {
+  setAllowed,
+  isAllowed,
+  getUserInfo,
+  getNetwork,
+} from '@stellar/freighter-api'
 
 export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
@@ -852,6 +857,20 @@ const MainPage = ({ id }) => {
                           />
                         </svg>
                       )}
+                      <div
+                        onClick={async () => {
+                          const network = await getNetwork()
+                          console.log(network)
+                          // toast.success('contracts ' + contractsToBeSaved)
+                        }}
+                        className={`${
+                          isLoading || isLoadingCompilation
+                            ? 'animate-pulse !bg-[#35428a]'
+                            : 'cursor-pointer  hover:bg-[#35428a]'
+                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
+                      >
+                        networ
+                      </div>
                       <div
                         onClick={async () => {
                           console.log(await getUserInfo())
