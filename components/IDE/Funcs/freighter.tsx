@@ -2,6 +2,7 @@ import {
   requestAccess,
   signTransaction,
   setAllowed,
+  isConnected,
 } from '@stellar/freighter-api'
 import { Networks } from '@stellar/stellar-sdk'
 

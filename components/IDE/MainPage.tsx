@@ -69,6 +69,11 @@ export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
 }
 
+export enum TypeWalletProvider {
+  ACCELAR,
+  FREIGHTER,
+}
+
 export const sorobanNetworkToRpc = {
   Testnet: 'https://horizon-testnet.stellar.org',
   Mainnet: 'https://horizon.stellar.org',
@@ -108,6 +113,11 @@ const MainPage = ({ id }) => {
   const [isLoadingCompilation, setIsLoadingCompilation] = useState(false)
   const [value, setValue] = useState('// start your code here')
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
+
+  const [walletProvider, setWalletProvider] = useState<TypeWalletProvider>(
+    TypeWalletProvider.ACCELAR,
+  )
+
   const monaco = useMonaco()
   const [selected, setSelected] = useState<ValueObject>(optionsNetwork[0])
   const [openModalDeploy, setOpenModalDeploy] = useState(false)
@@ -804,6 +814,8 @@ const MainPage = ({ id }) => {
             getData={(value) => {
               getData(value)
             }}
+            walletProvider={walletProvider}
+            setWalletProvider={setWalletProvider}
           />
           {blockchainContracts?.length > 0 ? (
             <>

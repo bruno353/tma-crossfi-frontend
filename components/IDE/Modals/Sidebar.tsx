@@ -6,7 +6,7 @@ import {
   BlockchainContractProps,
   BlockchainWalletProps,
 } from '@/types/blockchain-app'
-import { optionsNetwork } from '../MainPage'
+import { TypeWalletProvider, optionsNetwork } from '../MainPage'
 import { callAxiosBackend } from '@/utils/general-api'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -14,6 +14,8 @@ import { parseCookies } from 'nookies'
 import CntDeploymentHistoryModal from './CntDeploymentHistoryModal'
 import { transformString, wait } from '@/utils/functions'
 import { SmileySad } from 'phosphor-react'
+import { requestAccess, setAllowed, isConnected } from '@stellar/freighter-api'
+import { checkConnection, retrievePublicKey } from '../Funcs/freighter'
 
 export interface MenuI {
   id: string
@@ -44,6 +46,8 @@ export interface MenuI {
   setOpenConsole(value: boolean): void
   isLoadingWallets: boolean
   getData(value: string): void
+  walletProvider: TypeWalletProvider
+  setWalletProvider(value: TypeWalletProvider): void
 }
 
 const Sidebar = ({
@@ -75,12 +79,30 @@ const Sidebar = ({
   setOpenConsole,
   getData,
   isLoadingWallets,
+  walletProvider,
+  setWalletProvider,
 }: MenuI) => {
   const [isContractsListOpen, setIsContractsListOpen] = useState(true)
   const [
     isContractsDeploymentHistoryListOpen,
     setIsContractsDeploymentHistoryListOpen,
   ] = useState(false)
+
+  const [connect, setConnected] = useState('Connect Wallet')
+  const [publickey, setPublicKey] = useState('Wallet not Connected..')
+
+  useEffect(() => {
+    if (publickey !== 'Wallet not Connected..') {
+      setConnected(publickey)
+    }
+  }, [publickey])
+
+  async function connectWallet() {
+    if (await checkConnection()) {
+      const publicKey = await retrievePublicKey()
+      setPublicKey(publicKey)
+    }
+  }
 
   const [isCntDeploymentHistoryModalOpen, setIsCntDeploymentHistoryModalOpen] =
     useState<string>('')
@@ -189,8 +211,8 @@ const Sidebar = ({
           classNameForPopUpBox="!translate-y-[35px]"
         />
       </div>
-      <div className="mt-4">
-        <div className="mb-2 flex gap-x-[5px]">
+      <div className="mt-4 ">
+        <div className="mb-2 flex gap-x-[5px] ">
           <img
             alt="ethereum avatar"
             src="/images/depin/card.svg"
@@ -211,47 +233,105 @@ const Sidebar = ({
             Wallet
           </div>
         </div>
-        {isLoadingWallets ? (
-          <div className="mb-2 flex h-[25px] w-full animate-pulse rounded-md bg-[#dbdbdb1e]"></div>
-        ) : (
-          <>
-            <div className="flex items-center gap-x-1">
-              {blockchainWallets?.length > 0 ? (
-                <Dropdown
-                  optionSelected={blockchainWalletsSelected}
-                  options={blockchainWalletsDropdown}
-                  onValueChange={(value) => {
-                    setBlockchainWalletsSelected(value)
-                  }}
-                  classNameForDropdown="!px-1 !pr-2 !py-1 !flex-grow !min-w-[130px] !font-medium"
-                  classNameForPopUp="!px-1 !pr-2 !py-1"
-                  classNameForPopUpBox="!translate-y-[35px]"
-                />
-              ) : (
-                <div className="text-[#c5c4c4]">create a wallet </div>
-              )}
+        <div className="mb-3 mt-1 flex w-fit gap-x-[1px] rounded-xl bg-[#242B51] px-1 py-1">
+          <div
+            onClick={() => {
+              setWalletProvider(TypeWalletProvider.ACCELAR)
+            }}
+            className={`cursor-pointer rounded-xl px-2 py-1 ${
+              walletProvider === TypeWalletProvider.ACCELAR && 'bg-[#dbdbdb1e]'
+            }`}
+          >
+            Accelar
+          </div>
+          <div
+            onClick={() => {
+              setWalletProvider(TypeWalletProvider.FREIGHTER)
+            }}
+            className={`cursor-pointer rounded-xl px-2 py-1 ${
+              walletProvider === TypeWalletProvider.FREIGHTER &&
+              'bg-[#dbdbdb1e]'
+            }`}
+          >
+            Freighter
+          </div>
+        </div>
+        {walletProvider === TypeWalletProvider.ACCELAR && (
+          <div>
+            {isLoadingWallets ? (
+              <div className="mb-2 flex h-[25px] w-full animate-pulse rounded-md bg-[#dbdbdb1e]"></div>
+            ) : (
+              <>
+                <div className="flex items-center gap-x-1">
+                  {blockchainWallets?.length > 0 ? (
+                    <Dropdown
+                      optionSelected={blockchainWalletsSelected}
+                      options={blockchainWalletsDropdown}
+                      onValueChange={(value) => {
+                        setBlockchainWalletsSelected(value)
+                      }}
+                      classNameForDropdown="!px-1 !pr-2 !py-1 !flex-grow !min-w-[130px] !font-medium"
+                      classNameForPopUp="!px-1 !pr-2 !py-1"
+                      classNameForPopUpBox="!translate-y-[35px]"
+                    />
+                  ) : (
+                    <div className="text-[#c5c4c4]">create a wallet </div>
+                  )}
 
-              <a href={`/workspace/${id}/blockchain-wallets`}>
-                <div
-                  title="Create wallet"
-                  className="flex-grow-0 cursor-pointer text-[16px]"
-                >
-                  +
+                  <a href={`/workspace/${id}/blockchain-wallets`}>
+                    <div
+                      title="Create wallet"
+                      className="flex-grow-0 cursor-pointer text-[16px]"
+                    >
+                      +
+                    </div>
+                  </a>
                 </div>
-              </a>
-            </div>
-            {blockchainWalletsSelected && (
-              <div className="mt-2 text-[12px] text-[#c5c4c4]">
-                {' '}
-                Balance:{' '}
-                {
-                  blockchainWallets.find(
-                    (obj) => obj.id === blockchainWalletsSelected.value,
-                  ).balance
-                }
-              </div>
+                {blockchainWalletsSelected && (
+                  <div className="mt-2 text-[12px] text-[#c5c4c4]">
+                    {' '}
+                    Balance:{' '}
+                    {
+                      blockchainWallets.find(
+                        (obj) => obj.id === blockchainWalletsSelected.value,
+                      ).balance
+                    }
+                  </div>
+                )}
+              </>
             )}
-          </>
+          </div>
+        )}
+        {walletProvider === TypeWalletProvider.FREIGHTER && (
+          <div className="mb-8">
+            {isLoadingWallets ? (
+              <div className="mb-2 flex h-[25px] w-full animate-pulse rounded-md bg-[#dbdbdb1e]"></div>
+            ) : (
+              <>
+                <div
+                  onClick={connectWallet}
+                  className={` ${
+                    connect !== 'Connect Wallet'
+                      ? ''
+                      : 'cursor-pointer hover:bg-[#7542f7]'
+                  } mx-auto flex w-fit items-center  gap-x-2 whitespace-nowrap rounded-lg bg-[#634cc9b6] px-3 py-1 text-center text-[14px] font-normal`}
+                >
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/depin/freighter.svg"
+                    className="-ml-1 w-[20px]"
+                  ></img>
+                  <label>
+                    {connect !== 'Connect Wallet' ? (
+                      <>{transformString(connect, 4)}</>
+                    ) : (
+                      <>Connect Wallet</>
+                    )}
+                  </label>
+                </div>
+              </>
+            )}
+          </div>
         )}
       </div>
       <div className="mt-4">
