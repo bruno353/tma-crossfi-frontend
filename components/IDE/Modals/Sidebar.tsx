@@ -157,7 +157,7 @@ const Sidebar = ({
   return (
     <div
       ref={relativeDivRef}
-      className="relative h-[81vh] max-h-[81vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light 2xl:h-[81vh] 2xl:max-h-[81vh]"
+      className="relative h-[81vh] max-h-[81vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light 2xl:h-[82vh] 2xl:max-h-[82vh]"
     >
       <div className="relative flex gap-x-[5px]">
         <img
