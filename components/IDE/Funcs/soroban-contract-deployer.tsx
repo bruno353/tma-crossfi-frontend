@@ -14,7 +14,7 @@ import {
 import { userSignTransaction } from './freighter'
 import { getPublicKey } from '@stellar/freighter-api'
 
-const rpcUrl = 'https://soroban-testnet.stellar.org'
+const rpcUrl = 'https://soroban-testnet.stellar.org/'
 
 const contractAddress =
   'CAAN5X32XWBIX3Q52BR4AJDVBAXPC5M3MVVPAVE5HVES2VWJBPO573L2'
@@ -32,9 +32,7 @@ const params = {
 
 async function deploySmartContract(wasm: Buffer) {
   console.log('aquiii')
-  const server = new SorobanRpc.Server(
-    'https://soroban-testnet.stellar.org:443',
-  )
+  const server = new SorobanRpc.Server('https://soroban-testnet.stellar.org')
   console.log('aquiii2')
 
   // Criar chave pública a partir da chave privada
@@ -250,15 +248,18 @@ async function contractInt(caller, functName, values, wasm) {
   const sourceAccount = await provider.getAccount(caller)
   let buildTx
   if (values) {
+    console.log('vAI TER VALUES SIM')
     const opt = Operation.uploadContractWasm({
       wasm,
       source: sourceAccount.accountId(),
     })
     buildTx = new TransactionBuilder(sourceAccount, params)
       .addOperation(opt)
+      .setNetworkPassphrase(Networks.TESTNET)
       .setTimeout(30)
       .build()
   }
+  console.log(buildTx)
   const _buildTx = await provider.prepareTransaction(buildTx)
   const prepareTx = _buildTx.toXDR()
   const signedTx = await userSignTransaction(prepareTx, 'TESTNET', caller)
