@@ -10,6 +10,7 @@ import {
   Address,
   Contract,
   nativeToScVal,
+  StrKey,
 } from '@stellar/stellar-sdk'
 import { userSignTransaction } from './freighter'
 import { getPublicKey } from '@stellar/freighter-api'
@@ -243,6 +244,7 @@ async function deploySmartContract(wasm: Buffer) {
 }
 
 async function contractInt(caller, functName, values, wasm) {
+  console.log('entrei contract Init')
   const provider = new SorobanRpc.Server(rpcUrl, { allowHttp: true })
   const sourceAccount = await provider.getAccount(caller)
   console.log('vAI TER VALUES SIM')
@@ -258,8 +260,10 @@ async function contractInt(caller, functName, values, wasm) {
   console.log(buildTx)
   const _buildTx = await provider.prepareTransaction(buildTx)
   const prepareTx = await _buildTx.toXDR()
+  console.log('requisitando signing')
   const signedTx = await userSignTransaction(prepareTx, 'TESTNET', caller)
   const tx = await TransactionBuilder.fromXDR(signedTx, Networks.TESTNET)
+  console.log('requisitando trans')
   try {
     const sendTx = await provider.sendTransaction(tx).catch(function (err) {
       return err
@@ -275,10 +279,72 @@ async function contractInt(caller, functName, values, wasm) {
       }
       if (txResponse.status === 'SUCCESS') {
         const result = txResponse.returnValue
-        return result
+        console.log('result return value')
+        console.log(result)
+        console.log(result['_value'])
+        const sourceAccount2 = await provider.getAccount(caller)
+        const add = new Address(sourceAccount2.accountId())
+        const opt2 = Operation.createCustomContract({
+          address: add,
+          wasmHash: result['_value'],
+        })
+        const buildTx2 = new TransactionBuilder(sourceAccount2, params)
+          .setNetworkPassphrase(Networks.TESTNET)
+          .setTimeout(30)
+          .addOperation(opt2)
+          .build()
+        console.log(buildTx2)
+        const _buildTx2 = await provider.prepareTransaction(buildTx2)
+        const prepareTx2 = await _buildTx2.toXDR()
+        console.log('requisitando signing')
+        const signedTx2 = await userSignTransaction(
+          prepareTx2,
+          'TESTNET',
+          caller,
+        )
+        const tx2 = await TransactionBuilder.fromXDR(
+          signedTx2,
+          Networks.TESTNET,
+        )
+        const sendTx2 = await provider
+          .sendTransaction(tx2)
+          .catch(function (err) {
+            return err
+          })
+        if (sendTx2.errorResult) {
+          throw new Error('Unable to submit transaction')
+        }
+        if (sendTx2.status === 'PENDING') {
+          let txResponse2 = await provider.getTransaction(sendTx2.hash)
+          while (txResponse2.status === 'NOT_FOUND') {
+            txResponse2 = await provider.getTransaction(sendTx2.hash)
+            await new Promise((resolve) => setTimeout(resolve, 100))
+          }
+          if (txResponse2.status === 'SUCCESS') {
+            const result2 = txResponse2.returnValue
+            console.log('result return value final deployment')
+            console.log(result2)
+            console.log('result totally')
+            console.log(txResponse2)
+            console.log('metadata')
+            const transactionMeta = txResponse2.resultMetaXdr
+            const returnValue = transactionMeta.v3().sorobanMeta().returnValue()
+            const contractIdBuffer = Buffer.from(
+              returnValue['_value']['_value'].toString('hex'),
+              'hex',
+            )
+
+            // Derive o endereço do contrato (strkey) a partir do Buffer do contractId.
+            const contractAddress = StrKey.encodeContract(contractIdBuffer)
+
+            console.log('cotnract')
+            console.log(contractAddress)
+          }
+        }
       }
     }
   } catch (err) {
+    console.log(err)
     return err
   }
 }
