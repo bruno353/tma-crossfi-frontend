@@ -14,7 +14,7 @@ import {
 import { userSignTransaction } from './freighter'
 import { getPublicKey } from '@stellar/freighter-api'
 
-const rpcUrl = 'https://soroban-testnet.stellar.org/'
+const rpcUrl = 'https://soroban-testnet.stellar.org'
 
 const contractAddress =
   'CAAN5X32XWBIX3Q52BR4AJDVBAXPC5M3MVVPAVE5HVES2VWJBPO573L2'
