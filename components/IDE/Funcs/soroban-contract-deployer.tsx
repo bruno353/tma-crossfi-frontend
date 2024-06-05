@@ -255,7 +255,6 @@ async function contractInt(caller, functName, values, wasm) {
     })
     buildTx = new TransactionBuilder(sourceAccount, params)
       .addOperation(opt)
-      .setNetworkPassphrase(Networks.TESTNET)
       .setTimeout(30)
       .build()
   }
