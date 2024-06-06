@@ -354,7 +354,13 @@ const Sidebar = ({
               setIsCntModalOpen('')
             }}
           >
-            <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+            <div
+              className={`grid ${
+                isContractsDeploymentHistoryListOpen
+                  ? 'max-h-[calc(10vh)]'
+                  : 'max-h-[calc(18vh)]'
+              }   gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(20vh)]`}
+            >
               {blockchainContracts?.map((cnt, index) => (
                 <div
                   onClick={() => {
@@ -502,7 +508,13 @@ const Sidebar = ({
               <>
                 {blockchainContractSelected?.ideContractDeploymentHistories
                   ?.length > 0 ? (
-                  <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                  <div
+                    className={`grid ${
+                      isContractsListOpen
+                        ? 'max-h-[calc(11vh)]'
+                        : '!max-h-[calc(20vh)]'
+                    }  gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(20vh)]`}
+                  >
                     {blockchainContractSelected?.ideContractDeploymentHistories.map(
                       (cntHistory, index) => {
                         return (
@@ -579,11 +591,10 @@ const Sidebar = ({
             )}
             {isCntDeploymentHistoryModalOpen?.length > 0 && divPosition && (
               <div
-                className="absolute z-50"
+                className="absolute z-50 -translate-y-[100%] translate-x-[120px] 2xl:translate-y-[10px]"
                 style={{
                   top: `${divPosition.top}px`,
                   left: `${divPosition.left}px`,
-                  transform: 'translateY(10px) translateX(120px)',
                 }}
               >
                 <CntDeploymentHistoryModal
