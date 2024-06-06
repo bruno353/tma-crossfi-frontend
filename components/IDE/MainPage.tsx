@@ -117,7 +117,21 @@ const MainPage = ({ id }) => {
   const [isLoadingContracts, setIsLoadingContracts] = useState(true)
   const [isLoadingNewContract, setIsLoadingNewContract] = useState(false)
   const [isLoadingCompilation, setIsLoadingCompilation] = useState(false)
-  const [value, setValue] = useState('// start your code here')
+  const [value, setValue] = useState(
+    `
+  // start your code here
+  use soroban_sdk::{contractimpl, Env, contract};
+
+  #[contract]
+    pub struct SumContract;
+
+  #[contractimpl]
+    impl SumContract {
+    pub fn add(env: Env, a: i32, b: i32) -> i32 {
+    a + b
+    }
+  `,
+  )
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
 
   const [walletProvider, setWalletProvider] = useState<TypeWalletProvider>(
@@ -625,7 +639,21 @@ const MainPage = ({ id }) => {
     const data = {
       workspaceId: id,
       network: 'STELLAR',
-      code: '// write your code here',
+      code: `#![no_std]
+use soroban_sdk::{contractimpl, Env, contract};
+    
+#[contract]
+pub struct SumContract;
+    
+#[contractimpl]
+impl SumContract {
+  /// This is a simple sum smart-contract.
+  ///
+  /// start coding here
+  pub fn add(env: Env, a: i32, b: i32) -> i32 {
+    a + b
+  }
+}`,
       name: 'untitled',
     }
     try {

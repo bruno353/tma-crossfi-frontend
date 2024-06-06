@@ -122,7 +122,21 @@ const Sidebar = ({
     const data = {
       workspaceId: id,
       network: 'STELLAR',
-      code: '// write your code here',
+      code: `#![no_std]
+use soroban_sdk::{contractimpl, Env, contract};
+    
+#[contract]
+pub struct SumContract;
+    
+#[contractimpl]
+impl SumContract {
+  /// This is a simple sum smart-contract.
+  ///
+  /// start coding here
+  pub fn add(env: Env, a: i32, b: i32) -> i32 {
+    a + b
+  }
+}`,
       name: 'untitled',
     }
     try {
