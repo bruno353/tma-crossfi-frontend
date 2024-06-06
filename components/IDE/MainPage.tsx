@@ -917,60 +917,6 @@ const MainPage = ({ id }) => {
                         </svg>
                       )}
                       <div
-                        onClick={async () => {
-                          const network = await getNetwork()
-                          console.log(network)
-                          // toast.success('contracts ' + contractsToBeSaved)
-                        }}
-                        className={`${
-                          isLoading || isLoadingCompilation
-                            ? 'animate-pulse !bg-[#35428a]'
-                            : 'cursor-pointer  hover:bg-[#35428a]'
-                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
-                      >
-                        networ
-                      </div>
-                      <div
-                        onClick={async () => {
-                          console.log(await getUserInfo())
-                          // toast.success('contracts ' + contractsToBeSaved)
-                        }}
-                        className={`${
-                          isLoading || isLoadingCompilation
-                            ? 'animate-pulse !bg-[#35428a]'
-                            : 'cursor-pointer  hover:bg-[#35428a]'
-                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
-                      >
-                        userInfo
-                      </div>
-                      <div
-                        onClick={async () => {
-                          console.log(await isAllowed())
-                          await setAllowed()
-                          // toast.success('contracts ' + contractsToBeSaved)
-                        }}
-                        className={`${
-                          isLoading || isLoadingCompilation
-                            ? 'animate-pulse !bg-[#35428a]'
-                            : 'cursor-pointer  hover:bg-[#35428a]'
-                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
-                      >
-                        requestAccess
-                      </div>
-                      <div
-                        onClick={() => {
-                          connectWallet()
-                          // toast.success('contracts ' + contractsToBeSaved)
-                        }}
-                        className={`${
-                          isLoading || isLoadingCompilation
-                            ? 'animate-pulse !bg-[#35428a]'
-                            : 'cursor-pointer  hover:bg-[#35428a]'
-                        }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
-                      >
-                        connectWallet
-                      </div>
-                      <div
                         onClick={() => {
                           compileContract()
                           // toast.success('contracts ' + contractsToBeSaved)
@@ -1180,7 +1126,11 @@ const MainPage = ({ id }) => {
               {(openContracts || openConsole) && (
                 <div className="grid h-[81vh] w-full max-w-[400px] gap-y-[1vh] text-[13px] 2xl:h-[82vh]">
                   {openContracts && (
-                    <div className="h-[40vh] max-h-[40vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4 py-4 scrollbar-thin   scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:h-[40.5vh] 2xl:max-h-[40.5vh] ">
+                    <div
+                      className={`h-[40vh] w-full overflow-y-auto rounded-xl bg-[#1D2144] px-4 py-4 scrollbar-thin   scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:h-[40.5vh] ${
+                        !openConsole && '!h-full 2xl:!h-full'
+                      }`}
+                    >
                       <div className="flex justify-between">
                         <div className="flex gap-x-[5px]">
                           <img
@@ -1493,7 +1443,11 @@ const MainPage = ({ id }) => {
                     </div>
                   )}
                   {openConsole && (
-                    <div className="h-[40vh] max-h-[40vh] w-full max-w-[400px] overflow-y-auto rounded-xl bg-[#1D2144] px-4 py-4 scrollbar-thin   scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:h-[40.5vh] 2xl:max-h-[40.5vh] ">
+                    <div
+                      className={`h-[40vh] w-full max-w-[400px] overflow-y-auto rounded-xl bg-[#1D2144] px-4 py-4 scrollbar-thin   scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:h-[40.5vh]  ${
+                        !openContracts && '!h-full 2xl:!h-full'
+                      }`}
+                    >
                       <div className="flex gap-x-[5px]">
                         <img
                           alt="ethereum avatar"
