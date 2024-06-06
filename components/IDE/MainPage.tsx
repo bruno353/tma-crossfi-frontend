@@ -177,6 +177,8 @@ const MainPage = ({ id }) => {
   const onMount = (editor, highlightLine?: number) => {
     editorRef.current = editor
     editor.focus()
+    editor.deltaDecorations(decorationIds, [])
+    setDecorationIds([])
 
     if (highlightLine) {
       // Add the decoration to highlight line 10
@@ -312,6 +314,12 @@ const MainPage = ({ id }) => {
         wasm: JSON.stringify(res.contractWasm.data),
         createdAt: String(new Date()),
       })
+
+      newContracts[cntIndex].consoleLogs = newContracts[
+        cntIndex
+      ].consoleLogs.filter((cntfilter) => {
+        return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
+      })
       console.log('passei 12345')
 
       setBlockchainContracts(newContracts)
@@ -360,6 +368,12 @@ const MainPage = ({ id }) => {
 
       newContracts[cntIndex].consoleLogs =
         newContracts[cntIndex].consoleLogs ?? []
+
+      newContracts[cntIndex].consoleLogs = newContracts[
+        cntIndex
+      ].consoleLogs.filter((cntfilter) => {
+        return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
+      })
 
       for (let i = 0; i < out?.length; i++) {
         let errorDescription = extractTextMessageSecondOcorrency(
@@ -430,6 +444,7 @@ const MainPage = ({ id }) => {
           desc: `${res.contractAddress}`,
           createdAt: String(new Date()),
         })
+        newContracts[cntIndex].ideContractDeploymentHistories.unshift({res.history})
 
         setBlockchainContracts(newContracts)
         setBlockchainContractSelected(newContracts[cntIndex])
@@ -649,7 +664,7 @@ const MainPage = ({ id }) => {
       )
       newCnts[cntIndex].name = contractNameRef.current
       setBlockchainContracts(newCnts)
-
+      setBlockchainContractSelected(newCnts[cntIndex])
       await callAxiosBackend(
         'put',
         `/blockchain/functions/renameContract`,
@@ -870,7 +885,9 @@ const MainPage = ({ id }) => {
                 <div className="w-full min-w-[60%]">
                   <div className="flex w-full justify-between">
                     <div className="relative flex items-center gap-x-4 text-[14px]">
-                      <div>{blockchainContractSelected?.name}</div>
+                      <div className="max-w-[200px] overflow-x-auto whitespace-nowrap">
+                        {blockchainContractSelected?.name}
+                      </div>
                       <div
                         onClick={() => setLanguageSelectorOpen(true)}
                         className="my-auto mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
@@ -1068,7 +1085,7 @@ const MainPage = ({ id }) => {
                           ? blockchainWallets.find(
                               (obj) =>
                                 obj.id === blockchainWalletsSelected.value,
-                            ).stellarWalletPubK
+                            )?.stellarWalletPubK
                           : '0x'
                       }
                       walletFreighter={connect}
@@ -1131,7 +1148,7 @@ const MainPage = ({ id }) => {
                         !openConsole && '!h-full 2xl:!h-full'
                       }`}
                     >
-                      <div className="flex justify-between">
+                      <div className="grid justify-between gap-y-2 2xl:flex">
                         <div className="flex gap-x-[5px]">
                           <img
                             alt="ethereum avatar"
@@ -1169,7 +1186,7 @@ const MainPage = ({ id }) => {
                           </div>
                         )}
                       </div>
-                      <div className="mt-[20px] grid gap-y-[12px]">
+                      <div className="mt-[10px] grid gap-y-[12px] 2xl:mt-[20px]">
                         {blockchainContractSelected?.contractInspections?.map(
                           (cntIns, index) => (
                             <div
@@ -1459,7 +1476,10 @@ const MainPage = ({ id }) => {
                       <div className="mt-[20px] grid gap-y-[12px]">
                         {blockchainContractSelected?.consoleLogs?.map(
                           (cnslLog, index) => (
-                            <div className="w-full max-w-[70%]" key={index}>
+                            <div
+                              className="w-full max-w-[98%] 2xl:max-w-[70%]"
+                              key={index}
+                            >
                               {cnslLog?.type === 'error' && (
                                 <div
                                   onMouseEnter={() => {
@@ -1531,7 +1551,7 @@ const MainPage = ({ id }) => {
                                         )
                                       }}
                                       src="/images/header/arrow-gray.svg"
-                                      className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                      className={`ml-1 w-[12px] cursor-pointer rounded-full transition-transform duration-150 ${
                                         cnslLog?.isOpen && 'rotate-180'
                                       }`}
                                     ></img>
@@ -1611,7 +1631,7 @@ const MainPage = ({ id }) => {
                                         )
                                       }}
                                       src="/images/header/arrow-gray.svg"
-                                      className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                      className={`ml-1 w-[12px] cursor-pointer rounded-full transition-transform duration-150 ${
                                         cnslLog?.isOpen && 'rotate-180'
                                       }`}
                                     ></img>

@@ -14,7 +14,6 @@ import { parseCookies } from 'nookies'
 import CntDeploymentHistoryModal from './CntDeploymentHistoryModal'
 import { transformString, wait } from '@/utils/functions'
 import { SmileySad } from 'phosphor-react'
-import { requestAccess, setAllowed, isConnected } from '@stellar/freighter-api'
 import { checkConnection, retrievePublicKey } from '../Funcs/freighter'
 
 export interface MenuI {
@@ -263,7 +262,9 @@ const Sidebar = ({
                       classNameForPopUpBox="!translate-y-[35px]"
                     />
                   ) : (
-                    <div className="text-[#c5c4c4]">create a wallet </div>
+                    <div className="my-auto mt-1 text-[#c5c4c4]">
+                      create a wallet{' '}
+                    </div>
                   )}
 
                   <a href={`/workspace/${id}/blockchain-wallets`}>
@@ -530,7 +531,7 @@ const Sidebar = ({
                                 })
                               }
                             }}
-                            className={`relative  flex items-center rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
+                            className={`relative flex items-center rounded-md border border-transparent bg-transparent px-2 py-1 text-[14px] hover:bg-[#dbdbdb1e] 2xl:py-0 ${
                               isCntDeploymentHistoryModalOpen ===
                                 cntHistory?.id && '!bg-[#dbdbdb1e]'
                             }`}
@@ -538,9 +539,9 @@ const Sidebar = ({
                           >
                             <div className="my-auto w-[80%] max-w-[100%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent text-[13px] outline-none focus:border-primary">
                               {' '}
-                              {transformString(cntHistory?.contractAddress, 3)}
+                              {transformString(cntHistory?.contractAddress, 4)}
                             </div>
-                            <div className="my-auto text-[12px] text-[#c5c4c4]">
+                            <div className="my-auto whitespace-nowrap text-[10px] text-[#c5c4c4] 2xl:text-[12px]">
                               {String(
                                 new Date(
                                   cntHistory?.createdAt,
