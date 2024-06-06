@@ -444,7 +444,9 @@ const MainPage = ({ id }) => {
           desc: `${res.contractAddress}`,
           createdAt: String(new Date()),
         })
-        newContracts[cntIndex].ideContractDeploymentHistories.unshift({res.history})
+        newContracts[cntIndex].ideContractDeploymentHistories.unshift(
+          res['history'],
+        )
 
         setBlockchainContracts(newContracts)
         setBlockchainContractSelected(newContracts[cntIndex])
