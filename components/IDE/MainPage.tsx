@@ -955,6 +955,13 @@ const MainPage = ({ id }) => {
                             blockchainContractSelected?.contractInspections,
                           )
                           if (
+                            !blockchainWalletsSelected &&
+                            publickey === 'Wallet not Connected..'
+                          ) {
+                            toast.error('Connect a wallet to continue')
+                            return
+                          }
+                          if (
                             blockchainContractSelected?.contractInspections
                               ?.length > 0
                           ) {
@@ -977,6 +984,13 @@ const MainPage = ({ id }) => {
 
                       <div
                         onClick={() => {
+                          if (
+                            !blockchainWalletsSelected &&
+                            publickey === 'Wallet not Connected..'
+                          ) {
+                            toast.error('Connect a wallet to continue')
+                            return
+                          }
                           if (
                             blockchainContractSelected?.contractInspections
                               ?.length > 0
@@ -1968,6 +1982,7 @@ const MainPage = ({ id }) => {
                       newContract.consoleLogs = []
                       const newCnts = [...blockchainContracts, newContract]
                       setBlockchainContracts(newCnts)
+                      setBlockchainContractSelected(newContract)
                     }
                   }}
                   className={`mx-auto ${
