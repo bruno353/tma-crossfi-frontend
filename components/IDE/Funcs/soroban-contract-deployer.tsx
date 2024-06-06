@@ -15,6 +15,9 @@ import {
 import { userSignTransaction } from './freighter'
 import { getPublicKey } from '@stellar/freighter-api'
 
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 const rpcUrl = 'https://soroban-testnet.stellar.org'
 
 const contractAddress =
@@ -243,7 +246,7 @@ async function deploySmartContract(wasm: Buffer) {
   }
 }
 
-async function contractInt(caller, functName, values, wasm) {
+async function contractInt(caller, wasm) {
   console.log('entrei contract Init')
   const provider = new SorobanRpc.Server(rpcUrl, { allowHttp: true })
   const sourceAccount = await provider.getAccount(caller)
@@ -269,6 +272,7 @@ async function contractInt(caller, functName, values, wasm) {
       return err
     })
     if (sendTx.errorResult) {
+      console.log(sendTx.errorResult)
       throw new Error('Unable to submit transaction')
     }
     if (sendTx.status === 'PENDING') {
@@ -309,9 +313,12 @@ async function contractInt(caller, functName, values, wasm) {
         const sendTx2 = await provider
           .sendTransaction(tx2)
           .catch(function (err) {
+            console.log('err here')
+            console.log(err)
             return err
           })
         if (sendTx2.errorResult) {
+          console.log(sendTx2.errorResult)
           throw new Error('Unable to submit transaction')
         }
         if (sendTx2.status === 'PENDING') {
@@ -339,42 +346,21 @@ async function contractInt(caller, functName, values, wasm) {
 
             console.log('cotnract')
             console.log(contractAddress)
+            return contractAddress
           }
         }
       }
     }
   } catch (err) {
     console.log(err)
-    return err
+    throw err
   }
 }
 
-async function fetchPoll() {
+async function deployContractFreighter(wasm: any) {
   const caller = await getPublicKey()
-  const result = await contractInt(caller, 'view_poll', null, 't')
-  const no = result._value[0]._attributes.val._value.toString()
-  const total = result._value[1]._attributes.val._value.toString()
-  const yes = result._value[2]._attributes.val._value.toString()
-  return [no, total, yes]
-}
-
-async function fetchVoter() {
-  const caller = await getPublicKey()
-  const voter = accountToScVal(caller)
-  const result = await contractInt(caller, 'view_voter', [voter], 't')
-  const selected = result._value[0]._attributes.val._value.toString()
-  const time = result._value[1]._attributes.val._value.toString()
-  const votes = result._value[2]._attributes.val._value.toString()
-  return [selected, time, votes]
-}
-
-async function vote(value, wasm) {
-  const caller = await getPublicKey()
-  const selected = stringToSymbol(value)
-  const voter = accountToScVal(caller)
-  const values = [voter, selected]
-  const result = await contractInt(caller, 'record_votes', values, wasm)
+  const result = await contractInt(caller, wasm)
   return result
 }
 
-export { fetchPoll, fetchVoter, vote, deploySmartContract }
+export { deployContractFreighter, deploySmartContract }

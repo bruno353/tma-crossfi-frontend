@@ -57,7 +57,7 @@ import NewCallFunctionModal from './Modals/CallFunctionModal'
 import DeployContractModal from './Modals/DeployContractModal'
 import ImportContractModal from './Modals/ImportContractModal'
 import BotHelperModal from './Modals/BotHelperModal'
-import { deploySmartContract, vote } from './Funcs/soroban-contract-deployer'
+import { deployContractFreighter } from './Funcs/soroban-contract-deployer'
 import {
   setAllowed,
   isAllowed,
@@ -125,7 +125,6 @@ const MainPage = ({ id }) => {
   const [isLoadingWallets, setIsLoadingWallets] = useState(false)
 
   const [openModalBotHelper, setOpenModalBotHelper] = useState(false)
-  const [publickey, getPublicKey] = useState('Wallet not Connected..')
 
   const [openCode, setOpenCode] = useState(true)
   const [openContracts, setOpenContracts] = useState(true)
@@ -221,15 +220,24 @@ const MainPage = ({ id }) => {
     }, 5)
   }
 
-  function convertToBuffer(data) {
-    return new Uint8Array(data).buffer
-  }
+  const [connect, setConnected] = useState('Connect Wallet')
+  const [publickey, setPublicKey] = useState('Wallet not Connected..')
+
+  useEffect(() => {
+    if (publickey !== 'Wallet not Connected..') {
+      setConnected(publickey)
+    }
+  }, [publickey])
 
   async function connectWallet() {
     if (await checkConnection()) {
       const publicKey = await retrievePublicKey()
-      getPublicKey(publicKey)
+      setPublicKey(publicKey)
     }
+  }
+
+  function convertToBuffer(data) {
+    return new Uint8Array(data).buffer
   }
 
   async function loadWasmModuleFromBuffer(buffer) {
@@ -285,6 +293,7 @@ const MainPage = ({ id }) => {
         (cnt) => cnt.id === blockchainContractSelected?.id,
       )
       console.log('passei 123')
+      newContracts[cntIndex].wasm = res.contractWasm.data
 
       newContracts[cntIndex].consoleLogs =
         newContracts[cntIndex].consoleLogs ?? []
@@ -302,21 +311,21 @@ const MainPage = ({ id }) => {
       setBlockchainContracts(newContracts)
       setBlockchainContractSelected(newContracts[cntIndex])
 
-      console.log('starting deploy')
-      console.log(typeof res.contractWasm.data)
-      console.log(res.contractWasm.data)
-      console.log('tratamentw')
-      const contractWasmBuffer = Buffer.from(res.contractWasm.data)
-      console.log(contractWasmBuffer)
-      console.log(typeof contractWasmBuffer)
-      console.log('pr')
-      console.log(contractWasmBuffer.toString('hex')) // Exibir como string hexadecimal
-      console.log(typeof contractWasmBuffer.toString('hex'))
-      console.log('213453421')
-      console.log(contractWasmBuffer.toString('base64')) // Exibir como string base64
-      console.log(typeof contractWasmBuffer.toString('base64'))
+      // console.log('starting deploy')
+      // console.log(typeof res.contractWasm.data)
+      // console.log(res.contractWasm.data)
+      // console.log('tratamentw')
+      // const contractWasmBuffer = Buffer.from(res.contractWasm.data)
+      // console.log(contractWasmBuffer)
+      // console.log(typeof contractWasmBuffer)
+      // console.log('pr')
+      // console.log(contractWasmBuffer.toString('hex')) // Exibir como string hexadecimal
+      // console.log(typeof contractWasmBuffer.toString('hex'))
+      // console.log('213453421')
+      // console.log(contractWasmBuffer.toString('base64')) // Exibir como string base64
+      // console.log(typeof contractWasmBuffer.toString('base64'))
 
-      await vote('YES', contractWasmBuffer)
+      // await deployContract(contractWasmBuffer)
       // deploySmartContract(contractWasmBuffer)
     } catch (err) {
       console.log(err)
@@ -389,55 +398,81 @@ const MainPage = ({ id }) => {
     const chain = selected.value
     const { userSessionToken } = parseCookies()
 
-    const data = {
-      walletId: blockchainWalletsSelected.value,
-      contractId: blockchainContractSelected?.id,
-      environment: selected.value.toLowerCase(),
+    if (walletProvider === TypeWalletProvider.ACCELAR) {
+      const data = {
+        walletId: blockchainWalletsSelected.value,
+        contractId: blockchainContractSelected?.id,
+        environment: selected.value.toLowerCase(),
+      }
+
+      try {
+        const res = await callAxiosBackend(
+          'post',
+          '/blockchain/functions/deploySorobanContract',
+          userSessionToken,
+          data,
+        )
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
+        )
+        newContracts[cntIndex].currentAddress = res.contractAddress
+        newContracts[cntIndex].currentChain = chain
+        newContracts[cntIndex].consoleLogs.unshift({
+          type: 'deploy',
+          contractName: blockchainContractSelected?.name,
+          desc: `${res.contractAddress}`,
+          createdAt: String(new Date()),
+        })
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      } catch (err) {
+        console.log(err)
+        console.log('Error: ' + err.response.data.message)
+
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
+        )
+        const errorDescription = convertAnsiToHtml(err.response.data.message)
+        console.log(errorDescription)
+
+        newContracts[cntIndex].consoleLogs.unshift({
+          type: 'deployError',
+          desc: errorDescription,
+          contractName: blockchainContractSelected?.name,
+          createdAt: String(new Date()),
+        })
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      }
+    } else if (walletProvider === TypeWalletProvider.FREIGHTER) {
+      try {
+        const contractWasmBuffer = Buffer.from(blockchainContractSelected.wasm)
+        const addressRes = await deployContractFreighter(contractWasmBuffer)
+
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
+        )
+        newContracts[cntIndex].currentAddress = addressRes
+        newContracts[cntIndex].currentChain = chain
+        newContracts[cntIndex].consoleLogs.unshift({
+          type: 'deploy',
+          contractName: blockchainContractSelected?.name,
+          desc: `${addressRes}`,
+          createdAt: String(new Date()),
+        })
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      } catch (err) {
+        toast.error(err)
+      }
     }
 
-    try {
-      const res = await callAxiosBackend(
-        'post',
-        '/blockchain/functions/deploySorobanContract',
-        userSessionToken,
-        data,
-      )
-      const newContracts = [...blockchainContracts]
-      const cntIndex = newContracts.findIndex(
-        (cnt) => cnt.id === blockchainContractSelected?.id,
-      )
-      newContracts[cntIndex].currentAddress = res.contractAddress
-      newContracts[cntIndex].currentChain = chain
-      newContracts[cntIndex].consoleLogs.unshift({
-        type: 'deploy',
-        contractName: blockchainContractSelected?.name,
-        desc: `${res.contractAddress}`,
-        createdAt: String(new Date()),
-      })
-
-      setBlockchainContracts(newContracts)
-      setBlockchainContractSelected(newContracts[cntIndex])
-    } catch (err) {
-      console.log(err)
-      console.log('Error: ' + err.response.data.message)
-
-      const newContracts = [...blockchainContracts]
-      const cntIndex = newContracts.findIndex(
-        (cnt) => cnt.id === blockchainContractSelected?.id,
-      )
-      const errorDescription = convertAnsiToHtml(err.response.data.message)
-      console.log(errorDescription)
-
-      newContracts[cntIndex].consoleLogs.unshift({
-        type: 'deployError',
-        desc: errorDescription,
-        contractName: blockchainContractSelected?.name,
-        createdAt: String(new Date()),
-      })
-
-      setBlockchainContracts(newContracts)
-      setBlockchainContractSelected(newContracts[cntIndex])
-    }
     setIsLoadingCompilation(false)
   }
 
@@ -816,6 +851,8 @@ const MainPage = ({ id }) => {
             }}
             walletProvider={walletProvider}
             setWalletProvider={setWalletProvider}
+            connectWallet={connectWallet}
+            connect={connect}
           />
           {blockchainContracts?.length > 0 ? (
             <>
@@ -956,7 +993,7 @@ const MainPage = ({ id }) => {
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
                           (!blockchainContractSelected?.contractInspections ||
                             blockchainContractSelected?.contractInspections
-                              ?.length > 0) &&
+                              ?.length === 0) &&
                           '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
                         }`}
                       >
@@ -1071,14 +1108,19 @@ const MainPage = ({ id }) => {
                       contract={blockchainContractSelected}
                       environment={selected.value}
                       wallet={
-                        blockchainWallets.find(
-                          (obj) => obj.id === blockchainWalletsSelected.value,
-                        ).stellarWalletPubK
+                        walletProvider === TypeWalletProvider.ACCELAR
+                          ? blockchainWallets.find(
+                              (obj) =>
+                                obj.id === blockchainWalletsSelected.value,
+                            ).stellarWalletPubK
+                          : '0x'
                       }
+                      walletFreighter={connect}
+                      walletProvider={walletProvider}
                       walletBalance={
                         blockchainWallets.find(
                           (obj) => obj.id === blockchainWalletsSelected.value,
-                        ).balance
+                        )?.balance || '0'
                       }
                     />
                     <ImportContractModal

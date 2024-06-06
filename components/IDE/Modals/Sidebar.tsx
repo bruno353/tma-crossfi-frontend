@@ -48,6 +48,8 @@ export interface MenuI {
   getData(value: string): void
   walletProvider: TypeWalletProvider
   setWalletProvider(value: TypeWalletProvider): void
+  connect: string
+  connectWallet(): void
 }
 
 const Sidebar = ({
@@ -81,28 +83,14 @@ const Sidebar = ({
   isLoadingWallets,
   walletProvider,
   setWalletProvider,
+  connect,
+  connectWallet,
 }: MenuI) => {
   const [isContractsListOpen, setIsContractsListOpen] = useState(true)
   const [
     isContractsDeploymentHistoryListOpen,
     setIsContractsDeploymentHistoryListOpen,
   ] = useState(false)
-
-  const [connect, setConnected] = useState('Connect Wallet')
-  const [publickey, setPublicKey] = useState('Wallet not Connected..')
-
-  useEffect(() => {
-    if (publickey !== 'Wallet not Connected..') {
-      setConnected(publickey)
-    }
-  }, [publickey])
-
-  async function connectWallet() {
-    if (await checkConnection()) {
-      const publicKey = await retrievePublicKey()
-      setPublicKey(publicKey)
-    }
-  }
 
   const [isCntDeploymentHistoryModalOpen, setIsCntDeploymentHistoryModalOpen] =
     useState<string>('')
@@ -314,14 +302,14 @@ const Sidebar = ({
                     connect !== 'Connect Wallet'
                       ? ''
                       : 'cursor-pointer hover:bg-[#7542f7]'
-                  } mx-auto flex w-fit items-center  gap-x-2 whitespace-nowrap rounded-lg bg-[#634cc9b6] px-3 py-1 text-center text-[14px] font-normal`}
+                  } mx-auto flex w-fit items-center justify-center  gap-x-2 whitespace-nowrap rounded-lg bg-[#634cc9b6] px-5 py-1 text-center text-[14px] font-normal`}
                 >
                   <img
                     alt="ethereum avatar"
                     src="/images/depin/freighter.svg"
-                    className="-ml-1 w-[20px]"
+                    className="-ml-1 w-[20px] cursor-pointer"
                   ></img>
-                  <label>
+                  <label className="cursor-pointer">
                     {connect !== 'Connect Wallet' ? (
                       <>{transformString(connect, 4)}</>
                     ) : (

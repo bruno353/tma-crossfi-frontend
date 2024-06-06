@@ -134,6 +134,7 @@ export interface BlockchainContractProps {
   name?: string
   network: string
   code?: string
+  wasm?: any
   currentAddress?: string
   currentChain?: string
   ideContractDeploymentHistories: BlockchainContractDeploymentHistoryProps[]

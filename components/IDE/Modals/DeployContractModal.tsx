@@ -16,7 +16,7 @@ import { parseCookies } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { createBlockchainApps, createWallet } from '@/utils/api-blockchain'
 import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
-import { cleanDocs } from '../MainPage'
+import { TypeWalletProvider, cleanDocs } from '../MainPage'
 import {
   BlockchainContractProps,
   ContractInspectionI,
@@ -28,7 +28,9 @@ export interface ModalI {
   contract: BlockchainContractProps
   environment: string
   wallet: string
+  walletFreighter: string
   walletBalance: string
+  walletProvider: TypeWalletProvider
   onUpdateM(): void
   onClose(): void
   isOpen: boolean
@@ -38,7 +40,9 @@ const DeployContractModal = ({
   isOpen,
   environment,
   wallet,
+  walletFreighter,
   walletBalance,
+  walletProvider,
   onUpdateM,
   onClose,
   contract,
@@ -112,33 +116,48 @@ const DeployContractModal = ({
           </div>
           <div className="text-[#c5c4c4]">
             Wallet:{' '}
-            <span
-              className="cursor-pointer text-[#fff]"
-              onClick={() => {
-                navigator.clipboard.writeText(wallet)
-                toast.success('Address copied')
-              }}
-            >
-              {transformString(wallet, 7)}
-            </span>
+            {walletProvider === TypeWalletProvider.ACCELAR ? (
+              <span
+                className="cursor-pointer text-[#fff]"
+                onClick={() => {
+                  navigator.clipboard.writeText(wallet)
+                  toast.success('Address copied')
+                }}
+              >
+                {transformString(wallet, 7)}
+              </span>
+            ) : (
+              <span
+                className="cursor-pointer text-[#fff]"
+                onClick={() => {
+                  navigator.clipboard.writeText(walletFreighter)
+                  toast.success('Address copied')
+                }}
+              >
+                {transformString(walletFreighter, 7)}
+              </span>
+            )}
           </div>
-          <div className="text-[#c5c4c4]">
-            Balance: <span className="text-[#fff]">{walletBalance}</span>
-          </div>
+          {walletProvider === TypeWalletProvider.ACCELAR && (
+            <div className="text-[#c5c4c4]">
+              Balance: <span className="text-[#fff]">{walletBalance}</span>
+            </div>
+          )}
         </div>
 
-        {Number(walletBalance) === 0 && (
-          <div className="mt-2 flex gap-x-3">
-            <img
-              alt="ethereum avatar"
-              src="/images/depin/warning.svg"
-              className="w-[15px]"
-            ></img>
-            <div className="text-[14px] text-[#cc5563]">
-              You have no balance, this transaction will likely fail
+        {Number(walletBalance) === 0 &&
+          walletProvider === TypeWalletProvider.ACCELAR && (
+            <div className="mt-2 flex gap-x-3">
+              <img
+                alt="ethereum avatar"
+                src="/images/depin/warning.svg"
+                className="w-[15px]"
+              ></img>
+              <div className="text-[14px] text-[#cc5563]">
+                You have no balance, this transaction will likely fail
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         <div className="mt-5 flex justify-start">
           <div
@@ -159,7 +178,11 @@ const DeployContractModal = ({
         {isConfirmTransactionOpen && (
           <div ref={confirmTransactionRef} className="absolute right-0">
             <ConfirmDeployContractModal
-              wallet={wallet}
+              wallet={
+                walletProvider === TypeWalletProvider.ACCELAR
+                  ? wallet
+                  : walletFreighter
+              }
               environment={environment}
               onConfirmTransaction={() => {
                 onUpdateM()
