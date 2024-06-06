@@ -27,14 +27,19 @@ const retrievePublicKey = async () => {
   return publicKey
 }
 
-const userSignTransaction = async (xdr, network, signWith) => {
+const userSignTransaction = async (
+  xdr,
+  network,
+  networkPassphrase,
+  signWith,
+) => {
   let signedTransaction = ''
   let error = ''
   try {
     signedTransaction = await signTransaction(xdr, {
       accountToSign: signWith,
-      network: 'TESTNET',
-      networkPassphrase: Networks.TESTNET,
+      network,
+      networkPassphrase,
     })
   } catch (e) {
     console.log('error here')

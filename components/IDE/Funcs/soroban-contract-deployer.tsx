@@ -29,11 +29,6 @@ const stringToSymbol = (value) => {
 
 const accountToScVal = (account) => new Address(account).toScVal()
 
-const params = {
-  fee: BASE_FEE,
-  networkPassphrase: Networks.TESTNET,
-}
-
 async function deploySmartContract(wasm: Buffer) {
   console.log('aquiii')
   const server = new SorobanRpc.Server('https://soroban-testnet.stellar.org')
@@ -85,6 +80,7 @@ async function deploySmartContract(wasm: Buffer) {
     const signedTx = await userSignTransaction(
       preparedTransaction,
       'TESTNET',
+      Networks.TESTNET,
       caller,
     )
 
@@ -246,7 +242,12 @@ async function deploySmartContract(wasm: Buffer) {
   }
 }
 
-async function contractInt(caller, wasm) {
+async function contractInt(caller, wasm, network, networkPassphrase) {
+  const params = {
+    fee: BASE_FEE,
+    networkPassphrase,
+  }
+
   console.log('entrei contract Init')
   const provider = new SorobanRpc.Server(rpcUrl, { allowHttp: true })
   const sourceAccount = await provider.getAccount(caller)
@@ -256,7 +257,7 @@ async function contractInt(caller, wasm) {
     source: sourceAccount.accountId(),
   })
   const buildTx = new TransactionBuilder(sourceAccount, params)
-    .setNetworkPassphrase(Networks.TESTNET)
+    .setNetworkPassphrase(networkPassphrase)
     .setTimeout(30)
     .addOperation(opt)
     .build()
@@ -264,8 +265,13 @@ async function contractInt(caller, wasm) {
   const _buildTx = await provider.prepareTransaction(buildTx)
   const prepareTx = await _buildTx.toXDR()
   console.log('requisitando signing')
-  const signedTx = await userSignTransaction(prepareTx, 'TESTNET', caller)
-  const tx = await TransactionBuilder.fromXDR(signedTx, Networks.TESTNET)
+  const signedTx = await userSignTransaction(
+    prepareTx,
+    network,
+    networkPassphrase,
+    caller,
+  )
+  const tx = await TransactionBuilder.fromXDR(signedTx, networkPassphrase)
   console.log('requisitando trans')
   try {
     const sendTx = await provider.sendTransaction(tx).catch(function (err) {
@@ -293,7 +299,7 @@ async function contractInt(caller, wasm) {
           wasmHash: result['_value'],
         })
         const buildTx2 = new TransactionBuilder(sourceAccount2, params)
-          .setNetworkPassphrase(Networks.TESTNET)
+          .setNetworkPassphrase(networkPassphrase)
           .setTimeout(30)
           .addOperation(opt2)
           .build()
@@ -303,12 +309,13 @@ async function contractInt(caller, wasm) {
         console.log('requisitando signing')
         const signedTx2 = await userSignTransaction(
           prepareTx2,
-          'TESTNET',
+          network,
+          networkPassphrase,
           caller,
         )
         const tx2 = await TransactionBuilder.fromXDR(
           signedTx2,
-          Networks.TESTNET,
+          networkPassphrase,
         )
         const sendTx2 = await provider
           .sendTransaction(tx2)
@@ -357,9 +364,16 @@ async function contractInt(caller, wasm) {
   }
 }
 
-async function deployContractFreighter(wasm: any) {
+async function deployContractFreighter(
+  wasm: any,
+  network: string,
+  networkPassphrase: string,
+) {
+  console.log('recebido')
+  console.log(network)
+  console.log(networkPassphrase)
   const caller = await getPublicKey()
-  const result = await contractInt(caller, wasm)
+  const result = await contractInt(caller, wasm, network, networkPassphrase)
   return result
 }
 

@@ -64,6 +64,7 @@ import {
   getUserInfo,
   getNetwork,
 } from '@stellar/freighter-api'
+import { Networks } from '@stellar/stellar-sdk'
 
 export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
@@ -77,6 +78,11 @@ export enum TypeWalletProvider {
 export const sorobanNetworkToRpc = {
   Testnet: 'https://horizon-testnet.stellar.org',
   Mainnet: 'https://horizon.stellar.org',
+}
+
+export const optionsNetworkToPassphrase = {
+  TESTNET: Networks.TESTNET,
+  MAINNET: Networks.PUBLIC,
 }
 
 export const optionsNetwork = [
@@ -451,7 +457,11 @@ const MainPage = ({ id }) => {
     } else if (walletProvider === TypeWalletProvider.FREIGHTER) {
       try {
         const contractWasmBuffer = Buffer.from(blockchainContractSelected.wasm)
-        const addressRes = await deployContractFreighter(contractWasmBuffer)
+        const addressRes = await deployContractFreighter(
+          contractWasmBuffer,
+          selected.value.toUpperCase(),
+          optionsNetworkToPassphrase[selected.value.toUpperCase()],
+        )
 
         const newContracts = [...blockchainContracts]
         const cntIndex = newContracts.findIndex(
