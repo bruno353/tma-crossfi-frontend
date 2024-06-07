@@ -1023,7 +1023,7 @@ impl SumContract {
                             blockchainContractSelected?.contractInspections
                               ?.length > 0
                           ) {
-                            setOpenModalDeploy(true)
+                            setOpenModalImport(true)
                           }
                         }}
                         className={`${
