@@ -380,6 +380,8 @@ const MainPage = ({ id }) => {
         (cnt) => cnt.id === blockchainContractSelected?.id,
       )
 
+      newContracts[cntIndex].contractInspections = []
+
       newContracts[cntIndex].consoleLogs =
         newContracts[cntIndex].consoleLogs ?? []
 
