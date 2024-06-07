@@ -220,7 +220,7 @@ const MainPage = ({ id }) => {
   const menuRef = useRef(null)
 
   async function writeCode(cntIndex: number, finalV: string) {
-    if (cntIndex < 0 || cntIndex >= blockchainContracts.length) {
+    if (cntIndex < 0 || cntIndex >= blockchainContracts?.length) {
       return
     }
 
@@ -228,7 +228,7 @@ const MainPage = ({ id }) => {
     let textToBuild = ''
 
     const intervalId = setInterval(() => {
-      if (index < finalV.length) {
+      if (index < finalV?.length) {
         textToBuild = textToBuild + finalV.charAt(index)
 
         setBlockchainContracts((prevContracts) => {
@@ -601,7 +601,7 @@ const MainPage = ({ id }) => {
         userSessionToken,
       )
       const walletsToSet = []
-      for (let i = 0; i < res.length; i++) {
+      for (let i = 0; i < res?.length; i++) {
         walletsToSet.push({
           name: transformString(res[i].stellarWalletPubK, 5),
           value: res[i].id,
