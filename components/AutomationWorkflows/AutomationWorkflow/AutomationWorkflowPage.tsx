@@ -647,7 +647,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
               </div>
             )}
           </div>
-          <div className="mt-[45px] h-full ">
+          <div className="mt-[20px] h-full 2xl:mt-[45px] ">
             <SubNavBar
               onChange={(value) => {
                 setNavBarSelected(value)
