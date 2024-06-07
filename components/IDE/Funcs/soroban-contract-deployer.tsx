@@ -364,6 +364,81 @@ async function contractInt(caller, wasm, network, networkPassphrase) {
   }
 }
 
+async function contractTransaction(
+  caller,
+  functName,
+  contractAddress,
+  network,
+  networkPassphrase,
+  values,
+) {
+  const params = {
+    fee: BASE_FEE,
+    networkPassphrase,
+  }
+
+  console.log('entrei contract Init')
+  const provider = new SorobanRpc.Server(rpcUrl, { allowHttp: true })
+  const sourceAccount = await provider.getAccount(caller)
+  const contract = new Contract(contractAddress)
+  let buildTx
+  console.log('valuies auqi')
+  console.log(values)
+  if (values == null) {
+    buildTx = new TransactionBuilder(sourceAccount, params)
+      .addOperation(contract.call(functName))
+      .setNetworkPassphrase(networkPassphrase)
+      .setTimeout(30)
+      .build()
+  } else {
+    buildTx = new TransactionBuilder(sourceAccount, params)
+      .addOperation(contract.call(functName, ...values))
+      .setNetworkPassphrase(networkPassphrase)
+      .setTimeout(30)
+      .build()
+  }
+  console.log('preparando')
+  console.log(buildTx)
+  const _buildTx = await provider.prepareTransaction(buildTx)
+  console.log('xdr agr')
+  const prepareTx = await _buildTx.toXDR()
+  console.log('requisitando signing')
+  const signedTx = await userSignTransaction(
+    prepareTx,
+    network,
+    networkPassphrase,
+    caller,
+  )
+  const tx = await TransactionBuilder.fromXDR(signedTx, networkPassphrase)
+  console.log('requisitando trans')
+  try {
+    const sendTx = await provider.sendTransaction(tx).catch(function (err) {
+      return err
+    })
+    if (sendTx.errorResult) {
+      console.log(sendTx.errorResult)
+      throw new Error('Unable to submit transaction')
+    }
+    if (sendTx.status === 'PENDING') {
+      let txResponse = await provider.getTransaction(sendTx.hash)
+      while (txResponse.status === 'NOT_FOUND') {
+        txResponse = await provider.getTransaction(sendTx.hash)
+        await new Promise((resolve) => setTimeout(resolve, 100))
+      }
+      if (txResponse.status === 'SUCCESS') {
+        const result = txResponse.returnValue
+        console.log('result return value')
+        console.log(result)
+        console.log(result['_value'])
+        return result['_value']
+      }
+    }
+  } catch (err) {
+    console.log(err)
+    throw err
+  }
+}
+
 async function deployContractFreighter(
   wasm: any,
   network: string,
@@ -377,4 +452,30 @@ async function deployContractFreighter(
   return result
 }
 
-export { deployContractFreighter, deploySmartContract }
+async function transactionContractFreighter(
+  functName: string,
+  contractAddress: string,
+  network: string,
+  networkPassphrase: string,
+  values?: any,
+) {
+  console.log('recebido')
+  console.log(network)
+  console.log(networkPassphrase)
+  const caller = await getPublicKey()
+  const result = await contractTransaction(
+    caller,
+    functName,
+    contractAddress,
+    network,
+    networkPassphrase,
+    values,
+  )
+  return result
+}
+
+export {
+  deployContractFreighter,
+  deploySmartContract,
+  transactionContractFreighter,
+}

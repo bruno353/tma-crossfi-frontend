@@ -57,14 +57,17 @@ import NewCallFunctionModal from './Modals/CallFunctionModal'
 import DeployContractModal from './Modals/DeployContractModal'
 import ImportContractModal from './Modals/ImportContractModal'
 import BotHelperModal from './Modals/BotHelperModal'
-import { deployContractFreighter } from './Funcs/soroban-contract-deployer'
+import {
+  deployContractFreighter,
+  transactionContractFreighter,
+} from './Funcs/soroban-contract-deployer'
 import {
   setAllowed,
   isAllowed,
   getUserInfo,
   getNetwork,
 } from '@stellar/freighter-api'
-import { Networks } from '@stellar/stellar-sdk'
+import { nativeToScVal, Networks } from '@stellar/stellar-sdk'
 
 export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
@@ -381,6 +384,8 @@ const MainPage = ({ id }) => {
       )
 
       newContracts[cntIndex].contractInspections = []
+      newContracts[cntIndex].currentAddress = null
+      newContracts[cntIndex].currentChain = null
 
       newContracts[cntIndex].consoleLogs =
         newContracts[cntIndex].consoleLogs ?? []
@@ -1369,7 +1374,7 @@ impl SumContract {
                                   </div>
                                   <div className="flex gap-x-5">
                                     <div
-                                      onClick={() => {
+                                      onClick={async () => {
                                         if (
                                           !blockchainContractSelected.currentAddress
                                         ) {
@@ -1418,22 +1423,128 @@ impl SumContract {
                                           )
                                         }
                                         if (!isContractCallLoading) {
-                                          const finalCntInsInput = []
-
-                                          for (
-                                            let i = 0;
-                                            i < cntIns?.inputs?.length;
-                                            i++
+                                          if (
+                                            walletProvider ===
+                                              TypeWalletProvider?.ACCELAR &&
+                                            blockchainWalletsSelected
                                           ) {
-                                            finalCntInsInput.push({
-                                              paramName: cntIns?.inputs[i].name,
-                                              value: cntIns?.inputs[i].value,
+                                            const finalCntInsInput = []
+
+                                            for (
+                                              let i = 0;
+                                              i < cntIns?.inputs?.length;
+                                              i++
+                                            ) {
+                                              finalCntInsInput.push({
+                                                paramName:
+                                                  cntIns?.inputs[i].name,
+                                                value: cntIns?.inputs[i].value,
+                                              })
+                                            }
+                                            callContract(
+                                              cntIns?.functionName,
+                                              finalCntInsInput,
+                                            )
+                                          } else if (
+                                            walletProvider ===
+                                              TypeWalletProvider?.FREIGHTER &&
+                                            publickey
+                                          ) {
+                                            const contractId =
+                                              blockchainContractSelected?.id
+                                            const address =
+                                              blockchainContractSelected?.currentAddress
+                                            const finalValues = []
+                                            const finalCntInsInput = []
+                                            for (
+                                              let i = 0;
+                                              i < cntIns?.inputs?.length;
+                                              i++
+                                            ) {
+                                              finalCntInsInput.push({
+                                                paramName:
+                                                  cntIns?.inputs[i].name,
+                                                value: cntIns?.inputs[i].value,
+                                              })
+                                            }
+                                            for (
+                                              let i = 0;
+                                              i < cntIns?.inputs?.length;
+                                              i++
+                                            ) {
+                                              console.log('comecemos')
+
+                                              console.log(
+                                                cntIns?.inputs[i].type,
+                                              )
+                                              console.log(
+                                                typeof cntIns?.inputs[i].value,
+                                              )
+                                              console.log(
+                                                'se tipagem comecar com i ou u, significa que é i32 ou u64 por exemplo, dai botar  aprimeira letra pt amaisucula',
+                                              )
+                                              let type = cntIns?.inputs[i].type
+                                              let value =
+                                                cntIns?.inputs[i].value
+                                              if (
+                                                cntIns?.inputs[i].type?.charAt(
+                                                  0,
+                                                ) === 'U' ||
+                                                cntIns?.inputs[i].type?.charAt(
+                                                  0,
+                                                ) === 'I'
+                                              ) {
+                                                type =
+                                                  cntIns?.inputs[
+                                                    i
+                                                  ].type.toLowerCase()
+                                                value = Number(
+                                                  cntIns?.inputs[i].value,
+                                                )
+                                              }
+                                              finalValues.push(
+                                                nativeToScVal(value, {
+                                                  type,
+                                                }),
+                                              )
+                                            }
+                                            const returnValue =
+                                              await transactionContractFreighter(
+                                                cntIns?.functionName,
+                                                blockchainContractSelected?.currentAddress,
+                                                selected.value.toUpperCase(),
+                                                optionsNetworkToPassphrase[
+                                                  selected.value.toUpperCase()
+                                                ],
+                                                finalValues,
+                                              )
+                                            const newContracts = [
+                                              ...blockchainContracts,
+                                            ]
+                                            const cntIndex =
+                                              newContracts.findIndex(
+                                                (cnt) => cnt.id === contractId,
+                                              )
+                                            newContracts[
+                                              cntIndex
+                                            ].consoleLogs.unshift({
+                                              type: 'contractCall',
+                                              functionName:
+                                                cntIns?.functionName,
+                                              args: finalCntInsInput.map(
+                                                (param) => param.value,
+                                              ),
+                                              responseValue:
+                                                JSON.parse(returnValue),
+                                              desc: address,
+                                              createdAt: String(new Date()),
                                             })
+
+                                            setBlockchainContracts(newContracts)
+                                            setBlockchainContractSelected(
+                                              newContracts[cntIndex],
+                                            )
                                           }
-                                          callContract(
-                                            cntIns?.functionName,
-                                            finalCntInsInput,
-                                          )
                                         }
                                       }}
                                       className={`${
