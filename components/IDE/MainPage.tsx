@@ -671,6 +671,7 @@ impl SumContract {
         data,
       )
       setIsLoadingNewContract(false)
+      setLanguage('javascript')
       if (monaco) {
         monaco.editor.defineTheme('vs-dark', {
           base: 'vs-dark',
