@@ -671,6 +671,23 @@ impl SumContract {
         data,
       )
       setIsLoadingNewContract(false)
+      if (monaco) {
+        monaco.editor.defineTheme('vs-dark', {
+          base: 'vs-dark',
+          inherit: true,
+          rules: [],
+          colors: {
+            'editor.background': '#1D2144',
+            'editor.foreground': '#FFFFFF',
+            'editor.lineHighlightBackground': '#dbdbdb1e',
+            'editorLineNumber.foreground': '#858585',
+            'editor.selectionBackground': '#0000FF20',
+          },
+        })
+        setTimeout(() => {
+          setLanguage('rust')
+        }, 1000)
+      }
       return res
     } catch (err) {
       console.log(err)
