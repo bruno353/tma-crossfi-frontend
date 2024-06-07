@@ -1033,7 +1033,7 @@ impl SumContract {
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
                           (!blockchainContractSelected?.contractInspections ||
                             blockchainContractSelected?.contractInspections
-                              ?.length > 0) &&
+                              ?.length === 0) &&
                           '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
                         }`}
                       >
