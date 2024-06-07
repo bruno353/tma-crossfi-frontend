@@ -10,17 +10,17 @@ export const workflowOptions = [
     type: 'DEVELOPMENT',
     pathSegment: '',
   },
-  {
-    name: 'Credit management',
-    description:
-      'All-in-one space for managing financial features including loans, transactions, payments, and credit analysis.',
-    imgSource: '/images/workflows/paper.svg',
-    imgStyle: 'w-[18px] 2xl:w-[20px]',
-    imgStyleBoard: 'w-[11px] 2xl:w-[13px]',
-    imgStyleTitle: 'w-[28px]',
-    type: 'FINANCIAL',
-    pathSegment: '',
-  },
+  // {
+  //   name: 'Credit management',
+  //   description:
+  //     'All-in-one space for managing financial features including loans, transactions, payments, and credit analysis.',
+  //   imgSource: '/images/workflows/paper.svg',
+  //   imgStyle: 'w-[18px] 2xl:w-[20px]',
+  //   imgStyleBoard: 'w-[11px] 2xl:w-[13px]',
+  //   imgStyleTitle: 'w-[28px]',
+  //   type: 'FINANCIAL',
+  //   pathSegment: '',
+  // },
 ]
 
 export const workflowTypeToOptions = {
