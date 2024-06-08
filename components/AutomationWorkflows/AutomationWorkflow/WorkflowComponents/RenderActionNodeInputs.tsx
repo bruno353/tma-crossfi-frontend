@@ -61,17 +61,31 @@ const RenderActionNodeInputs = ({
     const input2 = data.icpWalletId?.length > 0
     const input3 = data.methodName?.length > 0
     const input4 = data.callArguments?.length > 0
+    const input5 = data.walletId?.length > 0
+    const input6 = data.contractAddress?.length > 0
+    const input7 = data.functionName?.length > 0
+    const input8 = data.functionParams?.length > 0
     console.log(input1)
     console.log(input2)
     console.log(input3)
     console.log(input4)
-    if (input1 && input2 && input3 && input4) {
+    if (nodeType === 'CALL_CANISTER' && input1 && input2 && input3 && input4) {
       console.log('mudando filled pra true')
       inputsFilled(true)
       return true
-    } else {
-      return false
     }
+    if (
+      nodeType === 'CALL_SOROBAN_SC' &&
+      input5 &&
+      input6 &&
+      input7 &&
+      input8
+    ) {
+      console.log('mudando filled pra true')
+      inputsFilled(true)
+      return true
+    }
+    return false
   }
 
   if (nodeType === 'CALL_CANISTER') {
@@ -222,6 +236,166 @@ const RenderActionNodeInputs = ({
                   onChange={(event) => {
                     const newData = { ...nodeData }
                     newData.callArguments = event.target.value
+                    handleChange(newData)
+                    inputsFilledTreatment(newData)
+                  }}
+                  className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51]`}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+  if (nodeType === 'CALL_SOROBAN_SC') {
+    return (
+      <>
+        <div className="mt-[25px]">
+          <div className="text-[12px] 2xl:text-[13px]">
+            <div className="">Inputs</div>
+            {!inputsFilledTreatment(nodeData) && (
+              <div className="text-[11px] text-[#cc5563] 2xl:text-[12px]">
+                Save the inputs to finish the node setup
+              </div>
+            )}
+            <div className="mt-[15px] grid gap-y-[12px] text-[#c5c4c49d]">
+              <div>
+                <div className="relative mb-[5px] flex items-center gap-x-[7px]">
+                  <div className="">Contract address</div>
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/header/help.svg"
+                    className="w-[15px] cursor-pointer rounded-full"
+                    onMouseEnter={() => setIsInfoCanisterId(true)}
+                    onMouseLeave={() => setIsInfoCanisterId(false)}
+                  ></img>
+                  {isInfoCanisterId && (
+                    <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px] ">
+                      Set the canister address that will be called
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="text"
+                  maxLength={500}
+                  placeholder=""
+                  name="cronExpression"
+                  value={nodeData?.contractAddress}
+                  onChange={(event) => {
+                    const newData = { ...nodeData }
+                    newData.contractAddress = event.target.value
+                    handleChange(newData)
+                    inputsFilledTreatment(newData)
+                  }}
+                  className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51]`}
+                />
+              </div>
+              <div>
+                <div className="relative mb-[5px] flex items-center gap-x-[7px]">
+                  <div className="">Soroban wallet</div>
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/header/help.svg"
+                    className="w-[15px] cursor-pointer rounded-full"
+                    onMouseEnter={() => setIsInfoICPCanisterWallet(true)}
+                    onMouseLeave={() => setIsInfoICPCanisterWallet(false)}
+                  ></img>
+                  {isInfoICPCanisterWallet && (
+                    <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                      Select the Soroban wallet that will be interacting with
+                      the contract. Ensure it's enough xlm{' '}
+                    </div>
+                  )}
+                </div>
+                {optionWallet?.length === 0 ? (
+                  <div className="text-[#cc5563]">
+                    You have no wallets.{' '}
+                    <span
+                      // onClick={() => {
+                      //   const basePath = pathname.split('/')[1]
+                      //   const workspaceId = pathname.split('/')[2]
+                      //   const newPath = `/${basePath}/${workspaceId}` // Constrói o novo caminho
+
+                      //   push(newPath)
+                      // }}
+                      className="cursor-pointer underline underline-offset-2 hover:text-[#0354EC]"
+                    >
+                      Deploy your first Soroban wallet
+                    </span>{' '}
+                    to continue with a canister creation.
+                  </div>
+                ) : (
+                  <Dropdown
+                    optionSelected={selectedOptionWallet}
+                    options={optionWallet}
+                    onValueChange={(value) => {
+                      const newData = { ...nodeData }
+                      newData.walletId = value.value
+                      handleChange(newData)
+                      inputsFilledTreatment(newData)
+                      setSelectedOptionWallet(value)
+                    }}
+                  />
+                )}
+              </div>
+              <div>
+                <div className="relative mb-[5px] flex items-center gap-x-[7px]">
+                  <div className="">Function name</div>
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/header/help.svg"
+                    className="w-[15px] cursor-pointer rounded-full"
+                    onMouseEnter={() => setIsInfoMethodNameId(true)}
+                    onMouseLeave={() => setIsInfoMethodNameId(false)}
+                  ></img>
+                  {isInfoMethodNameId && (
+                    <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                      Set the method name. Ex: "add"
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="text"
+                  maxLength={500}
+                  placeholder=""
+                  name="cronExpression"
+                  value={nodeData?.functionName}
+                  onChange={(event) => {
+                    const newData = { ...nodeData }
+                    newData.functionName = event.target.value
+                    handleChange(newData)
+                    inputsFilledTreatment(newData)
+                  }}
+                  className={`w-full rounded-md border border-transparent px-6 py-2 text-body-color placeholder-[#c5c4c472]  outline-none focus:border-primary  dark:bg-[#242B51]`}
+                />
+              </div>
+              <div>
+                <div className="relative mb-[5px] flex items-center gap-x-[7px]">
+                  <div className="">Call arguments</div>
+                  <img
+                    alt="ethereum avatar"
+                    src="/images/header/help.svg"
+                    className="w-[15px] cursor-pointer rounded-full"
+                    onMouseEnter={() => setCallArgumentsInfo(true)}
+                    onMouseLeave={() => setCallArgumentsInfo(false)}
+                  ></img>
+                  {callArgumentsInfo && (
+                    <div className="absolute right-0 flex w-[200px] -translate-y-[80%] translate-x-[1%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                      Ex: If the function accept a two params called a and b:{' '}
+                      {`[{"paramName": "a", "value": "2"}, {"paramName": "b", "value": "1"}]`}
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="text"
+                  maxLength={500}
+                  placeholder=""
+                  name="cronExpression"
+                  value={nodeData?.functionParams}
+                  onChange={(event) => {
+                    const newData = { ...nodeData }
+                    newData.functionParams = event.target.value
                     handleChange(newData)
                     inputsFilledTreatment(newData)
                   }}

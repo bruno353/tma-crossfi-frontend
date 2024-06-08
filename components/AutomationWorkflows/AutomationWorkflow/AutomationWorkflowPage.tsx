@@ -91,6 +91,17 @@ export const actionOptions = [
     actionType: 'CALL_CANISTER',
     pathSegment: '',
   },
+  {
+    name: 'Call smart-contract',
+    description: 'Interact with a smart-contract through the wallet select',
+    imgSource: '/images/workflows/paper.svg',
+    imgStyle: 'w-[18px] 2xl:w-[20px]',
+    imgStyleBoard: 'w-[11px] 2xl:w-[13px]',
+    type: 'Soroban',
+    abbreviationType: 'XLM',
+    actionType: 'CALL_SOROBAN_SC',
+    pathSegment: '',
+  },
 ]
 
 const triggerDefault = {
@@ -282,6 +293,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
 
     try {
       await createWorkflowTrigger(data, userSessionToken)
+      getData()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -327,6 +339,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
         nodesActionPosition: newNodesActionPosition,
       }
       setAutomationWorkflowSelected(newAutomatedWorkflowSet)
+      getData()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -345,6 +358,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
 
     try {
       const res = await editWorkflowTrigger(data, userSessionToken)
+      getData()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -426,6 +440,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     setNodeIsLoading('trigger')
     const { userSessionToken } = parseCookies()
 
+    dataNode.environment = 'testnet'
     const data = {
       id: nodeId,
       value: dataNode,
@@ -513,6 +528,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
       const res = await deleteNodeAction(data, userSessionToken)
       setAutomationWorkflowSelected(res)
       setAutomationWorkflowNodeSelected(null)
+      getData()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -552,6 +568,7 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
         },
       }
       setAutomationWorkflowSelected(newAutomatedWorkflowSet)
+      getData()
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)

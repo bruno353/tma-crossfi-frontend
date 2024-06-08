@@ -15,6 +15,7 @@ import { parseCookies } from 'nookies'
 import {
   AutomationWorkflowProps,
   NodeActionWorkflowProps,
+  NodeActionWorkflowType,
 } from '@/types/automation'
 import { editAutomationWorkflow } from '@/utils/api-automation'
 import { actionOptions, triggerOptions } from '../AutomationWorkflowPage'
@@ -22,6 +23,7 @@ import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { actionTypeToClass } from '../../../../types/consts/automation-workflow'
 import RenderActionNodeInputs from './RenderActionNodeInputs'
 import DeleteNodeModal from '../Modals/DeleteNodeModal'
+import { transformString } from '@/utils/functions'
 
 export interface ModalI {
   automationWorkflowSelected: AutomationWorkflowProps
@@ -69,13 +71,24 @@ const SidebarActionNodeWorkflow = ({
   )
 
   let optionWallet = []
-  optionWallet = automationWorkflowSelected?.icpWallets?.map((icpWallet) => {
-    const newValue = {
-      name: `${icpWallet.walletId}`,
-      value: icpWallet.id,
-    }
-    return newValue
-  })
+  optionWallet =
+    node?.type === NodeActionWorkflowType.CALL_CANISTER
+      ? automationWorkflowSelected?.icpWallets?.map((icpWallet) => {
+          const newValue = {
+            name: `${icpWallet.walletId}`,
+            value: icpWallet.id,
+          }
+          return newValue
+        }) || [] // Certifique-se de que a expressão retorna um array, mesmo que icpWallets seja undefined.
+      : automationWorkflowSelected?.workspace?.BlockchainWallets?.map(
+          (wallet) => {
+            const newValue = {
+              name: transformString(wallet?.stellarWalletPubK, 5),
+              value: wallet?.id,
+            }
+            return newValue
+          },
+        ) || []
 
   useEffect(() => {
     if (node?.value) {
@@ -148,6 +161,70 @@ const SidebarActionNodeWorkflow = ({
                   className={`${
                     option.type !== 'Internet Computer Protocol' && 'hidden'
                   }`}
+                >
+                  <div
+                    onClick={() => {
+                      // if the node was already created, either edit it or go back to the node
+                      if (node) {
+                        if (
+                          option.actionType ===
+                          String(
+                            automationWorkflowSelected?.nodeTriggerWorkflow
+                              ?.type,
+                          )
+                        ) {
+                          setIsEditingNode(false)
+                          handleSetTriggerOptionInfo('')
+                        } else {
+                          handleEditTrigger(option.actionType)
+                        }
+                      }
+                      // if not, create the node
+                      else {
+                        handleCreateNode(option.actionType)
+                      }
+                    }}
+                    className={`relative mb-[5px] flex cursor-pointer items-center gap-x-[10px] rounded-[7px] border-[0.5px] border-[#c5c4c423] bg-[#e6e5e51e] px-[10px] py-[9px] hover:bg-[#6f6f6f4b]`}
+                  >
+                    <img
+                      src={option.imgSource}
+                      alt="image"
+                      className={option.imgStyle}
+                    />
+                    <div className="text-center text-[13px] font-light 2xl:text-[14px]">
+                      {option.name}
+                    </div>
+                    {triggerOptionInfo === option.name && (
+                      <div className=" absolute left-0 top-0 w-[200px] -translate-y-[120%] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px]  font-normal text-[#c5c4c4]">
+                        <div>{option.description}</div>
+                      </div>
+                    )}
+                    {String(
+                      automationWorkflowSelected?.nodeTriggerWorkflow?.type,
+                    ) === option.actionType && (
+                      <div className="absolute right-4 my-auto h-[8px] w-[8px] rounded-full bg-[#642EE7]"></div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-[25px]">
+              <div className="mb-[7px] text-[12px] 2xl:text-[13px]">
+                Soroban
+              </div>
+              {actionOptions.map((option, index) => (
+                <div
+                  onClick={() => {
+                    // handleSidebarClick(option.pathSegment, option.option)
+                  }}
+                  onMouseEnter={() => {
+                    handleSetTriggerOptionInfo(option.name)
+                  }}
+                  onMouseLeave={() => {
+                    handleSetTriggerOptionInfo('')
+                  }}
+                  key={index}
+                  className={`${option.type !== 'Soroban' && 'hidden'}`}
                 >
                   <div
                     onClick={() => {

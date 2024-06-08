@@ -11,10 +11,12 @@
 //   updatedAt: string
 
 import { ICPWalletsProps } from './blockchain-app'
+import { WorkspaceProps } from './workspace'
 
 // }
-enum NodeActionWorkflowType {
+export enum NodeActionWorkflowType {
   CALL_CANISTER,
+  CALL_SOROBAN_SC,
 }
 enum NodeTriggerWorkflowType {
   CRON,
@@ -54,6 +56,7 @@ export interface AutomationWorkflowProps {
   nodesActionPosition: string[]
   icpWallets: ICPWalletsProps[]
   transactionsHistory: TransactionHistoryWorkflow[]
+  workspace: WorkspaceProps
   createdAt: string
   updatedAt: string
   activated: boolean
