@@ -274,7 +274,6 @@ const MainPage = ({ id }) => {
 
   const executeFunction = (wasmExports) => {
     // const argsArray = [BigInt('bruno'.trim())]
-    console.log('chamando')
     const func = wasmExports['add']
     if (!func) {
       toast.error('Function not found!')
@@ -313,12 +312,10 @@ const MainPage = ({ id }) => {
         userSessionToken,
         data,
       )
-      console.log('passei')
       const newContracts = [...blockchainContracts]
       const cntIndex = newContracts.findIndex(
         (cnt) => cnt.id === blockchainContractSelected?.id,
       )
-      console.log('passei 123')
       newContracts[cntIndex].wasm = res.contractWasm.data
 
       newContracts[cntIndex].consoleLogs =
@@ -338,7 +335,6 @@ const MainPage = ({ id }) => {
       ].consoleLogs.filter((cntfilter) => {
         return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
       })
-      console.log('passei 12345')
 
       setBlockchainContracts(newContracts)
       setBlockchainContractSelected(newContracts[cntIndex])
@@ -376,9 +372,6 @@ const MainPage = ({ id }) => {
 
       const out = extractAllErrorMessages(err.response.data.message)
 
-      console.log('out prisma')
-      console.log(out)
-
       const newContracts = [...blockchainContracts]
       const cntIndex = newContracts.findIndex(
         (cnt) => cnt.id === blockchainContractSelected?.id,
@@ -407,16 +400,12 @@ const MainPage = ({ id }) => {
         errorMessage = convertAnsiToHtml(errorMessage)
         errorDescription = convertAnsiToHtml(errorDescription)
 
-        console.log('mesnagem enviando pra pegar')
-        console.log(out[i])
         let lineError = extractTextMessageAndRemoveItems(
           out[i],
           '[0m\r\n\u001b[0m\u001b[1m\u001b[38;5;12m',
           '\u001b[0m ',
         )
         lineError = Number(lineError)
-        console.log('lineError')
-        console.log(errorDescription)
 
         console.log({ errorDescription, errorMessage, lineError })
         newContracts[cntIndex].consoleLogs.unshift({
@@ -1491,17 +1480,7 @@ impl SumContract {
                                               i < cntIns?.inputs?.length;
                                               i++
                                             ) {
-                                              console.log('comecemos')
-
-                                              console.log(
-                                                cntIns?.inputs[i].type,
-                                              )
-                                              console.log(
-                                                typeof cntIns?.inputs[i].value,
-                                              )
-                                              console.log(
-                                                'se tipagem comecar com i ou u, significa que é i32 ou u64 por exemplo, dai botar  aprimeira letra pt amaisucula',
-                                              )
+                                              // se tipagem comecar com i ou u, significa que é i32 ou u64 por exemplo, dai botar  aprimeira letra pt amaisucula
                                               let type = cntIns?.inputs[i].type
                                               let value =
                                                 cntIns?.inputs[i].value
