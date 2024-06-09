@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable dot-notation */
@@ -152,7 +153,11 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                 </a>
               ) : (
                 <a
-                  href={`https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`}
+                  href={
+                    sorobanEnvironment?.value === 'Testnet'
+                      ? 'https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}'
+                      : 'https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}'
+                  }
                   target="_blank"
                   rel="noreferrer"
                 >

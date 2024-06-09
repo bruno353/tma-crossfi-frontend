@@ -58,14 +58,17 @@ import NewCallFunctionModal from './Modals/CallFunctionModal'
 import DeployContractModal from './Modals/DeployContractModal'
 import ImportContractModal from './Modals/ImportContractModal'
 import BotHelperModal from './Modals/BotHelperModal'
-import { deployContractFreighter } from './Funcs/soroban-contract-deployer'
+import {
+  deployContractFreighter,
+  transactionContractFreighter,
+} from './Funcs/soroban-contract-deployer'
 import {
   setAllowed,
   isAllowed,
   getUserInfo,
   getNetwork,
 } from '@stellar/freighter-api'
-import { Networks } from '@stellar/stellar-sdk'
+import { nativeToScVal, Networks } from '@stellar/stellar-sdk'
 
 export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
@@ -118,7 +121,21 @@ const MainPage = ({ id }) => {
   const [isLoadingContracts, setIsLoadingContracts] = useState(true)
   const [isLoadingNewContract, setIsLoadingNewContract] = useState(false)
   const [isLoadingCompilation, setIsLoadingCompilation] = useState(false)
-  const [value, setValue] = useState('// start your code here')
+  const [value, setValue] = useState(
+    `
+  // start your code here
+  use soroban_sdk::{contractimpl, Env, contract};
+
+  #[contract]
+    pub struct SumContract;
+
+  #[contractimpl]
+    impl SumContract {
+    pub fn add(env: Env, a: i32, b: i32) -> i32 {
+    a + b
+    }
+  `,
+  )
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
 
   const [walletProvider, setWalletProvider] = useState<TypeWalletProvider>(
@@ -178,6 +195,8 @@ const MainPage = ({ id }) => {
   const onMount = (editor, highlightLine?: number) => {
     editorRef.current = editor
     editor.focus()
+    editor.deltaDecorations(decorationIds, [])
+    setDecorationIds([])
 
     if (highlightLine) {
       // Add the decoration to highlight line 10
@@ -202,7 +221,7 @@ const MainPage = ({ id }) => {
   const menuRef = useRef(null)
 
   async function writeCode(cntIndex: number, finalV: string) {
-    if (cntIndex < 0 || cntIndex >= blockchainContracts.length) {
+    if (cntIndex < 0 || cntIndex >= blockchainContracts?.length) {
       return
     }
 
@@ -210,7 +229,7 @@ const MainPage = ({ id }) => {
     let textToBuild = ''
 
     const intervalId = setInterval(() => {
-      if (index < finalV.length) {
+      if (index < finalV?.length) {
         textToBuild = textToBuild + finalV.charAt(index)
 
         setBlockchainContracts((prevContracts) => {
@@ -313,6 +332,12 @@ const MainPage = ({ id }) => {
         wasm: JSON.stringify(res.contractWasm.data),
         createdAt: String(new Date()),
       })
+
+      newContracts[cntIndex].consoleLogs = newContracts[
+        cntIndex
+      ].consoleLogs.filter((cntfilter) => {
+        return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
+      })
       console.log('passei 12345')
 
       setBlockchainContracts(newContracts)
@@ -359,8 +384,18 @@ const MainPage = ({ id }) => {
         (cnt) => cnt.id === blockchainContractSelected?.id,
       )
 
+      newContracts[cntIndex].contractInspections = []
+      newContracts[cntIndex].currentAddress = null
+      newContracts[cntIndex].currentChain = null
+
       newContracts[cntIndex].consoleLogs =
         newContracts[cntIndex].consoleLogs ?? []
+
+      newContracts[cntIndex].consoleLogs = newContracts[
+        cntIndex
+      ].consoleLogs.filter((cntfilter) => {
+        return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
+      })
 
       for (let i = 0; i < out?.length; i++) {
         let errorDescription = extractTextMessageSecondOcorrency(
@@ -431,6 +466,9 @@ const MainPage = ({ id }) => {
           desc: `${res.contractAddress}`,
           createdAt: String(new Date()),
         })
+        newContracts[cntIndex].ideContractDeploymentHistories.unshift(
+          res['history'],
+        )
 
         setBlockchainContracts(newContracts)
         setBlockchainContractSelected(newContracts[cntIndex])
@@ -564,7 +602,7 @@ const MainPage = ({ id }) => {
         userSessionToken,
       )
       const walletsToSet = []
-      for (let i = 0; i < res.length; i++) {
+      for (let i = 0; i < res?.length; i++) {
         walletsToSet.push({
           name: transformString(res[i].stellarWalletPubK, 5),
           value: res[i].id,
@@ -609,7 +647,21 @@ const MainPage = ({ id }) => {
     const data = {
       workspaceId: id,
       network: 'STELLAR',
-      code: '// write your code here',
+      code: `#![no_std]
+use soroban_sdk::{contractimpl, Env, contract};
+    
+#[contract]
+pub struct SumContract;
+    
+#[contractimpl]
+impl SumContract {
+  /// This is a simple sum smart-contract.
+  ///
+  /// start coding here
+  pub fn add(env: Env, a: i32, b: i32) -> i32 {
+    a + b
+  }
+}`,
       name: 'untitled',
     }
     try {
@@ -620,6 +672,24 @@ const MainPage = ({ id }) => {
         data,
       )
       setIsLoadingNewContract(false)
+      setLanguage('javascript')
+      if (monaco) {
+        monaco.editor.defineTheme('vs-dark', {
+          base: 'vs-dark',
+          inherit: true,
+          rules: [],
+          colors: {
+            'editor.background': '#1D2144',
+            'editor.foreground': '#FFFFFF',
+            'editor.lineHighlightBackground': '#dbdbdb1e',
+            'editorLineNumber.foreground': '#858585',
+            'editor.selectionBackground': '#0000FF20',
+          },
+        })
+        setTimeout(() => {
+          setLanguage('rust')
+        }, 1000)
+      }
       return res
     } catch (err) {
       console.log(err)
@@ -650,7 +720,7 @@ const MainPage = ({ id }) => {
       )
       newCnts[cntIndex].name = contractNameRef.current
       setBlockchainContracts(newCnts)
-
+      setBlockchainContractSelected(newCnts[cntIndex])
       await callAxiosBackend(
         'put',
         `/blockchain/functions/renameContract`,
@@ -871,7 +941,9 @@ const MainPage = ({ id }) => {
                 <div className="w-full min-w-[60%]">
                   <div className="flex w-full justify-between">
                     <div className="relative flex items-center gap-x-4 text-[14px]">
-                      <div>{blockchainContractSelected?.name}</div>
+                      <div className="max-w-[200px] overflow-x-auto whitespace-nowrap">
+                        {blockchainContractSelected?.name}
+                      </div>
                       <div
                         onClick={() => setLanguageSelectorOpen(true)}
                         className="my-auto mb-2 flex w-fit cursor-pointer items-center gap-x-[7px] rounded-md pl-2 pr-3 text-[14px] font-normal text-[#c5c4c4] hover:bg-[#c5c5c510]"
@@ -937,6 +1009,13 @@ const MainPage = ({ id }) => {
                             blockchainContractSelected?.contractInspections,
                           )
                           if (
+                            !blockchainWalletsSelected &&
+                            publickey === 'Wallet not Connected..'
+                          ) {
+                            toast.error('Connect a wallet to continue')
+                            return
+                          }
+                          if (
                             blockchainContractSelected?.contractInspections
                               ?.length > 0
                           ) {
@@ -960,10 +1039,17 @@ const MainPage = ({ id }) => {
                       <div
                         onClick={() => {
                           if (
+                            !blockchainWalletsSelected &&
+                            publickey === 'Wallet not Connected..'
+                          ) {
+                            toast.error('Connect a wallet to continue')
+                            return
+                          }
+                          if (
                             blockchainContractSelected?.contractInspections
                               ?.length > 0
                           ) {
-                            setOpenModalDeploy(true)
+                            setOpenModalImport(true)
                           }
                         }}
                         className={`${
@@ -973,7 +1059,7 @@ const MainPage = ({ id }) => {
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
                           (!blockchainContractSelected?.contractInspections ||
                             blockchainContractSelected?.contractInspections
-                              ?.length > 0) &&
+                              ?.length === 0) &&
                           '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
                         }`}
                       >
@@ -1069,7 +1155,7 @@ const MainPage = ({ id }) => {
                           ? blockchainWallets.find(
                               (obj) =>
                                 obj.id === blockchainWalletsSelected.value,
-                            ).stellarWalletPubK
+                            )?.stellarWalletPubK
                           : '0x'
                       }
                       walletFreighter={connect}
@@ -1132,7 +1218,7 @@ const MainPage = ({ id }) => {
                         !openConsole && '!h-full 2xl:!h-full'
                       }`}
                     >
-                      <div className="flex justify-between">
+                      <div className="grid justify-between gap-y-2 2xl:flex">
                         <div className="flex gap-x-[5px]">
                           <img
                             alt="ethereum avatar"
@@ -1170,7 +1256,7 @@ const MainPage = ({ id }) => {
                           </div>
                         )}
                       </div>
-                      <div className="mt-[20px] grid gap-y-[12px]">
+                      <div className="mt-[10px] grid gap-y-[12px] 2xl:mt-[20px]">
                         {blockchainContractSelected?.contractInspections?.map(
                           (cntIns, index) => (
                             <div
@@ -1307,7 +1393,7 @@ const MainPage = ({ id }) => {
                                   </div>
                                   <div className="flex gap-x-5">
                                     <div
-                                      onClick={() => {
+                                      onClick={async () => {
                                         if (
                                           !blockchainContractSelected.currentAddress
                                         ) {
@@ -1356,22 +1442,128 @@ const MainPage = ({ id }) => {
                                           )
                                         }
                                         if (!isContractCallLoading) {
-                                          const finalCntInsInput = []
-
-                                          for (
-                                            let i = 0;
-                                            i < cntIns?.inputs?.length;
-                                            i++
+                                          if (
+                                            walletProvider ===
+                                              TypeWalletProvider?.ACCELAR &&
+                                            blockchainWalletsSelected
                                           ) {
-                                            finalCntInsInput.push({
-                                              paramName: cntIns?.inputs[i].name,
-                                              value: cntIns?.inputs[i].value,
+                                            const finalCntInsInput = []
+
+                                            for (
+                                              let i = 0;
+                                              i < cntIns?.inputs?.length;
+                                              i++
+                                            ) {
+                                              finalCntInsInput.push({
+                                                paramName:
+                                                  cntIns?.inputs[i].name,
+                                                value: cntIns?.inputs[i].value,
+                                              })
+                                            }
+                                            callContract(
+                                              cntIns?.functionName,
+                                              finalCntInsInput,
+                                            )
+                                          } else if (
+                                            walletProvider ===
+                                              TypeWalletProvider?.FREIGHTER &&
+                                            publickey
+                                          ) {
+                                            const contractId =
+                                              blockchainContractSelected?.id
+                                            const address =
+                                              blockchainContractSelected?.currentAddress
+                                            const finalValues = []
+                                            const finalCntInsInput = []
+                                            for (
+                                              let i = 0;
+                                              i < cntIns?.inputs?.length;
+                                              i++
+                                            ) {
+                                              finalCntInsInput.push({
+                                                paramName:
+                                                  cntIns?.inputs[i].name,
+                                                value: cntIns?.inputs[i].value,
+                                              })
+                                            }
+                                            for (
+                                              let i = 0;
+                                              i < cntIns?.inputs?.length;
+                                              i++
+                                            ) {
+                                              console.log('comecemos')
+
+                                              console.log(
+                                                cntIns?.inputs[i].type,
+                                              )
+                                              console.log(
+                                                typeof cntIns?.inputs[i].value,
+                                              )
+                                              console.log(
+                                                'se tipagem comecar com i ou u, significa que é i32 ou u64 por exemplo, dai botar  aprimeira letra pt amaisucula',
+                                              )
+                                              let type = cntIns?.inputs[i].type
+                                              let value =
+                                                cntIns?.inputs[i].value
+                                              if (
+                                                cntIns?.inputs[i].type?.charAt(
+                                                  0,
+                                                ) === 'U' ||
+                                                cntIns?.inputs[i].type?.charAt(
+                                                  0,
+                                                ) === 'I'
+                                              ) {
+                                                type =
+                                                  cntIns?.inputs[
+                                                    i
+                                                  ].type.toLowerCase()
+                                                value = Number(
+                                                  cntIns?.inputs[i].value,
+                                                )
+                                              }
+                                              finalValues.push(
+                                                nativeToScVal(value, {
+                                                  type,
+                                                }),
+                                              )
+                                            }
+                                            const returnValue =
+                                              await transactionContractFreighter(
+                                                cntIns?.functionName,
+                                                blockchainContractSelected?.currentAddress,
+                                                selected.value.toUpperCase(),
+                                                optionsNetworkToPassphrase[
+                                                  selected.value.toUpperCase()
+                                                ],
+                                                finalValues,
+                                              )
+                                            const newContracts = [
+                                              ...blockchainContracts,
+                                            ]
+                                            const cntIndex =
+                                              newContracts.findIndex(
+                                                (cnt) => cnt.id === contractId,
+                                              )
+                                            newContracts[
+                                              cntIndex
+                                            ].consoleLogs.unshift({
+                                              type: 'contractCall',
+                                              functionName:
+                                                cntIns?.functionName,
+                                              args: finalCntInsInput.map(
+                                                (param) => param.value,
+                                              ),
+                                              responseValue:
+                                                JSON.parse(returnValue),
+                                              desc: address,
+                                              createdAt: String(new Date()),
                                             })
+
+                                            setBlockchainContracts(newContracts)
+                                            setBlockchainContractSelected(
+                                              newContracts[cntIndex],
+                                            )
                                           }
-                                          callContract(
-                                            cntIns?.functionName,
-                                            finalCntInsInput,
-                                          )
                                         }
                                       }}
                                       className={`${
@@ -1460,7 +1652,10 @@ const MainPage = ({ id }) => {
                       <div className="mt-[20px] grid gap-y-[12px]">
                         {blockchainContractSelected?.consoleLogs?.map(
                           (cnslLog, index) => (
-                            <div className="w-full max-w-[70%]" key={index}>
+                            <div
+                              className="w-full max-w-[98%] 2xl:max-w-[70%]"
+                              key={index}
+                            >
                               {cnslLog?.type === 'error' && (
                                 <div
                                   onMouseEnter={() => {
@@ -1532,7 +1727,7 @@ const MainPage = ({ id }) => {
                                         )
                                       }}
                                       src="/images/header/arrow-gray.svg"
-                                      className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                      className={`ml-1 w-[12px] cursor-pointer rounded-full transition-transform duration-150 ${
                                         cnslLog?.isOpen && 'rotate-180'
                                       }`}
                                     ></img>
@@ -1612,7 +1807,7 @@ const MainPage = ({ id }) => {
                                         )
                                       }}
                                       src="/images/header/arrow-gray.svg"
-                                      className={`w-[12px]  cursor-pointer rounded-full transition-transform duration-150 ${
+                                      className={`ml-1 w-[12px] cursor-pointer rounded-full transition-transform duration-150 ${
                                         cnslLog?.isOpen && 'rotate-180'
                                       }`}
                                     ></img>
@@ -1947,6 +2142,7 @@ const MainPage = ({ id }) => {
                       newContract.consoleLogs = []
                       const newCnts = [...blockchainContracts, newContract]
                       setBlockchainContracts(newCnts)
+                      setBlockchainContractSelected(newContract)
                     }
                   }}
                   className={`mx-auto ${

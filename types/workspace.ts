@@ -1,3 +1,4 @@
+import { BlockchainWalletProps } from './blockchain-app'
 import { UserProps } from './user'
 
 export enum WorkspaceType {
@@ -22,6 +23,7 @@ export interface WorkspaceProps {
   logoURL?: string
   finalURL?: string
   type: WorkspaceType
+  BlockchainWallets: BlockchainWalletProps[]
   createdAt: string
   updatedAt: string
   icpWalletPubKPrincipal: string

@@ -14,7 +14,6 @@ import { parseCookies } from 'nookies'
 import CntDeploymentHistoryModal from './CntDeploymentHistoryModal'
 import { transformString, wait } from '@/utils/functions'
 import { SmileySad } from 'phosphor-react'
-import { requestAccess, setAllowed, isConnected } from '@stellar/freighter-api'
 import { checkConnection, retrievePublicKey } from '../Funcs/freighter'
 
 export interface MenuI {
@@ -123,7 +122,21 @@ const Sidebar = ({
     const data = {
       workspaceId: id,
       network: 'STELLAR',
-      code: '// write your code here',
+      code: `#![no_std]
+use soroban_sdk::{contractimpl, Env, contract};
+    
+#[contract]
+pub struct SumContract;
+    
+#[contractimpl]
+impl SumContract {
+  /// This is a simple sum smart-contract.
+  ///
+  /// start coding here
+  pub fn add(env: Env, a: i32, b: i32) -> i32 {
+    a + b
+  }
+}`,
       name: 'untitled',
     }
     try {
@@ -263,7 +276,9 @@ const Sidebar = ({
                       classNameForPopUpBox="!translate-y-[35px]"
                     />
                   ) : (
-                    <div className="text-[#c5c4c4]">create a wallet </div>
+                    <div className="my-auto mt-1 text-[#c5c4c4]">
+                      create a wallet{' '}
+                    </div>
                   )}
 
                   <a href={`/workspace/${id}/blockchain-wallets`}>
@@ -353,7 +368,13 @@ const Sidebar = ({
               setIsCntModalOpen('')
             }}
           >
-            <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+            <div
+              className={`grid ${
+                isContractsDeploymentHistoryListOpen
+                  ? 'max-h-[calc(10vh)]'
+                  : 'max-h-[calc(18vh)]'
+              }   gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(20vh)]`}
+            >
               {blockchainContracts?.map((cnt, index) => (
                 <div
                   onClick={() => {
@@ -501,7 +522,13 @@ const Sidebar = ({
               <>
                 {blockchainContractSelected?.ideContractDeploymentHistories
                   ?.length > 0 ? (
-                  <div className="grid max-h-[calc(20vh)] gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md ">
+                  <div
+                    className={`grid ${
+                      isContractsListOpen
+                        ? 'max-h-[calc(11vh)]'
+                        : '!max-h-[calc(20vh)]'
+                    }  gap-y-[2px] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(20vh)]`}
+                  >
                     {blockchainContractSelected?.ideContractDeploymentHistories.map(
                       (cntHistory, index) => {
                         return (
@@ -530,7 +557,7 @@ const Sidebar = ({
                                 })
                               }
                             }}
-                            className={`relative  flex items-center rounded-md border border-transparent bg-transparent px-2 text-[14px] hover:bg-[#dbdbdb1e] ${
+                            className={`relative flex items-center rounded-md border border-transparent bg-transparent px-2 py-1 text-[14px] hover:bg-[#dbdbdb1e] 2xl:py-0 ${
                               isCntDeploymentHistoryModalOpen ===
                                 cntHistory?.id && '!bg-[#dbdbdb1e]'
                             }`}
@@ -538,9 +565,9 @@ const Sidebar = ({
                           >
                             <div className="my-auto w-[80%] max-w-[100%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent text-[13px] outline-none focus:border-primary">
                               {' '}
-                              {transformString(cntHistory?.contractAddress, 3)}
+                              {transformString(cntHistory?.contractAddress, 4)}
                             </div>
-                            <div className="my-auto text-[12px] text-[#c5c4c4]">
+                            <div className="my-auto whitespace-nowrap text-[10px] text-[#c5c4c4] 2xl:text-[12px]">
                               {String(
                                 new Date(
                                   cntHistory?.createdAt,
@@ -578,11 +605,10 @@ const Sidebar = ({
             )}
             {isCntDeploymentHistoryModalOpen?.length > 0 && divPosition && (
               <div
-                className="absolute z-50"
+                className="absolute z-50 -translate-y-[100%] translate-x-[120px] 2xl:translate-y-[10px]"
                 style={{
                   top: `${divPosition.top}px`,
                   left: `${divPosition.left}px`,
-                  transform: 'translateY(10px) translateX(120px)',
                 }}
               >
                 <CntDeploymentHistoryModal

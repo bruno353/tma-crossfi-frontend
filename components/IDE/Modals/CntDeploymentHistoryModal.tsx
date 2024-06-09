@@ -30,7 +30,8 @@ const CntDeploymentHistoryModal = ({
             <img
               alt="ethereum avatar"
               src={
-                ideContractDeploymentHistories.userWorkspace.user.profilePicture
+                ideContractDeploymentHistories?.userWorkspace?.user
+                  ?.profilePicture
               }
               className="w-[25px] rounded-full"
             ></img>
