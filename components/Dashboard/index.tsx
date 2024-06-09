@@ -108,10 +108,10 @@ const Dashboard = () => {
                     Created at: {workspace.createdAt}
                   </div>
                   <img
-                    src={workflowTypeToOptions[workspace?.type].imgSource}
+                    src={workflowTypeToOptions[workspace?.type]?.imgSource}
                     alt="image"
                     className={`absolute right-2 top-2 ${
-                      workflowTypeToOptions[workspace?.type].imgStyleTitle
+                      workflowTypeToOptions[workspace?.type]?.imgStyleTitle
                     }`}
                   />
                 </div>
