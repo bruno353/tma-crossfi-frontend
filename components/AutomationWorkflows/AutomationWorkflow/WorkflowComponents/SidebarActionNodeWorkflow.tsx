@@ -92,8 +92,6 @@ const SidebarActionNodeWorkflow = ({
 
   useEffect(() => {
     if (node?.value) {
-      console.log('the node value')
-      console.log(node?.value)
       setSelectedData(JSON.parse(node?.value))
     }
   }, [node])

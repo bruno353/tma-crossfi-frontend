@@ -65,7 +65,6 @@ const WorkflowsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
   }, [isDeleteUserOpen])
 
   function handleClickApp(id: string, event) {
-    console.log('cliquei no app ism')
     if (!editRef?.current?.contains(event.target)) {
       push(`${pathname}/${id}`)
     }

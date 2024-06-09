@@ -161,24 +161,18 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
     [],
   )
   const handleNodeRemove = (nodeIdToRemove) => {
-    console.log('new test')
+    console.log(nodeIdToRemove)
   }
 
   const handleNodeSelect = (nodeIdToSelect) => {
-    console.log('handleNodeSelect')
-    console.log(nodeIdToSelect)
     setAutomationWorkflowNodeSelected(nodeIdToSelect)
   }
 
   const handleNewNode = (id) => {
-    console.log('id: ' + id)
     setAutomationWorkflowNodeSelected('newNode')
 
     const newNodes = [...nodes]
     const newEdges = []
-
-    console.log('nodes')
-    console.log(newNodes)
 
     const nodeIndex = newNodes.findIndex((nd) => {
       return nd.id === id
@@ -406,28 +400,18 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
         newEdges.push(edgeObj)
       }
     }
-    console.log('new edges to set')
-    console.log(newEdges)
-    console.log('new nodes to set - here')
-    console.log(nodes)
     setReactFlowEdges(newEdges)
     setNodes(newNodeOrder)
   }
 
   function verifyNodesValue(data: AutomationWorkflowProps) {
-    console.log('entrei para vali')
     const actionNodes = data.nodeActionWorkflow
     const invalidNodes = !!actionNodes.find((nd) => !nd['value'])
     const invalidTrigger = !data.nodeTriggerWorkflow?.value
 
     if (invalidNodes || invalidTrigger) {
-      console.log('invalido')
-      console.log(invalidNodes)
-      console.log(invalidTrigger)
-      console.log(data.nodeTriggerWorkflow?.value)
       setWorkflowReadyToPublish(false)
     } else {
-      console.log('tudo valido')
       setWorkflowReadyToPublish(true)
     }
   }
@@ -610,7 +594,6 @@ const AutomationWorkflowPage = ({ id, workspaceId }) => {
           <div
             onClick={() => {
               const basePath = pathname.split('/')[1]
-              console.log('the bash pathhhh ' + basePath)
               const newPath = `/${basePath}/${workspaceId}/llm-apps` // Constrói o novo caminho
               push(newPath)
             }}

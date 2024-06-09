@@ -55,8 +55,6 @@ const RenderActionNodeInputs = ({
   }, [nodeData])
 
   function inputsFilledTreatment(data: any) {
-    console.log('fazendo validacao filled')
-    console.log(data)
     const input1 = data.canisterId?.length > 0
     const input2 = data.icpWalletId?.length > 0
     const input3 = data.methodName?.length > 0
@@ -65,12 +63,7 @@ const RenderActionNodeInputs = ({
     const input6 = data.contractAddress?.length > 0
     const input7 = data.functionName?.length > 0
     const input8 = data.functionParams?.length > 0
-    console.log(input1)
-    console.log(input2)
-    console.log(input3)
-    console.log(input4)
     if (nodeType === 'CALL_CANISTER' && input1 && input2 && input3 && input4) {
-      console.log('mudando filled pra true')
       inputsFilled(true)
       return true
     }
@@ -81,7 +74,6 @@ const RenderActionNodeInputs = ({
       input7 &&
       input8
     ) {
-      console.log('mudando filled pra true')
       inputsFilled(true)
       return true
     }
