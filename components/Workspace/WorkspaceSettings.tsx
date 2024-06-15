@@ -89,7 +89,7 @@ const WorkspaceSettings = ({
               type="text"
               id="workspaceName"
               name="workspaceName"
-              value={workflowTypeToOptions[workspace?.type].name}
+              value={workflowTypeToOptions[workspace?.type]?.name}
               className="mt-[10px] w-fit rounded-md border border-transparent px-6 py-2 text-[14px] text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
             />
           </div>

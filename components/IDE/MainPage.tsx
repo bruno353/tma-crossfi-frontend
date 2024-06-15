@@ -51,6 +51,7 @@ import {
   extractTextMessageSecondOcorrency,
   getValueBetweenStrings,
   transformString,
+  wait,
 } from '@/utils/functions'
 import Sidebar from './Modals/Sidebar'
 import * as StellarSdk from '@stellar/stellar-sdk'
@@ -220,15 +221,21 @@ const MainPage = ({ id }) => {
   }
   const menuRef = useRef(null)
 
-  async function writeCode(cntIndex: number, finalV: string) {
+  async function writeCode(
+    cntIndex: number,
+    finalV: string,
+    contractId: string,
+  ) {
+    console.log('Chamando write code')
     if (cntIndex < 0 || cntIndex >= blockchainContracts?.length) {
+      console.log('tem problema de index')
       return
     }
 
     let index = 0
     let textToBuild = ''
 
-    const intervalId = setInterval(() => {
+    const intervalId = setInterval(async () => {
       if (index < finalV?.length) {
         textToBuild = textToBuild + finalV.charAt(index)
 
@@ -242,6 +249,8 @@ const MainPage = ({ id }) => {
         index++
       } else {
         clearInterval(intervalId)
+        await wait(500)
+        saveContract(contractId)
       }
     }, 5)
   }
@@ -834,6 +843,7 @@ impl SumContract {
   }
 
   const saveContracts = (contractId) => {
+    console.log('save contract was called')
     dispatch({ type: 'ADD_CONTRACT', payload: contractId })
     clearTimeout(saveTimeoutRef.current)
     saveTimeoutRef.current = setTimeout(() => {
@@ -1176,7 +1186,8 @@ impl SumContract {
                     />
                     <BotHelperModal
                       isOpen={openModalBotHelper}
-                      onUpdateM={(response, contractId) => {
+                      onUpdateM={async (response, contractId) => {
+                        console.log('Chamando on update bot')
                         const finalV = getValueBetweenStrings(
                           response,
                           '```rust\n',
@@ -1186,9 +1197,8 @@ impl SumContract {
                         const cntIndex = newContracts.findIndex(
                           (cnt) => cnt.id === contractId,
                         )
-                        writeCode(cntIndex, finalV)
-                        saveContracts(contractId)
                         setOpenModalBotHelper(false)
+                        await writeCode(cntIndex, finalV, contractId)
                       }}
                       onClose={() => {
                         setOpenModalBotHelper(false)
