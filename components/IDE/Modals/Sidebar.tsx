@@ -411,7 +411,7 @@ impl SumContract {
                     <input
                       value={contractName}
                       ref={nameRef}
-                      className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary"
+                      className="w-[75%] max-w-[75%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary 2xl:w-[80%] 2xl:max-w-[80%]"
                       onChange={(e) => {
                         if (e.target.value.length < 50) {
                           setContractName(e.target.value)
@@ -420,7 +420,7 @@ impl SumContract {
                       autoFocus
                     />
                   ) : (
-                    <div className="w-[80%] max-w-[80%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary">
+                    <div className="w-[75%] max-w-[75%] overflow-hidden truncate text-ellipsis whitespace-nowrap border border-transparent bg-transparent outline-none focus:border-primary 2xl:w-[80%] 2xl:max-w-[80%]">
                       {' '}
                       {cnt?.name}{' '}
                     </div>
