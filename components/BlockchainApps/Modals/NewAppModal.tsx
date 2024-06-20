@@ -30,6 +30,13 @@ export const optionsNetwork = [
     imageSrc: '/images/workspace/stellar-new.svg',
     imageStyle: 'w-[22px]',
   },
+  {
+    name: 'Crossfi',
+    value: 'CROSSFI',
+    token: 'XFI',
+    imageSrc: '/images/workspace/crossfi-2.png',
+    imageStyle: 'w-[22px]',
+  },
 ]
 
 const NewAppModal = ({ isOpen, onUpdateM, onClose, workspaceId }) => {

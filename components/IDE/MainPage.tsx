@@ -101,6 +101,17 @@ export const optionsNetwork = [
   },
 ]
 
+export const optionsNetworkCrossfi = [
+  {
+    name: 'Testnet',
+    value: 'Testnet',
+  },
+]
+
+export const crossfiNetworkToRpc = {
+  Testnet: 'https://tendermint-rpc.testnet.ms',
+}
+
 const contractReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_CONTRACT':

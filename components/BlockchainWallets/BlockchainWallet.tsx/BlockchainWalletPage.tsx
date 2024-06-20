@@ -33,6 +33,7 @@ import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import {
   sorobanNetworkToRpc,
   optionsNetwork as sorobanOption,
+  optionsNetworkCrossfi as crossfiOption,
 } from '@/components/IDE/MainPage'
 import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
 import { callAxiosBackend } from '@/utils/general-api'
@@ -48,6 +49,10 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
 
   const [sorobanEnvironment, setSorobanEnvironment] = useState<ValueObject>(
     sorobanOption[1],
+  )
+
+  const [crossfiEnvironment, setCrossfiEnvironment] = useState<ValueObject>(
+    crossfiOption[0],
   )
 
   const { workspace, user } = useContext(AccountContext)
@@ -138,7 +143,7 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   {blockchainWallet?.name}
                 </div>
               </div>
-              {blockchainWallet?.network === 'ICP' ? (
+              {blockchainWallet?.network === 'ICP' && (
                 <a
                   href={`https://dashboard.internetcomputer.org/account/${blockchainWallet?.icpWalletPubKId}`}
                   target="_blank"
@@ -151,12 +156,13 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     </span>
                   </div>
                 </a>
-              ) : (
+              )}
+              {blockchainWallet?.network === 'STELLAR' && (
                 <a
                   href={
                     sorobanEnvironment?.value === 'Testnet'
-                      ? 'https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}'
-                      : 'https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}'
+                      ? `https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
+                      : `https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
                   }
                   target="_blank"
                   rel="noreferrer"
@@ -169,7 +175,25 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   </div>
                 </a>
               )}
-              {blockchainWallet?.network === 'ICP' ? (
+              {blockchainWallet?.network === 'CROSSFI' && (
+                <a
+                  href={
+                    sorobanEnvironment?.value === 'Testnet'
+                      ? 'https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}'
+                      : 'https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}'
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="mt-2 text-[14px] ">
+                    Public Key:{' '}
+                    <span className="hover:text-[#0354EC]">
+                      {blockchainWallet?.crossfiWalletPubK}
+                    </span>
+                  </div>
+                </a>
+              )}
+              {blockchainWallet?.network === 'ICP' && (
                 <div className="relative flex w-fit gap-x-[5px]">
                   <div className="mt-2 text-[14px] ">
                     Identity balance:{' '}
@@ -190,7 +214,8 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     </div>
                   )}
                 </div>
-              ) : (
+              )}
+              {blockchainWallet?.network === 'STELLAR' && (
                 <div>
                   <div className="relative flex w-fit gap-x-[5px]">
                     <div className="mt-3 text-[14px] ">
@@ -220,6 +245,30 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   )}
                 </div>
               )}
+              {blockchainWallet?.network === 'CROSSFI' && (
+                <div>
+                  <div className="relative flex w-fit gap-x-[5px]">
+                    <div className="mt-3 text-[14px] ">
+                      Wallet balance:{' '}
+                      {/* <span>{blockchainWallet?.balance} XFI</span> */}
+                    </div>
+                    <img
+                      alt="ethereum avatar"
+                      src="/images/header/help.svg"
+                      className="w-[17px] cursor-pointer rounded-full"
+                      onMouseEnter={() => setIsInfoBalanceOpen(true)}
+                      onMouseLeave={() => setIsInfoBalanceOpen(false)}
+                    ></img>
+                    {isInfoBalanceOpen && (
+                      <div className="absolute right-0 flex w-fit min-w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                        To fund your wallet, its necessary to transfer XFI
+                        tokens to your address. You can buy XFI tokens in
+                        exchanges as Uniswap
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
             {workspace?.isUserAdmin && (
               <div className="grid gap-y-6">
@@ -236,6 +285,21 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     <Dropdown
                       optionSelected={sorobanEnvironment}
                       options={sorobanOption}
+                      onValueChange={(value) => {
+                        getData(sorobanNetworkToRpc[value.value])
+                        setSorobanEnvironment(value)
+                      }}
+                      classNameForDropdown="!px-4 !pr-2 !py-1 !text-[#fff] !text-[14px]"
+                      classNameForPopUp="!px-1 !pr-2 !py-1"
+                      classNameForPopUpBox="!translate-y-[35px]"
+                    />
+                  </div>
+                )}
+                {blockchainWallet?.network === 'CROSSFI' && (
+                  <div>
+                    <Dropdown
+                      optionSelected={crossfiEnvironment}
+                      options={crossfiOption}
                       onValueChange={(value) => {
                         getData(sorobanNetworkToRpc[value.value])
                         setSorobanEnvironment(value)
