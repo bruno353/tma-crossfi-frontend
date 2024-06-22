@@ -1,11 +1,63 @@
-export const LANGUAGE_VERSIONS = {
+import { NetworkIDE } from '../blockchain-app'
+
+export const LANGUAGE_VERSIONS_STELLAR = {
   //   javascript: '18.15.0',
   //   typescript: '5.0.3',
   //   python: '3.10.0',
   //   java: '15.0.2',
   //   csharp: '6.12.0',
   rust: '1.58.0',
-  solidity: 'soon',
+  sol: 'soon',
+}
+
+export const LANGUAGE_VERSIONS_CROSSFI = {
+  //   javascript: '18.15.0',
+  //   typescript: '5.0.3',
+  //   python: '3.10.0',
+  //   java: '15.0.2',
+  //   csharp: '6.12.0',
+  sol: '0.6.0',
+  rust: 'soon',
+}
+
+export const CHAIN_SPECS = {
+  STELLAR: {
+    value: NetworkIDE.STELLAR,
+    text: 'Soroban',
+    imgSource: '/images/workspace/stellar-new.svg',
+    imgStyle: 'w-[16px]',
+  },
+  CROSSFI: {
+    value: NetworkIDE.CROSSFI,
+    text: 'Crossfi',
+    imgSource: '/images/workspace/crossfi-2.png',
+    imgStyle: 'w-[18px]',
+  },
+}
+
+export const CHAIN_TO_TEMPLATE = {
+  STELLAR: `#![no_std]
+use soroban_sdk::{contractimpl, Env, contract};
+    
+#[contract]
+pub struct SumContract;
+    
+#[contractimpl]
+impl SumContract {
+  /// This is a simple sum smart-contract.
+  ///
+  /// start coding here
+  pub fn add(env: Env, a: i32, b: i32) -> i32 {
+    a + b
+  }
+}`,
+  CROSSFI: `// SPDX-License-Identifier: MIT
+// compiler version must be greater than or equal to 0.8.24 and less than 0.9.0
+pragma solidity ^0.8.24;
+
+contract HelloWorld {
+    string public greet = "Hello World!";
+}`,
 }
 
 export const CODE_SNIPPETS = {

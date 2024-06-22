@@ -34,6 +34,7 @@ import {
   sorobanNetworkToRpc,
   optionsNetwork as sorobanOption,
   optionsNetworkCrossfi as crossfiOption,
+  crossfiNetworkToRpc,
 } from '@/components/IDE/MainPage'
 import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
 import { callAxiosBackend } from '@/utils/general-api'
@@ -176,22 +177,17 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                 </a>
               )}
               {blockchainWallet?.network === 'CROSSFI' && (
-                <a
-                  href={
-                    sorobanEnvironment?.value === 'Testnet'
-                      ? 'https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}'
-                      : 'https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}'
-                  }
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <div className="mt-2 text-[14px] ">
-                    Public Key:{' '}
-                    <span className="hover:text-[#0354EC]">
-                      {blockchainWallet?.crossfiWalletPubK}
-                    </span>
-                  </div>
-                </a>
+                <div className="mt-2 text-[14px] ">
+                  Public Key:{' '}
+                  <span className="hover:text-[#0354EC]">
+                    {blockchainWallet?.crossfiWalletPubK}
+                  </span>{' '}
+                  /
+                  <span className="hover:text-[#0354EC]">
+                    {' '}
+                    {blockchainWallet?.evmCrossfiWalletPubK}{' '}
+                  </span>
+                </div>
               )}
               {blockchainWallet?.network === 'ICP' && (
                 <div className="relative flex w-fit gap-x-[5px]">
@@ -250,7 +246,10 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   <div className="relative flex w-fit gap-x-[5px]">
                     <div className="mt-3 text-[14px] ">
                       Wallet balance:{' '}
-                      {/* <span>{blockchainWallet?.balance} XFI</span> */}
+                      <span>
+                        {String(Number(blockchainWallet?.balance) / 10 ** 18)}{' '}
+                        XFI
+                      </span>
                     </div>
                     <img
                       alt="ethereum avatar"
@@ -301,8 +300,8 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                       optionSelected={crossfiEnvironment}
                       options={crossfiOption}
                       onValueChange={(value) => {
-                        getData(sorobanNetworkToRpc[value.value])
-                        setSorobanEnvironment(value)
+                        getData(crossfiNetworkToRpc[value.value])
+                        setCrossfiEnvironment(value)
                       }}
                       classNameForDropdown="!px-4 !pr-2 !py-1 !text-[#fff] !text-[14px]"
                       classNameForPopUp="!px-1 !pr-2 !py-1"
@@ -345,7 +344,8 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     onUpdate={getData}
                     blockchainWalletId={blockchainWallet?.id}
                     blockchainWallet={blockchainWallet}
-                    sorobanEnvironment={sorobanEnvironment.value}
+                    sorobanEnvironment={sorobanEnvironment?.value}
+                    crossfiEnvironment={crossfiEnvironment?.value}
                   />
                 </div>
               )}

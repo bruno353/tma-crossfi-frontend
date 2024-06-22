@@ -133,7 +133,9 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                         )}
                         <div className=" overflow-hidden truncate text-ellipsis whitespace-nowrap">
                           {transformString(
-                            wallet.icpWalletPubKId || wallet.stellarWalletPubK,
+                            wallet.icpWalletPubKId ||
+                              wallet.stellarWalletPubK ||
+                              wallet.crossfiWalletPubK,
                           )}
                         </div>
                         <img
@@ -147,7 +149,8 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                             event.stopPropagation()
                             navigator.clipboard.writeText(
                               wallet.icpWalletPubKId ||
-                                wallet.stellarWalletPubK,
+                                wallet.stellarWalletPubK ||
+                                wallet.crossfiWalletPubK,
                             )
                           }}
                         ></img>

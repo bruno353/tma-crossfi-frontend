@@ -1,4 +1,5 @@
 import { AutomationWorkflowProps } from '@/types/automation'
+import { NetworkIDE } from '@/types/blockchain-app'
 import { ChannelProps, ConversationProps } from '@/types/chat'
 import { UserProps } from '@/types/user'
 import { WorkspaceProps } from '@/types/workspace'
@@ -31,6 +32,9 @@ interface CreateUserContextProps {
   setAutomationWorkflowNodeSelected: (
     automationWorkflowNodeSelected: string | undefined,
   ) => void
+
+  ideChain: NetworkIDE | undefined
+  setIDEChain: (ideChain: NetworkIDE | undefined) => void
 
   automationWorkflowSelected: AutomationWorkflowProps | undefined
   setAutomationWorkflowSelected: (
@@ -70,6 +74,8 @@ export default function AccountContextProvider({
     useState<AutomationWorkflowProps>()
   const [nodeIsLoading, setNodeIsLoading] = useState<string>('')
   const [nodeHasChange, setNodeHasChange] = useState<string>('')
+  const [ideChain, setIDEChain] = useState<NetworkIDE>(NetworkIDE.STELLAR)
+
   const [reactFlowEdges, setReactFlowEdges] = useState<any>([])
 
   const [dm, setDm] = useState<ChannelProps>()
@@ -80,6 +86,8 @@ export default function AccountContextProvider({
       value={{
         user,
         setUser,
+        ideChain,
+        setIDEChain,
         nodeHasChange,
         setNodeHasChange,
         automationWorkflowSelected,

@@ -32,6 +32,8 @@ import NewICPWalletModal from '../Modals/NewICPWalletModal'
 import EditICPWalletModal from '../Modals/EditICPWalletModal'
 import FundICPWalletModal from '../Modals/FundICPWalletModal'
 import TransferICPModal from '../Modals/TransferICPModal'
+import TransferXFIModal from '../Modals/TransferXFIModal'
+import { crossfiNetworkEVMToRpc } from '@/components/IDE/MainPage'
 
 export interface ModalI {
   wallets: ICPWalletsProps[]
@@ -40,6 +42,7 @@ export interface ModalI {
   isUserAdmin: boolean
   onUpdate(): void
   sorobanEnvironment?: string
+  crossfiEnvironment?: string
 }
 
 const TransactionsRender = ({
@@ -49,6 +52,7 @@ const TransactionsRender = ({
   blockchainWalletId,
   blockchainWallet,
   sorobanEnvironment,
+  crossfiEnvironment,
 }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
@@ -56,6 +60,8 @@ const TransactionsRender = ({
   const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
   const [isEditWalletOpen, setIsEditWalletOpen] = useState<any>()
   const [isTransferOpen, setIsTransferOpen] = useState<any>()
+  const [isTransferCrossfiOpen, setIsTransferCrossfiOpen] = useState<any>()
+
   const [isDeployNewCanisterWalletOpen, setIsDeployNewCanisterWalletOpen] =
     useState<boolean>(false)
   const [isFundInfoOpen, setIsFundInfoOpen] = useState<any>()
@@ -107,7 +113,11 @@ const TransactionsRender = ({
         <div className="mb-[18px]">
           <div
             onClick={() => {
-              setIsTransferOpen(true)
+              if (blockchainWallet?.network === 'ICP') {
+                setIsTransferOpen(true)
+              } else if (blockchainWallet?.network === 'CROSSFI') {
+                setIsTransferCrossfiOpen(true)
+              }
             }}
             className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
           >
@@ -142,6 +152,20 @@ const TransactionsRender = ({
           onUpdateM={() => {
             onUpdate()
             setIsTransferOpen(false)
+          }}
+          blockchainWallet={blockchainWallet}
+        />
+      )}
+      {isTransferCrossfiOpen && (
+        <TransferXFIModal
+          isOpen={isTransferCrossfiOpen}
+          rpcEnvironment={crossfiNetworkEVMToRpc[crossfiEnvironment]}
+          onClose={() => {
+            setIsTransferCrossfiOpen(false)
+          }}
+          onUpdateM={() => {
+            onUpdate()
+            setIsTransferCrossfiOpen(false)
           }}
           blockchainWallet={blockchainWallet}
         />

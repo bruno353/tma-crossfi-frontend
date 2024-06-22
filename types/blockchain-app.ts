@@ -110,6 +110,11 @@ export interface BlockchainWalletProps {
   updatedAt: string
 }
 
+export enum NetworkIDE {
+  STELLAR = 'STELLAR',
+  CROSSFI = 'CROSSFI',
+}
+
 export interface BlockchainAppProps {
   id: string
   name: string

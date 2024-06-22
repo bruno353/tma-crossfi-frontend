@@ -207,6 +207,7 @@ const TransferICPModal = ({
               <ConfirmFundICPWalletModal
                 amount={fundAmount}
                 wallet={addressTo}
+                token={'ICP'}
                 onConfirmTransaction={() => {
                   setIsConfirmTransactionOpen(false)
                   handleFund()

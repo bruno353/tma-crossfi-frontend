@@ -36,6 +36,7 @@ import {
   ConsoleCompile,
   ConsoleLog,
   ContractInspectionI,
+  NetworkIDE,
 } from '@/types/blockchain-app'
 // import NewAppModal from './Modals/NewAppModal'
 import Editor, { useMonaco } from '@monaco-editor/react'
@@ -70,6 +71,11 @@ import {
   getNetwork,
 } from '@stellar/freighter-api'
 import { nativeToScVal, Networks } from '@stellar/stellar-sdk'
+import {
+  CHAIN_TO_TEMPLATE,
+  LANGUAGE_VERSIONS_CROSSFI,
+  LANGUAGE_VERSIONS_STELLAR,
+} from '@/types/consts/ide'
 
 export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
@@ -112,6 +118,10 @@ export const crossfiNetworkToRpc = {
   Testnet: 'https://tendermint-rpc.testnet.ms',
 }
 
+export const crossfiNetworkEVMToRpc = {
+  Testnet: 'https://rpc.testnet.ms',
+}
+
 const contractReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_CONTRACT':
@@ -133,21 +143,6 @@ const MainPage = ({ id }) => {
   const [isLoadingContracts, setIsLoadingContracts] = useState(true)
   const [isLoadingNewContract, setIsLoadingNewContract] = useState(false)
   const [isLoadingCompilation, setIsLoadingCompilation] = useState(false)
-  const [value, setValue] = useState(
-    `
-  // start your code here
-  use soroban_sdk::{contractimpl, Env, contract};
-
-  #[contract]
-    pub struct SumContract;
-
-  #[contractimpl]
-    impl SumContract {
-    pub fn add(env: Env, a: i32, b: i32) -> i32 {
-    a + b
-    }
-  `,
-  )
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
 
   const [walletProvider, setWalletProvider] = useState<TypeWalletProvider>(
@@ -192,7 +187,7 @@ const MainPage = ({ id }) => {
   const [blockchainWalletsSelected, setBlockchainWalletsSelected] =
     useState<ValueObject>()
   const [contractsToBeSaved, dispatch] = useReducer(contractReducer, [])
-  const { workspace, user } = useContext(AccountContext)
+  const { workspace, user, ideChain, setIDEChain } = useContext(AccountContext)
   const [decorationIds, setDecorationIds] = useState([])
 
   const { push } = useRouter()
@@ -274,6 +269,19 @@ const MainPage = ({ id }) => {
       setConnected(publickey)
     }
   }, [publickey])
+
+  useEffect(() => {
+    async function run() {
+      getContracts()
+      if (ideChain === NetworkIDE.STELLAR) {
+        setLanguage('rust')
+      } else if (ideChain === NetworkIDE.CROSSFI) {
+        setLanguage('sol')
+      }
+      setIsLoading(false)
+    }
+    run()
+  }, [ideChain])
 
   async function connectWallet() {
     if (await checkConnection()) {
@@ -637,7 +645,7 @@ const MainPage = ({ id }) => {
     try {
       const res = await callAxiosBackend(
         'get',
-        `/blockchain/functions/getContracts?id=${id}`,
+        `/blockchain/functions/getContracts?id=${id}&network=${ideChain}`,
         userSessionToken,
       )
       res.consoleLogs = []
@@ -655,22 +663,8 @@ const MainPage = ({ id }) => {
 
     const data = {
       workspaceId: id,
-      network: 'STELLAR',
-      code: `#![no_std]
-use soroban_sdk::{contractimpl, Env, contract};
-    
-#[contract]
-pub struct SumContract;
-    
-#[contractimpl]
-impl SumContract {
-  /// This is a simple sum smart-contract.
-  ///
-  /// start coding here
-  pub fn add(env: Env, a: i32, b: i32) -> i32 {
-    a + b
-  }
-}`,
+      network: ideChain,
+      code: CHAIN_TO_TEMPLATE[ideChain],
       name: 'untitled',
     }
     try {
@@ -971,6 +965,11 @@ impl SumContract {
                           ref={menuRef}
                         >
                           <SelectLanguageModal
+                            LANGUAGE_VERSIONS={
+                              ideChain === NetworkIDE.STELLAR
+                                ? LANGUAGE_VERSIONS_STELLAR
+                                : LANGUAGE_VERSIONS_CROSSFI
+                            }
                             onUpdateM={(value) => {
                               setLanguage(value)
                               setLanguageSelectorOpen(false)

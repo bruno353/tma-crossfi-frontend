@@ -10,12 +10,14 @@ import { ICPWalletsProps } from '@/types/blockchain-app'
 export interface MenuI {
   wallet: string
   amount: string
+  token: string
   onConfirmTransaction(): void
 }
 
 const ConfirmFundICPWalletModal = ({
   wallet,
   amount,
+  token,
   onConfirmTransaction,
 }: MenuI) => {
   return (
@@ -23,7 +25,7 @@ const ConfirmFundICPWalletModal = ({
       <div className="h-full w-fit rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[12px] font-normal text-[#c5c4c4]">
         <div className="grid gap-y-[10px]">
           <div>
-            You are transfering {amount} ICP to {wallet}
+            You are transfering {amount} {token} to {wallet}
           </div>
           <div className="mt-2 flex justify-between">
             <div

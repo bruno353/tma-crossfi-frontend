@@ -15,6 +15,9 @@ import CntDeploymentHistoryModal from './CntDeploymentHistoryModal'
 import { transformString, wait } from '@/utils/functions'
 import { SmileySad } from 'phosphor-react'
 import { checkConnection, retrievePublicKey } from '../Funcs/freighter'
+import ChainSelector from '../Components/ChainSelector'
+import { AccountContext } from '@/contexts/AccountContext'
+import { CHAIN_TO_TEMPLATE } from '@/types/consts/ide'
 
 export interface MenuI {
   id: string
@@ -91,6 +94,8 @@ const Sidebar = ({
     setIsContractsDeploymentHistoryListOpen,
   ] = useState(false)
 
+  const { ideChain, setIDEChain } = useContext(AccountContext)
+
   const [isCntDeploymentHistoryModalOpen, setIsCntDeploymentHistoryModalOpen] =
     useState<string>('')
 
@@ -121,22 +126,8 @@ const Sidebar = ({
 
     const data = {
       workspaceId: id,
-      network: 'STELLAR',
-      code: `#![no_std]
-use soroban_sdk::{contractimpl, Env, contract};
-    
-#[contract]
-pub struct SumContract;
-    
-#[contractimpl]
-impl SumContract {
-  /// This is a simple sum smart-contract.
-  ///
-  /// start coding here
-  pub fn add(env: Env, a: i32, b: i32) -> i32 {
-    a + b
-  }
-}`,
+      network: ideChain,
+      code: CHAIN_TO_TEMPLATE[ideChain],
       name: 'untitled',
     }
     try {
@@ -182,14 +173,11 @@ impl SumContract {
       ref={relativeDivRef}
       className="relative h-[81vh] max-h-[81vh] rounded-xl bg-[#1D2144] py-4 pl-4 pr-8 text-[13px] font-light 2xl:h-[82vh] 2xl:max-h-[82vh]"
     >
-      <div className="relative flex gap-x-[5px]">
-        <img
-          alt="ethereum avatar"
-          src="/images/workspace/stellar-new.svg"
-          className="w-[16px]"
-        ></img>
-        <div className="font-medium">Soroban</div>
-      </div>
+      <ChainSelector
+        onUpdateM={() => {
+          console.log('e')
+        }}
+      />
       <div className="mt-4 h-[1px] w-full bg-[#c5c4c41a]"></div>
       <div className="mt-5 w-fit">
         <div className="mb-2 flex gap-x-[5px]">

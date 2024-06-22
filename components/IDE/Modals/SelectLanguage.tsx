@@ -6,13 +6,13 @@ import { parseCookies } from 'nookies'
 import { deleteMessage } from '@/utils/api'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { LANGUAGE_VERSIONS } from '@/types/consts/ide'
 
 export interface MenuI {
+  LANGUAGE_VERSIONS: object
   onUpdateM(value: string): void
 }
 
-const SelectLanguageModal = ({ onUpdateM }: MenuI) => {
+const SelectLanguageModal = ({ onUpdateM, LANGUAGE_VERSIONS }: MenuI) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const languages = Object.entries(LANGUAGE_VERSIONS)

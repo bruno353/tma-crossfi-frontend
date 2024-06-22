@@ -6,34 +6,34 @@
 'use client'
 // import { useState } from 'react'
 import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
-import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { parseCookies } from 'nookies'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
-import { fundICPWallet } from '@/utils/api-blockchain'
+import { fundICPWallet, transferICP } from '@/utils/api-blockchain'
 import { ICPWalletsProps, BlockchainWalletProps } from '@/types/blockchain-app'
-import DeleteAppModal from './DeleteAppModal'
 import ConfirmFundICPWalletModal from './ConfirmFundICPWalletModal'
 import { wait } from '@/utils/functions'
+import { callAxiosBackend } from '@/utils/general-api'
 
 export interface ModalI {
-  wallet: ICPWalletsProps
   blockchainWallet: BlockchainWalletProps
+  rpcEnvironment: string
   onUpdateM(): void
   onClose(): void
   isOpen: boolean
 }
 
-const FundICPWalletModal = ({
-  wallet,
+const TransferXFIModal = ({
   blockchainWallet,
+  rpcEnvironment,
   onUpdateM,
   onClose,
   isOpen,
 }: ModalI) => {
+  const [addressTo, setAddressTo] = useState('')
   const [fundAmount, setFundAmount] = useState('0.0')
   const [isLoading, setIsLoading] = useState(null)
   const [isConfirmTransactionOpen, setIsConfirmTransactionOpen] =
@@ -53,19 +53,34 @@ const FundICPWalletModal = ({
     }
   }
 
+  const handleInputAddressChange = (e) => {
+    setIsConfirmTransactionOpen(false)
+    if (!isLoading) {
+      const value = e.target.value
+      setAddressTo(value)
+    }
+  }
+
   const handleFund = async () => {
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
 
-    const final = {
-      id: wallet?.id,
+    const data = {
+      id: blockchainWallet?.id,
+      addressTo,
       amount: fundAmount,
+      evmCrossfiRPC: rpcEnvironment,
     }
 
     try {
-      await fundICPWallet(final, userSessionToken)
-      await wait(6500)
+      const res = await callAxiosBackend(
+        'post',
+        '/blockchain/functions/transferXFI',
+        userSessionToken,
+        data,
+      )
+      await wait(3500)
       toast.success(`Success`)
       setIsLoading(false)
       onUpdateM()
@@ -115,7 +130,7 @@ const FundICPWalletModal = ({
         ref={modalRef}
         className="absolute inset-0 bg-[#1c1c3d] opacity-80"
       ></div>
-      <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 py-12 md:w-[500px]">
+      <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 py-12 pb-10 md:w-[500px]">
         <div onClick={onClose} className="absolute right-5 top-5">
           <img
             alt="delete"
@@ -128,15 +143,16 @@ const FundICPWalletModal = ({
             htmlFor="workspaceName"
             className="mb-2 block text-[14px] text-[#C5C4C4]"
           >
-            ICP Wallet Id
+            Address to transfer (EVM)
           </label>
           <input
             type="text"
-            maxLength={50}
+            maxLength={500}
             id="workspaceName"
-            disabled={true}
             name="workspaceName"
-            value={wallet?.walletId}
+            placeholder="0x..."
+            onChange={handleInputAddressChange}
+            value={addressTo}
             className="w-full rounded-md border border-transparent px-6 py-2 text-base text-body-color placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
           />
         </div>
@@ -146,7 +162,7 @@ const FundICPWalletModal = ({
               htmlFor="workspaceName"
               className="mb-2 block text-[14px] text-[#C5C4C4]"
             >
-              Amount (ICPs) to fund
+              Amount (XFI) to fund
             </label>
             <div
               onClick={() => {
@@ -170,34 +186,44 @@ const FundICPWalletModal = ({
           />
         </div>
         <div className="relative mt-10 flex justify-between">
-          {Number(fundAmount) > 0 && (
-            <div
-              className={`${
-                isLoading
-                  ? 'animate-pulse !bg-[#35428a]'
-                  : 'cursor-pointer  hover:bg-[#35428a]'
-              } rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
-              onClick={() => {
-                if (Number(fundAmount) > Number(blockchainWallet.balance)) {
-                  toast.error(
-                    `Fund amount cannot be greater than wallet balance`,
-                  )
-                  return
-                }
-                if (!isLoading && fundAmount && Number(fundAmount) > 0) {
-                  setIsConfirmTransactionOpen(true)
-                }
-              }}
-            >
-              Fund wallet
-            </div>
-          )}
+          <div
+            className={`
+            ${
+              Number(fundAmount) > 0 && addressTo?.length > 0
+                ? `${
+                    isLoading
+                      ? 'animate-pulse !bg-[#35428a]'
+                      : 'cursor-pointer  hover:bg-[#35428a]'
+                  } `
+                : `!cursor-auto !bg-[#4f5b9bbb]`
+            } rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff]
+             `}
+            onClick={() => {
+              if (Number(fundAmount) > Number(blockchainWallet.balance)) {
+                toast.error(`Fund amount cannot be greater than wallet balance`)
+                return
+              }
+              if (
+                !isLoading &&
+                fundAmount &&
+                Number(fundAmount) > 0 &&
+                addressTo?.length > 0
+              ) {
+                setIsConfirmTransactionOpen(true)
+              }
+            }}
+          >
+            Transfer
+          </div>
           {isConfirmTransactionOpen && (
-            <div ref={confirmTransactionRef} className="absolute right-0">
+            <div
+              ref={confirmTransactionRef}
+              className="absolute right-0 w-fit translate-x-[30%]"
+            >
               <ConfirmFundICPWalletModal
                 amount={fundAmount}
-                wallet={wallet.walletId}
-                token={'ICP'}
+                wallet={addressTo}
+                token={'XFI'}
                 onConfirmTransaction={() => {
                   setIsConfirmTransactionOpen(false)
                   handleFund()
@@ -211,4 +237,4 @@ const FundICPWalletModal = ({
   )
 }
 
-export default FundICPWalletModal
+export default TransferXFIModal
