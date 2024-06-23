@@ -87,6 +87,7 @@ export interface ContractInspectionI {
   functionName: string
   inputs: ContractInspectionInputsI[]
   outputsArray: string[]
+  stateMutability?: string // this is for abi of evm contracts: view; nonpayable; payable
   transactError?: boolean
   isOpen?: boolean
   docs?: string
