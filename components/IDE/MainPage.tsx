@@ -36,6 +36,7 @@ import {
   ConsoleCompile,
   ConsoleLog,
   ContractInspectionI,
+  ContractInspectionInputsI,
   NetworkIDE,
 } from '@/types/blockchain-app'
 // import NewAppModal from './Modals/NewAppModal'
@@ -595,6 +596,45 @@ const MainPage = ({ id }) => {
     }
   }
 
+  // abiValue should be like: {"abi":[{"type":"function","name":"s_balances","inputs":[{"name":"","type":"address","internalType":"address"}],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"view"},{"type":"function","name":"stake","inputs":[{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"token","type":"address","internalType":"address"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"nonpayable"},{"type":"function","name":"stake2","inputs":[{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"token","type":"address","internalType":"address"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"nonpayable"},{"type":"error","name":"TransferFailed","inputs":[]}],"bytecode":{"object":"0x6080604052348015600f57600080fd5b506102488061001f6000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c80630bd314f3146100465780637acb775714610046578063ab32eb691461006e575b600080fd5b610059610054366004610181565b61009c565b60405190151581526020015b60405180910390f35b61008e61007c3660046101ad565b60006020819052908152604090205481565b604051908152602001610065565b336000908152602081905260408120805484919083906100bd9084906101cf565b90915550506040516323b872dd60e01b8152336004820152306024820152604481018490526000906001600160a01b038416906323b872dd906064016020604051808303816000875af1158015610118573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061013c91906101f0565b90508061015c576040516312171d8360e31b815260040160405180910390fd5b90505b92915050565b80356001600160a01b038116811461017c57600080fd5b919050565b6000806040838503121561019457600080fd5b823591506101a460208401610165565b90509250929050565b6000602082840312156101bf57600080fd5b6101c882610165565b9392505050565b8082018082111561015f57634e487b7160e01b600052601160045260246000fd5b60006020828403121561020257600080fd5b8151801515811461015c57600080fdfea2646970667358221220342c22510447cbfd64a4882fe969adfe36d875fe26e92f98e54d39b6e22c4f4764736f6c634300081a0033","sourceMap":"141:643:21:-:0;;;;;;;;;;;;;;;;;;;","linkReferences":{}},"deployedBytecode":{"object":"0x608060405234801561001057600080fd5b50600436106100415760003560e01c80630bd314f3146100465780637acb775714610046578063ab32eb691461006e575b600080fd5b610059610054366004610181565b61009c565b60405190151581526020015b60405180910390f35b61008e61007c3660046101ad565b60006020819052908152604090205481565b604051908152602001610065565b336000908152602081905260408120805484919083906100bd9084906101cf565b90915550506040516323b872dd60e01b8152336004820152306024820152604481018490526000906001600160a01b038416906323b872dd906064016020604051808303816000875af1158015610118573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061013c91906101f0565b90508061015c576040516312171d8360e31b815260040160405180910390fd5b90505b92915050565b80356001600160a01b038116811461017c57600080fd5b919050565b6000806040838503121561019457600080fd5b823591506101a460208401610165565b90509250929050565b6000602082840312156101bf57600080fd5b6101c882610165565b9392505050565b8082018082111561015f57634e487b7160e01b600052601160045260246000fd5b60006020828403121561020257600080fd5b8151801515811461015c57600080fdfea2646970667358221220342c22510447cbfd64a4882fe969adfe36d875fe26e92f98e54d39b6e22c4f4764736f6c634300081a0033","sourceMap":"141:643:21:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;508:274;;;;;;:::i;:::-;;:::i;:::-;;;616:14:22;;609:22;591:41;;579:2;564:18;508:274:21;;;;;;;;175:45;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;980:25:22;;;968:2;953:18;175:45:21;834:177:22;508:274:21;597:10;571:4;586:22;;;;;;;;;;:32;;612:6;;586:22;571:4;;586:32;;612:6;;586:32;:::i;:::-;;;;-1:-1:-1;;643:61:21;;-1:-1:-1;;;643:61:21;;670:10;643:61;;;1445:51:22;690:4:21;1512:18:22;;;1505:60;1581:18;;;1574:34;;;628:12:21;;-1:-1:-1;;;;;643:26:21;;;;;1418:18:22;;643:61:21;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;628:76;;719:7;714:37;;735:16;;-1:-1:-1;;;735:16:21;;;;;;;;;;;714:37;768:7;-1:-1:-1;508:274:21;;;;;:::o;14:173:22:-;82:20;;-1:-1:-1;;;;;131:31:22;;121:42;;111:70;;177:1;174;167:12;111:70;14:173;;;:::o;192:254::-;260:6;268;321:2;309:9;300:7;296:23;292:32;289:52;;;337:1;334;327:12;289:52;373:9;360:23;350:33;;402:38;436:2;425:9;421:18;402:38;:::i;:::-;392:48;;192:254;;;;;:::o;643:186::-;702:6;755:2;743:9;734:7;730:23;726:32;723:52;;;771:1;768;761:12;723:52;794:29;813:9;794:29;:::i;:::-;784:39;643:186;-1:-1:-1;;;643:186:22:o;1016:222::-;1081:9;;;1102:10;;;1099:133;;;1154:10;1149:3;1145:20;1142:1;1135:31;1189:4;1186:1;1179:15;1217:4;1214:1;1207:15;1619:277;1686:6;1739:2;1727:9;1718:7;1714:23;1710:32;1707:52;;;1755:1;1752;1745:12;1707:52;1787:9;1781:16;1840:5;1833:13;1826:21;1819:5;1816:32;1806:60;;1862:1;1859;1852:12","linkReferences":{}},"methodIdentifiers":{"s_balances(address)":"ab32eb69","stake(uint256,address)":"7acb7757","stake2(uint256,address)":"0bd314f3"},"rawMetadata":"{\"compiler\":{\"version\":\"0.8.26+commit.8a97fa7a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"TransferFailed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"s_balances\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"stake\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"stake2\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/Counter.sol\":\"StakeContract\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin/=lib/openzeppelin-contracts/\",\":@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/\",\":ds-test/=lib/openzeppelin-contracts/lib/forge-std/lib/ds-test/src/\",\":erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/\",\":forge-std/=lib/forge-std/src/\",\":openzeppelin-contracts/=lib/openzeppelin-contracts/\"]},\"sources\":{\"lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0ea104e577e63faea3b69c415637e99e755dcbf64c5833d7140c35a714d6d90c\",\"dweb:/ipfs/Qmau6x4Ns9XdyynRCNNp3RhLqijJjFm7z5fyZazfYFGYdq\"]},\"src/Counter.sol\":{\"keccak256\":\"0x781d8ef5e98b9f804e9766da61ee3fc5071b1784f867d55d9b03553ee9c7c511\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://242c990ec13156f4e1beb3b56f6486bcd87f0387d43c2a924fefc99127ff9e43\",\"dweb:/ipfs/QmfLybFw9s1VY2yUCovPPdhtmGikPvyhoFFTfeJnyzMT1M\"]}},\"version\":1}","metadata":{"compiler":{"version":"0.8.26+commit.8a97fa7a"},"language":"Solidity","output":{"abi":[{"inputs":[],"type":"error","name":"TransferFailed"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function","name":"s_balances","outputs":[{"internalType":"uint256","name":"","type":"uint256"}]},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address","name":"token","type":"address"}],"stateMutability":"nonpayable","type":"function","name":"stake","outputs":[{"internalType":"bool","name":"","type":"bool"}]},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address","name":"token","type":"address"}],"stateMutability":"nonpayable","type":"function","name":"stake2","outputs":[{"internalType":"bool","name":"","type":"bool"}]}],"devdoc":{"kind":"dev","methods":{},"version":1},"userdoc":{"kind":"user","methods":{},"version":1}},"settings":{"remappings":["@openzeppelin/=lib/openzeppelin-contracts/","@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/","ds-test/=lib/openzeppelin-contracts/lib/forge-std/lib/ds-test/src/","erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/","forge-std/=lib/forge-std/src/","openzeppelin-contracts/=lib/openzeppelin-contracts/"],"optimizer":{"enabled":true,"runs":200},"metadata":{"bytecodeHash":"ipfs"},"compilationTarget":{"src/Counter.sol":"StakeContract"},"evmVersion":"paris","libraries":{}},"sources":{"lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol":{"keccak256":"0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70","urls":["bzz-raw://0ea104e577e63faea3b69c415637e99e755dcbf64c5833d7140c35a714d6d90c","dweb:/ipfs/Qmau6x4Ns9XdyynRCNNp3RhLqijJjFm7z5fyZazfYFGYdq"],"license":"MIT"},"src/Counter.sol":{"keccak256":"0x781d8ef5e98b9f804e9766da61ee3fc5071b1784f867d55d9b03553ee9c7c511","urls":["bzz-raw://242c990ec13156f4e1beb3b56f6486bcd87f0387d43c2a924fefc99127ff9e43","dweb:/ipfs/QmfLybFw9s1VY2yUCovPPdhtmGikPvyhoFFTfeJnyzMT1M"],"license":"MIT"}},"version":1},"id":21}
+  function abiToContractInspection(abiValue: any) {
+    const parsedAbiValue = JSON.parse(JSON.parse(abiValue))
+    const contractInspections: ContractInspectionI[] = []
+
+    const functions: any = parsedAbiValue.abi
+
+    console.log('abi value')
+    console.log(parsedAbiValue)
+
+    console.log('functions abi')
+    console.log(functions)
+
+    if (!Array.isArray(functions)) {
+      console.log('its not an array')
+      return
+    }
+
+    for (let i = 0; i < functions?.length; i++) {
+      if (functions[i]['type'] === 'function') {
+        const functionInputs: ContractInspectionInputsI[] = []
+        for (let j = 0; j < functions[i]['inputs']?.length; j++) {
+          functionInputs.push({
+            name: functions[i]['inputs'][j]['name'],
+            type: functions[i]['inputs'][j]['type'],
+          })
+        }
+        contractInspections.push({
+          functionName: functions[i]['name'],
+          inputs: functionInputs,
+          outputsArray: [],
+          stateMutability: functions[i]['stateMutability'],
+        })
+      }
+    }
+
+    return contractInspections
+  }
+
   async function deployContractCrossfi(contractABIName: string) {
     const chain = selected.value
     const { userSessionToken } = parseCookies()
@@ -631,6 +671,16 @@ const MainPage = ({ id }) => {
         newContracts[cntIndex].ideContractDeploymentHistories.unshift(
           res['history'],
         )
+
+        const insp = abiToContractInspection(
+          blockchainContractSelected?.contractABIs?.find(
+            (cntABI) => cntABI?.name === contractABIName,
+          )?.content,
+        )
+        newContracts[cntIndex].contractInspections = insp
+
+        console.log('the contrac inspections')
+        console.log(insp)
 
         setBlockchainContracts(newContracts)
         setBlockchainContractSelected(newContracts[cntIndex])
@@ -1806,7 +1856,7 @@ const MainPage = ({ id }) => {
                         {blockchainContractSelected?.contractABIs?.length >
                           0 && (
                           <div className="max-w-[100%] overflow-hidden">
-                            <div className="mb-2">ABIs</div>
+                            <div className="mb-2 mt-3">ABIs</div>
                             <ContractsABIRender
                               blockchainContractSelected={
                                 blockchainContractSelected
