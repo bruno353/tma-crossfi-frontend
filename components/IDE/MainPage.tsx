@@ -818,6 +818,7 @@ const MainPage = ({ id }) => {
   }, [id])
 
   useEffect(() => {
+    setLanguage('loading')
     if (monaco) {
       monaco.editor.defineTheme('vs-dark', {
         base: 'vs-dark',
@@ -1661,27 +1662,31 @@ const MainPage = ({ id }) => {
                             </div>
                           ),
                         )}
-                        <div className="max-w-[100%] overflow-hidden">
-                          <div className="mb-2">ABIs</div>
-                          <ContractsABIRender
-                            blockchainContractSelected={
-                              blockchainContractSelected
-                            }
-                            setBlockchainContractSelected={(value) => {
-                              const newBlockchainContracts = [
-                                ...blockchainContracts,
-                              ]
-                              const cntIndex = newBlockchainContracts.findIndex(
-                                (cnt) => cnt.id === value.id,
-                              )
-                              newBlockchainContracts[cntIndex] = value
-                              setParamsToContracts(
-                                newBlockchainContracts,
-                                cntIndex,
-                              )
-                            }}
-                          />
-                        </div>
+                        {blockchainContractSelected?.contractABIs?.length >
+                          0 && (
+                          <div className="max-w-[100%] overflow-hidden">
+                            <div className="mb-2">ABIs</div>
+                            <ContractsABIRender
+                              blockchainContractSelected={
+                                blockchainContractSelected
+                              }
+                              setBlockchainContractSelected={(value) => {
+                                const newBlockchainContracts = [
+                                  ...blockchainContracts,
+                                ]
+                                const cntIndex =
+                                  newBlockchainContracts.findIndex(
+                                    (cnt) => cnt.id === value.id,
+                                  )
+                                newBlockchainContracts[cntIndex] = value
+                                setParamsToContracts(
+                                  newBlockchainContracts,
+                                  cntIndex,
+                                )
+                              }}
+                            />
+                          </div>
+                        )}
                       </div>
                       <NewCallFunctionModal
                         isOpen={isCallingFunctionModal >= 0}
