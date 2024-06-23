@@ -274,6 +274,7 @@ const MainPage = ({ id }) => {
   useEffect(() => {
     async function run() {
       getContracts()
+      getData('Testnet')
       if (ideChain === NetworkIDE.STELLAR) {
         setLanguage('rust')
       } else if (ideChain === NetworkIDE.CROSSFI) {
@@ -507,10 +508,7 @@ const MainPage = ({ id }) => {
     setIsLoadingCompilation(false)
   }
 
-  async function deployContract() {
-    setOpenModalDeploy(false)
-    setIsLoadingCompilation(true)
-
+  async function deployContractSoroban() {
     const chain = selected.value
     const { userSessionToken } = parseCookies()
 
@@ -595,6 +593,107 @@ const MainPage = ({ id }) => {
         toast.error(err)
       }
     }
+  }
+
+  async function deployContractCrossfi(contractABIName: string) {
+    const chain = selected.value
+    const { userSessionToken } = parseCookies()
+
+    if (walletProvider === TypeWalletProvider.ACCELAR) {
+      const data = {
+        walletId: blockchainWalletsSelected.value,
+        contractId: blockchainContractSelected?.id,
+        environment: selected.value.toLowerCase(),
+        abiName: contractABIName,
+      }
+
+      try {
+        const res = await callAxiosBackend(
+          'post',
+          '/blockchain/functions/deployCrossfiContract',
+          userSessionToken,
+          data,
+        )
+        console.log('response da api')
+        console.log(res)
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
+        )
+        newContracts[cntIndex].currentAddress = res.contractAddress
+        newContracts[cntIndex].currentChain = chain
+        newContracts[cntIndex].consoleLogs.unshift({
+          type: 'deploy',
+          contractName: blockchainContractSelected?.name,
+          desc: `${res.contractAddress}`,
+          createdAt: String(new Date()),
+        })
+        newContracts[cntIndex].ideContractDeploymentHistories.unshift(
+          res['history'],
+        )
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      } catch (err) {
+        console.log(err)
+        console.log('Error: ' + err.response.data.message)
+
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
+        )
+        const errorDescription = convertAnsiToHtml(err.response.data.message)
+        console.log(errorDescription)
+
+        newContracts[cntIndex].consoleLogs.unshift({
+          type: 'deployError',
+          desc: errorDescription,
+          contractName: blockchainContractSelected?.name,
+          createdAt: String(new Date()),
+        })
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      }
+    } else if (walletProvider === TypeWalletProvider.FREIGHTER) {
+      try {
+        const contractWasmBuffer = Buffer.from(blockchainContractSelected.wasm)
+        const addressRes = await deployContractFreighter(
+          contractWasmBuffer,
+          selected.value.toUpperCase(),
+          optionsNetworkToPassphrase[selected.value.toUpperCase()],
+        )
+
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
+        )
+        newContracts[cntIndex].currentAddress = addressRes
+        newContracts[cntIndex].currentChain = chain
+        newContracts[cntIndex].consoleLogs.unshift({
+          type: 'deploy',
+          contractName: blockchainContractSelected?.name,
+          desc: `${addressRes}`,
+          createdAt: String(new Date()),
+        })
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      } catch (err) {
+        toast.error(err)
+      }
+    }
+  }
+
+  async function deployContract(contractABIName?: string) {
+    setOpenModalDeploy(false)
+    setIsLoadingCompilation(true)
+
+    if (ideChain === NetworkIDE.STELLAR) {
+      await deployContractSoroban()
+    } else if (ideChain === NetworkIDE.CROSSFI) {
+      await deployContractCrossfi(contractABIName)
+    }
 
     setIsLoadingCompilation(false)
   }
@@ -664,32 +763,62 @@ const MainPage = ({ id }) => {
     setIsLoadingWallets(true)
     const { userSessionToken } = parseCookies()
 
-    let rpc = ''
-    if (environment === 'Testnet') {
-      rpc = '&sorobanRPC=https://horizon-testnet.stellar.org'
-    }
+    if (ideChain === NetworkIDE.STELLAR) {
+      let rpc = ''
+      if (environment === 'Testnet') {
+        rpc = '&sorobanRPC=https://horizon-testnet.stellar.org'
+      }
 
-    try {
-      const res = await callAxiosBackend(
-        'get',
-        `/blockchain/functions/getWorkspaceWallets?id=${id}&network=STELLAR${rpc}`,
-        userSessionToken,
-      )
-      const walletsToSet = []
-      for (let i = 0; i < res?.length; i++) {
-        walletsToSet.push({
-          name: transformString(res[i].stellarWalletPubK, 5),
-          value: res[i].id,
-        })
+      try {
+        const res = await callAxiosBackend(
+          'get',
+          `/blockchain/functions/getWorkspaceWallets?id=${id}&network=STELLAR${rpc}`,
+          userSessionToken,
+        )
+        const walletsToSet = []
+        for (let i = 0; i < res?.length; i++) {
+          walletsToSet.push({
+            name: transformString(res[i].stellarWalletPubK, 5),
+            value: res[i].id,
+          })
+        }
+        setBlockchainWalletsDropdown(walletsToSet)
+        setBlockchainWallets(res)
+        if (walletsToSet?.length > 0) {
+          setBlockchainWalletsSelected(walletsToSet[0])
+        }
+      } catch (err) {
+        console.log(err)
+        toast.error(`Error: ${err.response.data.message}`)
       }
-      setBlockchainWalletsDropdown(walletsToSet)
-      setBlockchainWallets(res)
-      if (walletsToSet?.length > 0) {
-        setBlockchainWalletsSelected(walletsToSet[0])
+    } else if (ideChain === NetworkIDE.CROSSFI) {
+      let rpc = ''
+      if (environment === 'Testnet') {
+        rpc = '&evmCrossfiRPC=https://rpc.testnet.ms'
       }
-    } catch (err) {
-      console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
+
+      try {
+        const res = await callAxiosBackend(
+          'get',
+          `/blockchain/functions/getWorkspaceWallets?id=${id}&network=CROSSFI${rpc}`,
+          userSessionToken,
+        )
+        const walletsToSet = []
+        for (let i = 0; i < res?.length; i++) {
+          walletsToSet.push({
+            name: transformString(res[i].evmCrossfiWalletPubK, 5),
+            value: res[i].id,
+          })
+        }
+        setBlockchainWalletsDropdown(walletsToSet)
+        setBlockchainWallets(res)
+        if (walletsToSet?.length > 0) {
+          setBlockchainWalletsSelected(walletsToSet[0])
+        }
+      } catch (err) {
+        console.log(err)
+        toast.error(`Error: ${err.response.data.message}`)
+      }
     }
     setIsLoadingWallets(false)
     setIsLoading(false)
@@ -936,6 +1065,24 @@ const MainPage = ({ id }) => {
     })
   }
 
+  function walletToReturn() {
+    if (walletProvider !== TypeWalletProvider.ACCELAR) {
+      return '0x'
+    }
+
+    if (ideChain === NetworkIDE.STELLAR) {
+      const wallet = blockchainWallets.find(
+        (obj) => obj.id === blockchainWalletsSelected.value,
+      )?.stellarWalletPubK
+      return wallet
+    } else if (ideChain === NetworkIDE.CROSSFI) {
+      const wallet = blockchainWallets.find(
+        (obj) => obj.id === blockchainWalletsSelected.value,
+      )?.evmCrossfiWalletPubK
+      return wallet
+    }
+  }
+
   useEffect(() => {
     return () => {
       clearTimeout(saveTimeoutRef.current)
@@ -1084,7 +1231,8 @@ const MainPage = ({ id }) => {
                           }
                           if (
                             blockchainContractSelected?.contractInspections
-                              ?.length > 0
+                              ?.length > 0 ||
+                            blockchainContractSelected?.contractABIs?.length > 0
                           ) {
                             setOpenModalDeploy(true)
                           }
@@ -1094,9 +1242,8 @@ const MainPage = ({ id }) => {
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
-                          (!blockchainContractSelected?.contractInspections ||
-                            blockchainContractSelected?.contractInspections
-                              ?.length === 0) &&
+                          !blockchainContractSelected?.contractInspections &&
+                          !blockchainContractSelected?.contractABIs &&
                           '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
                         }`}
                       >
@@ -1114,7 +1261,8 @@ const MainPage = ({ id }) => {
                           }
                           if (
                             blockchainContractSelected?.contractInspections
-                              ?.length > 0
+                              ?.length > 0 ||
+                            blockchainContractSelected?.contractABIs?.length > 0
                           ) {
                             setOpenModalImport(true)
                           }
@@ -1124,9 +1272,8 @@ const MainPage = ({ id }) => {
                             ? 'animate-pulse !bg-[#35428a]'
                             : 'cursor-pointer  hover:bg-[#35428a]'
                         }  w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] ${
-                          (!blockchainContractSelected?.contractInspections ||
-                            blockchainContractSelected?.contractInspections
-                              ?.length === 0) &&
+                          !blockchainContractSelected?.contractInspections &&
+                          !blockchainContractSelected?.contractABIs &&
                           '!cursor-default !bg-[#35428a77] !text-[#ffffffab]'
                         }`}
                       >
@@ -1209,22 +1356,15 @@ const MainPage = ({ id }) => {
                     </div>
                     <DeployContractModal
                       isOpen={openModalDeploy}
-                      onUpdateM={() => {
-                        deployContract()
+                      onUpdateM={(value) => {
+                        deployContract(value)
                       }}
                       onClose={() => {
                         setOpenModalDeploy(false)
                       }}
                       contract={blockchainContractSelected}
                       environment={selected.value}
-                      wallet={
-                        walletProvider === TypeWalletProvider.ACCELAR
-                          ? blockchainWallets.find(
-                              (obj) =>
-                                obj.id === blockchainWalletsSelected.value,
-                            )?.stellarWalletPubK
-                          : '0x'
-                      }
+                      wallet={walletToReturn()}
                       walletFreighter={connect}
                       walletProvider={walletProvider}
                       walletBalance={
@@ -1232,6 +1372,7 @@ const MainPage = ({ id }) => {
                           (obj) => obj.id === blockchainWalletsSelected.value,
                         )?.balance || '0'
                       }
+                      contractABIs={blockchainContractSelected?.contractABIs}
                     />
                     <ImportContractModal
                       isOpen={openModalImport}
@@ -1959,29 +2100,31 @@ const MainPage = ({ id }) => {
                                   </div>
                                   {cnslLog?.isOpen && (
                                     <div className="mt-3">
-                                      <div className="flex items-center gap-x-3">
-                                        <div className="mt-[1px] text-[#c5c4c4]">
-                                          Wasm:{' '}
-                                          {cnslLog?.wasm?.substring(0, 10) +
-                                            '...' +
-                                            cnslLog?.wasm?.slice(-10)}
+                                      {cnslLog?.wasm && (
+                                        <div className="flex items-center gap-x-3">
+                                          <div className="mt-[1px] text-[#c5c4c4]">
+                                            Wasm:{' '}
+                                            {cnslLog?.wasm?.substring(0, 10) +
+                                              '...' +
+                                              cnslLog?.wasm?.slice(-10)}
+                                          </div>
+                                          <img
+                                            // ref={editRef}
+                                            alt="ethereum avatar"
+                                            src="/images/workspace/copy.svg"
+                                            className="w-[18px] cursor-pointer rounded-full"
+                                            // onMouseEnter={() => setIsCopyInfoOpen(canister.id)}
+                                            // onMouseLeave={() => setIsCopyInfoOpen(null)}
+                                            onClick={(event) => {
+                                              event.stopPropagation()
+                                              navigator.clipboard.writeText(
+                                                cnslLog?.wasm,
+                                              )
+                                              toast.success('Wasm copied')
+                                            }}
+                                          ></img>
                                         </div>
-                                        <img
-                                          // ref={editRef}
-                                          alt="ethereum avatar"
-                                          src="/images/workspace/copy.svg"
-                                          className="w-[18px] cursor-pointer rounded-full"
-                                          // onMouseEnter={() => setIsCopyInfoOpen(canister.id)}
-                                          // onMouseLeave={() => setIsCopyInfoOpen(null)}
-                                          onClick={(event) => {
-                                            event.stopPropagation()
-                                            navigator.clipboard.writeText(
-                                              cnslLog?.wasm,
-                                            )
-                                            toast.success('Wasm copied')
-                                          }}
-                                        ></img>
-                                      </div>
+                                      )}
                                       <div className="mt-3 flex items-center gap-x-3">
                                         <div className="mt-[1px] text-[#c5c4c4]">
                                           Compiled at:{' '}

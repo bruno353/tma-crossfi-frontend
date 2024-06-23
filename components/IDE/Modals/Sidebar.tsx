@@ -212,7 +212,10 @@ const Sidebar = ({
             className={`${blockchainWallets?.length > 0 && 'cursor-pointer'}`}
             onClick={(event) => {
               event.stopPropagation()
-              const index = blockchainWallets.find(
+              if (!blockchainWalletsSelected) {
+                return
+              }
+              const index = blockchainWallets?.find(
                 (blc) => blc.id === blockchainWalletsSelected.value,
               )
               navigator.clipboard.writeText(index.stellarWalletPubK)
@@ -283,9 +286,9 @@ const Sidebar = ({
                     {' '}
                     Balance:{' '}
                     {
-                      blockchainWallets.find(
+                      blockchainWallets?.find(
                         (obj) => obj.id === blockchainWalletsSelected.value,
-                      ).balance
+                      )?.balance
                     }
                   </div>
                 )}

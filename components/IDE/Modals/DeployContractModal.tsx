@@ -19,10 +19,13 @@ import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
 import { TypeWalletProvider, cleanDocs } from '../MainPage'
 import {
   BlockchainContractProps,
+  ContractABII,
   ContractInspectionI,
+  NetworkIDE,
 } from '@/types/blockchain-app'
 import ConfirmDeployContractModal from './ConfirmDeployContractModal'
 import { transformString } from '@/utils/functions'
+import { AccountContext } from '@/contexts/AccountContext'
 
 export interface ModalI {
   contract: BlockchainContractProps
@@ -31,9 +34,10 @@ export interface ModalI {
   walletFreighter: string
   walletBalance: string
   walletProvider: TypeWalletProvider
-  onUpdateM(): void
+  onUpdateM(contractABIName?: string): void
   onClose(): void
   isOpen: boolean
+  contractABIs?: ContractABII[]
 }
 
 const DeployContractModal = ({
@@ -46,8 +50,14 @@ const DeployContractModal = ({
   onUpdateM,
   onClose,
   contract,
+  contractABIs,
 }: ModalI) => {
+  const { ideChain } = useContext(AccountContext)
+
   const [isLoading, setIsLoading] = useState(null)
+
+  const [abiOptions, setABIOptions] = useState<ValueObject[]>(null)
+  const [abiSelected, setABISelected] = useState<ValueObject>()
 
   const [isConfirmTransactionOpen, setIsConfirmTransactionOpen] =
     useState<boolean>(false)
@@ -60,6 +70,20 @@ const DeployContractModal = ({
     if (event.target === modalRef.current) {
       onClose()
     }
+  }
+
+  function handleNewABIs() {
+    console.log('fui chamado handle new abi')
+    console.log(contractABIs)
+    const finalSet: ValueObject[] = []
+    for (let i = 0; i < contractABIs?.length; i++) {
+      finalSet.push({
+        name: contractABIs[i].name,
+        value: contractABIs[i].name,
+      })
+    }
+    setABIOptions(finalSet)
+    setABISelected(finalSet[0])
   }
 
   useEffect(() => {
@@ -82,6 +106,10 @@ const DeployContractModal = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isConfirmTransactionOpen])
+
+  useEffect(() => {
+    handleNewABIs()
+  }, [isOpen])
 
   return (
     <div
@@ -143,6 +171,21 @@ const DeployContractModal = ({
               Balance: <span className="text-[#fff]">{walletBalance}</span>
             </div>
           )}
+          {ideChain === NetworkIDE.CROSSFI && (
+            <div className="w-fit min-w-[200px]">
+              <div className="mb-2 text-[#c5c4c4]">ABI:</div>
+              <Dropdown
+                optionSelected={abiSelected}
+                options={abiOptions}
+                onValueChange={(value) => {
+                  setABISelected(value)
+                }}
+                classNameForDropdown="!px-1 !pr-2 !py-1 !font-medium"
+                classNameForPopUp="!px-1 !pr-2 !py-1"
+                classNameForPopUpBox="!translate-y-[35px]"
+              />
+            </div>
+          )}
         </div>
 
         {Number(walletBalance) === 0 &&
@@ -185,7 +228,7 @@ const DeployContractModal = ({
               }
               environment={environment}
               onConfirmTransaction={() => {
-                onUpdateM()
+                onUpdateM(abiSelected?.value)
                 setIsConfirmTransactionOpen(false)
                 // handleFund()
               }}
