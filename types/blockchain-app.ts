@@ -38,7 +38,7 @@ export interface ConsoleError {
 export interface ConsoleCompile {
   type: 'compile'
   contractName: string
-  wasm: string
+  wasm?: string
   createdAt: string
   desc?: string
   isOpen?: boolean
@@ -90,6 +90,12 @@ export interface ContractInspectionI {
   transactError?: boolean
   isOpen?: boolean
   docs?: string
+}
+
+export interface ContractABII {
+  name: string
+  content: any
+  isOpen?: boolean
 }
 
 export interface BlockchainWalletProps {
@@ -146,7 +152,8 @@ export interface BlockchainContractProps {
   currentChain?: string
   ideContractDeploymentHistories: BlockchainContractDeploymentHistoryProps[]
   consoleLogs: ConsoleLog[]
-  contractInspections: ContractInspectionI[]
+  contractInspections?: ContractInspectionI[] // Soroban inspetions
+  contractABIs?: ContractABII[] // EVM abis
   createdAt?: string
   updatedAt?: string
 }

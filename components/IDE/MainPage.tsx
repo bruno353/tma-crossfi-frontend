@@ -76,6 +76,7 @@ import {
   LANGUAGE_VERSIONS_CROSSFI,
   LANGUAGE_VERSIONS_STELLAR,
 } from '@/types/consts/ide'
+import ContractsABIRender from './Components/ContractsABIRender'
 
 export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
@@ -328,125 +329,181 @@ const MainPage = ({ id }) => {
     const { userSessionToken } = parseCookies()
 
     const data = {
-      walletId: '123',
       contractId: blockchainContractSelected?.id,
       code: blockchainContractSelected?.code,
     }
 
-    try {
-      const res = await callAxiosBackend(
-        'post',
-        '/blockchain/functions/compileSorobanContract',
-        userSessionToken,
-        data,
-      )
-      const newContracts = [...blockchainContracts]
-      const cntIndex = newContracts.findIndex(
-        (cnt) => cnt.id === blockchainContractSelected?.id,
-      )
-      newContracts[cntIndex].wasm = res.contractWasm.data
-
-      newContracts[cntIndex].consoleLogs =
-        newContracts[cntIndex].consoleLogs ?? []
-
-      newContracts[cntIndex].contractInspections = res.contractInspection
-
-      newContracts[cntIndex].consoleLogs.unshift({
-        type: 'compile',
-        contractName: blockchainContractSelected?.name,
-        wasm: JSON.stringify(res.contractWasm.data),
-        createdAt: String(new Date()),
-      })
-
-      newContracts[cntIndex].consoleLogs = newContracts[
-        cntIndex
-      ].consoleLogs.filter((cntfilter) => {
-        return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
-      })
-
-      setBlockchainContracts(newContracts)
-      setBlockchainContractSelected(newContracts[cntIndex])
-
-      // console.log('starting deploy')
-      // console.log(typeof res.contractWasm.data)
-      // console.log(res.contractWasm.data)
-      // console.log('tratamentw')
-      // const contractWasmBuffer = Buffer.from(res.contractWasm.data)
-      // console.log(contractWasmBuffer)
-      // console.log(typeof contractWasmBuffer)
-      // console.log('pr')
-      // console.log(contractWasmBuffer.toString('hex')) // Exibir como string hexadecimal
-      // console.log(typeof contractWasmBuffer.toString('hex'))
-      // console.log('213453421')
-      // console.log(contractWasmBuffer.toString('base64')) // Exibir como string base64
-      // console.log(typeof contractWasmBuffer.toString('base64'))
-
-      // await deployContract(contractWasmBuffer)
-      // deploySmartContract(contractWasmBuffer)
-    } catch (err) {
-      console.log(err)
-      console.log('Error: ' + err.response.data.message)
-      // let errorDescription = extractTextMessage(
-      //   err.response.data.message,
-      //   'error[',
-      //   'Building',
-      // )
-      // let errorMessage = extractTextMessage(errorDescription, 'error[', '\n')
-
-      // errorMessage = convertAnsiToHtml(errorMessage)
-      // errorDescription = convertAnsiToHtml(errorDescription)
-
-      // console.log('response tratado: ' + errorMessage)
-
-      const out = extractAllErrorMessages(err.response.data.message)
-
-      const newContracts = [...blockchainContracts]
-      const cntIndex = newContracts.findIndex(
-        (cnt) => cnt.id === blockchainContractSelected?.id,
-      )
-
-      newContracts[cntIndex].contractInspections = []
-      newContracts[cntIndex].currentAddress = null
-      newContracts[cntIndex].currentChain = null
-
-      newContracts[cntIndex].consoleLogs =
-        newContracts[cntIndex].consoleLogs ?? []
-
-      newContracts[cntIndex].consoleLogs = newContracts[
-        cntIndex
-      ].consoleLogs.filter((cntfilter) => {
-        return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
-      })
-
-      for (let i = 0; i < out?.length; i++) {
-        let errorDescription = extractTextMessageSecondOcorrency(
-          out[i],
-          '\u001b[0m\r\n\u001b[0m',
-          'Building',
+    if (ideChain === NetworkIDE.STELLAR) {
+      try {
+        const res = await callAxiosBackend(
+          'post',
+          '/blockchain/functions/compileContract',
+          userSessionToken,
+          data,
         )
-        let errorMessage = extractTextMessage(out[i], 'error[', '\n')
-        errorMessage = convertAnsiToHtml(errorMessage)
-        errorDescription = convertAnsiToHtml(errorDescription)
-
-        let lineError = extractTextMessageAndRemoveItems(
-          out[i],
-          '[0m\r\n\u001b[0m\u001b[1m\u001b[38;5;12m',
-          '\u001b[0m ',
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
         )
-        lineError = Number(lineError)
+        newContracts[cntIndex].wasm = res.contractWasm.data
 
-        console.log({ errorDescription, errorMessage, lineError })
+        newContracts[cntIndex].consoleLogs =
+          newContracts[cntIndex].consoleLogs ?? []
+
+        newContracts[cntIndex].contractInspections = res.contractInspection
+
         newContracts[cntIndex].consoleLogs.unshift({
-          errorDescription,
-          errorMessage,
-          lineError,
-          type: 'error',
+          type: 'compile',
+          contractName: blockchainContractSelected?.name,
+          wasm: JSON.stringify(res.contractWasm.data),
+          createdAt: String(new Date()),
         })
-      }
 
-      setBlockchainContracts(newContracts)
-      setBlockchainContractSelected(newContracts[cntIndex])
+        newContracts[cntIndex].consoleLogs = newContracts[
+          cntIndex
+        ].consoleLogs.filter((cntfilter) => {
+          return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
+        })
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      } catch (err) {
+        console.log(err)
+        console.log('Error: ' + err.response.data.message)
+        const out = extractAllErrorMessages(err.response.data.message)
+
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
+        )
+
+        newContracts[cntIndex].contractInspections = []
+        newContracts[cntIndex].currentAddress = null
+        newContracts[cntIndex].currentChain = null
+
+        newContracts[cntIndex].consoleLogs =
+          newContracts[cntIndex].consoleLogs ?? []
+
+        newContracts[cntIndex].consoleLogs = newContracts[
+          cntIndex
+        ].consoleLogs.filter((cntfilter) => {
+          return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
+        })
+
+        for (let i = 0; i < out?.length; i++) {
+          let errorDescription = extractTextMessageSecondOcorrency(
+            out[i],
+            '\u001b[0m\r\n\u001b[0m',
+            'Building',
+          )
+          let errorMessage = extractTextMessage(out[i], 'error[', '\n')
+          errorMessage = convertAnsiToHtml(errorMessage)
+          errorDescription = convertAnsiToHtml(errorDescription)
+
+          let lineError = extractTextMessageAndRemoveItems(
+            out[i],
+            '[0m\r\n\u001b[0m\u001b[1m\u001b[38;5;12m',
+            '\u001b[0m ',
+          )
+          lineError = Number(lineError)
+
+          console.log({ errorDescription, errorMessage, lineError })
+          newContracts[cntIndex].consoleLogs.unshift({
+            errorDescription,
+            errorMessage,
+            lineError,
+            type: 'error',
+          })
+        }
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      }
+    } else if (ideChain === NetworkIDE.CROSSFI) {
+      try {
+        const res = await callAxiosBackend(
+          'post',
+          '/blockchain/functions/compileContract',
+          userSessionToken,
+          data,
+        )
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
+        )
+        newContracts[cntIndex].consoleLogs =
+          newContracts[cntIndex].consoleLogs ?? []
+
+        newContracts[cntIndex].contractABIs = res.contractABIs
+
+        newContracts[cntIndex].consoleLogs.unshift({
+          type: 'compile',
+          contractName: blockchainContractSelected?.name,
+          createdAt: String(new Date()),
+        })
+
+        newContracts[cntIndex].consoleLogs = newContracts[
+          cntIndex
+        ].consoleLogs.filter((cntfilter) => {
+          return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
+        })
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      } catch (err) {
+        console.log(err)
+        console.log('Error: ' + err.response.data.message)
+        const out = extractAllErrorMessages(err.response.data.message)
+
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
+        )
+
+        newContracts[cntIndex].contractInspections = []
+        newContracts[cntIndex].currentAddress = null
+        newContracts[cntIndex].currentChain = null
+
+        newContracts[cntIndex].consoleLogs =
+          newContracts[cntIndex].consoleLogs ?? []
+
+        newContracts[cntIndex].consoleLogs = newContracts[
+          cntIndex
+        ].consoleLogs.filter((cntfilter) => {
+          return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
+        })
+
+        for (let i = 0; i < out?.length; i++) {
+          let errorDescription = extractTextMessageSecondOcorrency(
+            out[i],
+            '\u001b[0m\r\n\u001b[0m',
+            'Building',
+          )
+          let errorMessage = extractTextMessage(out[i], 'error[', '\n')
+          errorMessage = convertAnsiToHtml(errorMessage)
+          errorDescription = convertAnsiToHtml(errorDescription)
+
+          let lineError = extractTextMessageAndRemoveItems(
+            out[i],
+            '[0m\r\n\u001b[0m\u001b[1m\u001b[38;5;12m',
+            '\u001b[0m ',
+          )
+          lineError = Number(lineError)
+
+          console.log({ errorDescription, errorMessage, lineError })
+          newContracts[cntIndex].consoleLogs.unshift({
+            errorDescription,
+            errorMessage,
+            lineError,
+            type: 'error',
+          })
+        }
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      }
     }
+
     setIsLoadingCompilation(false)
   }
 
@@ -1604,6 +1661,27 @@ const MainPage = ({ id }) => {
                             </div>
                           ),
                         )}
+                        <div className="max-w-[100%] overflow-hidden">
+                          <div className="mb-2">ABIs</div>
+                          <ContractsABIRender
+                            blockchainContractSelected={
+                              blockchainContractSelected
+                            }
+                            setBlockchainContractSelected={(value) => {
+                              const newBlockchainContracts = [
+                                ...blockchainContracts,
+                              ]
+                              const cntIndex = newBlockchainContracts.findIndex(
+                                (cnt) => cnt.id === value.id,
+                              )
+                              newBlockchainContracts[cntIndex] = value
+                              setParamsToContracts(
+                                newBlockchainContracts,
+                                cntIndex,
+                              )
+                            }}
+                          />
+                        </div>
                       </div>
                       <NewCallFunctionModal
                         isOpen={isCallingFunctionModal >= 0}
@@ -1879,9 +1957,9 @@ const MainPage = ({ id }) => {
                                       <div className="flex items-center gap-x-3">
                                         <div className="mt-[1px] text-[#c5c4c4]">
                                           Wasm:{' '}
-                                          {cnslLog.wasm.substring(0, 10) +
+                                          {cnslLog?.wasm?.substring(0, 10) +
                                             '...' +
-                                            cnslLog.wasm.slice(-10)}
+                                            cnslLog?.wasm?.slice(-10)}
                                         </div>
                                         <img
                                           // ref={editRef}
@@ -1893,7 +1971,7 @@ const MainPage = ({ id }) => {
                                           onClick={(event) => {
                                             event.stopPropagation()
                                             navigator.clipboard.writeText(
-                                              cnslLog.wasm,
+                                              cnslLog?.wasm,
                                             )
                                             toast.success('Wasm copied')
                                           }}
