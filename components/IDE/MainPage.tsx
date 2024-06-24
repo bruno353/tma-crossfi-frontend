@@ -635,6 +635,27 @@ const MainPage = ({ id }) => {
     return contractInspections
   }
 
+  function treatParamsAndCallCrossfiContract(cntIns: ContractInspectionI) {
+    const finalCntInsInput = []
+
+    for (let i = 0; i < cntIns?.inputs?.length; i++) {
+      finalCntInsInput.push(String(cntIns?.inputs[i].value))
+    }
+    sendTransactionContractCrossfi(cntIns, finalCntInsInput)
+  }
+
+  function treatParamsAndCallSorobanContract(cntIns: ContractInspectionI) {
+    const finalCntInsInput = []
+
+    for (let i = 0; i < cntIns?.inputs?.length; i++) {
+      finalCntInsInput.push({
+        paramName: cntIns?.inputs[i].name,
+        value: cntIns?.inputs[i].value,
+      })
+    }
+    callSorobanContract(cntIns?.functionName, finalCntInsInput)
+  }
+
   async function deployContractCrossfi(contractABIName: string) {
     const chain = selected.value
     const { userSessionToken } = parseCookies()
@@ -748,7 +769,7 @@ const MainPage = ({ id }) => {
     setIsLoadingCompilation(false)
   }
 
-  async function callContract(
+  async function callSorobanContract(
     functionName: string,
     functionParams: { paramName: string; value: string }[],
   ) {
@@ -782,6 +803,79 @@ const MainPage = ({ id }) => {
         functionName,
         args: functionParams.map((param) => param.value),
         responseValue: JSON.parse(res.value),
+        desc: address,
+        createdAt: String(new Date()),
+      })
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
+    } catch (err) {
+      console.log(err)
+      console.log('Error: ' + err.response.data.message)
+
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      newContracts[cntIndex].consoleLogs.unshift({
+        type: 'deployError',
+        desc: err.response.data.message,
+        contractName: blockchainContractSelected?.name,
+        createdAt: String(new Date()),
+      })
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
+    }
+    setIsContractCallLoading(false)
+  }
+
+  async function sendTransactionContractCrossfi(
+    contractInspection: ContractInspectionI,
+    functionParams: string[],
+  ) {
+    setIsContractCallLoading(contractInspection.functionName)
+
+    const address = blockchainContractSelected?.currentAddress
+
+    const { userSessionToken } = parseCookies()
+
+    // treating the function name, must send like: callHere(uint256, string)
+    let types = ''
+    for (let i = 0; i < contractInspection?.inputs?.length; i++) {
+      if (i === 0) {
+        types = contractInspection?.inputs[i].type
+      } else {
+        types = types + `, ${contractInspection?.inputs[i].type}`
+      }
+    }
+
+    const functionNameFinal = `${contractInspection.functionName}(${types})`
+
+    const data = {
+      walletId: blockchainWalletsSelected.value,
+      contractAddress: blockchainContractSelected?.currentAddress,
+      environment: selected.value.toLowerCase(),
+      functionName: functionNameFinal,
+      functionParams,
+    }
+
+    try {
+      const res = await callAxiosBackend(
+        'post',
+        '/blockchain/functions/sendTransactionCrossfiContract',
+        userSessionToken,
+        data,
+      )
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      newContracts[cntIndex].consoleLogs.unshift({
+        type: 'contractCall',
+        functionName: contractInspection.functionName,
+        args: functionParams,
+        responseValue: JSON.parse(res.transactionHash),
         desc: address,
         createdAt: String(new Date()),
       })
@@ -1705,23 +1799,19 @@ const MainPage = ({ id }) => {
                                               TypeWalletProvider?.ACCELAR &&
                                             blockchainWalletsSelected
                                           ) {
-                                            const finalCntInsInput = []
-
-                                            for (
-                                              let i = 0;
-                                              i < cntIns?.inputs?.length;
-                                              i++
+                                            if (
+                                              ideChain === NetworkIDE.STELLAR
                                             ) {
-                                              finalCntInsInput.push({
-                                                paramName:
-                                                  cntIns?.inputs[i].name,
-                                                value: cntIns?.inputs[i].value,
-                                              })
+                                              treatParamsAndCallSorobanContract(
+                                                cntIns,
+                                              )
+                                            } else if (
+                                              ideChain === NetworkIDE.CROSSFI
+                                            ) {
+                                              treatParamsAndCallCrossfiContract(
+                                                cntIns,
+                                              )
                                             }
-                                            callContract(
-                                              cntIns?.functionName,
-                                              finalCntInsInput,
-                                            )
                                           } else if (
                                             walletProvider ===
                                               TypeWalletProvider?.FREIGHTER &&
