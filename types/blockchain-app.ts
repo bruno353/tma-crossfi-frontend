@@ -50,6 +50,7 @@ export interface ConsoleContractCall {
   args: string[]
   responseValue: any
   createdAt: string
+  stateMutability?: string // this is for abi of evm contracts: view; nonpayable; payable
   desc?: string
   isOpen?: boolean
 }
@@ -66,6 +67,7 @@ export interface ConsoleDeployError {
   type: 'deployError'
   contractName: string
   createdAt: string
+  renderHTML?: boolean
   desc?: string
   isOpen?: boolean
 }
@@ -88,6 +90,7 @@ export interface ContractInspectionI {
   inputs: ContractInspectionInputsI[]
   outputsArray: string[]
   stateMutability?: string // this is for abi of evm contracts: view; nonpayable; payable
+  payableValue?: string // if its a payable function
   transactError?: boolean
   isOpen?: boolean
   docs?: string

@@ -34,6 +34,7 @@ import {
   BlockchainContractProps,
   BlockchainWalletProps,
   ConsoleCompile,
+  ConsoleContractCall,
   ConsoleLog,
   ContractInspectionI,
   ContractInspectionInputsI,
@@ -455,7 +456,28 @@ const MainPage = ({ id }) => {
       } catch (err) {
         console.log(err)
         console.log('Error: ' + err.response.data.message)
-        const out = extractAllErrorMessages(err.response.data.message)
+        const outHere = getValueBetweenStrings(
+          err.response.data.message,
+          '[1;31mError',
+          '\r\n',
+        )
+        console.log('outHere recibi: ')
+        console.log(outHere)
+
+        const outHere2 = getValueBetweenStrings(
+          err.response.data.message,
+          '-->',
+          '                  ',
+        )
+
+        const line = getValueBetweenStrings(
+          err.response.data.message,
+          'Counter.sol:',
+          ':',
+        )
+
+        console.log('outHere2 recibi: ')
+        console.log(outHere2)
 
         const newContracts = [...blockchainContracts]
         const cntIndex = newContracts.findIndex(
@@ -475,31 +497,18 @@ const MainPage = ({ id }) => {
           return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
         })
 
-        for (let i = 0; i < out?.length; i++) {
-          let errorDescription = extractTextMessageSecondOcorrency(
-            out[i],
-            '\u001b[0m\r\n\u001b[0m',
-            'Building',
-          )
-          let errorMessage = extractTextMessage(out[i], 'error[', '\n')
-          errorMessage = convertAnsiToHtml(errorMessage)
-          errorDescription = convertAnsiToHtml(errorDescription)
+        const errorMessage = convertAnsiToHtml(outHere)
+        const errorDescription = convertAnsiToHtml(outHere2)
 
-          let lineError = extractTextMessageAndRemoveItems(
-            out[i],
-            '[0m\r\n\u001b[0m\u001b[1m\u001b[38;5;12m',
-            '\u001b[0m ',
-          )
-          lineError = Number(lineError)
+        const lineError = Number(line)
 
-          console.log({ errorDescription, errorMessage, lineError })
-          newContracts[cntIndex].consoleLogs.unshift({
-            errorDescription,
-            errorMessage,
-            lineError,
-            type: 'error',
-          })
-        }
+        console.log({ errorDescription, errorMessage, lineError })
+        newContracts[cntIndex].consoleLogs.unshift({
+          errorDescription,
+          errorMessage,
+          lineError,
+          type: 'error',
+        })
 
         setBlockchainContracts(newContracts)
         setBlockchainContractSelected(newContracts[cntIndex])
@@ -507,6 +516,28 @@ const MainPage = ({ id }) => {
     }
 
     setIsLoadingCompilation(false)
+  }
+
+  function renderCnslLogResponse(cnsl: ConsoleContractCall) {
+    if (ideChain === NetworkIDE.STELLAR) {
+      return <div>{JSON.stringify(cnsl?.responseValue)}</div>
+    } else if (ideChain === NetworkIDE.CROSSFI) {
+      if (cnsl?.stateMutability === 'view') {
+        return <div>{cnsl?.responseValue}</div>
+      } else {
+        return (
+          <div
+            onClick={() => {
+              navigator.clipboard.writeText(cnsl?.responseValue)
+              toast.success('Hash copied')
+            }}
+            className="cursor-pointer"
+          >
+            {transformString(cnsl?.responseValue, 8)}
+          </div>
+        )
+      }
+    }
   }
 
   async function deployContractSoroban() {
@@ -641,7 +672,11 @@ const MainPage = ({ id }) => {
     for (let i = 0; i < cntIns?.inputs?.length; i++) {
       finalCntInsInput.push(String(cntIns?.inputs[i].value))
     }
-    sendTransactionContractCrossfi(cntIns, finalCntInsInput)
+    if (cntIns.stateMutability === 'view') {
+      callTransactionContractCrossfi(cntIns, finalCntInsInput)
+    } else {
+      sendTransactionContractCrossfi(cntIns, finalCntInsInput)
+    }
   }
 
   function treatParamsAndCallSorobanContract(cntIns: ContractInspectionI) {
@@ -713,7 +748,12 @@ const MainPage = ({ id }) => {
         const cntIndex = newContracts.findIndex(
           (cnt) => cnt.id === blockchainContractSelected?.id,
         )
-        const errorDescription = convertAnsiToHtml(err.response.data.message)
+        const errorMessage = getValueBetweenStrings(
+          err.response.data.message,
+          'Error: \r\n\u001b[31m',
+          '[0m\r\n',
+        )
+        const errorDescription = convertAnsiToHtml(errorMessage)
         console.log(errorDescription)
 
         newContracts[cntIndex].consoleLogs.unshift({
@@ -721,6 +761,7 @@ const MainPage = ({ id }) => {
           desc: errorDescription,
           contractName: blockchainContractSelected?.name,
           createdAt: String(new Date()),
+          renderHTML: true,
         })
 
         setBlockchainContracts(newContracts)
@@ -860,6 +901,10 @@ const MainPage = ({ id }) => {
       functionParams,
     }
 
+    if (contractInspection.stateMutability === 'payable') {
+      data['payableValue'] = contractInspection.payableValue
+    }
+
     try {
       const res = await callAxiosBackend(
         'post',
@@ -875,7 +920,86 @@ const MainPage = ({ id }) => {
         type: 'contractCall',
         functionName: contractInspection.functionName,
         args: functionParams,
-        responseValue: JSON.parse(res.transactionHash),
+        responseValue: res.transactionHash,
+        stateMutability: contractInspection.stateMutability,
+        desc: address,
+        createdAt: String(new Date()),
+      })
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
+    } catch (err) {
+      console.log(err)
+      console.log('Error: ' + err.response.data.message)
+
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      newContracts[cntIndex].consoleLogs.unshift({
+        type: 'deployError',
+        desc: err.response.data.message,
+        contractName: blockchainContractSelected?.name,
+        createdAt: String(new Date()),
+      })
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
+    }
+    setIsContractCallLoading(false)
+  }
+
+  async function callTransactionContractCrossfi(
+    contractInspection: ContractInspectionI,
+    functionParams: string[],
+  ) {
+    setIsContractCallLoading(contractInspection.functionName)
+
+    const address = blockchainContractSelected?.currentAddress
+
+    const { userSessionToken } = parseCookies()
+
+    // treating the function name, must send like: callHere(uint256, string)
+    let types = ''
+    for (let i = 0; i < contractInspection?.inputs?.length; i++) {
+      if (i === 0) {
+        types = contractInspection?.inputs[i].type
+      } else {
+        types = types + `, ${contractInspection?.inputs[i].type}`
+      }
+    }
+
+    const functionNameFinal = `${contractInspection.functionName}(${types})`
+
+    const data = {
+      walletId: blockchainWalletsSelected.value,
+      contractAddress: blockchainContractSelected?.currentAddress,
+      environment: selected.value.toLowerCase(),
+      functionName: functionNameFinal,
+      functionParams,
+    }
+
+    try {
+      const res = await callAxiosBackend(
+        'post',
+        '/blockchain/functions/callTransactionCrossfiContract',
+        userSessionToken,
+        data,
+      )
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      let finalValue = res.value
+      if (Number(finalValue)) {
+        finalValue = Number(finalValue)
+      }
+      newContracts[cntIndex].consoleLogs.unshift({
+        type: 'contractCall',
+        functionName: contractInspection.functionName,
+        args: functionParams,
+        responseValue: finalValue,
+        stateMutability: contractInspection.stateMutability,
         desc: address,
         createdAt: String(new Date()),
       })
@@ -1674,6 +1798,13 @@ const MainPage = ({ id }) => {
                                   }`}
                                 ></img>
                                 {cntIns?.isOpen && (
+                                  <div className="ml-2 text-[#c5c4c4]">
+                                    {cntIns?.stateMutability ??
+                                      cntIns?.stateMutability}
+                                  </div>
+                                )}
+
+                                {cntIns?.isOpen && (
                                   <img
                                     alt="ethereum avatar"
                                     src="/images/depin/open.svg"
@@ -1742,6 +1873,61 @@ const MainPage = ({ id }) => {
                                         </div>
                                       ),
                                     )}
+                                    {cntIns?.stateMutability &&
+                                      cntIns?.stateMutability === 'payable' && (
+                                        <div>
+                                          <div className="mb-1 flex items-center justify-between text-base font-light">
+                                            <div className="font-medium text-[#cc5563]">
+                                              Payable value
+                                            </div>
+                                            <div className="text-xs text-[#c5c4c4]">
+                                              wei
+                                            </div>
+                                          </div>
+
+                                          <input
+                                            type="text"
+                                            id="workspaceName"
+                                            name="workspaceName"
+                                            value={cntIns?.payableValue}
+                                            onChange={(e) => {
+                                              if (
+                                                !(
+                                                  typeof e.target.value ===
+                                                  'number'
+                                                )
+                                              ) {
+                                                return
+                                              }
+                                              if (!isLoading) {
+                                                const newContracts = [
+                                                  ...blockchainContracts,
+                                                ]
+                                                const cntIndex =
+                                                  newContracts.findIndex(
+                                                    (cnt) =>
+                                                      cnt.id ===
+                                                      blockchainContractSelected?.id,
+                                                  )
+
+                                                newContracts[
+                                                  cntIndex
+                                                ].contractInspections[
+                                                  index
+                                                ].payableValue = e.target.value
+
+                                                setBlockchainContracts(
+                                                  newContracts,
+                                                )
+                                                setBlockchainContractSelected(
+                                                  newContracts[cntIndex],
+                                                )
+                                              }
+                                            }}
+                                            className="w-full rounded-md border border-transparent px-3 py-1 text-base placeholder-body-color  outline-none focus:border-primary  dark:bg-[#242B51]"
+                                          />
+                                        </div>
+                                      )}
                                   </div>
                                   <div className="flex gap-x-5">
                                     <div
@@ -1910,7 +2096,10 @@ const MainPage = ({ id }) => {
                                           : 'cursor-pointer  hover:bg-[#35428a]'
                                       }  my-auto h-fit w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
                                     >
-                                      Transact
+                                      {ideChain === NetworkIDE?.CROSSFI &&
+                                      cntIns?.stateMutability === 'view'
+                                        ? 'Get'
+                                        : 'Transact'}
                                     </div>
                                     {cntIns?.transactError && (
                                       <div className="text-xs font-medium text-[#cc5563]">
@@ -2138,15 +2327,24 @@ const MainPage = ({ id }) => {
                                         src="/images/depin/warning.svg"
                                         className="w-[20px]"
                                       ></img>
-                                      <div
-                                        className={`${
-                                          !cnslLog?.isOpen
-                                            ? 'line-clamp-2'
-                                            : 'max-w-[90%]'
-                                        }`}
-                                      >
-                                        {cnslLog?.desc}
-                                      </div>
+                                      {cnslLog?.renderHTML ? (
+                                        <div
+                                          className="whitespace-pre-wrap"
+                                          dangerouslySetInnerHTML={{
+                                            __html: cnslLog?.desc,
+                                          }}
+                                        />
+                                      ) : (
+                                        <div
+                                          className={`${
+                                            !cnslLog?.isOpen
+                                              ? 'line-clamp-2'
+                                              : 'max-w-[90%]'
+                                          }`}
+                                        >
+                                          {cnslLog?.desc}
+                                        </div>
+                                      )}
                                     </div>
 
                                     <img
@@ -2414,7 +2612,7 @@ const MainPage = ({ id }) => {
                                     >
                                       {cnslLog?.functionName}(
                                       {cnslLog?.args.join(', ')}) {'-->'}{' '}
-                                      {JSON.stringify(cnslLog?.responseValue)}
+                                      {renderCnslLogResponse(cnslLog)}
                                     </div>
                                     <img
                                       alt="ethereum avatar"
