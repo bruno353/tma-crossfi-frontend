@@ -19,7 +19,7 @@ const ContractsABIRender = ({
   setBlockchainContractSelected,
 }: MenuI) => {
   return (
-    <div className="">
+    <div className="grid gap-y-2">
       {blockchainContractSelected?.contractABIs?.map((cntABI, index) => (
         <div
           key={index}

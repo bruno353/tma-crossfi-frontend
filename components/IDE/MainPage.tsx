@@ -16,6 +16,8 @@ import {
   useRef,
 } from 'react'
 
+import { useAccount } from 'wagmi'
+
 import { retrievePublicKey, checkConnection } from './Funcs/freighter'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
@@ -147,6 +149,7 @@ const MainPage = ({ id }) => {
   const [isLoadingNewContract, setIsLoadingNewContract] = useState(false)
   const [isLoadingCompilation, setIsLoadingCompilation] = useState(false)
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
+  const { address } = useAccount()
 
   const [walletProvider, setWalletProvider] = useState<TypeWalletProvider>(
     TypeWalletProvider.ACCELAR,
@@ -328,6 +331,17 @@ const MainPage = ({ id }) => {
 
   async function compileContract() {
     setIsLoadingCompilation(true)
+
+    const newContracts = [...blockchainContracts]
+    const cntIndex = newContracts.findIndex(
+      (cnt) => cnt.id === blockchainContractSelected?.id,
+    )
+    newContracts[cntIndex].currentAddress = ''
+    newContracts[cntIndex].contractInspections = []
+    newContracts[cntIndex].contractABIs = []
+
+    setBlockchainContracts(newContracts)
+    setBlockchainContractSelected(newContracts[cntIndex])
 
     const { userSessionToken } = parseCookies()
 
@@ -1517,7 +1531,6 @@ const MainPage = ({ id }) => {
                       >
                         Deploy
                       </div>
-
                       <div
                         onClick={() => {
                           if (
@@ -1546,6 +1559,9 @@ const MainPage = ({ id }) => {
                         }`}
                       >
                         Import
+                      </div>
+                      <div>
+                        <w3m-button />
                       </div>
                     </div>
                   </div>
