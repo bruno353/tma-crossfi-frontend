@@ -5,6 +5,7 @@ import Dropdown, { ValueObject } from '../../Modals/Dropdown'
 import {
   BlockchainContractProps,
   BlockchainWalletProps,
+  NetworkIDE,
 } from '@/types/blockchain-app'
 import { TypeWalletProvider, optionsNetwork } from '../MainPage'
 import { callAxiosBackend } from '@/utils/general-api'
@@ -236,17 +237,31 @@ const Sidebar = ({
           >
             Accelar
           </div>
-          <div
-            onClick={() => {
-              setWalletProvider(TypeWalletProvider.FREIGHTER)
-            }}
-            className={`cursor-pointer rounded-xl px-2 py-1 ${
-              walletProvider === TypeWalletProvider.FREIGHTER &&
-              'bg-[#dbdbdb1e]'
-            }`}
-          >
-            Freighter
-          </div>
+          {ideChain === NetworkIDE.STELLAR && (
+            <div
+              onClick={() => {
+                setWalletProvider(TypeWalletProvider.FREIGHTER)
+              }}
+              className={`cursor-pointer rounded-xl px-2 py-1 ${
+                walletProvider === TypeWalletProvider.FREIGHTER &&
+                'bg-[#dbdbdb1e]'
+              }`}
+            >
+              Freighter
+            </div>
+          )}
+          {ideChain === NetworkIDE.CROSSFI && (
+            <div
+              onClick={() => {
+                setWalletProvider(TypeWalletProvider.EVM)
+              }}
+              className={`cursor-pointer rounded-xl px-2 py-1 ${
+                walletProvider === TypeWalletProvider.EVM && 'bg-[#dbdbdb1e]'
+              }`}
+            >
+              Metamask
+            </div>
+          )}
         </div>
         {walletProvider === TypeWalletProvider.ACCELAR && (
           <div>
@@ -322,6 +337,19 @@ const Sidebar = ({
                       <>Connect Wallet</>
                     )}
                   </label>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+        {walletProvider === TypeWalletProvider.EVM && (
+          <div className="mb-8">
+            {isLoadingWallets ? (
+              <div className="mb-2 flex h-[25px] w-full animate-pulse rounded-md bg-[#dbdbdb1e]"></div>
+            ) : (
+              <>
+                <div className="mx-auto flex">
+                  <w3m-button size="sm" />
                 </div>
               </>
             )}

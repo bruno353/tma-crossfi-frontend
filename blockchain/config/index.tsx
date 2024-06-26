@@ -4,6 +4,29 @@ import { mainnet, bscTestnet, sepolia } from 'wagmi/chains'
 
 export const projectId = 'a8a94eaa29bf7b1d3a0d94172c58e6ac'
 
+const crossfiTestnet = {
+  id: 4157,
+  name: 'CrossFi Testnet',
+  network: 'crossfi',
+  nativeCurrency: {
+    name: 'XFI',
+    symbol: 'XFI',
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.testnet.ms'],
+    },
+    public: {
+      http: ['https://rpc.testnet.ms'],
+    },
+  },
+  blockExplorers: {
+    default: { name: 'CrossfiScan', url: 'https://scan.testnet.ms' },
+  },
+  testnet: true,
+}
+
 if (!projectId) throw new Error('Project ID is not defined')
 
 const metadata = {
@@ -14,14 +37,12 @@ const metadata = {
 }
 
 export const wagmiConfig = defaultWagmiConfig({
-  chains: [mainnet, sepolia, bscTestnet], // required
+  chains: [mainnet, sepolia, bscTestnet, crossfiTestnet], // required
   projectId, // required
   metadata, // required
   ssr: true,
   transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-    [bscTestnet.id]: http('https://data-seed-prebsc-1-s1.binance.org:8545'),
+    [crossfiTestnet.id]: http('https://rpc.testnet.ms'),
   },
   storage: createStorage({
     storage: cookieStorage,

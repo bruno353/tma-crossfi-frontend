@@ -89,6 +89,7 @@ export const cleanDocs = (docs) => {
 export enum TypeWalletProvider {
   ACCELAR,
   FREIGHTER,
+  EVM,
 }
 
 export const sorobanNetworkToRpc = {
@@ -1559,9 +1560,6 @@ const MainPage = ({ id }) => {
                         }`}
                       >
                         Import
-                      </div>
-                      <div>
-                        <w3m-button />
                       </div>
                     </div>
                   </div>
