@@ -398,7 +398,9 @@ const Sidebar = ({
                   onClick={() => {
                     setBlockchainContractSelected(cnt)
                   }}
-                  ref={(el) => (itemRefsCnt.current[index] = el)}
+                  ref={(el) => {
+                    itemRefsCnt.current[index] = el
+                  }}
                   onMouseEnter={() => {
                     setIsCntModalOpen(cnt.id)
                     setBlockchainContractHovered(cnt)
@@ -551,7 +553,9 @@ const Sidebar = ({
                       (cntHistory, index) => {
                         return (
                           <div
-                            ref={(el) => (itemRefs.current[index] = el)}
+                            ref={(el) => {
+                              itemRefs.current[index] = el
+                            }}
                             onMouseEnter={() => {
                               setIsCntDeploymentHistoryModalOpen(cntHistory.id)
                               if (
