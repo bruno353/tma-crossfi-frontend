@@ -13,11 +13,10 @@ if (!projectId) throw new Error('Project ID is not defined')
 createWeb3Modal({
   wagmiConfig,
   projectId,
-  themeMode: 'dark',
-  // themeVariables: {
-  //   "--w3m-accent": "cyan",
-  //   "--w3m-border-radius-master": "0px"
-  // }
+  themeVariables: {
+    '--w3m-font-size-master': '7px',
+    '--w3m-accent': '#273687',
+  },
 })
 
 export function Web3Modal({

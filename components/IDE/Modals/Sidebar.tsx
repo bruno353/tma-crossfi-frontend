@@ -19,6 +19,7 @@ import { checkConnection, retrievePublicKey } from '../Funcs/freighter'
 import ChainSelector from '../Components/ChainSelector'
 import { AccountContext } from '@/contexts/AccountContext'
 import { CHAIN_TO_TEMPLATE } from '@/types/consts/ide'
+import ConnectButton from '@/contexts/ConnectButton'
 
 export interface MenuI {
   id: string
@@ -347,11 +348,9 @@ const Sidebar = ({
             {isLoadingWallets ? (
               <div className="mb-2 flex h-[25px] w-full animate-pulse rounded-md bg-[#dbdbdb1e]"></div>
             ) : (
-              <>
-                <div className="mx-auto flex">
-                  <w3m-button size="sm" />
-                </div>
-              </>
+              <div className="mx-auto flex">
+                <ConnectButton />
+              </div>
             )}
           </div>
         )}
