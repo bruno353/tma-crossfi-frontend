@@ -1156,6 +1156,11 @@ const MainPage = ({ id }) => {
       }
     }
 
+    let value
+    if (contractInspection.stateMutability === 'payable') {
+      value = contractInspection.payableValue
+    }
+
     const findAbi = blockchainContractSelected.contractABIs.find(
       (abi) => abi.name === blockchainContractSelected.currentContractABIName,
     )
@@ -1174,6 +1179,7 @@ const MainPage = ({ id }) => {
         chain,
         address,
         addressContract,
+        value,
       )
       console.log('rtespo')
       console.log(res)
@@ -1936,11 +1942,20 @@ const MainPage = ({ id }) => {
                       isOpen={openModalBotHelper}
                       onUpdateM={async (response, contractId) => {
                         console.log('Chamando on update bot')
-                        const finalV = getValueBetweenStrings(
-                          response,
-                          '```rust\n',
-                          '```',
-                        )
+                        let finalV
+                        if (ideChain === NetworkIDE.STELLAR) {
+                          finalV = getValueBetweenStrings(
+                            response,
+                            '```rust\n',
+                            '```',
+                          )
+                        } else if (ideChain === NetworkIDE.CROSSFI) {
+                          finalV = getValueBetweenStrings(
+                            response,
+                            '```solidity\n',
+                            '```',
+                          )
+                        }
                         const newContracts = [...blockchainContracts]
                         const cntIndex = newContracts.findIndex(
                           (cnt) => cnt.id === contractId,

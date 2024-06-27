@@ -31,6 +31,7 @@ export function useContractWrite() {
     chain: Chain,
     account: `0x${string}` | Account,
     contract: any,
+    value?: string,
   ) => {
     const result = await writeContractAsync({
       abi: contractABI,
@@ -39,6 +40,7 @@ export function useContractWrite() {
       functionName,
       chain,
       account,
+      value: value ?? '0',
     })
     const transaction = await waitForTransactionReceipt(wagmiConfig, {
       hash: result,
