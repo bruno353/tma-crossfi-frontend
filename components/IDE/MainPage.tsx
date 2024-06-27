@@ -1117,7 +1117,7 @@ const MainPage = ({ id }) => {
       setBlockchainContractSelected(newContracts[cntIndex])
     } catch (err) {
       console.log(err)
-      console.log('Error: ' + err.response.data.message)
+      console.log('Error: ' + err?.response?.data?.message)
 
       const newContracts = [...blockchainContracts]
       const cntIndex = newContracts.findIndex(
@@ -1125,7 +1125,7 @@ const MainPage = ({ id }) => {
       )
       newContracts[cntIndex].consoleLogs.unshift({
         type: 'deployError',
-        desc: err.response.data.message,
+        desc: err?.response?.data?.message,
         contractName: blockchainContractSelected?.name,
         createdAt: String(new Date()),
       })
@@ -1144,6 +1144,9 @@ const MainPage = ({ id }) => {
       toast.error('Wallet not connected')
       return
     }
+    console.log('state mutability')
+    console.log(contractInspection.stateMutability)
+    console.log(contractInspection.payableValue)
     setIsContractCallLoading(contractInspection.functionName)
 
     // treating the function name, must send like: callHere(uint256, string)
@@ -1202,7 +1205,7 @@ const MainPage = ({ id }) => {
       setBlockchainContractSelected(newContracts[cntIndex])
     } catch (err) {
       console.log(err)
-      console.log('Error: ' + err.response.data.message)
+      console.log('Error: ' + err?.response?.data?.message)
 
       const newContracts = [...blockchainContracts]
       const cntIndex = newContracts.findIndex(
@@ -1210,7 +1213,7 @@ const MainPage = ({ id }) => {
       )
       newContracts[cntIndex].consoleLogs.unshift({
         type: 'deployError',
-        desc: err.response.data.message,
+        desc: err?.response?.data?.message ?? 'Check metamask for log error',
         contractName: blockchainContractSelected?.name,
         createdAt: String(new Date()),
       })
@@ -1277,7 +1280,7 @@ const MainPage = ({ id }) => {
       setBlockchainContractSelected(newContracts[cntIndex])
     } catch (err) {
       console.log(err)
-      console.log('Error: ' + err.response.data.message)
+      console.log('Error: ' + err?.response?.data?.message)
 
       const newContracts = [...blockchainContracts]
       const cntIndex = newContracts.findIndex(
@@ -1285,7 +1288,7 @@ const MainPage = ({ id }) => {
       )
       newContracts[cntIndex].consoleLogs.unshift({
         type: 'deployError',
-        desc: err.response.data.message,
+        desc: err?.response?.data?.message ?? 'Check metamask for log error',
         contractName: blockchainContractSelected?.name,
         createdAt: String(new Date()),
       })
@@ -2177,14 +2180,6 @@ const MainPage = ({ id }) => {
                                             name="workspaceName"
                                             value={cntIns?.payableValue}
                                             onChange={(e) => {
-                                              if (
-                                                !(
-                                                  typeof e.target.value ===
-                                                  'number'
-                                                )
-                                              ) {
-                                                return
-                                              }
                                               if (!isLoading) {
                                                 const newContracts = [
                                                   ...blockchainContracts,
