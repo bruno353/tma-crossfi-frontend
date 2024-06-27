@@ -763,6 +763,18 @@ const MainPage = ({ id }) => {
         abiName: contractABIName,
       }
 
+      const constructor = blockchainContractSelected?.contractABIs?.find(
+        (ct) => ct.name === contractABIName,
+      )?.constructor
+
+      if (constructor && Array.isArray(constructor)) {
+        const constructorParams = []
+        for (let i = 0; i < constructor?.length; i++) {
+          constructorParams.push(constructor[i]?.value)
+        }
+        data['constructorParams'] = constructorParams
+      }
+
       try {
         const res = await callAxiosBackend(
           'post',
@@ -840,7 +852,16 @@ const MainPage = ({ id }) => {
         const abiObject = JSON.parse(JSON.parse(findAbi.content))
         const bytecode = abiObject?.bytecode?.object
         const abi = abiObject?.abi
-        const res = await deploy(abi, bytecode)
+
+        const constructor = findAbi?.constructor
+        const constructorParams = []
+
+        if (constructor && Array.isArray(constructor)) {
+          for (let i = 0; i < constructor?.length; i++) {
+            constructorParams.push(constructor[i]?.value)
+          }
+        }
+        const res = await deploy(abi, bytecode, constructorParams)
 
         newContracts[cntIndex].currentAddress = res.contractAddress
         newContracts[cntIndex].currentChain = chain

@@ -17,10 +17,11 @@ import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import { createBlockchainApps, createWallet } from '@/utils/api-blockchain'
 import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
 import { cleanDocs } from '../MainPage'
-import { BlockchainContractProps } from '@/types/blockchain-app'
+import { BlockchainContractProps, NetworkIDE } from '@/types/blockchain-app'
 import ConfirmDeployContractModal from './ConfirmDeployContractModal'
 import { isValidSorobanContractAddress } from '@/utils/functions'
 import { callAxiosBackend } from '@/utils/general-api'
+import { AccountContext } from '@/contexts/AccountContext'
 
 export interface ModalI {
   contract: BlockchainContractProps
@@ -46,6 +47,8 @@ const BotHelperModal = ({
 
   const [input, setInput] = useState('')
 
+  const { ideChain } = useContext(AccountContext)
+
   const confirmTransactionRef = useRef(null)
 
   const modalRef = useRef<HTMLDivElement>(null)
@@ -69,6 +72,10 @@ const BotHelperModal = ({
     const data = {
       question: input,
       id: contract?.id,
+    }
+
+    if (ideChain === NetworkIDE.CROSSFI) {
+      data['network'] = ideChain
     }
 
     try {

@@ -30,10 +30,11 @@ export function useContractDeploy() {
     },
   })
 
-  const deploy = async (abi: Abi, bytecode: string) => {
+  const deploy = async (abi: Abi, bytecode: string, args: any[]) => {
     const result = await deployContractAsync({
       abi,
       bytecode,
+      args,
     })
 
     const transaction = await waitForTransactionReceipt(wagmiConfig, {

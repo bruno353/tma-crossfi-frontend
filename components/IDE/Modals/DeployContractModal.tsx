@@ -94,7 +94,11 @@ const DeployContractModal = ({
     const cntABIIndex = contractABIs?.findIndex((ct) => ct.name === abiName)
     const cntABI = contractABIs[cntABIIndex]
 
-    if (!cntABI?.constructor) {
+    if (
+      !cntABI?.constructor ||
+      cntABI?.constructor?.length === 0 ||
+      !Array.isArray(cntABI?.constructor)
+    ) {
       return
     }
     return (
