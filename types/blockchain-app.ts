@@ -96,10 +96,17 @@ export interface ContractInspectionI {
   docs?: string
 }
 
+export interface ABIConstructorI {
+  name: string
+  type: string
+  value?: any
+}
+
 export interface ContractABII {
   name: string
   content: any
   isOpen?: boolean
+  constructor?: ABIConstructorI[]
 }
 
 export interface BlockchainWalletProps {
@@ -154,6 +161,7 @@ export interface BlockchainContractProps {
   wasm?: any
   currentAddress?: string
   currentChain?: string
+  currentContractABIName?: string
   ideContractDeploymentHistories: BlockchainContractDeploymentHistoryProps[]
   consoleLogs: ConsoleLog[]
   contractInspections?: ContractInspectionI[] // Soroban inspetions

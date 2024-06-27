@@ -37,7 +37,7 @@ const metadata = {
 }
 
 export const wagmiConfig = defaultWagmiConfig({
-  chains: [mainnet, sepolia, bscTestnet, crossfiTestnet], // required
+  chains: [crossfiTestnet], // required
   projectId, // required
   metadata, // required
   ssr: true,

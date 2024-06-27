@@ -33,11 +33,13 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { parseCookies } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 import {
+  ABIConstructorI,
   BlockchainContractProps,
   BlockchainWalletProps,
   ConsoleCompile,
   ConsoleContractCall,
   ConsoleLog,
+  ContractABII,
   ContractInspectionI,
   ContractInspectionInputsI,
   NetworkIDE,
@@ -55,7 +57,9 @@ import {
   extractTextMessageAndRemoveItems,
   extractTextMessageSecondOcorrency,
   getValueBetweenStrings,
+  getValueFromString,
   transformString,
+  truncateString,
   wait,
 } from '@/utils/functions'
 import Sidebar from './Modals/Sidebar'
@@ -81,6 +85,11 @@ import {
   LANGUAGE_VERSIONS_STELLAR,
 } from '@/types/consts/ide'
 import ContractsABIRender from './Components/ContractsABIRender'
+import { useContractDeploy } from './hooks/useContractDeploy'
+import { handleError } from './hooks/errors'
+import { useContractWrite } from './hooks/useContract'
+import { readContract } from '@wagmi/core'
+import { wagmiConfig } from '@/blockchain/config'
 
 export const cleanDocs = (docs) => {
   return docs?.replace(/(\r\n\s+|\n\s+)/g, '\n').trim()
@@ -150,7 +159,9 @@ const MainPage = ({ id }) => {
   const [isLoadingNewContract, setIsLoadingNewContract] = useState(false)
   const [isLoadingCompilation, setIsLoadingCompilation] = useState(false)
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
-  const { address } = useAccount()
+  const { address, chain } = useAccount()
+  const { deploy } = useContractDeploy()
+  const { write } = useContractWrite()
 
   const [walletProvider, setWalletProvider] = useState<TypeWalletProvider>(
     TypeWalletProvider.ACCELAR,
@@ -330,6 +341,23 @@ const MainPage = ({ id }) => {
     )
   }
 
+  function renderABIConstructor(abi: ContractABII) {
+    const abiContent = JSON.parse(JSON.parse(abi.content))
+
+    if (abiContent.abi[0]?.type === 'constructor') {
+      const inputs = abiContent.abi[0]?.inputs
+      const constructor: ABIConstructorI[] = []
+      for (let i = 0; i < inputs?.length; i++) {
+        constructor.push({
+          name: inputs[i].name,
+          type: inputs[i].type,
+          value: '',
+        })
+      }
+      return constructor
+    }
+  }
+
   async function compileContract() {
     setIsLoadingCompilation(true)
 
@@ -466,6 +494,14 @@ const MainPage = ({ id }) => {
           return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
         })
 
+        // doing constructor validations
+        for (let i = 0; i < res.contractABIs?.length; i++) {
+          const constructor = renderABIConstructor(res.contractABIs[i])
+          if (constructor) {
+            newContracts[cntIndex].contractABIs[i].constructor = constructor
+          }
+        }
+
         setBlockchainContracts(newContracts)
         setBlockchainContractSelected(newContracts[cntIndex])
       } catch (err) {
@@ -479,11 +515,7 @@ const MainPage = ({ id }) => {
         console.log('outHere recibi: ')
         console.log(outHere)
 
-        const outHere2 = getValueBetweenStrings(
-          err.response.data.message,
-          '-->',
-          '                  ',
-        )
+        const outHere2 = getValueFromString(err.response.data.message, '-->')
 
         const line = getValueBetweenStrings(
           err.response.data.message,
@@ -512,8 +544,8 @@ const MainPage = ({ id }) => {
           return cntfilter.type !== 'error' && cntfilter.type !== 'deployError'
         })
 
-        const errorMessage = convertAnsiToHtml(outHere)
-        const errorDescription = convertAnsiToHtml(outHere2)
+        const errorMessage = convertAnsiToHtml(outHere ?? '')
+        const errorDescription = convertAnsiToHtml(outHere2 ?? '')
 
         const lineError = Number(line)
 
@@ -694,6 +726,19 @@ const MainPage = ({ id }) => {
     }
   }
 
+  function treatParamsAndCallCrossfiContractWagmi(cntIns: ContractInspectionI) {
+    const finalCntInsInput = []
+
+    for (let i = 0; i < cntIns?.inputs?.length; i++) {
+      finalCntInsInput.push(String(cntIns?.inputs[i].value))
+    }
+    if (cntIns.stateMutability === 'view') {
+      callTransactionContractCrossfiWagmi(cntIns, finalCntInsInput)
+    } else {
+      sendTransactionContractCrossfiWagmi(cntIns, finalCntInsInput)
+    }
+  }
+
   function treatParamsAndCallSorobanContract(cntIns: ContractInspectionI) {
     const finalCntInsInput = []
 
@@ -749,6 +794,7 @@ const MainPage = ({ id }) => {
           )?.content,
         )
         newContracts[cntIndex].contractInspections = insp
+        newContracts[cntIndex].currentContractABIName = contractABIName
 
         console.log('the contrac inspections')
         console.log(insp)
@@ -782,32 +828,60 @@ const MainPage = ({ id }) => {
         setBlockchainContracts(newContracts)
         setBlockchainContractSelected(newContracts[cntIndex])
       }
-    } else if (walletProvider === TypeWalletProvider.FREIGHTER) {
+    } else if (walletProvider === TypeWalletProvider.EVM) {
       try {
-        const contractWasmBuffer = Buffer.from(blockchainContractSelected.wasm)
-        const addressRes = await deployContractFreighter(
-          contractWasmBuffer,
-          selected.value.toUpperCase(),
-          optionsNetworkToPassphrase[selected.value.toUpperCase()],
+        const newContracts = [...blockchainContracts]
+        const cntIndex = newContracts.findIndex(
+          (cnt) => cnt.id === blockchainContractSelected?.id,
         )
+        const findAbi = blockchainContractSelected.contractABIs.find(
+          (abi) => abi.name === contractABIName,
+        )
+        const abiObject = JSON.parse(JSON.parse(findAbi.content))
+        const bytecode = abiObject?.bytecode?.object
+        const abi = abiObject?.abi
+        const res = await deploy(abi, bytecode)
+
+        newContracts[cntIndex].currentAddress = res.contractAddress
+        newContracts[cntIndex].currentChain = chain
+        newContracts[cntIndex].consoleLogs.unshift({
+          type: 'deploy',
+          contractName: blockchainContractSelected?.name,
+          desc: `${res.contractAddress}`,
+          createdAt: String(new Date()),
+        })
+
+        const insp = abiToContractInspection(
+          blockchainContractSelected?.contractABIs?.find(
+            (cntABI) => cntABI?.name === contractABIName,
+          )?.content,
+        )
+        newContracts[cntIndex].contractInspections = insp
+        newContracts[cntIndex].currentContractABIName = contractABIName
+
+        setBlockchainContracts(newContracts)
+        setBlockchainContractSelected(newContracts[cntIndex])
+      } catch (err) {
+        console.log(err)
 
         const newContracts = [...blockchainContracts]
         const cntIndex = newContracts.findIndex(
           (cnt) => cnt.id === blockchainContractSelected?.id,
         )
-        newContracts[cntIndex].currentAddress = addressRes
-        newContracts[cntIndex].currentChain = chain
+
+        const errorMessage = convertAnsiToHtml(String(err))
+
         newContracts[cntIndex].consoleLogs.unshift({
-          type: 'deploy',
+          type: 'deployError',
+          desc: 'Deployment error - check metamask log error',
           contractName: blockchainContractSelected?.name,
-          desc: `${addressRes}`,
           createdAt: String(new Date()),
+          renderHTML: true,
         })
 
         setBlockchainContracts(newContracts)
         setBlockchainContractSelected(newContracts[cntIndex])
-      } catch (err) {
-        toast.error(err)
+        handleError(err)
       }
     }
   }
@@ -964,6 +1038,162 @@ const MainPage = ({ id }) => {
     setIsContractCallLoading(false)
   }
 
+  async function callTransactionContractCrossfiWagmi(
+    contractInspection: ContractInspectionI,
+    functionParams: string[],
+  ) {
+    if (!address) {
+      toast.error('Wallet not connected')
+      return
+    }
+    setIsContractCallLoading(contractInspection.functionName)
+
+    // treating the function name, must send like: callHere(uint256, string)
+    let types = ''
+    for (let i = 0; i < contractInspection?.inputs?.length; i++) {
+      if (i === 0) {
+        types = contractInspection?.inputs[i].type
+      } else {
+        types = types + `, ${contractInspection?.inputs[i].type}`
+      }
+    }
+
+    const findAbi = blockchainContractSelected.contractABIs.find(
+      (abi) => abi.name === blockchainContractSelected.currentContractABIName,
+    )
+    const abiObject = JSON.parse(JSON.parse(findAbi.content))
+    const abi = abiObject?.abi
+
+    const addressContract: any = blockchainContractSelected?.currentAddress
+
+    const functionNameFinal = `${contractInspection.functionName}`
+
+    try {
+      const res = await readContract(wagmiConfig, {
+        functionName: functionNameFinal,
+        args: functionParams,
+        abi,
+        address: addressContract,
+      })
+
+      console.log('rtespo')
+      console.log(res)
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      newContracts[cntIndex].consoleLogs.unshift({
+        type: 'contractCall',
+        functionName: contractInspection.functionName,
+        args: functionParams,
+        responseValue: String(res),
+        stateMutability: contractInspection.stateMutability,
+        desc: address,
+        createdAt: String(new Date()),
+      })
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
+    } catch (err) {
+      console.log(err)
+      console.log('Error: ' + err.response.data.message)
+
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      newContracts[cntIndex].consoleLogs.unshift({
+        type: 'deployError',
+        desc: err.response.data.message,
+        contractName: blockchainContractSelected?.name,
+        createdAt: String(new Date()),
+      })
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
+    }
+    setIsContractCallLoading(false)
+  }
+
+  async function sendTransactionContractCrossfiWagmi(
+    contractInspection: ContractInspectionI,
+    functionParams: string[],
+  ) {
+    if (!address) {
+      toast.error('Wallet not connected')
+      return
+    }
+    setIsContractCallLoading(contractInspection.functionName)
+
+    // treating the function name, must send like: callHere(uint256, string)
+    let types = ''
+    for (let i = 0; i < contractInspection?.inputs?.length; i++) {
+      if (i === 0) {
+        types = contractInspection?.inputs[i].type
+      } else {
+        types = types + `, ${contractInspection?.inputs[i].type}`
+      }
+    }
+
+    const findAbi = blockchainContractSelected.contractABIs.find(
+      (abi) => abi.name === blockchainContractSelected.currentContractABIName,
+    )
+    const abiObject = JSON.parse(JSON.parse(findAbi.content))
+    const abi = abiObject?.abi
+
+    const addressContract = blockchainContractSelected?.currentAddress
+
+    const functionNameFinal = `${contractInspection.functionName}`
+
+    try {
+      const res = await write(
+        functionNameFinal,
+        functionParams,
+        abi,
+        chain,
+        address,
+        addressContract,
+      )
+      console.log('rtespo')
+      console.log(res)
+
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      newContracts[cntIndex].consoleLogs.unshift({
+        type: 'contractCall',
+        functionName: contractInspection.functionName,
+        args: functionParams,
+        responseValue: res.transactionHash,
+        stateMutability: contractInspection.stateMutability,
+        desc: address,
+        createdAt: String(new Date()),
+      })
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
+    } catch (err) {
+      console.log(err)
+      console.log('Error: ' + err.response.data.message)
+
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      newContracts[cntIndex].consoleLogs.unshift({
+        type: 'deployError',
+        desc: err.response.data.message,
+        contractName: blockchainContractSelected?.name,
+        createdAt: String(new Date()),
+      })
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
+    }
+    setIsContractCallLoading(false)
+  }
+
   async function callTransactionContractCrossfi(
     contractInspection: ContractInspectionI,
     functionParams: string[],
@@ -1005,15 +1235,12 @@ const MainPage = ({ id }) => {
       const cntIndex = newContracts.findIndex(
         (cnt) => cnt.id === blockchainContractSelected?.id,
       )
-      let finalValue = res.value
-      if (Number(finalValue)) {
-        finalValue = Number(finalValue)
-      }
+      const finalValue = res.value
       newContracts[cntIndex].consoleLogs.unshift({
         type: 'contractCall',
         functionName: contractInspection.functionName,
         args: functionParams,
-        responseValue: finalValue,
+        responseValue: String(finalValue),
         stateMutability: contractInspection.stateMutability,
         desc: address,
         createdAt: String(new Date()),
@@ -1641,6 +1868,15 @@ const MainPage = ({ id }) => {
                       onUpdateM={(value) => {
                         deployContract(value)
                       }}
+                      onSaveContractABIs={(value) => {
+                        const newContracts = [...blockchainContracts]
+                        const cntIndex = newContracts.findIndex(
+                          (cnt) => cnt.id === blockchainContractSelected?.id,
+                        )
+                        newContracts[cntIndex].contractABIs = value
+                        setBlockchainContracts(newContracts)
+                        setBlockchainContractSelected(newContracts[cntIndex])
+                      }}
                       onClose={() => {
                         setOpenModalDeploy(false)
                       }}
@@ -2012,6 +2248,14 @@ const MainPage = ({ id }) => {
                                                 cntIns,
                                               )
                                             }
+                                          } else if (
+                                            walletProvider ===
+                                              TypeWalletProvider?.EVM &&
+                                            ideChain === NetworkIDE.CROSSFI
+                                          ) {
+                                            treatParamsAndCallCrossfiContractWagmi(
+                                              cntIns,
+                                            )
                                           } else if (
                                             walletProvider ===
                                               TypeWalletProvider?.FREIGHTER &&

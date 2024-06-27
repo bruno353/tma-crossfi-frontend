@@ -288,3 +288,26 @@ export function getValueBetweenStrings(stringMain, stringInicio, stringFim) {
 
   return resultado
 }
+
+export function getValueFromString(stringMain, stringInicio) {
+  const posInicio = stringMain.indexOf(stringInicio)
+  console.log(`Posição de início: ${posInicio}`)
+
+  if (posInicio === -1) {
+    return null
+  }
+
+  const inicioTexto = posInicio + stringInicio.length
+
+  const resultado = stringMain.substring(inicioTexto)
+
+  return resultado
+}
+
+export function truncateString(str: string, maxLength?: number) {
+  const maxLengthFinal = maxLength ?? 100
+  if (String(str).length > maxLengthFinal) {
+    return String(str).slice(0, maxLengthFinal) + '...'
+  }
+  return str
+}
