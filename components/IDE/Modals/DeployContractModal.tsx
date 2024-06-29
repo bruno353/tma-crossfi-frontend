@@ -33,6 +33,7 @@ export interface ModalI {
   environment: string
   wallet: string
   walletFreighter: string
+  walletEVM: string
   walletBalance: string
   walletProvider: TypeWalletProvider
   onUpdateM(contractABIName?: string): void
@@ -47,6 +48,7 @@ const DeployContractModal = ({
   environment,
   wallet,
   walletFreighter,
+  walletEVM,
   walletBalance,
   walletProvider,
   onUpdateM,
@@ -170,6 +172,18 @@ const DeployContractModal = ({
     }
   }, [isConfirmTransactionOpen])
 
+  function getWallet() {
+    let address = ''
+    if (walletProvider === TypeWalletProvider.ACCELAR) {
+      address = wallet
+    } else if (walletProvider === TypeWalletProvider.FREIGHTER) {
+      address = walletFreighter
+    } else if (walletProvider === TypeWalletProvider.EVM) {
+      address = walletEVM
+    }
+    return address
+  }
+
   useEffect(() => {
     handleNewABIs()
   }, [isOpen])
@@ -207,27 +221,15 @@ const DeployContractModal = ({
           </div>
           <div className="text-[#c5c4c4]">
             Wallet:{' '}
-            {walletProvider === TypeWalletProvider.ACCELAR ? (
-              <span
-                className="cursor-pointer text-[#fff]"
-                onClick={() => {
-                  navigator.clipboard.writeText(wallet)
-                  toast.success('Address copied')
-                }}
-              >
-                {transformString(wallet, 7)}
-              </span>
-            ) : (
-              <span
-                className="cursor-pointer text-[#fff]"
-                onClick={() => {
-                  navigator.clipboard.writeText(walletFreighter)
-                  toast.success('Address copied')
-                }}
-              >
-                {transformString(walletFreighter, 7)}
-              </span>
-            )}
+            <span
+              className="cursor-pointer text-[#fff]"
+              onClick={() => {
+                navigator.clipboard.writeText(wallet)
+                toast.success('Address copied')
+              }}
+            >
+              {transformString(getWallet(), 7)}
+            </span>
           </div>
           {walletProvider === TypeWalletProvider.ACCELAR && (
             <div className="text-[#c5c4c4]">

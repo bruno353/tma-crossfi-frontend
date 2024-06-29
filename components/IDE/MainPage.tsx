@@ -1914,6 +1914,7 @@ const MainPage = ({ id }) => {
                       environment={selected.value}
                       wallet={walletToReturn()}
                       walletFreighter={connect}
+                      walletEVM={address}
                       walletProvider={walletProvider}
                       walletBalance={
                         blockchainWallets.find(
