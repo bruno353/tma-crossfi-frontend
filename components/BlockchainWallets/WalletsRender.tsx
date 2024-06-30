@@ -28,7 +28,7 @@ import { UserWorkspaceProps } from '@/types/workspace'
 import { BlockchainWalletProps } from '@/types/blockchain-app'
 // import { optionsNetwork } from './Modals/NewAppModal'
 // import EditAppModal from './Modals/EditAppModal'
-import { formatDate, transformString } from '@/utils/functions'
+import { formatDate, transformString, truncateString } from '@/utils/functions'
 import { optionsNetwork } from '../BlockchainApps/Modals/NewAppModal'
 import EditWalletModal from './Modals/EditWalletModal'
 
@@ -182,7 +182,7 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                       {wallet.name}
                     </div>
                     <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {wallet.balance}{' '}
+                      {truncateString(wallet.balance, 5)}{' '}
                       {
                         optionsNetwork.find((op) => {
                           return op.value === wallet.network
