@@ -32,8 +32,8 @@ import NewICPWalletModal from '../Modals/NewICPWalletModal'
 import EditICPWalletModal from '../Modals/EditICPWalletModal'
 import FundICPWalletModal from '../Modals/FundICPWalletModal'
 import TransferICPModal from '../Modals/TransferICPModal'
-import TransferXFIModal from '../Modals/TransferXFIModal'
 import { crossfiNetworkEVMToRpc } from '@/components/IDE/MainPage'
+import TransferEVMModal from '../Modals/TransferEVMModal'
 
 export interface ModalI {
   wallets: ICPWalletsProps[]
@@ -41,8 +41,7 @@ export interface ModalI {
   blockchainWalletId: string
   isUserAdmin: boolean
   onUpdate(): void
-  sorobanEnvironment?: string
-  crossfiEnvironment?: string
+  netEnvironment?: string
 }
 
 const TransactionsRender = ({
@@ -51,8 +50,7 @@ const TransactionsRender = ({
   isUserAdmin,
   blockchainWalletId,
   blockchainWallet,
-  sorobanEnvironment,
-  crossfiEnvironment,
+  netEnvironment,
 }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isUserModalOpen, setIsUserModalOpen] = useState<any>()
@@ -60,7 +58,7 @@ const TransactionsRender = ({
   const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
   const [isEditWalletOpen, setIsEditWalletOpen] = useState<any>()
   const [isTransferOpen, setIsTransferOpen] = useState<any>()
-  const [isTransferCrossfiOpen, setIsTransferCrossfiOpen] = useState<any>()
+  const [isTransferEVMOpen, setIsTransferEVMOpen] = useState<any>()
 
   const [isDeployNewCanisterWalletOpen, setIsDeployNewCanisterWalletOpen] =
     useState<boolean>(false)
@@ -115,8 +113,11 @@ const TransactionsRender = ({
             onClick={() => {
               if (blockchainWallet?.network === 'ICP') {
                 setIsTransferOpen(true)
-              } else if (blockchainWallet?.network === 'CROSSFI') {
-                setIsTransferCrossfiOpen(true)
+              } else if (
+                blockchainWallet?.network === 'CROSSFI' ||
+                blockchainWallet?.network === 'FRAXTAL'
+              ) {
+                setIsTransferEVMOpen(true)
               }
             }}
             className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
@@ -129,7 +130,7 @@ const TransactionsRender = ({
             href={`${
               blockchainWallet?.network === 'ICP'
                 ? `https://dashboard.internetcomputer.org/account/${blockchainWallet.icpWalletPubKId}`
-                : sorobanEnvironment === 'Mainnet'
+                : netEnvironment === 'Mainnet'
                 ? `https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
                 : `https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
             } `}
@@ -156,16 +157,16 @@ const TransactionsRender = ({
           blockchainWallet={blockchainWallet}
         />
       )}
-      {isTransferCrossfiOpen && (
-        <TransferXFIModal
-          isOpen={isTransferCrossfiOpen}
-          rpcEnvironment={crossfiNetworkEVMToRpc[crossfiEnvironment]}
+      {isTransferEVMOpen && (
+        <TransferEVMModal
+          isOpen={isTransferEVMOpen}
+          netEnvironment={netEnvironment}
           onClose={() => {
-            setIsTransferCrossfiOpen(false)
+            setIsTransferEVMOpen(false)
           }}
           onUpdateM={() => {
             onUpdate()
-            setIsTransferCrossfiOpen(false)
+            setIsTransferEVMOpen(false)
           }}
           blockchainWallet={blockchainWallet}
         />

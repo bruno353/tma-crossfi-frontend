@@ -20,15 +20,25 @@ import { callAxiosBackend } from '@/utils/general-api'
 
 export interface ModalI {
   blockchainWallet: BlockchainWalletProps
-  rpcEnvironment: string
+  netEnvironment: string
   onUpdateM(): void
   onClose(): void
   isOpen: boolean
 }
 
-const TransferXFIModal = ({
+const netEnvironmentToLabel = {
+  CROSSFI: {
+    TESTNET: 'CROSSFI_TESTNET',
+  },
+  FRAXTAL: {
+    Mainnet: 'FRAXTAL_MAINNET',
+    Testnet: 'FRAXTAL_TESTNET',
+  },
+}
+
+const TransferEVMModal = ({
   blockchainWallet,
-  rpcEnvironment,
+  netEnvironment,
   onUpdateM,
   onClose,
   isOpen,
@@ -70,13 +80,13 @@ const TransferXFIModal = ({
       id: blockchainWallet?.id,
       addressTo,
       amount: fundAmount,
-      evmCrossfiRPC: rpcEnvironment,
+      evmRPC: netEnvironmentToLabel[blockchainWallet.network][netEnvironment],
     }
 
     try {
       const res = await callAxiosBackend(
         'post',
-        '/blockchain/functions/transferXFI',
+        '/blockchain/functions/transferEVMToken',
         userSessionToken,
         data,
       )
@@ -237,4 +247,4 @@ const TransferXFIModal = ({
   )
 }
 
-export default TransferXFIModal
+export default TransferEVMModal

@@ -342,11 +342,11 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                 {blockchainWallet?.network === 'CROSSFI' && (
                   <div>
                     <Dropdown
-                      optionSelected={crossfiEnvironment}
+                      optionSelected={netEnvironment}
                       options={crossfiOption}
                       onValueChange={(value) => {
                         getData(crossfiNetworkToRpc[value.value])
-                        setCrossfiEnvironment(value)
+                        setNetEnvironment(value)
                       }}
                       classNameForDropdown="!px-4 !pr-2 !py-1 !text-[#fff] !text-[14px]"
                       classNameForPopUp="!px-1 !pr-2 !py-1"
@@ -389,8 +389,7 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     onUpdate={getData}
                     blockchainWalletId={blockchainWallet?.id}
                     blockchainWallet={blockchainWallet}
-                    sorobanEnvironment={netEnvironment?.value}
-                    crossfiEnvironment={crossfiEnvironment?.value}
+                    netEnvironment={netEnvironment?.value}
                   />
                 </div>
               )}
