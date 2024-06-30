@@ -17,6 +17,13 @@ import { createBlockchainApps } from '@/utils/api-blockchain'
 
 export const optionsNetwork = [
   {
+    name: 'Fraxtal',
+    value: 'FRAXTAL',
+    token: 'frxETH',
+    imageSrc: '/images/workspace/frax.svg',
+    imageStyle: 'w-[25px]',
+  },
+  {
     name: 'Internet computer protocol',
     value: 'ICP',
     token: 'ICP',

@@ -116,6 +116,7 @@ export interface BlockchainWalletProps {
   icpWalletPubKPrincipal: string
   stellarWalletPubK: string
   stellarWalletPrivK: string
+  fraxtalWalletPubK: string
   crossfiWalletPubK: string
   evmCrossfiWalletPubK: string
   balance: string

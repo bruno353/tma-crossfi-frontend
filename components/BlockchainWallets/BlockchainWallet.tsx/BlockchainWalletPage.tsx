@@ -32,7 +32,7 @@ import TransactionsRender from './TransactionsRender'
 import Dropdown, { ValueObject } from '@/components/Modals/Dropdown'
 import {
   sorobanNetworkToRpc,
-  optionsNetwork as sorobanOption,
+  optionsNetwork as netOption,
   optionsNetworkCrossfi as crossfiOption,
   crossfiNetworkToRpc,
 } from '@/components/IDE/MainPage'
@@ -48,8 +48,8 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
     useState<BlockchainWalletProps>()
   const [isEditWalletOpen, setIsEditWalletOpen] = useState<boolean>(false)
 
-  const [sorobanEnvironment, setSorobanEnvironment] = useState<ValueObject>(
-    sorobanOption[1],
+  const [netEnvironment, setNetEnvironment] = useState<ValueObject>(
+    netOption[1],
   )
 
   const [crossfiEnvironment, setCrossfiEnvironment] = useState<ValueObject>(
@@ -161,7 +161,7 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
               {blockchainWallet?.network === 'STELLAR' && (
                 <a
                   href={
-                    sorobanEnvironment?.value === 'Testnet'
+                    netEnvironment?.value === 'Testnet'
                       ? `https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
                       : `https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
                   }
@@ -188,6 +188,24 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     {blockchainWallet?.evmCrossfiWalletPubK}{' '}
                   </span>
                 </div>
+              )}
+              {blockchainWallet?.network === 'FRAXTAL' && (
+                <a
+                  href={
+                    netEnvironment?.value === 'Testnet'
+                      ? `https://holesky.fraxscan.com/address/${blockchainWallet?.fraxtalWalletPubK}`
+                      : `https://fraxscan.com/address/${blockchainWallet?.fraxtalWalletPubK}`
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="mt-2 text-[14px] ">
+                    Public Key:{' '}
+                    <span className="hover:text-[#0354EC]">
+                      {blockchainWallet?.fraxtalWalletPubK}
+                    </span>
+                  </div>
+                </a>
               )}
               {blockchainWallet?.network === 'ICP' && (
                 <div className="relative flex w-fit gap-x-[5px]">
@@ -268,6 +286,32 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   </div>
                 </div>
               )}
+              {blockchainWallet?.network === 'FRAXTAL' && (
+                <div>
+                  <div className="relative flex w-fit gap-x-[5px]">
+                    <div className="mt-3 text-[14px] ">
+                      Wallet balance:{' '}
+                      <span>
+                        {String(Number(blockchainWallet?.balance))} frxETH
+                      </span>
+                    </div>
+                    <img
+                      alt="ethereum avatar"
+                      src="/images/header/help.svg"
+                      className="w-[17px] cursor-pointer rounded-full"
+                      onMouseEnter={() => setIsInfoBalanceOpen(true)}
+                      onMouseLeave={() => setIsInfoBalanceOpen(false)}
+                    ></img>
+                    {isInfoBalanceOpen && (
+                      <div className="absolute right-0 flex w-fit min-w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                        To fund your wallet, its necessary to transfer frxETH
+                        tokens to your address. You can buy frxETH tokens in L2
+                        exchanges
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
             {workspace?.isUserAdmin && (
               <div className="grid gap-y-6">
@@ -279,14 +323,15 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                 >
                   Edit identity
                 </div>
-                {blockchainWallet?.network === 'STELLAR' && (
+                {(blockchainWallet?.network === 'STELLAR' ||
+                  blockchainWallet?.network === 'FRAXTAL') && (
                   <div>
                     <Dropdown
-                      optionSelected={sorobanEnvironment}
-                      options={sorobanOption}
+                      optionSelected={netEnvironment}
+                      options={netOption}
                       onValueChange={(value) => {
                         getData(sorobanNetworkToRpc[value.value])
-                        setSorobanEnvironment(value)
+                        setNetEnvironment(value)
                       }}
                       classNameForDropdown="!px-4 !pr-2 !py-1 !text-[#fff] !text-[14px]"
                       classNameForPopUp="!px-1 !pr-2 !py-1"
@@ -344,7 +389,7 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     onUpdate={getData}
                     blockchainWalletId={blockchainWallet?.id}
                     blockchainWallet={blockchainWallet}
-                    sorobanEnvironment={sorobanEnvironment?.value}
+                    sorobanEnvironment={netEnvironment?.value}
                     crossfiEnvironment={crossfiEnvironment?.value}
                   />
                 </div>
