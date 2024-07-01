@@ -34,6 +34,7 @@ import FundICPWalletModal from '../Modals/FundICPWalletModal'
 import TransferICPModal from '../Modals/TransferICPModal'
 import { crossfiNetworkEVMToRpc } from '@/components/IDE/MainPage'
 import TransferEVMModal from '../Modals/TransferEVMModal'
+import OnRampModal from '../Modals/OnRamp'
 
 export interface ModalI {
   wallets: ICPWalletsProps[]
@@ -58,6 +59,7 @@ const TransactionsRender = ({
   const [isCopyInfoOpen, setIsCopyInfoOpen] = useState<any>()
   const [isEditWalletOpen, setIsEditWalletOpen] = useState<any>()
   const [isTransferOpen, setIsTransferOpen] = useState<any>()
+  const [isOnRampOpen, setIsOnRampOpen] = useState<any>()
   const [isTransferEVMOpen, setIsTransferEVMOpen] = useState<any>()
 
   const [isDeployNewCanisterWalletOpen, setIsDeployNewCanisterWalletOpen] =
@@ -108,7 +110,17 @@ const TransactionsRender = ({
   return (
     <div className="text-[14px] text-[#C5C4C4]">
       <div className=" text-[14px] font-normal">
-        <div className="mb-[18px]">
+        <div className="mb-[40px] flex gap-x-[30px]">
+          {blockchainWallet?.network === 'FRAXTAL' && (
+            <div
+              onClick={() => {
+                setIsOnRampOpen(true)
+              }}
+              className="w-[120px] cursor-pointer rounded-[5px] bg-[#273687]  p-[4px] px-[15px] text-center text-[14px] text-[#fff] hover:bg-[#35428a]"
+            >
+              On-ramp
+            </div>
+          )}
           <div
             onClick={() => {
               if (blockchainWallet?.network === 'ICP') {
@@ -120,7 +132,7 @@ const TransactionsRender = ({
                 setIsTransferEVMOpen(true)
               }
             }}
-            className="w-fit cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]"
+            className="w-[130px] cursor-pointer  rounded-[5px] bg-[#273687]  p-[4px] px-[15px] text-center text-[14px] text-[#fff] hover:bg-[#35428a]"
           >
             Transfer tokens
           </div>
@@ -171,6 +183,18 @@ const TransactionsRender = ({
           blockchainWallet={blockchainWallet}
         />
       )}
+      <OnRampModal
+        isOpen={isOnRampOpen}
+        netEnvironment={netEnvironment}
+        onClose={() => {
+          setIsOnRampOpen(false)
+        }}
+        onUpdateM={() => {
+          onUpdate()
+          setIsOnRampOpen(false)
+        }}
+        blockchainWallet={blockchainWallet}
+      />
     </div>
   )
 }

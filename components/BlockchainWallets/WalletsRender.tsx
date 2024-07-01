@@ -135,7 +135,8 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                           {transformString(
                             wallet.icpWalletPubKId ||
                               wallet.stellarWalletPubK ||
-                              wallet.crossfiWalletPubK,
+                              wallet.crossfiWalletPubK ||
+                              wallet.fraxtalWalletPubK,
                           )}
                         </div>
                         <img
@@ -150,7 +151,8 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                             navigator.clipboard.writeText(
                               wallet.icpWalletPubKId ||
                                 wallet.stellarWalletPubK ||
-                                wallet.crossfiWalletPubK,
+                                wallet.crossfiWalletPubK ||
+                                wallet.fraxtalWalletPubK,
                             )
                           }}
                         ></img>

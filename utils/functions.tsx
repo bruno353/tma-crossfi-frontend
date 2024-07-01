@@ -311,3 +311,18 @@ export function truncateString(str: string, maxLength?: number) {
   }
   return str
 }
+
+export function formatTokenPrice(price, decimalDigits?: number) {
+  // Convert the price to a number in case it's a string
+  const numberPrice = parseFloat(price)
+
+  if (isNaN(numberPrice)) {
+    return
+  }
+
+  // Format the price to include commas as thousands separators and to have two decimal places
+  return numberPrice.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: decimalDigits ?? 2,
+  })
+}
