@@ -10,12 +10,14 @@ export interface WebsocketI {
   workspaceId: string
   handleNewChannelMessage(message: NewChannelMessageProps): void
   handleNewConversationMessage(message: NewConversationMessageProps): void
+  handleNewOrderPixPaidMessage?(message: any): void
 }
 
 const WebsocketComponent = ({
   workspaceId,
   handleNewChannelMessage,
   handleNewConversationMessage,
+  handleNewOrderPixPaidMessage,
 }: WebsocketI) => {
   useEffect(() => {
     if (workspaceId) {
@@ -44,6 +46,11 @@ const WebsocketComponent = ({
       socket.on('channelMessage', (message) => {
         console.log('Mensagem do canal recebida:', message)
         handleNewChannelMessage(message)
+      })
+
+      socket.on('orderPixPaid', (message) => {
+        console.log('Mensagem orderPixPaid recebida:', message)
+        handleNewOrderPixPaidMessage(message)
       })
 
       socket.on('disconnect', () => {

@@ -6,7 +6,15 @@
 /* eslint-disable no-unused-vars */
 'use client'
 // import { useState } from 'react'
-import { useEffect, useState, ChangeEvent, FC, useContext, useRef } from 'react'
+import {
+  useEffect,
+  useState,
+  ChangeEvent,
+  FC,
+  useContext,
+  useRef,
+  useCallback,
+} from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
@@ -20,6 +28,7 @@ import { formatTokenPrice, wait } from '@/utils/functions'
 import { callAxiosBackend } from '@/utils/general-api'
 import axios from 'axios'
 import ConfirmGenericTransaction from './ConfirmGenericTransaction'
+import WebsocketComponent from '@/components/Chat/Websocket/WebsocketChat'
 
 export interface ModalI {
   blockchainWallet: BlockchainWalletProps
@@ -119,7 +128,7 @@ const OnRampModal = ({
       toast.success(`Order created`)
       setOnRampStatus(OnRampStatus.PIX_RENDER)
       setPixData(res)
-      startCheckOrder(res.id)
+      //   startCheckOrder(res.id)
       setIsLoading(false)
     } catch (err) {
       console.log(err)
@@ -226,32 +235,21 @@ const OnRampModal = ({
     setAddressTo(blockchainWallet?.fraxtalWalletPubK)
   }, [isOpen])
 
-  async function startCheckOrder(id: string) {
-    let counter = 0
-    let intervalId
-    if (
-      isOpen &&
-      onRampStatus === OnRampStatus.ORDER_CREATION &&
-      counter < 300
-    ) {
-      intervalId = setInterval(() => {
-        counter += 1
-        checkOrder(id)
-      }, 30000)
-    }
-    return () => clearInterval(intervalId)
-  }
-
-  useEffect(() => {
-    let intervalId
-    if (isOpen && onRampStatus === OnRampStatus.ORDER_CREATION) {
-      getSymbolPrice('ETHBRL')
-      intervalId = setInterval(() => {
-        getSymbolPrice('ETHBRL')
-      }, 60000)
-    }
-    return () => clearInterval(intervalId)
-  }, [isOpen])
+  //   async function startCheckOrder(id: string) {
+  //     let counter = 0
+  //     let intervalId
+  //     if (
+  //       isOpen &&
+  //       onRampStatus === OnRampStatus.ORDER_CREATION &&
+  //       counter < 300
+  //     ) {
+  //       intervalId = setInterval(() => {
+  //         counter += 1
+  //         checkOrder(id)
+  //       }, 30000)
+  //     }
+  //     return () => clearInterval(intervalId)
+  //   }
 
   if (onRampStatus === OnRampStatus.ORDER_CREATION) {
     return (
@@ -489,6 +487,20 @@ const OnRampModal = ({
             </div>
           </div>
         </div>
+        <WebsocketComponent
+          workspaceId={blockchainWallet.workspaceId}
+          handleNewChannelMessage={(message) => {
+            console.log('websocket funcionando show')
+          }}
+          handleNewConversationMessage={(message) => {
+            console.log('websocket funcionando show')
+          }}
+          handleNewOrderPixPaidMessage={(message) => {
+            if (message === pixData.id) {
+              onUpdateM()
+            }
+          }}
+        />
       </div>
     )
   }
