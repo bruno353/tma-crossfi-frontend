@@ -42,7 +42,6 @@ const MainPage = ({ id }) => {
   const [isInfoBalanceOpen, setIsInfoBalanceOpen] = useState(false)
   const [value, setValue] = useState('// start your code here')
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
-  const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const monaco = useMonaco()
   const [depins, setDepins] = useState<DepinDeploymentProps[]>([])
   const [selected, setSelected] = useState<ValueObject>(depinOptionsFeatures[0])
@@ -193,11 +192,11 @@ const MainPage = ({ id }) => {
               {workspace?.isUserAdmin && (
                 <div
                   onClick={() => {
-                    setIsCreatingNewApp(true)
+                    setIsDeployingNewDepingFeature(true)
                   }}
                   className={`${
                     depins.length === 0 && 'hidden'
-                  } cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
+                  } flex cursor-pointer items-center whitespace-nowrap rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
                 >
                   New Deployment
                 </div>
@@ -218,12 +217,12 @@ const MainPage = ({ id }) => {
                   {isDeployingNewDepinFeature ? (
                     <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                       <NewDeployment
-                        apps={depins}
-                        isUserAdmin={workspace?.isUserAdmin}
-                        onUpdate={getData}
+                        onUpdate={() => {
+                          setIsDeployingNewDepingFeature(false)
+                          getData()
+                        }}
                         setIsCreatingNewApp={() => {
-                          setIsDeployingNewDepingFeature(true)
-                          setIsCreatingNewApp(true)
+                          setIsDeployingNewDepingFeature(false)
                         }}
                       />
                     </div>
@@ -235,7 +234,6 @@ const MainPage = ({ id }) => {
                         onUpdate={getData}
                         setIsCreatingNewApp={() => {
                           setIsDeployingNewDepingFeature(true)
-                          setIsCreatingNewApp(true)
                         }}
                       />
                     </div>

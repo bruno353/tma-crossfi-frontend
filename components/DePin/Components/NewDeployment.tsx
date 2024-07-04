@@ -38,6 +38,7 @@ import { BlockchainWalletProps } from '@/types/blockchain-app'
 import ConnectButton from '@/contexts/ConnectButton'
 import { useAccount } from 'wagmi'
 import ConfirmGenericTransaction from '@/components/BlockchainWallets/Modals/ConfirmGenericTransaction'
+import fraxtalContractABI from '../abi-frax/fraxtalContractABI.json'
 
 export interface ModalI {
   onUpdate(): void
@@ -161,12 +162,16 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
     return false
   }
 
-  const handleCreateDeployment = async () => {
-    setIsLoading(true)
+  const handleAccelarDeployment = async () => {
     if (!formChecks()) {
       toast.error('Complete the form')
       return
     }
+    if (selectedPaymentMethod.value === 'pix') {
+      toast.error('Pix paymenths is disable for this hour in Brazil')
+      return
+    }
+    setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
 
@@ -187,12 +192,79 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
       )
       toast.success(`Order created`)
       console.log(res)
+      onUpdate()
       //   startCheckOrder(res.id)
       setIsLoading(false)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
       setIsLoading(false)
+    }
+  }
+
+  const handleEVMDeployment = async () => {
+    if (!formChecks()) {
+      toast.error('Complete the form')
+      return
+    }
+    setIsLoading(true)
+
+    const { userSessionToken } = parseCookies()
+
+    try {
+      const res = await write(
+        functionNameFinal,
+        functionParams,
+        fraxtalContractABI,
+        chain,
+        address,
+        addressContract,
+        value,
+      )
+      console.log('rtespo')
+      console.log(res)
+
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      newContracts[cntIndex].consoleLogs.unshift({
+        type: 'contractCall',
+        functionName: contractInspection.functionName,
+        args: functionParams,
+        responseValue: res.transactionHash,
+        stateMutability: contractInspection.stateMutability,
+        desc: address,
+        createdAt: String(new Date()),
+      })
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
+    } catch (err) {
+      console.log(err)
+      console.log('Error: ' + err?.response?.data?.message)
+
+      const newContracts = [...blockchainContracts]
+      const cntIndex = newContracts.findIndex(
+        (cnt) => cnt.id === blockchainContractSelected?.id,
+      )
+      newContracts[cntIndex].consoleLogs.unshift({
+        type: 'deployError',
+        desc: err?.response?.data?.message ?? 'Check metamask for log error',
+        contractName: blockchainContractSelected?.name,
+        createdAt: String(new Date()),
+      })
+
+      setBlockchainContracts(newContracts)
+      setBlockchainContractSelected(newContracts[cntIndex])
+    }
+  }
+
+  const handleCreateDeployment = async () => {
+    if (walletProvider === TypeWalletProvider.ACCELAR) {
+      handleAccelarDeployment()
+    } else if (walletProvider === TypeWalletProvider.EVM) {
+      handleEVMDeployment()
     }
   }
 
@@ -285,6 +357,9 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
         <div className="grid gap-y-[25px]">
           <div className="flex items-center gap-x-4">
             <img
+              onClick={() => {
+                setIsCreatingNewApp()
+              }}
               alt="ethereum avatar"
               src="/images/blockchain/arrow-left.svg"
               className="my-auto w-[25px] cursor-pointer 2xl:w-[20px]"
@@ -341,7 +416,7 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
                     onChange={(e) => {
                       setSDLValue(e.target.value)
                     }}
-                    className="h-[130px] w-[600px] rounded-md border border-transparent px-6 py-2 text-base text-white placeholder-body-color outline-none  focus:border-primary dark:bg-[#242B51]"
+                    className="h-[130px] w-[600px] rounded-md border border-transparent px-6 py-2 text-sm text-white placeholder-body-color outline-none  focus:border-primary dark:bg-[#242B51]"
                   >
                     {' '}
                   </textarea>{' '}

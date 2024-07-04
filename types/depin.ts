@@ -12,6 +12,7 @@ export interface DepinDeploymentProps {
   id: string
   name?: string
   sdl?: string
+  akashHash?: string
   tokenId?: string
   chainId?: string
   network?: TypeDepinNetwork

@@ -17,12 +17,13 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
-import { formatDate } from '@/utils/functions'
+import { formatDate, transformString } from '@/utils/functions'
 import { LLMAppProps } from '@/types/llm'
+import { DepinDeploymentProps } from '@/types/depin'
 // import EditWorkflowModal from './Modals/EditWorkflowModal'
 
 export interface ModalI {
-  apps: DePinProps[]
+  apps: DepinDeploymentProps[]
   isUserAdmin: boolean
   onUpdate(): void
   setIsCreatingNewApp(): void
@@ -123,16 +124,18 @@ const WorkflowsRender = ({
           ) : (
             <div className="">
               <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
-                <div className="w-full max-w-[20%]">Workflow name</div>
-                <div className="w-full max-w-[40%]">SDL</div>
-                <div className="w-full max-w-[25%]">created at</div>
+                <div className="w-full max-w-[20%]">Name</div>
+                <div className="w-full max-w-[25%]">SDL</div>
+                <div className="w-full max-w-[15%]">Token Id</div>
+                <div className="w-full max-w-[20%]">Akash hash</div>
+                <div className="w-full max-w-[10%]">created at</div>
               </div>
               <div className="max-h-[calc(100vh-26rem)] overflow-y-auto rounded-b-md  border border-[#c5c4c41a] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-32rem)] ">
                 {' '}
                 {apps?.map((app, index) => (
                   <div
                     onClick={(event) => {
-                      handleClickApp(app.id, event)
+                      // handleClickApp(app.id, event)
                     }}
                     key={index}
                     className={`flex items-center  ${
@@ -143,10 +146,22 @@ const WorkflowsRender = ({
                     <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {app.name}
                     </div>
-                    <div className="w-full max-w-[40%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                    <div className="w-full max-w-[25%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {app.sdl.slice(0, 40)}...
                     </div>
-                    <div className="w-full max-w-[30%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                    <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                      {app.tokenId}
+                    </div>
+                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#566cec]">
+                      <a
+                        href={`https://atomscan.com/akash/transactions/${app.akashHash}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {transformString(app.akashHash)}
+                      </a>
+                    </div>
+                    <div className="w-full max-w-[10%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
                       {formatDate(app.createdAt)}
                     </div>
                     <div className="ml-auto w-full max-w-[10%]">
