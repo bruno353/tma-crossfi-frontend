@@ -19,7 +19,6 @@ import 'react-quill/dist/quill.snow.css' // import styles
 import 'react-datepicker/dist/react-datepicker.css'
 import { formatDate } from '@/utils/functions'
 import { LLMAppProps } from '@/types/llm'
-import { AutomationWorkflowProps, DePinProps } from '@/types/automation'
 // import EditWorkflowModal from './Modals/EditWorkflowModal'
 
 export interface ModalI {

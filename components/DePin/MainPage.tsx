@@ -28,13 +28,13 @@ import { BlockchainWalletProps } from '@/types/blockchain-app'
 import { getBlockchainWallets } from '@/utils/api-blockchain'
 // import NewAppModal from './Modals/NewAppModal'
 import Editor, { useMonaco } from '@monaco-editor/react'
-import { DePinProps } from '@/types/automation'
 import DeploymentsRender from './DeploymentsRender'
 import NewWorkflowModal from './Modals/NewWorkflowModal'
 import Dropdown, { ValueObject } from '../Modals/Dropdown'
 import { depinOptionsFeatures } from '@/types/consts/depin'
 import NewDeployment from './Components/NewDeployment'
 import { callAxiosBackend } from '@/utils/general-api'
+import { DepinDeploymentProps } from '@/types/depin'
 
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -44,7 +44,7 @@ const MainPage = ({ id }) => {
   const [languageSelectorOpen, setLanguageSelectorOpen] = useState(false)
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const monaco = useMonaco()
-  const [dePins, setDePins] = useState<DePinProps[]>([])
+  const [depins, setDepins] = useState<DepinDeploymentProps[]>([])
   const [selected, setSelected] = useState<ValueObject>(depinOptionsFeatures[0])
 
   const [navBarSelected, setNavBarSelected] = useState('Deployments')
@@ -85,6 +85,7 @@ const MainPage = ({ id }) => {
         `/blockchain/depin/functions/getWorkspaceDeployments?id=${id}`,
         userSessionToken,
       )
+      setDepins(res)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
@@ -195,7 +196,7 @@ const MainPage = ({ id }) => {
                     setIsCreatingNewApp(true)
                   }}
                   className={`${
-                    dePins.length === 0 && 'hidden'
+                    depins.length === 0 && 'hidden'
                   } cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
                 >
                   New Deployment
@@ -217,7 +218,7 @@ const MainPage = ({ id }) => {
                   {isDeployingNewDepinFeature ? (
                     <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                       <NewDeployment
-                        apps={dePins}
+                        apps={depins}
                         isUserAdmin={workspace?.isUserAdmin}
                         onUpdate={getData}
                         setIsCreatingNewApp={() => {
@@ -229,7 +230,7 @@ const MainPage = ({ id }) => {
                   ) : (
                     <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                       <DeploymentsRender
-                        apps={dePins}
+                        apps={depins}
                         isUserAdmin={workspace?.isUserAdmin}
                         onUpdate={getData}
                         setIsCreatingNewApp={() => {
@@ -245,7 +246,7 @@ const MainPage = ({ id }) => {
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]"></div>
         </div>
-        <NewWorkflowModal
+        {/* <NewWorkflowModal
           isOpen={isCreatingNewApp}
           onClose={() => {
             setIsCreatingNewApp(false)
@@ -260,10 +261,10 @@ const MainPage = ({ id }) => {
               updatedAt: String(new Date()),
               activated: true,
             }
-            setDePins([newDeployment])
+            setDepins([newDeployment])
           }}
           workspaceId={workspace?.id}
-        />
+        /> */}
       </section>
     </>
   )

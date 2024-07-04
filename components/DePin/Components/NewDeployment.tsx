@@ -23,7 +23,6 @@ import {
   transformString,
 } from '@/utils/functions'
 import { LLMAppProps } from '@/types/llm'
-import { AutomationWorkflowProps, DePinProps } from '@/types/automation'
 import {
   depinOptionsFeatures,
   depinPaymentMethodsAccelar,
@@ -41,18 +40,11 @@ import { useAccount } from 'wagmi'
 import ConfirmGenericTransaction from '@/components/BlockchainWallets/Modals/ConfirmGenericTransaction'
 
 export interface ModalI {
-  apps: DePinProps[]
-  isUserAdmin: boolean
   onUpdate(): void
   setIsCreatingNewApp(): void
 }
 
-const NewDeployment = ({
-  apps,
-  onUpdate,
-  isUserAdmin,
-  setIsCreatingNewApp,
-}: ModalI) => {
+const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
