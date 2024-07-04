@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable dot-notation */
@@ -25,9 +26,15 @@ export interface ModalI {
   apps: DePinProps[]
   isUserAdmin: boolean
   onUpdate(): void
+  setIsCreatingNewApp(): void
 }
 
-const WorkflowsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
+const WorkflowsRender = ({
+  apps,
+  onUpdate,
+  isUserAdmin,
+  setIsCreatingNewApp,
+}: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
@@ -74,8 +81,36 @@ const WorkflowsRender = ({ apps, onUpdate, isUserAdmin }: ModalI) => {
   function NoAppsFound() {
     return (
       <div className="mx-auto w-fit items-center justify-center text-[15px] font-light">
-        <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
-        <span>No deployments found, create your first deployment</span>
+        <img
+          ref={editRef}
+          alt="ethereum avatar"
+          src="/images/depin/network.svg"
+          className="mx-auto w-[15px] cursor-pointer 2xl:w-[105px]"
+        ></img>{' '}
+        <div className="mx-auto flex w-fit">No deployments found</div>
+        {isUserAdmin && (
+          <div
+            onClick={() => {
+              setIsCreatingNewApp()
+            }}
+            className={`mx-auto mt-4 w-fit cursor-pointer rounded-[5px] bg-[#273687] p-[4px]  px-[40px] text-center text-[14px] text-[#fff] hover:bg-[#35428a] 2xl:text-[16px]`}
+          >
+            New Deployment
+          </div>
+        )}
+        <div className="mx-auto mt-10 max-w-[700px] text-center font-normal 2xl:text-[17px]">
+          The{' '}
+          <span className="cursor-pointer text-[#7b56d3]">
+            Fraxtal DePin feature
+          </span>{' '}
+          is an aggregational on-chain protocol for innumerous infrastructure
+          {'  '}
+          <span className="cursor-pointer text-[#7b56d3]">
+            decentralized computation and RWA
+          </span>
+          , through a set of oracles and workflows, manage your Akash, Iotex,
+          Helium through the Fraxtal blockchain
+        </div>
       </div>
     )
   }

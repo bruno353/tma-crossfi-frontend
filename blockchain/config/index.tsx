@@ -27,6 +27,29 @@ const crossfiTestnet = {
   testnet: true,
 }
 
+const fraxtalMainnet = {
+  id: 252,
+  name: 'Fraxtal',
+  network: 'fraxtal',
+  nativeCurrency: {
+    name: 'frxETH',
+    symbol: 'frxETH',
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.frax.com'],
+    },
+    public: {
+      http: ['https://rpc.frax.com'],
+    },
+  },
+  blockExplorers: {
+    default: { name: 'FraxScan', url: 'https://fraxscan.com' },
+  },
+  testnet: false,
+}
+
 if (!projectId) throw new Error('Project ID is not defined')
 
 const metadata = {
@@ -37,11 +60,12 @@ const metadata = {
 }
 
 export const wagmiConfig = defaultWagmiConfig({
-  chains: [crossfiTestnet], // required
+  chains: [fraxtalMainnet, crossfiTestnet], // required
   projectId, // required
   metadata, // required
   ssr: true,
   transports: {
+    [fraxtalMainnet.id]: http('https://rpc.frax.com'),
     [crossfiTestnet.id]: http('https://rpc.testnet.ms'),
   },
   storage: createStorage({

@@ -17,6 +17,7 @@ import { ICPWalletsProps, BlockchainWalletProps } from '@/types/blockchain-app'
 import ConfirmFundICPWalletModal from './ConfirmFundICPWalletModal'
 import { wait } from '@/utils/functions'
 import { callAxiosBackend } from '@/utils/general-api'
+import { netEnvironmentToLabel } from '@/types/consts/on-ramp'
 
 export interface ModalI {
   blockchainWallet: BlockchainWalletProps
@@ -24,16 +25,6 @@ export interface ModalI {
   onUpdateM(): void
   onClose(): void
   isOpen: boolean
-}
-
-const netEnvironmentToLabel = {
-  CROSSFI: {
-    TESTNET: 'CROSSFI_TESTNET',
-  },
-  FRAXTAL: {
-    Mainnet: 'FRAXTAL_MAINNET',
-    Testnet: 'FRAXTAL_TESTNET',
-  },
 }
 
 const TransferEVMModal = ({

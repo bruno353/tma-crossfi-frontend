@@ -50,6 +50,9 @@ interface CreateUserContextProps {
   minimize: boolean | undefined
   setMinimize: (minimize: boolean | undefined) => void
 
+  isDeployingNewDepinFeature: boolean | undefined
+  setIsDeployingNewDepingFeature: (minimize: boolean | undefined) => void
+
   reactFlowEdges: any | undefined
   setReactFlowEdges: (reactFlowEdges: any | undefined) => void
 
@@ -65,6 +68,8 @@ export default function AccountContextProvider({
   const [user, setUser] = useState<UserProps>()
   const [channels, setChannels] = useState<ChannelProps[]>()
   const [minimize, setMinimize] = useState<boolean>(false)
+  const [isDeployingNewDepinFeature, setIsDeployingNewDepingFeature] =
+    useState<boolean>(false)
   const [channel, setChannel] = useState<ChannelProps>()
   const [conversation, setConversation] = useState<ConversationProps>()
   const [conversations, setConversations] = useState<ConversationProps[]>()
@@ -86,6 +91,8 @@ export default function AccountContextProvider({
       value={{
         user,
         setUser,
+        isDeployingNewDepinFeature,
+        setIsDeployingNewDepingFeature,
         ideChain,
         setIDEChain,
         nodeHasChange,

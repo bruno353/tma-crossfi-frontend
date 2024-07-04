@@ -29,6 +29,7 @@ import { callAxiosBackend } from '@/utils/general-api'
 import axios from 'axios'
 import ConfirmGenericTransaction from './ConfirmGenericTransaction'
 import WebsocketComponent from '@/components/Chat/Websocket/WebsocketChat'
+import { netEnvironmentToLabel } from '@/types/consts/on-ramp'
 
 export interface ModalI {
   blockchainWallet: BlockchainWalletProps
@@ -36,16 +37,6 @@ export interface ModalI {
   onUpdateM(): void
   onClose(): void
   isOpen: boolean
-}
-
-const netEnvironmentToLabel = {
-  CROSSFI: {
-    TESTNET: 'CROSSFI_TESTNET',
-  },
-  FRAXTAL: {
-    Mainnet: 'FRAXTAL_MAINNET',
-    Testnet: 'FRAXTAL_TESTNET',
-  },
 }
 
 export enum OnRampStatus {
@@ -251,6 +242,17 @@ const OnRampModal = ({
   //     return () => clearInterval(intervalId)
   //   }
 
+  useEffect(() => {
+    let intervalId
+    if (isOpen) {
+      getSymbolPrice('ETHBRL')
+      intervalId = setInterval(() => {
+        getSymbolPrice('ETHBRL')
+      }, 60000)
+    }
+    return () => clearInterval(intervalId)
+  }, [isOpen])
+
   if (onRampStatus === OnRampStatus.ORDER_CREATION) {
     return (
       <div
@@ -266,7 +268,7 @@ const OnRampModal = ({
         <div className="relative z-50 w-[250px] rounded-md bg-[#060621] p-8 py-12 pb-10 pt-6 md:w-[500px]">
           <div onClick={onClose} className="absolute right-5 top-5">
             <img
-              alt="frax"
+              alt="delete"
               src="/images/delete.svg "
               className="w-[25px]  cursor-pointer rounded-[7px] p-[5px] hover:bg-[#c9c9c921]"
             ></img>
@@ -274,7 +276,7 @@ const OnRampModal = ({
           <div className="mb-8 flex gap-x-2">
             <div className="flex items-center gap-x-3">
               <img
-                alt="delete"
+                alt="frax"
                 src="/images/workspace/frax.svg"
                 className="w-[35px]"
               ></img>

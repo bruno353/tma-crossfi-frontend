@@ -31,6 +31,10 @@ import Editor, { useMonaco } from '@monaco-editor/react'
 import { DePinProps } from '@/types/automation'
 import DeploymentsRender from './DeploymentsRender'
 import NewWorkflowModal from './Modals/NewWorkflowModal'
+import Dropdown, { ValueObject } from '../Modals/Dropdown'
+import { depinOptionsFeatures } from '@/types/consts/depin'
+import NewDeployment from './Components/NewDeployment'
+import { callAxiosBackend } from '@/utils/general-api'
 
 const MainPage = ({ id }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -41,13 +45,19 @@ const MainPage = ({ id }) => {
   const [isCreatingNewApp, setIsCreatingNewApp] = useState(false)
   const monaco = useMonaco()
   const [dePins, setDePins] = useState<DePinProps[]>([])
+  const [selected, setSelected] = useState<ValueObject>(depinOptionsFeatures[0])
 
-  const [navBarSelected, setNavBarSelected] = useState('General')
+  const [navBarSelected, setNavBarSelected] = useState('Deployments')
   const [blockchainWallets, setBlockchainWallets] = useState<
     BlockchainWalletProps[]
   >([])
 
-  const { workspace, user } = useContext(AccountContext)
+  const {
+    workspace,
+    user,
+    isDeployingNewDepinFeature,
+    setIsDeployingNewDepingFeature,
+  } = useContext(AccountContext)
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -70,12 +80,16 @@ const MainPage = ({ id }) => {
     }
 
     try {
-      const res = await getBlockchainWallets(data, userSessionToken)
-      setBlockchainWallets(res)
+      const res = await callAxiosBackend(
+        'get',
+        `/blockchain/depin/functions/getWorkspaceDeployments?id=${id}`,
+        userSessionToken,
+      )
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
     }
+
     setIsLoading(false)
   }
 
@@ -138,12 +152,17 @@ const MainPage = ({ id }) => {
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="relative flex gap-x-[8px]">
               <div className="mt-auto flex gap-x-[8px] text-[24px] font-medium">
-                <img
+                {/* <img
                   alt="ethereum avatar"
                   src="/images/depin/akash.svg"
                   className="w-[25px] 2xl:w-[25px]"
+                ></img> */}
+                <img
+                  alt="frax"
+                  src="/images/workspace/frax.svg"
+                  className="w-[35px]"
                 ></img>
-                <div>Depin Deployment</div>
+                <div>Fraxtal Depin</div>
               </div>
               <img
                 alt="ethereum avatar"
@@ -155,22 +174,34 @@ const MainPage = ({ id }) => {
               {isInfoBalanceOpen && (
                 <div className="absolute right-0 flex w-fit -translate-y-[20%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
                   Create descentralized infrastructure deployments by using the
-                  Internet Computer Protocol {'<>'} Akash integration
+                  Frax
+                  {'<>'} Internet Computer Protocol {'<>'} Akash integration
                 </div>
               )}
             </div>
-            {workspace?.isUserAdmin && (
-              <div
-                onClick={() => {
-                  setIsCreatingNewApp(true)
+            <div className="flex gap-x-10">
+              <Dropdown
+                optionSelected={selected}
+                options={depinOptionsFeatures}
+                onValueChange={(value) => {
+                  setSelected(value)
                 }}
-                className={`${
-                  dePins.length === 0 && 'animate-bounce'
-                } cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
-              >
-                New Deployment
-              </div>
-            )}
+                classNameForDropdown="!min-w-[150px] !px-3 !py-1"
+                classNameForPopUp="!px-3"
+              />
+              {workspace?.isUserAdmin && (
+                <div
+                  onClick={() => {
+                    setIsCreatingNewApp(true)
+                  }}
+                  className={`${
+                    dePins.length === 0 && 'hidden'
+                  } cursor-pointer rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
+                >
+                  New Deployment
+                </div>
+              )}
+            </div>
           </div>
           <div className="mt-[45px]">
             <SubNavBar
@@ -178,16 +209,36 @@ const MainPage = ({ id }) => {
                 setNavBarSelected(value)
               }}
               selected={navBarSelected}
-              itensList={['General']}
+              itensList={['Deployments']}
             />
-            <div className="mt-[50px]">
-              {navBarSelected === 'General' && (
-                <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
-                  <DeploymentsRender
-                    apps={dePins}
-                    isUserAdmin={workspace?.isUserAdmin}
-                    onUpdate={getData}
-                  />
+            <div className="mt-[20px]">
+              {navBarSelected === 'Deployments' && (
+                <div>
+                  {isDeployingNewDepinFeature ? (
+                    <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+                      <NewDeployment
+                        apps={dePins}
+                        isUserAdmin={workspace?.isUserAdmin}
+                        onUpdate={getData}
+                        setIsCreatingNewApp={() => {
+                          setIsDeployingNewDepingFeature(true)
+                          setIsCreatingNewApp(true)
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
+                      <DeploymentsRender
+                        apps={dePins}
+                        isUserAdmin={workspace?.isUserAdmin}
+                        onUpdate={getData}
+                        setIsCreatingNewApp={() => {
+                          setIsDeployingNewDepingFeature(true)
+                          setIsCreatingNewApp(true)
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
