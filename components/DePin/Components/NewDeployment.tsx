@@ -230,7 +230,7 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
         fraxABI as Abi,
         chain,
         addressTointeract,
-        '0x3e2bEe48C44dAf53BbD33D2e20AdDB2A3F2080F4',
+        '0x05A8CBBFA99f5285e09db865f119df30170dba8D',
         String(bidAmountWei),
       )
       console.log('rtespo')
