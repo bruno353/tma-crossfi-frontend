@@ -456,7 +456,7 @@ const OnRampModal = ({
             <img
               alt="ethereum avatar"
               src={pixData?.qrCodeImage}
-              className="mx-auto mb-2 w-[300px]"
+              className="mx-auto mb-2 w-[150px] 2xl:w-[300px]"
             ></img>
           </div>
           <div className="mt-4 flex gap-x-2 px-5">

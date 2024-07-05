@@ -299,7 +299,6 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
   }
 
   const getDeploymentPrice = async () => {
-    return
     setTokenPrice('loading')
     const { userSessionToken } = parseCookies()
 
@@ -310,8 +309,7 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
         userSessionToken,
       )
       await new Promise((resolve) => setTimeout(resolve, 1000))
-      const finalPrice = formatTokenPrice(res.price)
-      setTokenPrice(finalPrice)
+      setTokenPrice(String(res.price))
     } catch (err) {
       console.log(err)
       toast.error(`Error getting symbol price`)
@@ -366,7 +364,7 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
             ></img>
             <div className="text-2xl">New deployment</div>
           </div>
-          <div className="h-[calc(100vh-26rem)] max-h-[calc(100vh-26rem)] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:h-[calc(100vh-23rem)] 2xl:max-h-[calc(100vh-23rem)]">
+          <div className="h-[calc(100vh-20rem)] max-h-[calc(100vh-20rem)] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:h-[calc(100vh-23rem)] 2xl:max-h-[calc(100vh-23rem)]">
             <div className="flex gap-x-20">
               <div>
                 <div className="mb-6">

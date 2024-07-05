@@ -147,7 +147,7 @@ const MainPage = ({ id }) => {
 
   return (
     <>
-      <section className="relative z-10 max-h-[calc(100vh-8rem)] overflow-hidden px-[20px] pb-16  text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
+      <section className="relative z-10 max-h-[calc(100vh-4rem)] overflow-hidden px-[20px] pb-16 text-[16px]  md:pb-20 lg:pb-28 lg:pt-[40px] 2xl:max-h-[calc(100vh-8rem)]">
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="relative flex gap-x-[8px]">
@@ -203,7 +203,7 @@ const MainPage = ({ id }) => {
               )}
             </div>
           </div>
-          <div className="mt-[45px]">
+          <div className="mt-[25px] 2xl:mt-[45px]">
             <SubNavBar
               onChange={(value) => {
                 setNavBarSelected(value)

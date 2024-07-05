@@ -116,7 +116,7 @@ const TransactionsRender = ({
               onClick={() => {
                 setIsOnRampOpen(true)
               }}
-              className="w-[120px] cursor-pointer rounded-[5px] bg-[#273687]  p-[4px] px-[15px] text-center text-[14px] text-[#fff] hover:bg-[#35428a]"
+              className="w-[120px] cursor-pointer whitespace-nowrap rounded-[5px] bg-[#273687]  p-[4px] px-[15px] text-center text-[14px] text-[#fff] hover:bg-[#35428a]"
             >
               On-ramp
             </div>
@@ -132,7 +132,7 @@ const TransactionsRender = ({
                 setIsTransferEVMOpen(true)
               }
             }}
-            className="w-[130px] cursor-pointer  rounded-[5px] bg-[#273687]  p-[4px] px-[15px] text-center text-[14px] text-[#fff] hover:bg-[#35428a]"
+            className="w-[130px] cursor-pointer whitespace-nowrap  rounded-[5px] bg-[#273687]  p-[4px] px-[15px] text-center text-[14px] text-[#fff] hover:bg-[#35428a]"
           >
             Transfer tokens
           </div>
