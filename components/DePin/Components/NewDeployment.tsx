@@ -299,7 +299,6 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
   }
 
   const getDeploymentPrice = async () => {
-    return
     setTokenPrice('loading')
     const { userSessionToken } = parseCookies()
 
@@ -310,8 +309,7 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
         userSessionToken,
       )
       await new Promise((resolve) => setTimeout(resolve, 1000))
-      const finalPrice = formatTokenPrice(res.price)
-      setTokenPrice(finalPrice)
+      setTokenPrice(String(res.price))
     } catch (err) {
       console.log(err)
       toast.error(`Error getting symbol price`)
