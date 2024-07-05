@@ -39,6 +39,10 @@ import ConnectButton from '@/contexts/ConnectButton'
 import { useAccount } from 'wagmi'
 import ConfirmGenericTransaction from '@/components/BlockchainWallets/Modals/ConfirmGenericTransaction'
 import fraxtalContractABI from '../abi-frax/fraxtalContractABI.json'
+import { useContractWrite } from '../../IDE/hooks/useContract'
+import { Abi } from 'viem'
+import { fraxABI } from '@/types/consts/fraxtalABI'
+import { parseEther } from 'ethers'
 
 export interface ModalI {
   onUpdate(): void
@@ -64,6 +68,7 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
   const confirmTransactionRef = useRef(null)
 
   const { address, chain } = useAccount()
+  const { write } = useContractWrite()
 
   const [blockchainWalletsDropdown, setBlockchainWalletsDropdown] =
     useState<ValueObject[]>()
@@ -177,10 +182,11 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
 
     const data = {
       walletId: blockchainWalletsSelected.value,
+      name: deploymentName,
       bidAmount,
       network: 'FRAXTAL_MAINNET',
       depinFeature: 'AKASH',
-      sdl: 'sdl',
+      sdl: sdlValue,
     }
 
     try {
@@ -207,56 +213,50 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
       toast.error('Complete the form')
       return
     }
+    if (!address) {
+      toast.error('Address not found')
+      return
+    }
     setIsLoading(true)
 
     const { userSessionToken } = parseCookies()
 
+    const addressTointeract = address
     try {
+      const bidAmountWei = parseEther(bidAmount)
       const res = await write(
-        functionNameFinal,
-        functionParams,
-        fraxtalContractABI,
+        'createDeployment',
+        ['sdl', addressTointeract],
+        fraxABI as Abi,
         chain,
-        address,
-        addressContract,
-        value,
+        addressTointeract,
+        '0x3e2bEe48C44dAf53BbD33D2e20AdDB2A3F2080F4',
+        String(bidAmountWei),
       )
       console.log('rtespo')
       console.log(res)
-
-      const newContracts = [...blockchainContracts]
-      const cntIndex = newContracts.findIndex(
-        (cnt) => cnt.id === blockchainContractSelected?.id,
+      const data = {
+        name: deploymentName,
+        workspaceId: workspace.id,
+        address: addressTointeract,
+        bidAmount,
+        network: 'FRAXTAL_MAINNET',
+        depinFeature: 'AKASH',
+        sdl: sdlValue,
+      }
+      await callAxiosBackend(
+        'post',
+        '/blockchain/depin/functions/createDeploymentOrderMetamask',
+        userSessionToken,
+        data,
       )
-      newContracts[cntIndex].consoleLogs.unshift({
-        type: 'contractCall',
-        functionName: contractInspection.functionName,
-        args: functionParams,
-        responseValue: res.transactionHash,
-        stateMutability: contractInspection.stateMutability,
-        desc: address,
-        createdAt: String(new Date()),
-      })
-
-      setBlockchainContracts(newContracts)
-      setBlockchainContractSelected(newContracts[cntIndex])
+      onUpdate()
+      setIsLoading(false)
     } catch (err) {
       console.log(err)
       console.log('Error: ' + err?.response?.data?.message)
-
-      const newContracts = [...blockchainContracts]
-      const cntIndex = newContracts.findIndex(
-        (cnt) => cnt.id === blockchainContractSelected?.id,
-      )
-      newContracts[cntIndex].consoleLogs.unshift({
-        type: 'deployError',
-        desc: err?.response?.data?.message ?? 'Check metamask for log error',
-        contractName: blockchainContractSelected?.name,
-        createdAt: String(new Date()),
-      })
-
-      setBlockchainContracts(newContracts)
-      setBlockchainContractSelected(newContracts[cntIndex])
+      toast.error('error: ', err)
+      setIsLoading(false)
     }
   }
 

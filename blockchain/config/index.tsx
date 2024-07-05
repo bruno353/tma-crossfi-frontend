@@ -1,6 +1,6 @@
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
 import { cookieStorage, createStorage, http } from 'wagmi'
-import { mainnet, bscTestnet, sepolia } from 'wagmi/chains'
+import { mainnet, bscTestnet, sepolia, holesky } from 'wagmi/chains'
 
 export const projectId = 'a8a94eaa29bf7b1d3a0d94172c58e6ac'
 
@@ -60,13 +60,14 @@ const metadata = {
 }
 
 export const wagmiConfig = defaultWagmiConfig({
-  chains: [fraxtalMainnet, crossfiTestnet], // required
+  chains: [fraxtalMainnet, crossfiTestnet, holesky], // required
   projectId, // required
   metadata, // required
   ssr: true,
   transports: {
     [fraxtalMainnet.id]: http('https://rpc.frax.com'),
     [crossfiTestnet.id]: http('https://rpc.testnet.ms'),
+    [holesky.id]: http('https://endpoints.omniatech.io/v1/eth/holesky/public'),
   },
   storage: createStorage({
     storage: cookieStorage,
