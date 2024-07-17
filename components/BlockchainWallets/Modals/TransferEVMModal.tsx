@@ -163,7 +163,7 @@ const TransferEVMModal = ({
               htmlFor="workspaceName"
               className="mb-2 block text-[14px] text-[#C5C4C4]"
             >
-              Amount (XFI) to fund
+              Amount (Native token) to fund
             </label>
             <div
               onClick={() => {

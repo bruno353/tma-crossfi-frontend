@@ -62,6 +62,8 @@ const TransactionsRender = ({
   const [isOnRampOpen, setIsOnRampOpen] = useState<any>()
   const [isTransferEVMOpen, setIsTransferEVMOpen] = useState<any>()
 
+  const onRampChains = ['FRAXTAL', 'DCHAIN']
+
   const [isDeployNewCanisterWalletOpen, setIsDeployNewCanisterWalletOpen] =
     useState<boolean>(false)
   const [isFundInfoOpen, setIsFundInfoOpen] = useState<any>()
@@ -111,7 +113,7 @@ const TransactionsRender = ({
     <div className="text-[14px] text-[#C5C4C4]">
       <div className=" text-[14px] font-normal">
         <div className="mb-[40px] flex gap-x-[30px]">
-          {blockchainWallet?.network === 'FRAXTAL' && (
+          {onRampChains.includes(blockchainWallet?.network) && (
             <div
               onClick={() => {
                 setIsOnRampOpen(true)
@@ -127,7 +129,8 @@ const TransactionsRender = ({
                 setIsTransferOpen(true)
               } else if (
                 blockchainWallet?.network === 'CROSSFI' ||
-                blockchainWallet?.network === 'FRAXTAL'
+                blockchainWallet?.network === 'FRAXTAL' ||
+                blockchainWallet?.network === 'DCHAIN'
               ) {
                 setIsTransferEVMOpen(true)
               }

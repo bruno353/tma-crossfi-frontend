@@ -29,7 +29,10 @@ import { callAxiosBackend } from '@/utils/general-api'
 import axios from 'axios'
 import ConfirmGenericTransaction from './ConfirmGenericTransaction'
 import WebsocketComponent from '@/components/Chat/Websocket/WebsocketChat'
-import { netEnvironmentToLabel } from '@/types/consts/on-ramp'
+import {
+  netEnvironmentToConfigs,
+  netEnvironmentToLabel,
+} from '@/types/consts/on-ramp'
 
 export interface ModalI {
   blockchainWallet: BlockchainWalletProps
@@ -67,7 +70,7 @@ const OnRampModal = ({
   )
   const [pixData, setPixData] = useState<PixDataI | null>()
 
-  const [isLoading, setIsLoading] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const [isInfoOpen, setIsInfoOpen] = useState(false)
 
   const [isConfirmTransactionOpen, setIsConfirmTransactionOpen] =
@@ -89,7 +92,6 @@ const OnRampModal = ({
   }
 
   const handleInputAddressChange = (e) => {
-    return
     setIsConfirmTransactionOpen(false)
     if (!isLoading) {
       const value = e.target.value
@@ -277,10 +279,15 @@ const OnRampModal = ({
             <div className="flex items-center gap-x-3">
               <img
                 alt="frax"
-                src="/images/workspace/frax.svg"
-                className="w-[35px]"
+                src={netEnvironmentToConfigs[blockchainWallet.network].imageSrc}
+                className={
+                  netEnvironmentToConfigs[blockchainWallet.network].imageStyle
+                }
               ></img>
-              <div className="text-[20px]">On-ramp Fraxtal</div>
+              <div className="text-[20px]">
+                On-ramp{' '}
+                {netEnvironmentToConfigs[blockchainWallet.network].label}
+              </div>
             </div>
             <img
               alt="ethereum avatar"
@@ -291,10 +298,11 @@ const OnRampModal = ({
             ></img>
             {isInfoOpen && (
               <div className="absolute right-0 flex w-fit max-w-[400px] -translate-y-[110%] translate-x-[20%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
-                For Brazilian citizens, you can now enter the Frax world by
-                buying frxETH directly through Pix payments. After sending the
-                Pix order, the tokens will be transferred to your wallet
-                immediately.
+                For Brazilian citizens, you can now enter the{' '}
+                {netEnvironmentToConfigs[blockchainWallet.network].label} world
+                buying {netEnvironmentToConfigs[blockchainWallet.network].token}{' '}
+                directly through Pix payments. After sending the Pix order, the
+                tokens will be transferred to your wallet immediately.
               </div>
             )}
           </div>
@@ -303,7 +311,8 @@ const OnRampModal = ({
               htmlFor="workspaceName"
               className="mb-2 block text-[14px] text-[#C5C4C4]"
             >
-              Address to receive frxETH tokens
+              Address to receive{' '}
+              {netEnvironmentToConfigs[blockchainWallet.network].token} tokens
             </label>
             <input
               type="text"
@@ -344,7 +353,10 @@ const OnRampModal = ({
             />
           </div>
           <div className="mb-6 flex gap-x-2">
-            <div className="">frxETH/BRL price:</div>
+            <div className="">
+              {netEnvironmentToConfigs[blockchainWallet.network].token}/BRL
+              price:
+            </div>
             {tokenPrice === 'loading' ? (
               <div className="h-5 w-32 animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
             ) : (
@@ -356,7 +368,10 @@ const OnRampModal = ({
             {tokenPrice === 'loading' ? (
               <div className="h-5 w-32 animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
             ) : (
-              <div>~ {amountToReceive} frxETH</div>
+              <div>
+                ~ {amountToReceive}{' '}
+                {netEnvironmentToConfigs[blockchainWallet.network].token}
+              </div>
             )}
           </div>
           <div className="relative mt-10 flex justify-between">
@@ -367,10 +382,10 @@ const OnRampModal = ({
                     ? `${
                         isLoading
                           ? 'animate-pulse !bg-[#35428a]'
-                          : 'cursor-pointer  hover:bg-[#35428a]'
+                          : '!cursor-pointer  !bg-[#273687] hover:bg-[#35428a] '
                       } `
                     : `!cursor-auto !bg-[#4f5b9bbb]`
-                } rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff]
+                } rounded-[5px] p-[4px] px-[15px] text-[14px] text-[#fff]
                  `}
               onClick={() => {
                 if (Number(fundAmount) > 100) {

@@ -17,6 +17,13 @@ import { createBlockchainApps } from '@/utils/api-blockchain'
 
 export const optionsNetwork = [
   {
+    name: 'Dchain',
+    value: 'DCHAIN',
+    token: 'WETH',
+    imageSrc: '/images/workspace/dchain.jpg',
+    imageStyle: 'w-[22px]',
+  },
+  {
     name: 'Fraxtal',
     value: 'FRAXTAL',
     token: 'frxETH',

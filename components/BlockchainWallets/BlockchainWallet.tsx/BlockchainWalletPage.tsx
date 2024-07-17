@@ -207,6 +207,24 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   </div>
                 </a>
               )}
+              {blockchainWallet?.network === 'DCHAIN' && (
+                <a
+                  href={
+                    netEnvironment?.value === 'Testnet'
+                      ? `https://dchaintestnet-2713017997578000-1.testnet.sagaexplorer.io/address/${blockchainWallet?.evmWalletPubK}`
+                      : `https://dchaintestnet-2713017997578000-1.testnet.sagaexplorer.io/address/${blockchainWallet?.evmWalletPubK}`
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="mt-2 text-[14px] ">
+                    Public Key:{' '}
+                    <span className="hover:text-[#0354EC]">
+                      {blockchainWallet?.evmWalletPubK}
+                    </span>
+                  </div>
+                </a>
+              )}
               {blockchainWallet?.network === 'ICP' && (
                 <div className="relative flex w-fit gap-x-[5px]">
                   <div className="mt-2 text-[14px] ">
@@ -312,6 +330,31 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   </div>
                 </div>
               )}
+              {blockchainWallet?.network === 'DCHAIN' && (
+                <div>
+                  <div className="relative flex w-fit gap-x-[5px]">
+                    <div className="mt-3 text-[14px] ">
+                      Wallet balance:{' '}
+                      <span>
+                        {String(Number(blockchainWallet?.balance))} WETH
+                      </span>
+                    </div>
+                    <img
+                      alt="ethereum avatar"
+                      src="/images/header/help.svg"
+                      className="w-[17px] cursor-pointer rounded-full"
+                      onMouseEnter={() => setIsInfoBalanceOpen(true)}
+                      onMouseLeave={() => setIsInfoBalanceOpen(false)}
+                    ></img>
+                    {isInfoBalanceOpen && (
+                      <div className="absolute right-0 flex w-fit min-w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
+                        To fund your wallet, its necessary to transfer WETH
+                        tokens to your address. You can get it in DCHAIN faucet
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
             {workspace?.isUserAdmin && (
               <div className="grid gap-y-6">
@@ -324,7 +367,8 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   Edit identity
                 </div>
                 {(blockchainWallet?.network === 'STELLAR' ||
-                  blockchainWallet?.network === 'FRAXTAL') && (
+                  blockchainWallet?.network === 'FRAXTAL' ||
+                  blockchainWallet?.network === 'DCHAIN') && (
                   <div>
                     <Dropdown
                       optionSelected={netEnvironment}
