@@ -16,6 +16,9 @@ export const depinOptionsNetwork = [
     imageSrc2: '/images/workspace/core-logo.svg',
     imageStyle2: 'w-[30px]',
     value2: 'TCORE',
+    value3: 'CORE_DAO',
+    value4: 'Testnet',
+    value5: 'evmWalletPubK',
   },
 ]
 

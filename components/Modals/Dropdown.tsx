@@ -8,6 +8,9 @@ export type ValueObject = {
   imageSrc?: string
   imageStyle?: string
   value2?: string
+  value3?: string
+  value4?: string
+  value5?: string
   imageSrc2?: string
   imageStyle2?: string
 }

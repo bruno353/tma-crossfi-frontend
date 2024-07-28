@@ -136,7 +136,8 @@ const WalletsRender = ({ wallets, onUpdate, isUserAdmin }: ModalI) => {
                             wallet.icpWalletPubKId ||
                               wallet.stellarWalletPubK ||
                               wallet.crossfiWalletPubK ||
-                              wallet.fraxtalWalletPubK,
+                              wallet.fraxtalWalletPubK ||
+                              wallet.evmWalletPubK,
                           )}
                         </div>
                         <img

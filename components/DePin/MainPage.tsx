@@ -192,27 +192,6 @@ const MainPage = ({ id }) => {
                 classNameForDropdown="!min-w-[150px] !px-3 !py-1"
                 classNameForPopUp="!px-3"
               />
-              <Dropdown
-                optionSelected={selected}
-                options={depinOptionsFeatures}
-                onValueChange={(value) => {
-                  setSelected(value)
-                }}
-                classNameForDropdown="!min-w-[150px] !px-3 !py-1"
-                classNameForPopUp="!px-3"
-              />
-              {workspace?.isUserAdmin && (
-                <div
-                  onClick={() => {
-                    setIsDeployingNewDepingFeature(true)
-                  }}
-                  className={`${
-                    depins.length === 0 && 'hidden'
-                  } flex cursor-pointer items-center whitespace-nowrap rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
-                >
-                  New Deployment
-                </div>
-              )}
             </div>
           </div>
           <div className="mt-[25px] 2xl:mt-[45px]">
@@ -243,6 +222,9 @@ const MainPage = ({ id }) => {
                     <div className="overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md">
                       <DeploymentsRender
                         apps={depins}
+                        setIsDeployingNewDepingFeature={() =>
+                          setIsDeployingNewDepingFeature(true)
+                        }
                         isUserAdmin={workspace?.isUserAdmin}
                         onUpdate={getData}
                         setIsCreatingNewApp={() => {

@@ -20,6 +20,8 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { formatDate, transformString } from '@/utils/functions'
 import { LLMAppProps } from '@/types/llm'
 import { DepinDeploymentProps } from '@/types/depin'
+import Dropdown, { ValueObject } from '../Modals/Dropdown'
+import { depinOptionsFeatures, depinOptionsNetwork } from '@/types/consts/depin'
 // import EditWorkflowModal from './Modals/EditWorkflowModal'
 
 export interface ModalI {
@@ -27,6 +29,7 @@ export interface ModalI {
   isUserAdmin: boolean
   onUpdate(): void
   setIsCreatingNewApp(): void
+  setIsDeployingNewDepingFeature(): void
 }
 
 const WorkflowsRender = ({
@@ -34,10 +37,12 @@ const WorkflowsRender = ({
   onUpdate,
   isUserAdmin,
   setIsCreatingNewApp,
+  setIsDeployingNewDepingFeature,
 }: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
+  const [selected, setSelected] = useState<ValueObject>(depinOptionsFeatures[0])
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -123,72 +128,102 @@ const WorkflowsRender = ({
           {apps?.length === 0 ? (
             NoAppsFound()
           ) : (
-            <div className="">
-              <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
-                <div className="w-full max-w-[20%]">Name</div>
-                <div className="w-full max-w-[25%]">SDL</div>
-                <div className="w-full max-w-[15%]">Token Id</div>
-                <div className="w-full max-w-[20%]">Akash hash</div>
-                <div className="w-full max-w-[10%]">created at</div>
-              </div>
-              <div className="max-h-[calc(100vh-26rem)] overflow-y-auto rounded-b-md  border border-[#c5c4c41a] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-32rem)] ">
-                {' '}
-                {apps?.map((app, index) => (
+            <div>
+              <div className="mb-6 flex gap-x-4">
+                {isUserAdmin && (
                   <div
-                    onClick={(event) => {
-                      // handleClickApp(app.id, event)
+                    onClick={() => {
+                      setIsDeployingNewDepingFeature()
                     }}
-                    key={index}
-                    className={`flex items-center  ${
-                      index !== apps?.length - 1 &&
-                      'border-b-[1px] border-[#c5c4c41a]'
-                    } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
+                    className={`flex cursor-pointer items-center whitespace-nowrap rounded-[5px]  bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
                   >
-                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {app.name}
-                    </div>
-                    <div className="w-full max-w-[25%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {app.sdl.slice(0, 40)}...
-                    </div>
-                    <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {app.tokenId}
-                    </div>
-                    <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#566cec]">
-                      <a
-                        href={`https://atomscan.com/akash/transactions/${app.akashHash}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {transformString(app.hostURI)}
-                      </a>
-                    </div>
-                    <div className="w-full max-w-[10%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
-                      {formatDate(app.createdAt)}
-                    </div>
-                    <div className="ml-auto w-full max-w-[10%]">
-                      {' '}
-                      {isEditInfoOpen === app.id && (
-                        <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
-                          Edit workflow
-                        </div>
-                      )}
-                      {isUserAdmin && (
-                        <img
-                          ref={editRef}
-                          alt="ethereum avatar"
-                          src="/images/chat/pencil.svg"
-                          className="w-[15px] cursor-pointer 2xl:w-[25px]"
-                          onMouseEnter={() => setIsEditInfoOpen(app.id)}
-                          onMouseLeave={() => setIsEditInfoOpen(null)}
-                          onClick={(event) => {
-                            event.stopPropagation()
-                            setIsEditAppOpen(app.id)
-                          }}
-                        ></img>
-                      )}
-                    </div>
+                    New Deployment
                   </div>
-                ))}
+                )}
+                <Dropdown
+                  optionSelected={selected}
+                  options={depinOptionsFeatures}
+                  onValueChange={(value) => {
+                    setSelected(value)
+                  }}
+                  classNameForDropdown="!min-w-[150px] !px-3 !py-1 !w-fit"
+                  classNameForPopUp="!px-3"
+                />
+              </div>
+
+              <div className="">
+                <div className="flex w-full rounded-t-md bg-[#c5c4c40e] px-[15px] py-[8px]">
+                  <div className="w-full max-w-[20%]">Name</div>
+                  <div className="w-full max-w-[25%]">URI</div>
+                  <div className="w-full max-w-[15%]">Token Id</div>
+                  <div className="w-full max-w-[20%]">Akash hash</div>
+                  <div className="w-full max-w-[10%]">created at</div>
+                </div>
+                <div className="max-h-[calc(100vh-26rem)] overflow-y-auto rounded-b-md  border border-[#c5c4c41a] scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:max-h-[calc(100vh-32rem)] ">
+                  {' '}
+                  {apps?.map((app, index) => (
+                    <div
+                      onClick={(event) => {
+                        // handleClickApp(app.id, event)
+                      }}
+                      key={index}
+                      className={`flex items-center  ${
+                        index !== apps?.length - 1 &&
+                        'border-b-[1px] border-[#c5c4c41a]'
+                      } cursor-pointer gap-x-[2px] px-[15px] py-[20px] text-[15px] font-normal hover:bg-[#7775840c]`}
+                    >
+                      <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                        {app.name}
+                      </div>
+                      <div className="w-full max-w-[25%] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#566cec]">
+                        <a
+                          href={`http://${app.hostURI}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {transformString(app.hostURI)}
+                        </a>
+                      </div>
+                      <div className="w-full max-w-[15%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                        {app.tokenId}
+                      </div>
+                      <div className="w-full max-w-[20%] overflow-hidden truncate text-ellipsis whitespace-nowrap hover:text-[#566cec]">
+                        <a
+                          href={`https://atomscan.com/akash/transactions/${app.akashHash}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {transformString(app.akashHash)}
+                        </a>
+                      </div>
+                      <div className="w-full max-w-[10%] overflow-hidden truncate text-ellipsis whitespace-nowrap">
+                        {formatDate(app.createdAt)}
+                      </div>
+                      <div className="ml-auto w-full max-w-[10%]">
+                        {' '}
+                        {isEditInfoOpen === app.id && (
+                          <div className="absolute flex w-fit -translate-x-[50%]   -translate-y-[100%]   items-center rounded-[6px]  bg-[#060621]  px-[10px] py-[5px] text-center">
+                            Edit workflow
+                          </div>
+                        )}
+                        {isUserAdmin && (
+                          <img
+                            ref={editRef}
+                            alt="ethereum avatar"
+                            src="/images/chat/pencil.svg"
+                            className="w-[15px] cursor-pointer 2xl:w-[25px]"
+                            onMouseEnter={() => setIsEditInfoOpen(app.id)}
+                            onMouseLeave={() => setIsEditInfoOpen(null)}
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              setIsEditAppOpen(app.id)
+                            }}
+                          ></img>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}

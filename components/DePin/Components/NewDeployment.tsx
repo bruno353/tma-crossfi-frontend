@@ -43,6 +43,7 @@ import { useContractWrite } from '../../IDE/hooks/useContract'
 import { Abi } from 'viem'
 import { fraxABI } from '@/types/consts/fraxtalABI'
 import { parseEther } from 'ethers'
+import { networkToNetworkRPC } from '@/components/BlockchainWallets/BlockchainWallet.tsx/BlockchainWalletPage'
 
 export interface ModalI {
   onUpdate(): void
@@ -273,20 +274,26 @@ const NewDeployment = ({
     }
   }
 
-  async function getWalletsFrax() {
+  async function getWallets() {
     setIsLoadingWallets(true)
     const { userSessionToken } = parseCookies()
 
     try {
       const res = await callAxiosBackend(
         'get',
-        `/blockchain/functions/getWorkspaceWallets?id=${workspace.id}&network=FRAXTAL`,
+        `/blockchain/functions/getWorkspaceWallets?id=${workspace.id}&${
+          networkToNetworkRPC[selectedNetwork?.value3].name
+        }=${
+          networkToNetworkRPC[selectedNetwork?.value3]?.value[
+            selectedNetwork?.value4
+          ]
+        }`,
         userSessionToken,
       )
       const walletsToSet = []
       for (let i = 0; i < res?.length; i++) {
         walletsToSet.push({
-          name: transformString(res[i].fraxtalWalletPubK, 5),
+          name: transformString(res[i][selectedNetwork.value5], 5),
           value: res[i].id,
         })
       }
@@ -345,7 +352,7 @@ const NewDeployment = ({
   useEffect(() => {
     let intervalId
     if (isDeployingNewDepinFeature) {
-      getWalletsFrax()
+      getWallets()
       getDeploymentPrice()
       intervalId = setInterval(() => {
         getDeploymentPrice()
@@ -500,7 +507,7 @@ const NewDeployment = ({
                     <div
                       onClick={() => {
                         setWalletProvider(TypeWalletProvider.ACCELAR)
-                        getWalletsFrax()
+                        getWallets()
                       }}
                       className={`cursor-pointer rounded-xl px-2 py-1 ${
                         walletProvider === TypeWalletProvider.ACCELAR &&
