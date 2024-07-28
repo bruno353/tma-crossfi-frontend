@@ -287,7 +287,7 @@ const NewDeployment = ({
           networkToNetworkRPC[selectedNetwork?.value3]?.value[
             selectedNetwork?.value4
           ]
-        }`,
+        }&network=${selectedNetwork?.value3}`,
         userSessionToken,
       )
       const walletsToSet = []
