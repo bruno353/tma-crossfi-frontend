@@ -475,7 +475,7 @@ const Sidebar = (id: any) => {
               className="mb-1 flex  cursor-pointer justify-between px-[10px]"
             >
               <div className="mb-1 text-[13px] font-normal text-[#c5c4c4]">
-                Managment
+                Management
               </div>
               <img
                 alt="ethereum avatar"

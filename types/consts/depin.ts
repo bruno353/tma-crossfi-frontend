@@ -7,11 +7,23 @@ export const depinOptionsFeatures = [
   },
 ]
 
+export const depinOptionsNetwork = [
+  {
+    name: 'Core DAO',
+    value: 'CORE_DAO_TESTNET',
+    imageSrc: '/images/workspace/core-logo.svg',
+    imageStyle: 'w-[22px]',
+    imageSrc2: '/images/workspace/core-logo.svg',
+    imageStyle2: 'w-[30px]',
+    value2: 'TCORE',
+  },
+]
+
 export const depinPaymentMethodsAccelar = [
   {
     name: 'Pay with wallet tokens',
     value: 'wallet',
-    imageSrc: '/images/workspace/frax.svg',
+    imageSrc: '/images/sidebar/wallet.svg',
     imageStyle: 'w-[25px]',
   },
   {

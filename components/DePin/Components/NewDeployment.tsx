@@ -47,9 +47,14 @@ import { parseEther } from 'ethers'
 export interface ModalI {
   onUpdate(): void
   setIsCreatingNewApp(): void
+  selectedNetwork: ValueObject
 }
 
-const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
+const NewDeployment = ({
+  onUpdate,
+  setIsCreatingNewApp,
+  selectedNetwork,
+}: ModalI) => {
   const [isDeleteUserOpen, setIsDeleteUserOpen] = useState<any>()
   const [isEditInfoOpen, setIsEditInfoOpen] = useState<any>()
   const [isEditAppOpen, setIsEditAppOpen] = useState<any>()
@@ -184,7 +189,7 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
       walletId: blockchainWalletsSelected.value,
       name: deploymentName,
       bidAmount,
-      network: 'FRAXTAL_MAINNET',
+      network: selectedNetwork?.value,
       depinFeature: 'AKASH',
       sdl: sdlValue,
     }
@@ -360,11 +365,11 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
               }}
               alt="ethereum avatar"
               src="/images/blockchain/arrow-left.svg"
-              className="my-auto w-[25px] cursor-pointer 2xl:w-[20px]"
+              className="my-auto w-[15px] cursor-pointer 2xl:w-[20px]"
             ></img>
-            <div className="text-2xl">New deployment</div>
+            <div className="text-xl 2xl:text-2xl">New deployment</div>
           </div>
-          <div className="h-[calc(100vh-20rem)] max-h-[calc(100vh-20rem)] overflow-y-auto scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:h-[calc(100vh-23rem)] 2xl:max-h-[calc(100vh-23rem)]">
+          <div className="h-[calc(100vh-20rem)] max-h-[calc(100vh-20rem)] overflow-y-auto pb-4 scrollbar-thin scrollbar-track-[#1D2144] scrollbar-thumb-[#c5c4c4] scrollbar-track-rounded-md scrollbar-thumb-rounded-md 2xl:h-[calc(100vh-23rem)] 2xl:max-h-[calc(100vh-23rem)]">
             <div className="flex gap-x-20">
               <div>
                 <div className="mb-6">
@@ -424,7 +429,9 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
                   {tokenPrice === 'loading' ? (
                     <div className="h-5 w-32 animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
                   ) : (
-                    <div>~ frxETH {tokenPrice}</div>
+                    <div>
+                      ~ {selectedNetwork?.value2} {tokenPrice}
+                    </div>
                   )}
                 </div>
                 <div className="mb-6">
@@ -432,7 +439,7 @@ const NewDeployment = ({ onUpdate, setIsCreatingNewApp }: ModalI) => {
                     htmlFor="workspaceName"
                     className="mb-2 block text-[14px] text-[#C5C4C4]"
                   >
-                    Amount to bid* (frxETH)
+                    Amount to bid* ({selectedNetwork?.value2})
                   </label>
                   <input
                     type="text"

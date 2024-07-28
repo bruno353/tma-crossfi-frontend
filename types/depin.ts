@@ -15,6 +15,7 @@ export interface DepinDeploymentProps {
   akashHash?: string
   tokenId?: string
   chainId?: string
+  hostURI?: string
   network?: TypeDepinNetwork
   depinFeature?: string
   status?: TypeDepinStatus

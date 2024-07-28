@@ -279,14 +279,16 @@ const OnRampModal = ({
             <div className="flex items-center gap-x-3">
               <img
                 alt="frax"
-                src={netEnvironmentToConfigs[blockchainWallet.network].imageSrc}
+                src={
+                  netEnvironmentToConfigs[blockchainWallet.network]?.imageSrc
+                }
                 className={
-                  netEnvironmentToConfigs[blockchainWallet.network].imageStyle
+                  netEnvironmentToConfigs[blockchainWallet.network]?.imageStyle
                 }
               ></img>
               <div className="text-[20px]">
                 On-ramp{' '}
-                {netEnvironmentToConfigs[blockchainWallet.network].label}
+                {netEnvironmentToConfigs[blockchainWallet.network]?.label}
               </div>
             </div>
             <img
@@ -299,8 +301,9 @@ const OnRampModal = ({
             {isInfoOpen && (
               <div className="absolute right-0 flex w-fit max-w-[400px] -translate-y-[110%] translate-x-[20%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
                 For Brazilian citizens, you can now enter the{' '}
-                {netEnvironmentToConfigs[blockchainWallet.network].label} world
-                buying {netEnvironmentToConfigs[blockchainWallet.network].token}{' '}
+                {netEnvironmentToConfigs[blockchainWallet.network]?.label} world
+                buying{' '}
+                {netEnvironmentToConfigs[blockchainWallet.network]?.token}{' '}
                 directly through Pix payments. After sending the Pix order, the
                 tokens will be transferred to your wallet immediately.
               </div>
@@ -312,7 +315,7 @@ const OnRampModal = ({
               className="mb-2 block text-[14px] text-[#C5C4C4]"
             >
               Address to receive{' '}
-              {netEnvironmentToConfigs[blockchainWallet.network].token} tokens
+              {netEnvironmentToConfigs[blockchainWallet.network]?.token} tokens
             </label>
             <input
               type="text"
@@ -354,7 +357,7 @@ const OnRampModal = ({
           </div>
           <div className="mb-6 flex gap-x-2">
             <div className="">
-              {netEnvironmentToConfigs[blockchainWallet.network].token}/BRL
+              {netEnvironmentToConfigs[blockchainWallet.network]?.token}/BRL
               price:
             </div>
             {tokenPrice === 'loading' ? (
@@ -370,7 +373,7 @@ const OnRampModal = ({
             ) : (
               <div>
                 ~ {amountToReceive}{' '}
-                {netEnvironmentToConfigs[blockchainWallet.network].token}
+                {netEnvironmentToConfigs[blockchainWallet.network]?.token}
               </div>
             )}
           </div>

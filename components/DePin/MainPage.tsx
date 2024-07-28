@@ -31,7 +31,7 @@ import Editor, { useMonaco } from '@monaco-editor/react'
 import DeploymentsRender from './DeploymentsRender'
 import NewWorkflowModal from './Modals/NewWorkflowModal'
 import Dropdown, { ValueObject } from '../Modals/Dropdown'
-import { depinOptionsFeatures } from '@/types/consts/depin'
+import { depinOptionsFeatures, depinOptionsNetwork } from '@/types/consts/depin'
 import NewDeployment from './Components/NewDeployment'
 import { callAxiosBackend } from '@/utils/general-api'
 import { DepinDeploymentProps } from '@/types/depin'
@@ -45,6 +45,9 @@ const MainPage = ({ id }) => {
   const monaco = useMonaco()
   const [depins, setDepins] = useState<DepinDeploymentProps[]>([])
   const [selected, setSelected] = useState<ValueObject>(depinOptionsFeatures[0])
+  const [selectedNetwork, setSelectedNetwork] = useState<ValueObject>(
+    depinOptionsNetwork[0],
+  )
 
   const [navBarSelected, setNavBarSelected] = useState('Deployments')
   const [blockchainWallets, setBlockchainWallets] = useState<
@@ -81,7 +84,7 @@ const MainPage = ({ id }) => {
     try {
       const res = await callAxiosBackend(
         'get',
-        `/blockchain/depin/functions/getWorkspaceDeployments?id=${id}`,
+        `/blockchain/depin/functions/getWorkspaceDeployments?id=${id}&network=${selectedNetwork?.value}`,
         userSessionToken,
       )
       setDepins(res)
@@ -151,7 +154,7 @@ const MainPage = ({ id }) => {
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
             <div className="relative flex gap-x-[8px]">
-              <div className="mt-auto flex gap-x-[8px] text-[24px] font-medium">
+              <div className="mt-auto flex gap-x-[15px] text-[24px] font-medium">
                 {/* <img
                   alt="ethereum avatar"
                   src="/images/depin/akash.svg"
@@ -159,10 +162,10 @@ const MainPage = ({ id }) => {
                 ></img> */}
                 <img
                   alt="frax"
-                  src="/images/workspace/frax.svg"
-                  className="w-[35px]"
+                  src={selectedNetwork.imageSrc2}
+                  className={selectedNetwork.imageStyle2}
                 ></img>
-                <div>Fraxtal Depin</div>
+                <div>Accelar Depin</div>
               </div>
               <img
                 alt="ethereum avatar"
@@ -180,6 +183,15 @@ const MainPage = ({ id }) => {
               )}
             </div>
             <div className="flex gap-x-10">
+              <Dropdown
+                optionSelected={selectedNetwork}
+                options={depinOptionsNetwork}
+                onValueChange={(value) => {
+                  setSelectedNetwork(value)
+                }}
+                classNameForDropdown="!min-w-[150px] !px-3 !py-1"
+                classNameForPopUp="!px-3"
+              />
               <Dropdown
                 optionSelected={selected}
                 options={depinOptionsFeatures}
@@ -224,6 +236,7 @@ const MainPage = ({ id }) => {
                         setIsCreatingNewApp={() => {
                           setIsDeployingNewDepingFeature(false)
                         }}
+                        selectedNetwork={selectedNetwork}
                       />
                     </div>
                   ) : (

@@ -106,6 +106,11 @@ export const sorobanNetworkToRpc = {
   Mainnet: 'https://horizon.stellar.org',
 }
 
+export const coreDaoNetworkToRpc = {
+  Testnet: 'https://rpc.test.btcs.network',
+  Mainnet: 'https://rpc.ankr.com/core',
+}
+
 export const optionsNetworkToPassphrase = {
   TESTNET: Networks.TESTNET,
   MAINNET: Networks.PUBLIC,

@@ -85,7 +85,7 @@ const WorkflowsRender = ({
           ref={editRef}
           alt="ethereum avatar"
           src="/images/depin/network.svg"
-          className="mx-auto w-[15px] cursor-pointer 2xl:w-[105px]"
+          className="mx-auto w-[85px] cursor-pointer 2xl:w-[105px]"
         ></img>{' '}
         <div className="mx-auto flex w-fit">No deployments found</div>
         {isUserAdmin && (
@@ -98,18 +98,19 @@ const WorkflowsRender = ({
             New Deployment
           </div>
         )}
-        <div className="mx-auto mt-10 max-w-[700px] text-center font-normal 2xl:text-[17px]">
+        <div className="mx-auto mt-10 max-w-[800px] text-center font-normal 2xl:text-[17px]">
           The{' '}
           <span className="cursor-pointer text-[#7b56d3]">
-            Fraxtal DePin feature
+            Accelar DePin feature
           </span>{' '}
-          is an aggregational on-chain protocol for innumerous infrastructure
+          is an aggregational on-chain protocol for
           {'  '}
           <span className="cursor-pointer text-[#7b56d3]">
-            decentralized computation and RWA
-          </span>
-          , through a set of oracles and workflows, manage your Akash, Iotex,
-          Helium through the Fraxtal blockchain
+            decentralized computation and RWA infrastructures.
+          </span>{' '}
+          {'  '}
+          Through a set of oracles and workflows, manage your Akash, Iotex and
+          Helium dapps through your blockchain of choice.
         </div>
       </div>
     )
@@ -158,7 +159,7 @@ const WorkflowsRender = ({
                         target="_blank"
                         rel="noreferrer"
                       >
-                        {transformString(app.akashHash)}
+                        {transformString(app.hostURI)}
                       </a>
                     </div>
                     <div className="w-full max-w-[10%] overflow-hidden truncate text-ellipsis whitespace-nowrap">

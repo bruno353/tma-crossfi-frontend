@@ -35,10 +35,16 @@ import {
   optionsNetwork as netOption,
   optionsNetworkCrossfi as crossfiOption,
   crossfiNetworkToRpc,
+  coreDaoNetworkToRpc,
 } from '@/components/IDE/MainPage'
 import { optionsNetwork } from '@/components/BlockchainApps/Modals/NewAppModal'
 import { callAxiosBackend } from '@/utils/general-api'
 
+export const networkToNetworkRPC = {
+  STELLAR: { name: 'sorobanRPC', value: sorobanNetworkToRpc },
+  CORE_DAO: { name: 'coreDaoRPC', value: coreDaoNetworkToRpc },
+}
+export const netDropdown = ['STELLAR', 'FRAX', 'DCHAIN', 'CORE_DAO']
 const BlockchainWalletPage = ({ id, workspaceId }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isInfoBalanceOpen, setIsInfoBalanceOpen] = useState(false)
@@ -56,12 +62,57 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
     crossfiOption[0],
   )
 
+  const chainToInterfaceLabels = {
+    DCHAIN: {
+      pubkey: blockchainWallet?.evmWalletPubK,
+      testnetExplorer: `https://dchaintestnet-2713017997578000-1.testnet.sagaexplorer.io/address/${blockchainWallet?.evmWalletPubK}`,
+      productionExplorer: `https://dchaintestnet-2713017997578000-1.testnet.sagaexplorer.io/address/${blockchainWallet?.evmWalletPubK}`,
+    },
+    CORE_DAO: {
+      pubkey: blockchainWallet?.evmWalletPubK,
+      testnetExplorer: `https://scan.test.btcs.network/address/${blockchainWallet?.evmWalletPubK}`,
+      productionExplorer: `https://scan.coredao.org//address/${blockchainWallet?.evmWalletPubK}`,
+    },
+    FRAX: {
+      pubkey: blockchainWallet?.fraxtalWalletPubK,
+      testnetExplorer: `https://holesky.fraxscan.com/address/${blockchainWallet?.fraxtalWalletPubK}`,
+      productionExplorer: `https://fraxscan.com/address/${blockchainWallet?.fraxtalWalletPubK}`,
+    },
+    STELLAR: {
+      pubkey: blockchainWallet?.stellarWalletPubK,
+      testnetExplorer: `https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`,
+      productionExplorer: `https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`,
+    },
+  }
+  const chainToBalanceLabels = {
+    FRAXTAL: {
+      token: 'frxETH',
+      description:
+        'To fund your wallet, its necessary to transfer frxETH tokens to your address. You can buy frxETH tokens in L2 exchanges',
+    },
+    CROSSFI: {
+      token: 'XFI',
+      description:
+        'To fund your wallet, its necessary to transfer XFI tokens to your address. You can buy XFI tokens in exchanges as Uniswap',
+    },
+    DCHAIN: {
+      token: 'WETH',
+      description:
+        'To fund your wallet, its necessary to transfer WETH tokens to your address. You can get it in DCHAIN faucet',
+    },
+    CORE_DAO: {
+      token: 'TCORE',
+      description:
+        'To fund your wallet, its necessary to transfer TCORE tokens to your address.',
+    },
+  }
+
   const { workspace, user } = useContext(AccountContext)
 
   const pathname = usePathname()
   const { push } = useRouter()
 
-  async function getData(sorobanRpc?: string) {
+  async function getData(rpcName?: string, rpcValue?: string) {
     setIsLoading(true)
     const { userSessionToken } = parseCookies()
 
@@ -69,8 +120,8 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
       id,
     }
 
-    if (sorobanRpc) {
-      data['sorobanRPC'] = sorobanRpc
+    if (rpcName) {
+      data[rpcName] = rpcValue
     }
 
     try {
@@ -158,12 +209,14 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   </div>
                 </a>
               )}
-              {blockchainWallet?.network === 'STELLAR' && (
+              {chainToInterfaceLabels[blockchainWallet?.network] && (
                 <a
                   href={
                     netEnvironment?.value === 'Testnet'
-                      ? `https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
-                      : `https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`
+                      ? chainToInterfaceLabels[blockchainWallet?.network]
+                          .testnetExplorer
+                      : chainToInterfaceLabels[blockchainWallet?.network]
+                          .productionExplorer
                   }
                   target="_blank"
                   rel="noreferrer"
@@ -171,7 +224,7 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   <div className="mt-2 text-[14px] ">
                     Public Key:{' '}
                     <span className="hover:text-[#0354EC]">
-                      {blockchainWallet?.stellarWalletPubK}
+                      {chainToInterfaceLabels[blockchainWallet?.network].pubkey}
                     </span>
                   </div>
                 </a>
@@ -188,42 +241,6 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     {blockchainWallet?.evmCrossfiWalletPubK}{' '}
                   </span>
                 </div>
-              )}
-              {blockchainWallet?.network === 'FRAXTAL' && (
-                <a
-                  href={
-                    netEnvironment?.value === 'Testnet'
-                      ? `https://holesky.fraxscan.com/address/${blockchainWallet?.fraxtalWalletPubK}`
-                      : `https://fraxscan.com/address/${blockchainWallet?.fraxtalWalletPubK}`
-                  }
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <div className="mt-2 text-[14px] ">
-                    Public Key:{' '}
-                    <span className="hover:text-[#0354EC]">
-                      {blockchainWallet?.fraxtalWalletPubK}
-                    </span>
-                  </div>
-                </a>
-              )}
-              {blockchainWallet?.network === 'DCHAIN' && (
-                <a
-                  href={
-                    netEnvironment?.value === 'Testnet'
-                      ? `https://dchaintestnet-2713017997578000-1.testnet.sagaexplorer.io/address/${blockchainWallet?.evmWalletPubK}`
-                      : `https://dchaintestnet-2713017997578000-1.testnet.sagaexplorer.io/address/${blockchainWallet?.evmWalletPubK}`
-                  }
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <div className="mt-2 text-[14px] ">
-                    Public Key:{' '}
-                    <span className="hover:text-[#0354EC]">
-                      {blockchainWallet?.evmWalletPubK}
-                    </span>
-                  </div>
-                </a>
               )}
               {blockchainWallet?.network === 'ICP' && (
                 <div className="relative flex w-fit gap-x-[5px]">
@@ -277,14 +294,14 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                   )}
                 </div>
               )}
-              {blockchainWallet?.network === 'CROSSFI' && (
+              {chainToBalanceLabels[blockchainWallet?.network] && (
                 <div>
                   <div className="relative flex w-fit gap-x-[5px]">
                     <div className="mt-3 text-[14px] ">
                       Wallet balance:{' '}
                       <span>
-                        {String(Number(blockchainWallet?.balance) / 10 ** 18)}{' '}
-                        XFI
+                        {String(Number(blockchainWallet?.balance))}{' '}
+                        {chainToBalanceLabels[blockchainWallet?.network].token}
                       </span>
                     </div>
                     <img
@@ -296,60 +313,10 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                     ></img>
                     {isInfoBalanceOpen && (
                       <div className="absolute right-0 flex w-fit min-w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
-                        To fund your wallet, its necessary to transfer XFI
-                        tokens to your address. You can buy XFI tokens in
-                        exchanges as Uniswap
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-              {blockchainWallet?.network === 'FRAXTAL' && (
-                <div>
-                  <div className="relative flex w-fit gap-x-[5px]">
-                    <div className="mt-3 text-[14px] ">
-                      Wallet balance:{' '}
-                      <span>
-                        {String(Number(blockchainWallet?.balance))} frxETH
-                      </span>
-                    </div>
-                    <img
-                      alt="ethereum avatar"
-                      src="/images/header/help.svg"
-                      className="w-[17px] cursor-pointer rounded-full"
-                      onMouseEnter={() => setIsInfoBalanceOpen(true)}
-                      onMouseLeave={() => setIsInfoBalanceOpen(false)}
-                    ></img>
-                    {isInfoBalanceOpen && (
-                      <div className="absolute right-0 flex w-fit min-w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
-                        To fund your wallet, its necessary to transfer frxETH
-                        tokens to your address. You can buy frxETH tokens in L2
-                        exchanges
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-              {blockchainWallet?.network === 'DCHAIN' && (
-                <div>
-                  <div className="relative flex w-fit gap-x-[5px]">
-                    <div className="mt-3 text-[14px] ">
-                      Wallet balance:{' '}
-                      <span>
-                        {String(Number(blockchainWallet?.balance))} WETH
-                      </span>
-                    </div>
-                    <img
-                      alt="ethereum avatar"
-                      src="/images/header/help.svg"
-                      className="w-[17px] cursor-pointer rounded-full"
-                      onMouseEnter={() => setIsInfoBalanceOpen(true)}
-                      onMouseLeave={() => setIsInfoBalanceOpen(false)}
-                    ></img>
-                    {isInfoBalanceOpen && (
-                      <div className="absolute right-0 flex w-fit min-w-[200px] -translate-y-[80%] translate-x-[105%] items-center rounded-[6px]   border-[1px]   border-[#cfcfcf81] bg-[#060621]  px-[10px]  py-[7px] text-center text-[12px]">
-                        To fund your wallet, its necessary to transfer WETH
-                        tokens to your address. You can get it in DCHAIN faucet
+                        {
+                          chainToBalanceLabels[blockchainWallet?.network]
+                            .description
+                        }{' '}
                       </div>
                     )}
                   </div>
@@ -357,7 +324,7 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
               )}
             </div>
             {workspace?.isUserAdmin && (
-              <div className="grid gap-y-6">
+              <div className="grid gap-y-3">
                 <div
                   onClick={() => {
                     setIsEditWalletOpen(true)
@@ -366,15 +333,18 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
                 >
                   Edit identity
                 </div>
-                {(blockchainWallet?.network === 'STELLAR' ||
-                  blockchainWallet?.network === 'FRAXTAL' ||
-                  blockchainWallet?.network === 'DCHAIN') && (
+                {netDropdown.includes(blockchainWallet?.network) && (
                   <div>
                     <Dropdown
                       optionSelected={netEnvironment}
                       options={netOption}
                       onValueChange={(value) => {
-                        getData(sorobanNetworkToRpc[value.value])
+                        getData(
+                          networkToNetworkRPC[blockchainWallet?.network].name,
+                          networkToNetworkRPC[blockchainWallet?.network]?.value[
+                            value.value
+                          ],
+                        )
                         setNetEnvironment(value)
                       }}
                       classNameForDropdown="!px-4 !pr-2 !py-1 !text-[#fff] !text-[14px]"
@@ -401,7 +371,7 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
               </div>
             )}
           </div>
-          <div className="mt-[45px]">
+          <div className="mt-[25px] 2xl:mt-[45px]">
             <SubNavBar
               onChange={(value) => {
                 setNavBarSelected(value)

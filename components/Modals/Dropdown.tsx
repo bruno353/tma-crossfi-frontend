@@ -7,6 +7,9 @@ export type ValueObject = {
   value: string
   imageSrc?: string
   imageStyle?: string
+  value2?: string
+  imageSrc2?: string
+  imageStyle2?: string
 }
 
 interface ModalI {
