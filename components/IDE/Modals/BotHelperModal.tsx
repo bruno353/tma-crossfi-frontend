@@ -160,7 +160,7 @@ const BotHelperModal = ({
               className="mb-1 w-[20px]"
             ></img>
             <div className="block text-[18px] text-[#fff]">
-              Ask for Soroban coding help with the Accelar Bot
+              Ask for Smart-contract coding help with the Accelar Bot
             </div>
           </div>
 

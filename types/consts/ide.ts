@@ -20,6 +20,7 @@ export const LANGUAGE_VERSIONS_CROSSFI = {
   rust: 'soon',
 }
 
+export const evmChains = ['CROSSFI', 'EDUCHAIN']
 export const CHAIN_SPECS = {
   STELLAR: {
     value: NetworkIDE.STELLAR,
@@ -31,6 +32,12 @@ export const CHAIN_SPECS = {
     value: NetworkIDE.CROSSFI,
     text: 'Crossfi',
     imgSource: '/images/workspace/crossfi-2.png',
+    imgStyle: 'w-[18px]',
+  },
+  EDUCHAIN: {
+    value: NetworkIDE.EDUCHAIN,
+    text: 'Educhain',
+    imgSource: '/images/workspace/educhain-logo.svg',
     imgStyle: 'w-[18px]',
   },
 }
@@ -52,6 +59,13 @@ impl SumContract {
   }
 }`,
   CROSSFI: `// SPDX-License-Identifier: MIT
+// compiler version must be greater than or equal to 0.8.24 and less than 0.9.0
+pragma solidity ^0.8.24;
+
+contract HelloWorld {
+    string public greet = "Hello World!";
+}`,
+  EDUCHAIN: `// SPDX-License-Identifier: MIT
 // compiler version must be greater than or equal to 0.8.24 and less than 0.9.0
 pragma solidity ^0.8.24;
 

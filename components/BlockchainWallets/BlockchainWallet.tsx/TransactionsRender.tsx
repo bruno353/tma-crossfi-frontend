@@ -62,7 +62,8 @@ const TransactionsRender = ({
   const [isOnRampOpen, setIsOnRampOpen] = useState<any>()
   const [isTransferEVMOpen, setIsTransferEVMOpen] = useState<any>()
 
-  const onRampChains = ['FRAXTAL', 'DCHAIN']
+  const onRampChains = ['FRAXTAL', 'DCHAIN', 'EDUCHAIN']
+  const evmChainsTransfer = ['CROSSFI', 'DCHAIN', 'FRAXTAL', 'EDUCHAIN']
 
   const [isDeployNewCanisterWalletOpen, setIsDeployNewCanisterWalletOpen] =
     useState<boolean>(false)
@@ -128,9 +129,7 @@ const TransactionsRender = ({
               if (blockchainWallet?.network === 'ICP') {
                 setIsTransferOpen(true)
               } else if (
-                blockchainWallet?.network === 'CROSSFI' ||
-                blockchainWallet?.network === 'FRAXTAL' ||
-                blockchainWallet?.network === 'DCHAIN'
+                evmChainsTransfer.includes(blockchainWallet?.network)
               ) {
                 setIsTransferEVMOpen(true)
               }

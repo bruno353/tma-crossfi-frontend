@@ -14,6 +14,9 @@ export const netEnvironmentToLabel = {
     Mainnet: 'CORE_DAO_MAINNET',
     Testnet: 'CORE_DAO_TESTNET',
   },
+  EDUCHAIN: {
+    Testnet: 'EDUCHAIN_TESTNET',
+  },
 }
 
 export const netEnvironmentToConfigs = {
@@ -33,6 +36,12 @@ export const netEnvironmentToConfigs = {
     label: 'Core Dao',
     token: 'TCORE',
     imageSrc: '/images/workspace/core-logo.svg',
+    imageStyle: 'w-[35px]',
+  },
+  EDUCHAIN: {
+    label: 'Educhain',
+    token: 'EDU',
+    imageSrc: '/images/workspace/educhain-logo.svg',
     imageStyle: 'w-[35px]',
   },
 }

@@ -83,6 +83,7 @@ import {
   CHAIN_TO_TEMPLATE,
   LANGUAGE_VERSIONS_CROSSFI,
   LANGUAGE_VERSIONS_STELLAR,
+  evmChains,
 } from '@/types/consts/ide'
 import ContractsABIRender from './Components/ContractsABIRender'
 import { useContractDeploy } from './hooks/useContractDeploy'
@@ -134,12 +135,23 @@ export const optionsNetworkCrossfi = [
   },
 ]
 
+export const optionsNetworkEduchain = [
+  {
+    name: 'Testnet',
+    value: 'Testnet',
+  },
+]
+
 export const crossfiNetworkToRpc = {
   Testnet: 'https://tendermint-rpc.testnet.ms',
 }
 
 export const crossfiNetworkEVMToRpc = {
   Testnet: 'https://rpc.testnet.ms',
+}
+
+export const educhainNetworkEVMToRpc = {
+  Testnet: 'https://open-campus-codex-sepolia.drpc.org',
 }
 
 const contractReducer = (state, action) => {
@@ -470,7 +482,7 @@ const MainPage = ({ id }) => {
         setBlockchainContracts(newContracts)
         setBlockchainContractSelected(newContracts[cntIndex])
       }
-    } else if (ideChain === NetworkIDE.CROSSFI) {
+    } else if (evmChains.includes(ideChain)) {
       try {
         const res = await callAxiosBackend(
           'post',
@@ -573,7 +585,7 @@ const MainPage = ({ id }) => {
   function renderCnslLogResponse(cnsl: ConsoleContractCall) {
     if (ideChain === NetworkIDE.STELLAR) {
       return <div>{JSON.stringify(cnsl?.responseValue)}</div>
-    } else if (ideChain === NetworkIDE.CROSSFI) {
+    } else if (evmChains.includes(ideChain)) {
       if (cnsl?.stateMutability === 'view') {
         return <div>{cnsl?.responseValue}</div>
       } else {
@@ -1346,6 +1358,29 @@ const MainPage = ({ id }) => {
         const res = await callAxiosBackend(
           'get',
           `/blockchain/functions/getWorkspaceWallets?id=${id}&network=CROSSFI${rpc}`,
+          userSessionToken,
+        )
+        const walletsToSet = []
+        for (let i = 0; i < res?.length; i++) {
+          walletsToSet.push({
+            name: transformString(res[i].evmCrossfiWalletPubK, 5),
+            value: res[i].id,
+          })
+        }
+        setBlockchainWalletsDropdown(walletsToSet)
+        setBlockchainWallets(res)
+        if (walletsToSet?.length > 0) {
+          setBlockchainWalletsSelected(walletsToSet[0])
+        }
+      } catch (err) {
+        console.log(err)
+        toast.error(`Error: ${err.response.data.message}`)
+      }
+    } else if (ideChain === NetworkIDE.EDUCHAIN) {
+      try {
+        const res = await callAxiosBackend(
+          'get',
+          `/blockchain/functions/getWorkspaceWallets?id=${id}&network=EDUCHAIN`,
           userSessionToken,
         )
         const walletsToSet = []

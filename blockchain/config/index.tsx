@@ -27,6 +27,32 @@ const crossfiTestnet = {
   testnet: true,
 }
 
+const eduChain = {
+  id: 656476,
+  name: 'EDU Chain',
+  network: 'EDU Chain Testnet',
+  nativeCurrency: {
+    name: 'EDU',
+    symbol: 'EDU',
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://open-campus-codex-sepolia.drpc.org'],
+    },
+    public: {
+      http: ['https://open-campus-codex-sepolia.drpc.org'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'CoreScan',
+      url: 'https://opencampus-codex.blockscout.com',
+    },
+  },
+  testnet: true,
+}
+
 const fraxtalMainnet = {
   id: 252,
   name: 'Fraxtal',
@@ -60,11 +86,12 @@ const metadata = {
 }
 
 export const wagmiConfig = defaultWagmiConfig({
-  chains: [fraxtalMainnet, crossfiTestnet, holesky], // required
+  chains: [fraxtalMainnet, crossfiTestnet, holesky, eduChain], // required
   projectId, // required
   metadata, // required
   ssr: true,
   transports: {
+    [eduChain.id]: http('https://opencampus-codex.blockscout.com'),
     [fraxtalMainnet.id]: http('https://rpc.frax.com'),
     [crossfiTestnet.id]: http('https://rpc.testnet.ms'),
     [holesky.id]: http('https://endpoints.omniatech.io/v1/eth/holesky/public'),

@@ -104,6 +104,11 @@ const OnRampModal = ({
 
     const { userSessionToken } = parseCookies()
 
+    console.log('here')
+    console.log(blockchainWallet.network)
+    console.log(netEnvironment)
+    console.log(netEnvironmentToLabel[blockchainWallet.network][netEnvironment])
+
     const data = {
       id: blockchainWallet?.id,
       value: Number(fundAmount),
@@ -494,7 +499,7 @@ const OnRampModal = ({
           </div>
           <div className="mt-3 px-5">
             You are receiving:{' '}
-            {String(Number(pixData?.valueToReceive) * 10 ** 18)} frxETH tokens
+            {String(Number(pixData?.valueToReceive) * 10 ** 18)} chain tokens
           </div>
           <div className="relative ml-auto mt-10 flex justify-between">
             <div

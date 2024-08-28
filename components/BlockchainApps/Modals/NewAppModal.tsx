@@ -17,6 +17,13 @@ import { createBlockchainApps } from '@/utils/api-blockchain'
 
 export const optionsNetwork = [
   {
+    name: 'Educhain',
+    value: 'EDUCHAIN',
+    token: 'EDU',
+    imageSrc: '/images/workspace/educhain-logo.svg',
+    imageStyle: 'w-[22px]',
+  },
+  {
     name: 'Core DAO',
     value: 'CORE_DAO',
     token: 'TCORE',

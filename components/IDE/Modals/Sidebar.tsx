@@ -18,7 +18,7 @@ import { SmileySad } from 'phosphor-react'
 import { checkConnection, retrievePublicKey } from '../Funcs/freighter'
 import ChainSelector from '../Components/ChainSelector'
 import { AccountContext } from '@/contexts/AccountContext'
-import { CHAIN_TO_TEMPLATE } from '@/types/consts/ide'
+import { CHAIN_TO_TEMPLATE, evmChains } from '@/types/consts/ide'
 import ConnectButton from '@/contexts/ConnectButton'
 
 export interface MenuI {
@@ -251,7 +251,7 @@ const Sidebar = ({
               Freighter
             </div>
           )}
-          {ideChain === NetworkIDE.CROSSFI && (
+          {evmChains.includes(ideChain) && (
             <div
               onClick={() => {
                 setWalletProvider(TypeWalletProvider.EVM)

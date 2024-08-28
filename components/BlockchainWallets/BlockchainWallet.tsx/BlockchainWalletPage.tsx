@@ -83,6 +83,10 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
       testnetExplorer: `https://testnet.stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`,
       productionExplorer: `https://stellarchain.io/accounts/${blockchainWallet?.stellarWalletPubK}`,
     },
+    EDUCHAIN: {
+      pubkey: blockchainWallet?.evmWalletPubK,
+      testnetExplorer: `https://opencampus-codex.blockscout.com/address/${blockchainWallet?.stellarWalletPubK}`,
+    },
   }
   const chainToBalanceLabels = {
     FRAXTAL: {
@@ -104,6 +108,11 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
       token: 'TCORE',
       description:
         'To fund your wallet, its necessary to transfer TCORE tokens to your address.',
+    },
+    EDUCHAIN: {
+      token: 'EDU',
+      description:
+        'To fund your wallet, its necessary to transfer EDU tokens to your address.',
     },
   }
 
@@ -143,6 +152,12 @@ const BlockchainWalletPage = ({ id, workspaceId }) => {
     setIsLoading(true)
     getData()
   }, [id])
+
+  useEffect(() => {
+    if (blockchainWallet?.network === 'EDUCHAIN') {
+      setNetEnvironment(netOption[0])
+    }
+  }, [blockchainWallet])
 
   if (isLoading) {
     return (
