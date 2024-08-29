@@ -77,6 +77,9 @@ const BotHelperModal = ({
     if (ideChain === NetworkIDE.CROSSFI) {
       data['network'] = ideChain
     }
+    if (ideChain === NetworkIDE.EDUCHAIN) {
+      data['network'] = ideChain
+    }
 
     try {
       const res = await callAxiosBackend(

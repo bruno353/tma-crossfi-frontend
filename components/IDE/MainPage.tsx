@@ -311,7 +311,7 @@ const MainPage = ({ id }) => {
       getData('Testnet')
       if (ideChain === NetworkIDE.STELLAR) {
         setLanguage('rust')
-      } else if (ideChain === NetworkIDE.CROSSFI) {
+      } else if (evmChains.includes(ideChain)) {
         setLanguage('sol')
       }
       setIsLoading(false)
@@ -768,6 +768,19 @@ const MainPage = ({ id }) => {
     callSorobanContract(cntIns?.functionName, finalCntInsInput)
   }
 
+  function evmChainToEnvironment() {
+    if (ideChain === NetworkIDE.CROSSFI) {
+      console.log('!!!Crossfi!!!')
+      return selected.value.toLowerCase()
+    } else if (ideChain === NetworkIDE.EDUCHAIN) {
+      console.log('!!!EDUCHAIN_TESTNET!!!')
+      return 'EDUCHAIN_TESTNET'
+    } else if (ideChain === NetworkIDE.STELLAR) {
+      console.log('!!!Crossfi!!!')
+      return selected.value.toLowerCase()
+    }
+  }
+
   async function deployContractCrossfi(contractABIName: string) {
     const chain = selected.value
     const { userSessionToken } = parseCookies()
@@ -776,7 +789,7 @@ const MainPage = ({ id }) => {
       const data = {
         walletId: blockchainWalletsSelected.value,
         contractId: blockchainContractSelected?.id,
-        environment: selected.value.toLowerCase(),
+        environment: evmChainToEnvironment(),
         abiName: contractABIName,
       }
 
@@ -930,7 +943,7 @@ const MainPage = ({ id }) => {
 
     if (ideChain === NetworkIDE.STELLAR) {
       await deployContractSoroban()
-    } else if (ideChain === NetworkIDE.CROSSFI) {
+    } else if (evmChains.includes(ideChain)) {
       await deployContractCrossfi(contractABIName)
     }
 
@@ -1023,7 +1036,7 @@ const MainPage = ({ id }) => {
     const data = {
       walletId: blockchainWalletsSelected.value,
       contractAddress: blockchainContractSelected?.currentAddress,
-      environment: selected.value.toLowerCase(),
+      environment: evmChainToEnvironment(),
       functionName: functionNameFinal,
       functionParams,
     }
@@ -1266,7 +1279,7 @@ const MainPage = ({ id }) => {
     const data = {
       walletId: blockchainWalletsSelected.value,
       contractAddress: blockchainContractSelected?.currentAddress,
-      environment: selected.value.toLowerCase(),
+      environment: evmChainToEnvironment(),
       functionName: functionNameFinal,
       functionParams,
     }
@@ -1386,7 +1399,7 @@ const MainPage = ({ id }) => {
         const walletsToSet = []
         for (let i = 0; i < res?.length; i++) {
           walletsToSet.push({
-            name: transformString(res[i].evmCrossfiWalletPubK, 5),
+            name: transformString(res[i].evmWalletPubK, 5),
             value: res[i].id,
           })
         }
@@ -1659,6 +1672,11 @@ const MainPage = ({ id }) => {
       const wallet = blockchainWallets.find(
         (obj) => obj.id === blockchainWalletsSelected.value,
       )?.evmCrossfiWalletPubK
+      return wallet
+    } else if (ideChain === NetworkIDE.EDUCHAIN) {
+      const wallet = blockchainWallets.find(
+        (obj) => obj.id === blockchainWalletsSelected.value,
+      )?.evmWalletPubK
       return wallet
     }
   }
@@ -1951,7 +1969,7 @@ const MainPage = ({ id }) => {
                         setOpenModalDeploy(false)
                       }}
                       contract={blockchainContractSelected}
-                      environment={selected.value}
+                      environment={evmChainToEnvironment()}
                       wallet={walletToReturn()}
                       walletFreighter={connect}
                       walletEVM={address}
@@ -1980,7 +1998,7 @@ const MainPage = ({ id }) => {
                         setOpenModalImport(false)
                       }}
                       contract={blockchainContractSelected}
-                      environment={selected.value}
+                      environment={evmChainToEnvironment()}
                     />
                     <BotHelperModal
                       isOpen={openModalBotHelper}
@@ -1993,7 +2011,7 @@ const MainPage = ({ id }) => {
                             '```rust\n',
                             '```',
                           )
-                        } else if (ideChain === NetworkIDE.CROSSFI) {
+                        } else if (evmChains.includes(ideChain)) {
                           finalV = getValueBetweenStrings(
                             response,
                             '```solidity\n',
@@ -2314,7 +2332,7 @@ const MainPage = ({ id }) => {
                                                 cntIns,
                                               )
                                             } else if (
-                                              ideChain === NetworkIDE.CROSSFI
+                                              evmChains.includes(ideChain)
                                             ) {
                                               treatParamsAndCallCrossfiContract(
                                                 cntIns,
@@ -2323,7 +2341,7 @@ const MainPage = ({ id }) => {
                                           } else if (
                                             walletProvider ===
                                               TypeWalletProvider?.EVM &&
-                                            ideChain === NetworkIDE.CROSSFI
+                                              evmChains.includes(ideChain)
                                           ) {
                                             treatParamsAndCallCrossfiContractWagmi(
                                               cntIns,
@@ -2426,7 +2444,7 @@ const MainPage = ({ id }) => {
                                           : 'cursor-pointer  hover:bg-[#35428a]'
                                       }  my-auto h-fit w-fit rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] `}
                                     >
-                                      {ideChain === NetworkIDE?.CROSSFI &&
+                                      {evmChains.includes(ideChain) &&
                                       cntIns?.stateMutability === 'view'
                                         ? 'Get'
                                         : 'Transact'}
