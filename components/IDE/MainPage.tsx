@@ -2341,7 +2341,7 @@ const MainPage = ({ id }) => {
                                           } else if (
                                             walletProvider ===
                                               TypeWalletProvider?.EVM &&
-                                              evmChains.includes(ideChain)
+                                            evmChains.includes(ideChain)
                                           ) {
                                             treatParamsAndCallCrossfiContractWagmi(
                                               cntIns,
