@@ -2,7 +2,7 @@
 <path d="M1 2C98.0834 18.7226 95.9965 64.0006 95.9965 164" stroke="url(#paint0_linear_270_216)" stroke-width="3"/>
 <defs>
 <linearGradient id="paint0_linear_270_216" x1="96" y1="83" x2="1" y2="83" gradientUnits="userSpaceOnUse">
-<stop stop-color="#BFFFAF"/>
+<stop stop-color="#C8FF2C"/>
 <stop offset="1" stop-color="#080808" stop-opacity="0"/>
 </linearGradient>
 </defs>

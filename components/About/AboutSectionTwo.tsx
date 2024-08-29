@@ -11,7 +11,7 @@ const AboutSectionTwo = () => {
               data-wow-delay=".15s"
             >
               <Image
-                src="/images/about/about-image-2.svg"
+                src="https://openmesh-expert-frontend.vercel.app/images/about/about-image-2.svg"
                 alt="about image"
                 fill
               />

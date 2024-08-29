@@ -1,0 +1,22 @@
+/* reactflow-overrides.css */
+
+.react-flow__controls {
+    border-radius: 7% !important;
+    overflow: hidden; /* Garante que os filhos não ultrapassem o border-radius */
+  }
+
+/* Altera a cor dos ícones para branco */
+.react-flow__controls-button {
+    color: white !important;
+    background-color: rgb(6, 6, 33) !important;
+    border-color: transparent !important;
+    fill: white !important;
+  }
+
+.react-flow__controls-button:hover {
+    background-color: rgb(19, 19, 45) !important;
+  }
+  
+  
+  /* Se necessário, adicione regras CSS adicionais aqui para outras personalizações */
+  

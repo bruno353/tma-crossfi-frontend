@@ -1,0 +1,36 @@
+.ql-toolbar .ql-stroke {
+    fill: none;
+    stroke: #fff;
+}
+
+.ql-toolbar .ql-fill {
+    fill: #fff;
+    stroke: none;
+}
+
+.ql-toolbar .ql-picker {
+    display: none;
+    color: #000;
+}
+
+.my-quill .ql-container.ql-snow {
+    border: 0px solid #000; /* Cor da borda */
+    border-radius: 10px; /* Raio da borda arredondada */
+}
+
+.my-quill .ql-toolbar.ql-snow {
+    border: 0px solid #000; /* Cor da borda */
+    border-radius: 10px; /* Raio da borda arredondada */
+}
+
+
+.my-quill .ql-editor::before {
+    color: #C5C4C4; /* Substitua 'white' pela cor desejada */
+    opacity: 1; /* Ajuste a opacidade conforme necessário */
+    font-style: normal; /* Isto é para garantir que o estilo do texto esteja normal, não itálico */
+}
+
+.ql-editor{
+    max-height: 250px;
+    overflow: auto;
+  }

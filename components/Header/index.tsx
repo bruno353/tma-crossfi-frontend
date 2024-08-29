@@ -1,85 +1,281 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
+'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import ThemeToggler from './ThemeToggler'
 import menuData from './menuData'
-import { List } from 'phosphor-react'
-import * as Dialog from '@radix-ui/react-dialog'
-import { HeaderModal } from '../Modals/HeaderModal'
+import { parseCookies, destroyCookie, setCookie } from 'nookies'
+import { AccountContext } from '../../contexts/AccountContext'
+import { getCurrentUser } from '@/utils/api'
+import { usePathname, useRouter } from 'next/navigation'
+import Menu from './Menu'
+import NotificationMenu from './NotificationMenu'
 
 const Header = () => {
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false)
+  const [notificationOpen, setNotificationOpen] = useState(false)
+
   const navbarToggleHandler = () => {
     setNavbarOpen(!navbarOpen)
+    setMenuOpen(!menuOpen)
+    setNotificationOpen(false)
+  }
+  const notificationToggleHandler = () => {
+    setNotificationOpen(!notificationOpen)
+    setNavbarOpen(false)
+    setMenuOpen(!menuOpen)
   }
 
-  // submenu handler
-  const [openIndex, setOpenIndex] = useState(-1)
-  const handleSubmenu = (index) => {
-    if (openIndex === index) {
-      setOpenIndex(-1)
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const menuRef = useRef(null)
+
+  const closeMenu = () => {
+    setNotificationOpen(false)
+    setNavbarOpen(false)
+    setMenuOpen(false)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        // Clicked outside of the menu, so close it
+        closeMenu()
+      }
+    }
+
+    // Add event listener when the menu is open
+    if (menuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
     } else {
-      setOpenIndex(index)
+      // Remove event listener when the menu is closed
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [menuOpen])
+
+  const pathname = usePathname()
+
+  const cookies = parseCookies()
+  const userHasAnyCookie = cookies.userSessionToken
+
+  const { user, setUser } = useContext(AccountContext)
+  const { push } = useRouter()
+
+  function cleanData() {
+    destroyCookie(undefined, 'userSessionToken', { path: '/' })
+    destroyCookie(undefined, 'user', { path: '/' })
+    setUser(null)
+  }
+
+  function signOutUser() {
+    cleanData()
+    push('/')
+  }
+
+  async function getUserData() {
+    const { userSessionToken, user } = parseCookies()
+
+    console.log(userSessionToken)
+    if (userSessionToken) {
+      if (user) {
+        console.log('o meu userrrr')
+        console.log(JSON.parse(user))
+        setUser(JSON.parse(user))
+      }
+      try {
+        const dado = await getCurrentUser(userSessionToken)
+        if (dado) {
+          setUser(dado)
+          setCookie(null, 'userSessionToken', dado.sessionToken, {
+            path: '/',
+            maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+            secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+            sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+          })
+          setCookie(null, 'user', JSON.stringify(dado), {
+            path: '/',
+            maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+            secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+            sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+          })
+          handleUserPath(true)
+        } else {
+          cleanData()
+          handleUserPath(false)
+        }
+      } catch (err) {
+        cleanData()
+        handleUserPath(false)
+      }
     }
   }
 
-  const navigationItems = [
-    { label: 'About', href: '/about' },
-    { label: 'Products', href: '/products' },
-    { label: 'Technology', href: '/technology' },
-    { label: 'Infrastructure', href: '/infrastructure' },
-    {
-      label: 'Transparency & Governance',
-      href: '/transparency-and-governance',
-    },
-    { label: 'Community', href: '/community' },
-  ]
+  function handleUserPath(hasUser: boolean) {
+    if (hasUser) {
+      if (pathname.includes('/signin') || pathname.includes('/signup')) {
+        push('/dashboard')
+      }
+    }
+    if (!hasUser) {
+      if (pathname.includes('/dashboard')) {
+        push('/signin')
+      }
+    }
+  }
+
+  const hasUnreadenInvitation = user?.WorkspaceInvite?.some(
+    (work) => !work.viewed,
+  )
+
+  useEffect(() => {
+    if (userHasAnyCookie) {
+      console.log('user has cookis')
+      console.log(userHasAnyCookie)
+      console.log(cookies.userSessionToken)
+      try {
+        getUserData()
+      } catch (err) {
+        cleanData()
+      }
+    } else {
+      console.log('user has no cookies')
+      cleanData()
+    }
+  }, [])
 
   return (
     <>
-      {/* <Link href="#">
-        <div className="max-w-screen flex h-[32px] w-full items-center justify-center bg-gradient-to-r from-[#2250C4] via-[#D18BC0] to-[#E48D92]">
-          <span className="text-xs text-white">
-            Query engine is live! Apply for beta testing here
-          </span>
-        </div>
-      </Link> */}
-      <header className="max-w-screen top-0 left-0 z-40 mx-0 flex h-[80px] w-full items-center border-b border-[#dddd] bg-transparent bg-white bg-opacity-80">
-        <div className="mx-auto flex w-full max-w-[1280px] pr-8 2xl:max-w-[1440px] 2xl:px-0">
-          <div className="flex w-full items-center justify-between lg:gap-12 2xl:gap-24">
-            <Link href="/">
-              <Image
-                src="/images/logo/l3a-logo.svg"
-                alt="logo"
-                width={200}
-                height={45}
-              />
-            </Link>
-            {/* <ul className="hidden flex-1 items-center gap-16 lg:flex">
-              {navigationItems.map((navItem) => {
-                return (
-                  <Link key={navItem.href} href={navItem.href}>
-                    <li className="text-base text-black">{navItem.label}</li>
-                  </Link>
-                )
-              })}
-              <Link href="#" className="border border-[#5485FF] py-1 px-3">
-                <li>
-                  <span className="text-base text-[#5485FF]">
-                    Start Building
-                  </span>
-                </li>
+      <header
+        className={`header relative !z-[9999] flex h-[10vh] w-full items-center !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-transparent dark:!bg-opacity-60`}
+      >
+        <div className="container">
+          <div className="relative -mx-4 flex items-center justify-between">
+            <div className="w-60 max-w-full px-4 xl:mr-12">
+              <Link
+                onClick={() => {
+                  console.log(user)
+                }}
+                href={user ? '/dashboard' : '/'}
+                className={`header-logo block w-fit py-8`}
+              >
+                <Image
+                  src="/images/logo/logo-icon.svg"
+                  alt="logo"
+                  width={40}
+                  height={40}
+                  className="hidden w-[40px] dark:block"
+                />
               </Link>
-            </ul> */}
-            <div className="lg:hidden">
-              <Dialog.Root>
-                <Dialog.Trigger>
-                  <List className="text-black" size={24} weight="bold" />
-                </Dialog.Trigger>
-                <HeaderModal navigationItems={navigationItems} />
-              </Dialog.Root>
+            </div>
+            <div className="flex items-center  justify-end gap-x-[30px]">
+              <div className="relative">
+                {user && user.WorkspaceInvite?.length > 0 && (
+                  <div
+                    onClick={() => {
+                      notificationToggleHandler()
+                    }}
+                  >
+                    {hasUnreadenInvitation ? (
+                      <img
+                        src="/images/header/inviteWithSignal.svg"
+                        alt="image"
+                        className={`w-[45px] cursor-pointer`}
+                      />
+                    ) : (
+                      <img
+                        src="/images/header/inviteWithoutSignal.svg"
+                        alt="image"
+                        className={`w-[45px] cursor-pointer`}
+                      />
+                    )}
+                  </div>
+                )}
+                {user &&
+                  notificationOpen &&
+                  user.WorkspaceInvite?.length > 0 && (
+                    <div className="absolute right-0 top-[50px]" ref={menuRef}>
+                      <NotificationMenu
+                        workspaceInvites={user.WorkspaceInvite}
+                        user={user}
+                        onSignOut={signOutUser}
+                        onCloseNotifications={() => {
+                          setNotificationOpen(false)
+                        }}
+                        onWorkspaceInviteViewed={(value) => {
+                          const updatedUser = { ...user }
+                          const inviteIndex =
+                            updatedUser.WorkspaceInvite.findIndex(
+                              (invite) => invite.id === value,
+                            )
+                          if (inviteIndex !== -1) {
+                            console.log('found')
+                            updatedUser.WorkspaceInvite[inviteIndex] = {
+                              ...updatedUser.WorkspaceInvite[inviteIndex],
+                              viewed: true,
+                            }
+                            setUser(updatedUser)
+                          }
+                        }}
+                        onWorkspaceInviteArchived={(value) => {
+                          const updatedUser = { ...user }
+
+                          const inviteIndex =
+                            updatedUser.WorkspaceInvite.findIndex(
+                              (invite) => invite.id === value,
+                            )
+
+                          if (inviteIndex !== -1) {
+                            console.log('found archived')
+                            const updatedInvites = [
+                              ...updatedUser.WorkspaceInvite,
+                            ]
+                            updatedInvites.splice(inviteIndex, 1)
+                            console.log('final updated invites')
+                            console.log(updatedInvites)
+                            updatedUser.WorkspaceInvite = updatedInvites
+                            setUser(updatedUser)
+                          }
+                        }}
+                      />{' '}
+                    </div>
+                  )}
+              </div>
+              <div className="relative flex items-center justify-end pr-16 lg:pr-0">
+                {user && (
+                  <div
+                    onClick={() => {
+                      navbarToggleHandler()
+                    }}
+                    className="flex cursor-pointer gap-x-[15px]"
+                  >
+                    <img
+                      alt="ethereum avatar"
+                      src={user.profilePicture}
+                      className="w-[40px] max-w-[40px] rounded-full"
+                    ></img>
+                    <img
+                      alt="arrow"
+                      src="/images/header/arrow.svg"
+                      className="w-[15px] rounded-full"
+                    ></img>
+                  </div>
+                )}
+                {/* <div>
+                  <ThemeToggler />
+                </div> */}
+                {user && navbarOpen && (
+                  <div className="absolute top-[50px]" ref={menuRef}>
+                    <Menu user={user} onSignOut={signOutUser} />{' '}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

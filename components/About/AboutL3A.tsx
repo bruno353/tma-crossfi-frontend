@@ -3,7 +3,7 @@ const AboutL3A = () => {
     <>
       <section
         id="home"
-        className="relative z-10 overflow-hidden bg-white pt-[120px] pb-4 text-[#1E1E1E] md:pt-[150px]"
+        className="relative z-10 overflow-hidden bg-white pb-4 pt-[120px] text-[#1E1E1E] md:pt-[150px]"
       >
         <div className="container">
           <div className="-mx-4 flex flex-wrap">

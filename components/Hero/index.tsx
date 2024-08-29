@@ -1,35 +1,28 @@
-import Image from 'next/image'
-
+/* eslint-disable react/no-unescaped-entities */
 const Hero = () => {
   return (
     <>
       <section
         id="home"
-        className="relative z-10 overflow-hidden bg-white pt-[10px] text-[#1E1E1E]"
+        className="relative z-10 overflow-hidden bg-white px-[30px] pt-[53px] text-[#000000] md:px-[90px]"
       >
-        <div className="container">
-          <div className="-mx-4 flex flex-wrap">
-            <div className="w-full px-4">
-              <div
-                className="wow fadeInUp mx-auto max-w-[800px] text-center"
-                data-wow-delay=".2s"
-              >
-                <Image
-                  src="/images/hero/data-people.svg"
-                  alt="logo"
-                  width={100}
-                  height={20}
-                  className="mx-auto h-[402px] w-[747px] scale-110 transition-all duration-200 hover:z-20 md:mt-1 lg:mt-20"
-                />
-                {/* <h1 className="mb-5 text-3xl font-bold leading-tight sm:text-4xl sm:leading-tight md:text-7xl md:leading-tight">
-                  Join the ecosystem
-                </h1>
-                <p className="text-body-black mb-12 text-base font-medium !leading-relaxed dark:opacity-90  sm:text-lg md:mb-3 md:text-4xl xl:mb-12">
-                  Help build the decentralized data infrastructure and standards
-                  across Web3
-                </p> */}
-              </div>
-            </div>
+        <div className="">
+          <div className="text-[24px] font-medium -tracking-[2%] md:text-[33px] lg:!leading-[58px] xl:text-[38px] 2xl:text-[48px]">
+            Openmesh Expert Community
+          </div>
+          <div className="mt-[21px] text-[10px] font-normal -tracking-[2%] text-[#959595] md:text-[14px] lg:!leading-[150%] xl:max-w-[1250px] xl:text-[16px] 2xl:text-[20px]">
+            Discover and connect with leading Openmesh experts in our curated
+            directory. Whether you're seeking solutions or expertise, this is
+            your one-stop portal to the best in decentralized data technology.
+            Dive in and shape your Web 3.0 journey with the pros.
+          </div>
+          <div className="mt-[21px]">
+            <a
+              href={`${process.env.NEXT_PUBLIC_BASE_URL}/community/register`}
+              className=" cursor-pointer text-[10px] font-bold -tracking-[2%] text-[#0354EC] hover:text-[#2d5092] md:text-[14px] lg:!leading-[150%] xl:text-[16px] 2xl:text-[20px]"
+            >
+              Join as an Openmesh Expert {'-->'}
+            </a>
           </div>
         </div>
       </section>

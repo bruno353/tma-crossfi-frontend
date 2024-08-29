@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 
 // import Footer from '@/components/Footer'
@@ -6,6 +7,7 @@ import 'node_modules/react-modal-video/css/modal-video.css'
 import '../styles/index.css'
 import { Providers } from './providers'
 import Header from '@/components/Header'
+import { Web3Modal } from '@/contexts/Web3Modal'
 
 export default function RootLayout({
   children,
@@ -21,11 +23,13 @@ export default function RootLayout({
       */}
       <head />
 
-      <body className="max-w-screen w-full bg-white">
+      <body className="max-w-screen h-full w-full bg-[#060621]">
         <Providers>
-          <Header />
-          {children}
-          <ScrollToTop />
+          <Web3Modal>
+            <Header />
+            {children}
+            <ScrollToTop />
+          </Web3Modal>
         </Providers>
       </body>
     </html>
