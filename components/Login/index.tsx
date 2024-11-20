@@ -21,7 +21,6 @@ import { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 import Link from 'next/link'
 import ReCAPTCHA from 'react-google-recaptcha'
-import WebApp from '@twa-dev/sdk'
 
 import { createHash } from 'crypto'
 import ScrollToTop from '../ScrollToTop/index'
@@ -44,10 +43,24 @@ const SignUp = () => {
 
   const [userData, setUserData] = useState<UserData | null>(null)
   useEffect(() => {
-    console.log('use effect telegram chamado')
-    if (WebApp.initDataUnsafe.user) {
-      console.log('possui WebApp.initDataUnsafe.user')
-      setUserData(WebApp.initDataUnsafe.user as UserData)
+    if (typeof window !== 'undefined') {
+      // Verificar se está no navegador
+
+      // Mova a importação do SDK para dentro do useEffect
+      const initTelegram = async () => {
+        try {
+          const WebApp = (await import('@twa-dev/sdk')).default
+          console.log('use effect telegram chamado')
+          if (WebApp.initDataUnsafe.user) {
+            console.log('possui WebApp.initDataUnsafe.user')
+            setUserData(WebApp.initDataUnsafe.user as UserData)
+          }
+        } catch (error) {
+          console.error('Error initializing Telegram Web App:', error)
+        }
+      }
+
+      initTelegram()
     }
   }, [])
 
