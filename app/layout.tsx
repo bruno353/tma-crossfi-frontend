@@ -8,6 +8,7 @@ import '../styles/index.css'
 import { Providers } from './providers'
 import Header from '@/components/Header'
 import { Web3Modal } from '@/contexts/Web3Modal'
+import Script from 'next/script'
 
 export default function RootLayout({
   children,
@@ -21,6 +22,11 @@ export default function RootLayout({
         <head /> will contain the components returned by the nearest parent
         head.js. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
+      <Script
+        src="https://telegram.org/js/telegram-web-app.js"
+        strategy="beforeInteractive"
+      />
+
       <head />
 
       <body className="max-w-screen h-full w-full bg-[#060621]">
