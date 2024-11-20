@@ -21,15 +21,35 @@ import { parseCookies, destroyCookie, setCookie } from 'nookies'
 import { AccountContext } from '../../contexts/AccountContext'
 import Link from 'next/link'
 import ReCAPTCHA from 'react-google-recaptcha'
+import WebApp from '@twa-dev/sdk'
 
 import { createHash } from 'crypto'
 import ScrollToTop from '../ScrollToTop/index'
 import { SigninForm, SignupForm } from '@/types/user'
 import { createUser, googleRedirect, loginUser } from '@/utils/api'
 
+// Define the interface for user data
+interface UserData {
+  id: number
+  first_name: string
+  last_name?: string
+  username?: string
+  language_code: string
+  is_premium?: boolean
+}
+
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
+
+  const [userData, setUserData] = useState<UserData | null>(null)
+  useEffect(() => {
+    console.log('use effect telegram chamado')
+    if (WebApp.initDataUnsafe.user) {
+      console.log('possui WebApp.initDataUnsafe.user')
+      setUserData(WebApp.initDataUnsafe.user as UserData)
+    }
+  }, [])
 
   const { push } = useRouter()
 
@@ -127,7 +147,8 @@ const SignUp = () => {
               <div className="w-full px-4">
                 <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:px-[60px]">
                   <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
-                    Sign in to your account
+                    Sign in to your account {userData?.first_name} -{' '}
+                    {userData?.id} - {userData?.username}
                   </h3>
                   <p className="mb-11 text-center text-base font-medium text-body-color">
                     Start the revolution

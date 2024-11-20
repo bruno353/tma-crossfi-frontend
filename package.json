@@ -29,6 +29,7 @@
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-query": "^5.17.19",
     "@telegram-apps/sdk-react": "^2.0.12",
+    "@twa-dev/sdk": "^7.10.1",
     "@web3modal/wagmi": "^4.0.0-alpha.2",
     "ansi-to-html": "^0.7.2",
     "contentful": "^10.5.1",
