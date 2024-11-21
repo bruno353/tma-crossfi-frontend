@@ -63,7 +63,7 @@ const SignUp = () => {
 
           const res = await callAxiosBackend(
             'post',
-            '/blockchain/functions/getWallet',
+            '/user/functions/telegram/auth',
             'userSessionToken',
             JSON.stringify({ initData }),
           )
