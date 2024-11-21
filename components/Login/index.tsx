@@ -69,6 +69,7 @@ const SignUp = () => {
           )
         } catch (error) {
           console.error('Error initializing Telegram Web App:', error)
+          toast.error(`Error: ${error}`)
         }
       }
 
