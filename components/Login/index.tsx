@@ -26,6 +26,7 @@ import { createHash } from 'crypto'
 import ScrollToTop from '../ScrollToTop/index'
 import { SigninForm, SignupForm } from '@/types/user'
 import { createUser, googleRedirect, loginUser } from '@/utils/api'
+import { callAxiosBackend } from '@/utils/general-api'
 
 // Define the interface for user data
 interface UserData {
@@ -59,6 +60,13 @@ const SignUp = () => {
           }
           const initData = WebApp.initData
           setInitData(JSON.stringify(initData))
+
+          const res = await callAxiosBackend(
+            'post',
+            '/blockchain/functions/getWallet',
+            'userSessionToken',
+            JSON.stringify({ initData }),
+          )
         } catch (error) {
           console.error('Error initializing Telegram Web App:', error)
         }
