@@ -42,6 +42,8 @@ const SignUp = () => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
 
   const [userData, setUserData] = useState<UserData | null>(null)
+  const [initData, setInitData] = useState<any>(null)
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Verificar se está no navegador
@@ -55,6 +57,8 @@ const SignUp = () => {
             console.log('possui WebApp.initDataUnsafe.user')
             setUserData(WebApp.initDataUnsafe.user as UserData)
           }
+          const initData = WebApp.initData
+          setInitData(JSON.stringify(initData))
         } catch (error) {
           console.error('Error initializing Telegram Web App:', error)
         }
@@ -160,8 +164,9 @@ const SignUp = () => {
               <div className="w-full px-4">
                 <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:px-[60px]">
                   <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
-                    Sign in to your account {userData?.first_name} -{' '}
-                    {userData?.id} - {userData?.username}
+                    Sign in to your my account {userData?.first_name} -{' '}
+                    {userData?.id} - {userData?.username} and initData:{' '}
+                    {initData}
                   </h3>
                   <p className="mb-11 text-center text-base font-medium text-body-color">
                     Start the revolution
