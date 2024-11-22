@@ -47,10 +47,6 @@ const SignUp = () => {
   const [initData, setInitData] = useState<any>(null)
 
   useEffect(() => {
-    destroyCookie(undefined, 'userSessionToken', { path: '/' })
-    destroyCookie(undefined, 'user', { path: '/' })
-    setUser(null)
-    return
     if (typeof window !== 'undefined') {
       // Verificar se está no navegador
 
@@ -189,14 +185,14 @@ const SignUp = () => {
 
   return (
     <>
-      <section className="relative z-10 mt-auto overflow-hidden bg-yellow pb-2 pt-2 lg:pt-[0px]">
+      <section className="relative z-10 overflow-hidden pb-2 pt-2 lg:pt-[0px]">
         <div className="container">
           <form onSubmit={handleSubmit(onSubmit)} className="">
             <div className="-mx-4 flex flex-wrap">
               <div className="w-full px-4">
                 <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:px-[60px]">
                   <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
-                    Sign in to your account
+                    Crossfi Apps Center
                   </h3>
                   <p className="mb-11 text-center text-base font-medium text-body-color">
                     Start the revolution
