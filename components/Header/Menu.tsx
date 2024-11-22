@@ -59,7 +59,7 @@ const Menu = ({ user, onSignOut }: MenuI) => {
           </div>
         </Link>
         <div className="my-[20px] h-[0.5px] w-full bg-[#33323e]"></div>
-        <div
+        {/* <div
           onClick={() => {
             onSignOut()
           }}
@@ -71,7 +71,7 @@ const Menu = ({ user, onSignOut }: MenuI) => {
             src="/images/header/logout.svg"
             className="w-[18px] rounded-full"
           ></img>
-        </div>
+        </div> */}
       </div>
     </>
   )
