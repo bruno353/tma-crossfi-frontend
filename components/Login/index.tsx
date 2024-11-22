@@ -53,6 +53,7 @@ const SignUp = () => {
       const initTelegram = async () => {
         try {
           const WebApp = (await import('@twa-dev/sdk')).default
+          WebApp.ready()
           console.log('use effect telegram chamado')
           if (WebApp.initDataUnsafe.user) {
             console.log('possui WebApp.initDataUnsafe.user')
@@ -60,16 +61,18 @@ const SignUp = () => {
           }
           const initData = WebApp.initData
           setInitData(JSON.stringify(initData))
-
-          const res = await callAxiosBackend(
-            'post',
-            '/user/functions/telegram/auth',
-            'userSessionToken',
-            JSON.stringify({ initData }),
-          )
+          if (initData) {
+            const res = await callAxiosBackend(
+              'post',
+              '/user/functions/telegram/auth',
+              'userSessionToken',
+              JSON.stringify({ initData }),
+            )
+            toast.success('recebi res' + res)
+          }
         } catch (error) {
           console.error('Error initializing Telegram Web App:', error)
-          toast.error(`Error: ${error}`)
+          toast.error(`Here Error: ${error}`)
         }
       }
 

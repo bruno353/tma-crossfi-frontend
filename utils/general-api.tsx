@@ -19,6 +19,7 @@ export async function callAxiosBackend(
     headers: {
       'x-parse-application-id': `${process.env.NEXT_PUBLIC_API_BACKEND_KEY}`,
       'X-Parse-Session-Token': userSessionToken,
+      'Content-Type': 'application/json',
     },
     data,
   }
