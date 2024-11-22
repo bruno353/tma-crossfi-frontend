@@ -25,6 +25,7 @@ import { getUserWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
 import { Logo } from '../Sidebar/Logo'
 import { workflowTypeToOptions } from '@/utils/consts'
+import { callAxiosBackend } from '@/utils/general-api'
 
 const AppsCenter = () => {
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
@@ -46,7 +47,12 @@ const AppsCenter = () => {
     const { userSessionToken } = parseCookies()
 
     try {
-      const res = await getUserWorkspace(userSessionToken)
+      const res = await callAxiosBackend(
+        'post',
+        '/telegram/apps',
+        userSessionToken,
+      )
+      //   const res = await getUserWorkspace(userSessionToken)
       setWorkspaces(res)
       setIsLoading(false)
     } catch (err) {
@@ -61,7 +67,7 @@ const AppsCenter = () => {
     return (
       <div className="mx-auto w-fit items-center justify-center">
         <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
-        <span>No workspaces found</span>
+        <span>No Apps found</span>
       </div>
     )
   }
@@ -76,15 +82,15 @@ const AppsCenter = () => {
       <section className="relative z-10 overflow-hidden px-[20px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="container text-[#fff]">
           <div className="flex items-center justify-between gap-x-[20px]">
-            <div>Home</div>
-            <div
+            <div>Apps</div>
+            {/* <div
               onClick={openModal}
               className={`${
                 workspaces.length === 0 && 'animate-bounce'
               } cursor-pointer rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
             >
               + New workspace
-            </div>
+            </div> */}
           </div>
           <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]">
             {workspaces.map((workspace, index) => (

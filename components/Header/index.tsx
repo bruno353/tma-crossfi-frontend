@@ -170,7 +170,7 @@ const Header = () => {
                   alt="logo"
                   width={40}
                   height={40}
-                  className="hidden w-[20px] dark:block"
+                  className="hidden w-[30px] dark:block"
                 />
               </Link>
             </div>
@@ -258,12 +258,12 @@ const Header = () => {
                     <img
                       alt="ethereum avatar"
                       src={user.profilePicture}
-                      className="w-[40px] max-w-[40px] rounded-full"
+                      className="w-[30px] max-w-[30px] rounded-full"
                     ></img>
                     <img
                       alt="arrow"
                       src="/images/header/arrow.svg"
-                      className="w-[15px] rounded-full"
+                      className="w-[10px] rounded-full"
                     ></img>
                   </div>
                 )}
