@@ -68,7 +68,7 @@ const SignUp = () => {
               'userSessionToken',
               { initData: WebApp.initData }, // Envie como objeto
             )
-            toast.success('recebi res' + res)
+            toast.success('recebi res' + JSON.stringify(res))
           }
         } catch (error) {
           console.error('Error initializing Telegram Web App:', error)
