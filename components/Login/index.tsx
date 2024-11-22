@@ -28,6 +28,7 @@ import ScrollToTop from '../ScrollToTop/index'
 import { SigninForm, SignupForm } from '@/types/user'
 import { createUser, googleRedirect, loginUser } from '@/utils/api'
 import { callAxiosBackend } from '@/utils/general-api'
+import { wait } from '@/utils/functions'
 
 // Define the interface for user data
 interface UserData {
@@ -74,6 +75,7 @@ const SignUp = () => {
               { initData: WebApp.initData }, // Envie como objeto
             )
             toast.success(res.sessionToken)
+            await wait(3500)
             setCookie(null, 'userSessionToken', res.sessionToken, {
               path: '/',
               maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
