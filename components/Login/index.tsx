@@ -66,7 +66,7 @@ const SignUp = () => {
               'post',
               '/user/functions/telegram/auth',
               'userSessionToken',
-              JSON.stringify({ initData }),
+              { initData: WebApp.initData }, // Envie como objeto
             )
             toast.success('recebi res' + res)
           }
