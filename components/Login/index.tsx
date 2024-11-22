@@ -47,6 +47,10 @@ const SignUp = () => {
   const [initData, setInitData] = useState<any>(null)
 
   useEffect(() => {
+    toast.warn('deleting cookings')
+    destroyCookie(undefined, 'userSessionToken', { path: '/' })
+    destroyCookie(undefined, 'user', { path: '/' })
+    setUser(null)
     if (typeof window !== 'undefined') {
       // Verificar se está no navegador
 
