@@ -68,7 +68,21 @@ const SignUp = () => {
               'userSessionToken',
               { initData: WebApp.initData }, // Envie como objeto
             )
-            toast.success('recebi res' + JSON.stringify(res))
+            setCookie(null, 'userSessionToken', res.sessionToken, {
+              path: '/',
+              maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+              secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+              sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+            })
+            setCookie(null, 'user', JSON.stringify(res), {
+              path: '/',
+              maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+              secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+              sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+            })
+            setUser(res)
+            setIsLoading(false)
+            push('/dashboard')
           }
         } catch (error) {
           console.error('Error initializing Telegram Web App:', error)

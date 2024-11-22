@@ -2,6 +2,7 @@ import { UserWorkspaceProps, WorkspaceInviteProps } from './workspace'
 
 export interface UserProps {
   id: string
+  telegramUsername: string
   name: string
   email: string
   password: string
