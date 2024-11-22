@@ -209,7 +209,7 @@ const SignUp = () => {
                         className="w-[25px] 2xl:w-[30px]"
                       ></img>
                     </span>
-                    <label>Auth with Telegram</label>
+                    <label>Loading with Telegram</label>
                     <svg
                       aria-hidden="true"
                       className="my-auto ml-3 h-6 w-6 animate-spin fill-[#273687] text-[#242B51]"
@@ -227,106 +227,21 @@ const SignUp = () => {
                       />
                     </svg>
                   </div>
-                  <div className="mb-8 flex items-center justify-center">
-                    <span className="hidden h-[1px] w-full max-w-[60px] bg-body-color sm:block"></span>
-                    <p className="w-full px-5 text-center text-base font-medium text-body-color">
-                      Or, sign in with your credentials
-                    </p>
-                    <span className="hidden h-[1px] w-full max-w-[60px] bg-body-color sm:block"></span>
-                  </div>
-                  <form>
-                    <div className="mb-8">
-                      <label
-                        htmlFor="email"
-                        className="mb-3 block text-sm font-medium text-dark dark:text-white"
-                      >
-                        {' '}
-                        Email{' '}
-                        <p className="ml-[8px] text-[10px] font-normal text-[#ff0000]">
-                          {errors.email?.message}
-                        </p>
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        disabled={isLoading}
-                        maxLength={500}
-                        placeholder="Enter your Email"
-                        className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                        {...register('email')}
-                      />
-                    </div>
-                    <div className="mb-8">
-                      <div className="mb-3 flex gap-x-[15px]">
-                        <label
-                          htmlFor="password"
-                          className=" block text-sm font-medium text-dark dark:text-white"
-                        >
-                          {' '}
-                          Password{' '}
-                          <p className="ml-[8px] text-[10px] font-normal text-[#ff0000]">
-                            {errors.password?.message}
-                          </p>
-                        </label>
-                        {passwordVisibility ? (
-                          <div
-                            onClick={() => setPasswordVisibility(false)}
-                            className="flex cursor-pointer items-center text-center"
-                          >
-                            <EyeSlash className="cursor-pointer text-[#C5C4C4]" />
-                          </div>
-                        ) : (
-                          <div
-                            onClick={() => setPasswordVisibility(true)}
-                            className="flex cursor-pointer items-center text-center"
-                          >
-                            <Eye className="cursor-pointer text-[#C5C4C4]" />
-                          </div>
-                        )}
-                      </div>
-
-                      <div>
-                        <input
-                          type={passwordVisibility ? 'password' : 'text'}
-                          disabled={isLoading}
-                          maxLength={500}
-                          name="password"
-                          placeholder="Enter your Password"
-                          className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                          {...register('password')}
-                        />
-                      </div>
-                    </div>
-                    <div className="mb-6">
-                      <button
-                        onClick={handleSubmit(onSubmit)}
-                        className={`flex w-full items-center justify-center rounded-md bg-primary px-9 py-4 text-base font-medium text-white transition duration-300 ease-in-out
-                    ${
-                      isLoading
-                        ? 'animate-pulse cursor-default bg-[#5970da]'
-                        : ' hover:bg-opacity-80 hover:shadow-signUp'
-                    }`}
-                      >
-                        Sign in
-                      </button>
-                    </div>
-                  </form>
                   <p className="mt-10 text-center text-base font-medium text-body-color">
-                    Don't have an account? <br />
+                    How does Crossfi Apps Center works? <br />
                     <Link
                       href="/signup"
                       className="text-primary hover:underline"
                     >
-                      Sign up
+                      Check it
                     </Link>
                   </p>
                   <p className="mt-6 text-center text-base font-medium text-body-color">
-                    Forgot your password? <br />
                     <Link
                       href="/recover-password"
                       className="text-primary hover:underline"
                     >
-                      Recover password
+                      Powered by Accelar
                     </Link>
                   </p>
                 </div>
