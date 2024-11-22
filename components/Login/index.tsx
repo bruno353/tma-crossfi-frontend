@@ -46,7 +46,7 @@ const SignUp = () => {
   const [userData, setUserData] = useState<UserData | null>(null)
   const [initData, setInitData] = useState<any>(null)
 
-  useEffect(() => {
+  async function authTelegram() {
     toast.warn('deleting cookings')
     destroyCookie(undefined, 'userSessionToken', { path: '/' })
     destroyCookie(undefined, 'user', { path: '/' })
@@ -98,7 +98,9 @@ const SignUp = () => {
 
       initTelegram()
     }
-  }, [])
+  }
+
+  // useEffect(() => {}, [])
 
   const { push } = useRouter()
 
@@ -202,9 +204,7 @@ const SignUp = () => {
                     Start the revolution
                   </p>
                   <div
-                    onClick={() =>
-                      (window.location.href = `${process.env.NEXT_PUBLIC_API_BACKEND_BASE_URL}/user/functions/google/login`)
-                    }
+                    onClick={() => authTelegram()}
                     className="mb-6 flex w-full cursor-pointer items-center justify-center rounded-md bg-white p-3 text-base font-medium text-body-color shadow-one hover:text-primary dark:bg-[#242B51] dark:text-body-color dark:shadow-signUp dark:hover:text-white"
                   >
                     <span className="mr-3">
