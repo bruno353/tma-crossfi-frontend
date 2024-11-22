@@ -28,7 +28,6 @@ import ScrollToTop from '../ScrollToTop/index'
 import { SigninForm, SignupForm } from '@/types/user'
 import { createUser, googleRedirect, loginUser } from '@/utils/api'
 import { callAxiosBackend } from '@/utils/general-api'
-import { wait } from '@/utils/functions'
 
 // Define the interface for user data
 interface UserData {
@@ -47,11 +46,11 @@ const SignUp = () => {
   const [userData, setUserData] = useState<UserData | null>(null)
   const [initData, setInitData] = useState<any>(null)
 
-  async function authTelegram() {
-    toast.warn('deleting cookings')
+  useEffect(() => {
     destroyCookie(undefined, 'userSessionToken', { path: '/' })
     destroyCookie(undefined, 'user', { path: '/' })
     setUser(null)
+    return
     if (typeof window !== 'undefined') {
       // Verificar se está no navegador
 
@@ -75,7 +74,6 @@ const SignUp = () => {
               { initData: WebApp.initData }, // Envie como objeto
             )
             toast.success(res.sessionToken)
-            await wait(3500)
             setCookie(null, 'userSessionToken', res.sessionToken, {
               path: '/',
               maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
@@ -100,9 +98,7 @@ const SignUp = () => {
 
       initTelegram()
     }
-  }
-
-  // useEffect(() => {}, [])
+  }, [])
 
   const { push } = useRouter()
 
@@ -205,10 +201,7 @@ const SignUp = () => {
                   <p className="mb-11 text-center text-base font-medium text-body-color">
                     Start the revolution
                   </p>
-                  <div
-                    onClick={() => authTelegram()}
-                    className="mb-6 flex w-full cursor-pointer items-center justify-center rounded-md bg-white p-3 text-base font-medium text-body-color shadow-one hover:text-primary dark:bg-[#242B51] dark:text-body-color dark:shadow-signUp dark:hover:text-white"
-                  >
+                  <div className="mb-6 flex w-full cursor-pointer items-center justify-center rounded-md bg-white p-3 text-base font-medium text-body-color shadow-one hover:text-primary dark:bg-[#242B51] dark:text-body-color dark:shadow-signUp dark:hover:text-white">
                     <span className="mr-3">
                       <img
                         alt="ethereum avatar"
