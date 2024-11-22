@@ -201,7 +201,7 @@ const SignUp = () => {
                   <p className="mb-11 text-center text-base font-medium text-body-color">
                     Start the revolution
                   </p>
-                  <div className="mb-6 flex w-full cursor-pointer items-center justify-center rounded-md bg-white p-3 text-base font-medium text-body-color shadow-one hover:text-primary dark:bg-[#242B51] dark:text-body-color dark:shadow-signUp dark:hover:text-white">
+                  <div className="mb-6 flex w-full items-center justify-center rounded-md bg-white p-3 text-base font-medium text-body-color shadow-one hover:text-primary dark:bg-[#242B51] dark:text-body-color dark:shadow-signUp dark:hover:text-white">
                     <span className="mr-3">
                       <img
                         alt="ethereum avatar"
@@ -211,6 +211,17 @@ const SignUp = () => {
                     </span>
                     Auth with Telegram
                   </div>
+                  <svg
+                    className="mt-1 animate-spin"
+                    height="40px"
+                    id="Icons"
+                    version="1.1"
+                    viewBox="0 0 80 80"
+                    width="40px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M58.385,34.343V21.615L53.77,26.23C50.244,22.694,45.377,20.5,40,20.5c-10.752,0-19.5,8.748-19.5,19.5S29.248,59.5,40,59.5  c7.205,0,13.496-3.939,16.871-9.767l-4.326-2.496C50.035,51.571,45.358,54.5,40,54.5c-7.995,0-14.5-6.505-14.5-14.5  S32.005,25.5,40,25.5c3.998,0,7.617,1.632,10.239,4.261l-4.583,4.583H58.385z" />
+                  </svg>
                   <div className="mb-8 flex items-center justify-center">
                     <span className="hidden h-[1px] w-full max-w-[60px] bg-body-color sm:block"></span>
                     <p className="w-full px-5 text-center text-base font-medium text-body-color">
