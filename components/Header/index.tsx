@@ -170,7 +170,7 @@ const Header = () => {
                   alt="logo"
                   width={40}
                   height={40}
-                  className="hidden w-[40px] dark:block"
+                  className="hidden w-[20px] dark:block"
                 />
               </Link>
             </div>
