@@ -207,7 +207,7 @@ const SignUp = () => {
                     <label>Loading with Telegram</label>
                     <svg
                       aria-hidden="true"
-                      className="my-auto ml-3 h-6 w-6 animate-spin fill-[#273687] text-[#242B51]"
+                      className="my-auto ml-3 h-6 w-6 animate-spin fill-primary text-primary"
                       viewBox="0 0 100 101"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
