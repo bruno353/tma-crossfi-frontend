@@ -83,6 +83,7 @@ const SignUp = () => {
             })
             setUser(res)
             setIsLoading(false)
+            toast.success('pushing to dashgboard')
             push('/dashboard')
           }
         } catch (error) {
