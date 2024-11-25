@@ -189,7 +189,7 @@ const SignUp = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="">
             <div className="-mx-4 flex flex-wrap">
               <div className="w-full px-4">
-                <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:px-[60px]">
+                <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-2 py-10 dark:bg-dark sm:px-[60px]">
                   <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
                     Crossfi Apps Center
                   </h3>
@@ -207,7 +207,7 @@ const SignUp = () => {
                     <label>Loading with Telegram</label>
                     <svg
                       aria-hidden="true"
-                      className="my-auto ml-3 h-6 w-6 animate-spin fill-primary text-primary"
+                      className="my-auto ml-2 h-6 w-6 animate-spin fill-primary text-[#242B51]"
                       viewBox="0 0 100 101"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
