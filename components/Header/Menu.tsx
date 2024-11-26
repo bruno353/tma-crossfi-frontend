@@ -25,8 +25,25 @@ const Menu = ({ user, onSignOut }: MenuI) => {
             src={user.profilePicture}
             className="w-[40px] rounded-full"
           ></img>
-          <div>{user.name || user.email}</div>
+          <div>{user.name || user.email || user.telegramUsername}</div>
         </div>
+        {user.telegramAccelarWallets?.length > 0 && (
+          <div className="flex items-center gap-x-3">
+            <div>{user.telegramAccelarWallets[0].address}</div>
+
+            <img
+              alt="ethereum avatar"
+              src="/images/workspace/copy.svg"
+              className="w-[20px] cursor-pointer rounded-full"
+              onClick={(event) => {
+                event.stopPropagation()
+                navigator.clipboard.writeText(
+                  user.telegramAccelarWallets[0].address,
+                )
+              }}
+            ></img>
+          </div>
+        )}
         <div className="my-[20px] h-[1px] w-full bg-[#33323e]"></div>
         <Link href={'/dashboard'}>
           <div className="flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] hover:bg-[#c5c5c510]">

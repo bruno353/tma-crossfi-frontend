@@ -161,8 +161,8 @@ const SignUp = () => {
           sameSite: 'strict', // Recomendado para evitar ataques de CSRF
         })
         setUser(user)
-        push('/dashboard')
         window.location.reload()
+        push('/dashboard')
       }
     } catch (err) {
       console.log(err)
