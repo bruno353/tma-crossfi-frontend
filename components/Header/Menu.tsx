@@ -9,6 +9,7 @@ import { AccountContext } from '../../contexts/AccountContext'
 import { getCurrentUser } from '@/utils/api'
 import { usePathname, useRouter } from 'next/navigation'
 import { UserProps } from '@/types/user'
+import { transformString } from '@/utils/functions'
 
 export interface MenuI {
   user: UserProps
@@ -29,8 +30,7 @@ const Menu = ({ user, onSignOut }: MenuI) => {
         </div>
         {user.telegramAccelarWallets?.length > 0 && (
           <div className="flex items-center gap-x-3">
-            <div>{user.telegramAccelarWallets[0].address}</div>
-
+            <div>{transformString(user.telegramAccelarWallets[0].address)}</div>
             <img
               alt="ethereum avatar"
               src="/images/workspace/copy.svg"
