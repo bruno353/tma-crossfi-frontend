@@ -26,11 +26,15 @@ import { getUserWorkspace } from '@/utils/api'
 import { WorkspaceProps } from '@/types/workspace'
 import { Logo } from '../Sidebar/Logo'
 import { workflowTypeToOptions } from '@/utils/consts'
+import { callAxiosBackend } from '@/utils/general-api'
+import { TelegramAppProps, TelegramAppType } from '@/types/telegram'
 
 const Dashboard = () => {
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [workspaces, setWorkspaces] = useState<WorkspaceProps[]>([])
+  const [apps, setApps] = useState<TelegramAppProps[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [queryInput, setQueryInput] = useState<string>()
 
   const { push } = useRouter()
   const pathname = usePathname()
@@ -43,17 +47,33 @@ const Dashboard = () => {
     setIsCreatingNewWorkspace(false)
   }
 
-  async function getData() {
+  const categoryToList = {
+    Web3: TelegramAppType.WEB3,
+    Games: TelegramAppType.GAME,
+    Utilities: TelegramAppType.UTILITY,
+  }
+
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(category)
+    getData(category)
+  }
+
+  async function getData(category: string | null = null) {
     const { userSessionToken } = parseCookies()
 
     try {
-      const res = await getUserWorkspace(userSessionToken)
-      setWorkspaces(res)
+      const res = await callAxiosBackend(
+        'get',
+        `/telegram/apps?chain=CROSSFI${
+          category ? `&category=${category}` : ''
+        }`,
+        userSessionToken,
+      )
+      setApps(res)
       setIsLoading(false)
     } catch (err) {
       console.log(err)
       toast.error(`Error: ${err.response.data.message}`)
-      push('/')
       setIsLoading(false)
     }
   }
@@ -62,9 +82,15 @@ const Dashboard = () => {
     return (
       <div className="mx-auto w-fit items-center justify-center">
         <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
-        <span>No workspaces found</span>
+        <span>No Apps found</span>
       </div>
     )
+  }
+
+  const handleInputChange = (e) => {
+    if (!isLoading) {
+      setQueryInput(e.target.value)
+    }
   }
 
   useEffect(() => {
@@ -74,46 +100,51 @@ const Dashboard = () => {
 
   return (
     <>
-      <section className="relative z-10 overflow-hidden px-[20px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
+      <section className="relative z-10 overflow-hidden px-[5px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="container text-[#fff]">
-          <div className="flex items-center justify-between gap-x-[20px]">
-            <div>Home</div>
-            <div
-              onClick={openModal}
-              className={`${
-                workspaces.length === 0 && 'animate-bounce'
-              } cursor-pointer rounded-[5px] bg-[#273687] p-[4px] px-[15px] text-[14px] text-[#fff] hover:bg-[#35428a]`}
-            >
-              + New workspace
-            </div>
+          <div className="mb-4 flex gap-4">
+            {Object.keys(categoryToList).map((category) => (
+              <button
+                key={category}
+                onClick={() => handleCategoryClick(categoryToList[category])}
+                className={`rounded px-1 py-2 ${
+                  selectedCategory === categoryToList[category]
+                    ? 'bg-blue-500'
+                    : 'bg-gray-700'
+                } text-white`}
+              >
+                {category}
+              </button>
+            ))}
           </div>
-          <div className="mt-[50px] grid w-full grid-cols-3 gap-x-[30px] gap-y-[30px]">
-            {workspaces.map((workspace, index) => (
-              <a key={index} href={`/workspace/${workspace.id}`}>
-                <div className="relative grid h-40 w-full cursor-pointer rounded-[5px]  border-[0.6px] border-[#c5c4c45e] bg-transparent  p-[20px] text-[#fff] hover:bg-[#13132c]">
-                  <div className="flex items-start gap-x-[20px] overflow-hidden ">
-                    <Logo
-                      name={workspace.name}
-                      workspaceUrl={workspace.finalURL}
-                      tamanho={'[40px]'}
-                    />
-                    <div
-                      title={workspace.name}
-                      className="overflow-hidden truncate text-ellipsis whitespace-nowrap"
-                    >
-                      {workspace.name}
-                    </div>
-                  </div>
-                  <div className="mt-auto text-[12px] text-[#C5C4C4]">
-                    Created at: {workspace.createdAt}
-                  </div>
+          <div className="">
+            <input
+              type="text"
+              id="workspaceName"
+              name="workspaceName"
+              maxLength={100}
+              placeholder="Search apps"
+              value={queryInput}
+              onChange={handleInputChange}
+              className="w-[300px] rounded-md border border-transparent px-6 py-1 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp md:w-[400px]"
+            />
+          </div>
+          <div className="mb-3 mt-[50px] font-semibold">Community choices</div>
+          <div className=" overflow-x-auto whitespace-nowrap">
+            {apps.map((app, index) => (
+              <a key={index} href={app.telegramUrl} className="inline-block">
+                <div className="relative inline-block cursor-pointer rounded-[5px] px-3  text-center text-xs text-[#fff] hover:bg-[#13132c]">
                   <img
-                    src={workflowTypeToOptions[workspace?.type]?.imgSource}
+                    src={app.logoUrl}
                     alt="image"
-                    className={`absolute right-2 top-2 ${
-                      workflowTypeToOptions[workspace?.type]?.imgStyleTitle
-                    }`}
+                    className={`h-[60px] w-[60px] rounded-lg`}
                   />
+                  <div
+                    title={app.name}
+                    className="mt-1 max-w-[60px] overflow-hidden truncate text-ellipsis whitespace-nowrap"
+                  >
+                    {app.name}
+                  </div>
                 </div>
               </a>
             ))}
@@ -125,7 +156,7 @@ const Dashboard = () => {
               <div className="h-40 w-full animate-pulse rounded-[5px] bg-[#1d2144b0]"></div>
             </div>
           )}
-          {workspaces?.length === 0 && !isLoading && (
+          {apps?.length === 0 && !isLoading && (
             <div className="mt-[100px] w-full items-center">
               {NoWorkspaces()}
             </div>

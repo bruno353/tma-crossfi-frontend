@@ -19,7 +19,7 @@ export interface MenuI {
 const Menu = ({ user, onSignOut }: MenuI) => {
   return (
     <>
-      <div className="h-full w-[300px] rounded-[10px]  border-[1px] border-[#33323e] bg-[#060621] p-[15px] text-[14px] font-normal text-[#c5c4c4]">
+      <div className="h-full w-[250px] rounded-[10px] border-[1px]  border-[#33323e] bg-[#060621] p-[15px] text-[14px] font-normal text-[#c5c4c4] lg:w-[300px]">
         <div className="grid gap-y-[20px]">
           <img
             alt="ethereum avatar"

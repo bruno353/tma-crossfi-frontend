@@ -44,55 +44,41 @@ const SignUp = () => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
 
   const [userData, setUserData] = useState<UserData | null>(null)
-  const [initData, setInitData] = useState<any>(null)
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Verificar se está no navegador
+    // Verificar se está no navegador
 
-      // Mova a importação do SDK para dentro do useEffect
-      const initTelegram = async () => {
-        try {
-          const WebApp = (await import('@twa-dev/sdk')).default
-          WebApp.ready()
-          console.log('use effect telegram chamado')
-          if (WebApp.initDataUnsafe.user) {
-            console.log('possui WebApp.initDataUnsafe.user')
-            setUserData(WebApp.initDataUnsafe.user as UserData)
-          }
-          const initData = WebApp.initData
-          setInitData(JSON.stringify(initData))
-          if (initData) {
-            const res = await callAxiosBackend(
-              'post',
-              '/user/functions/telegram/auth',
-              'userSessionToken',
-              { initData: WebApp.initData }, // Envie como objeto
-            )
-            setCookie(null, 'userSessionToken', res.sessionToken, {
-              path: '/',
-              maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
-              secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
-              sameSite: 'strict', // Recomendado para evitar ataques de CSRF
-            })
-            setCookie(null, 'user', JSON.stringify(res), {
-              path: '/',
-              maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
-              secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
-              sameSite: 'strict', // Recomendado para evitar ataques de CSRF
-            })
-            setUser(res)
-            setIsLoading(false)
-            push('/dashboard')
-          }
-        } catch (error) {
-          console.error('Error initializing Telegram Web App:', error)
-          toast.error(`Here Error: ${error}`)
-        }
+    // Mova a importação do SDK para dentro do useEffect
+    const initTelegram = async () => {
+      try {
+        const res = await callAxiosBackend(
+          'post',
+          '/user/functions/telegram/auth-admin',
+          'userSessionToken',
+          { username: 'bruno001santos' }, // Envie como objeto
+        )
+        setCookie(null, 'userSessionToken', res.sessionToken, {
+          path: '/',
+          maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+          secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+          sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+        })
+        setCookie(null, 'user', JSON.stringify(res), {
+          path: '/',
+          maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
+          secure: true, // Recomendado para produção, garante que o cookie seja enviado apenas por HTTPS
+          sameSite: 'strict', // Recomendado para evitar ataques de CSRF
+        })
+        setUser(res)
+        setIsLoading(false)
+        push('/dashboard')
+      } catch (error) {
+        console.error('Error initializing Telegram Web App:', error)
+        toast.error(`Here Error: ${error}`)
       }
-
-      initTelegram()
     }
+
+    initTelegram()
   }, [])
 
   const { push } = useRouter()
