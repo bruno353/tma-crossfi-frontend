@@ -69,6 +69,7 @@ const SignUp = () => {
               'userSessionToken',
               { initData: WebApp.initData }, // Envie como objeto
             )
+            toast.success(res.sessionToken)
             setCookie(null, 'userSessionToken', res.sessionToken, {
               path: '/',
               maxAge: 30 * 24 * 60 * 60, // Exemplo de validade do cookie: 30 dias
