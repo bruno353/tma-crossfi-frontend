@@ -1,8 +1,15 @@
 import { UserWorkspaceProps, WorkspaceInviteProps } from './workspace'
 
+export interface TelegramAccelarWallet {
+  address: string
+  encryptedPk: string
+  chain: string
+}
+
 export interface UserProps {
   id: string
   telegramUsername: string
+  telegramAccelarWallets: TelegramAccelarWallet[]
   name: string
   email: string
   password: string

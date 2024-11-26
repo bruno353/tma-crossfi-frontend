@@ -83,7 +83,6 @@ const SignUp = () => {
             })
             setUser(res)
             setIsLoading(false)
-            toast.success('pushing to dashgboard')
             push('/dashboard')
           }
         } catch (error) {
@@ -163,6 +162,7 @@ const SignUp = () => {
         })
         setUser(user)
         push('/dashboard')
+        window.location.reload()
       }
     } catch (err) {
       console.log(err)
