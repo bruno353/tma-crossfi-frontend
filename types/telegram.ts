@@ -9,10 +9,12 @@ enum TelegramChain {
 }
 
 export interface TelegramAppProps {
+  id: string
   name: string
+  desc: string
   logoUrl: string
   telegramUrl: string
   chain: TelegramChain
   category: TelegramAppType
-  subcategories: string
+  subcategories: string[]
 }

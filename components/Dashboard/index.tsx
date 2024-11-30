@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 import { useEffect, useState } from 'react'
 import { parseCookies } from 'nookies'
@@ -34,11 +35,11 @@ const Dashboard = () => {
   // Busca os dados quando o valor de debounce ou categoria muda
   useEffect(() => {
     const fetchData = async () => {
-      if (!debouncedQuery && !selectedCategory) return // Evita buscas desnecessárias
       const { userSessionToken } = parseCookies()
       setIsLoading(true)
 
       try {
+        // Configura a URL da API com base nos filtros
         const res = await callAxiosBackend(
           'get',
           `/telegram/apps?chain=CROSSFI${
@@ -46,7 +47,7 @@ const Dashboard = () => {
           }${debouncedQuery ? `&search=${debouncedQuery}` : ''}`,
           userSessionToken,
         )
-        setApps(res)
+        setApps(res) // Atualiza os apps com os dados retornados
       } catch (err) {
         console.error(err)
         toast.error(
@@ -57,6 +58,7 @@ const Dashboard = () => {
       }
     }
 
+    // Sempre busca dados, mesmo que `debouncedQuery` e `selectedCategory` estejam vazios
     fetchData()
   }, [debouncedQuery, selectedCategory])
 
@@ -66,7 +68,11 @@ const Dashboard = () => {
   }
 
   const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category)
+    if (category === selectedCategory) {
+      setSelectedCategory(null)
+    } else {
+      setSelectedCategory(category)
+    }
   }
 
   function NoWorkspaces() {
@@ -74,6 +80,37 @@ const Dashboard = () => {
       <div className="mx-auto w-fit items-center justify-center">
         <SmileySad size={32} className="text-blue-500 mx-auto  mb-2" />
         <span>No Apps found</span>
+      </div>
+    )
+  }
+
+  const filterAppsBySubcategory = (subcategory: string) => {
+    return apps.filter((app) => app.subcategories.includes(subcategory))
+  }
+
+  function renderAppsBySubcategory(title: string, filter: string) {
+    return (
+      <div>
+        <div className="mb-3 mt-5 font-semibold">{title}</div>
+        <div className="overflow-x-auto whitespace-nowrap">
+          {filterAppsBySubcategory(filter).map((app, index) => (
+            <a key={index} href={`apps/${app.id}`} className="inline-block">
+              <div className="relative inline-block cursor-pointer rounded-[5px] px-3 text-center text-xs text-[#fff] hover:bg-[#13132c]">
+                <img
+                  src={app.logoUrl}
+                  alt="image"
+                  className="h-[60px] w-[60px] rounded-lg"
+                />
+                <div
+                  title={app.name}
+                  className="mt-1 max-w-[60px] overflow-hidden truncate text-ellipsis whitespace-nowrap"
+                >
+                  {app.name}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
     )
   }
@@ -118,42 +155,88 @@ const Dashboard = () => {
             </svg>
           </div>
         ) : (
-          <div>
-            <div className="mb-4 mt-2 flex gap-4">
+          <div className="mt-2">
+            <div className="mb-4 flex gap-4">
               {Object.keys(categoryToList).map((category) => (
                 <button
                   key={category}
                   onClick={() => handleCategoryClick(categoryToList[category])}
                   className={`rounded px-1 py-2 ${
                     selectedCategory === categoryToList[category]
-                      ? 'bg-blue-500'
-                      : 'bg-gray-700'
-                  } text-white`}
+                      ? 'text-white'
+                      : 'text-grey'
+                  }`}
                 >
                   {category}
                 </button>
               ))}
             </div>
-            <div className="mb-3 mt-5 font-semibold">Community choices</div>
-            <div className="overflow-x-auto whitespace-nowrap">
-              {apps.map((app, index) => (
-                <a key={index} href={app.telegramUrl} className="inline-block">
-                  <div className="relative inline-block cursor-pointer rounded-[5px] px-3 text-center text-xs text-[#fff] hover:bg-[#13132c]">
-                    <img
-                      src={app.logoUrl}
-                      alt="image"
-                      className="h-[60px] w-[60px] rounded-lg"
-                    />
-                    <div
-                      title={app.name}
-                      className="mt-1 max-w-[60px] overflow-hidden truncate text-ellipsis whitespace-nowrap"
+            {queryInput?.length === 0 && !selectedCategory ? (
+              <div>
+                {renderAppsBySubcategory(
+                  'Community choices',
+                  'community_choices',
+                )}
+                <div className="relative mt-10 rounded-lg bg-[#13132c] p-4 text-white shadow-lg">
+                  <h3 className="text-lg font-bold">
+                    New Launch: DeFi Staking for CrossFi
+                  </h3>
+                  <p className="mt-2 text-sm">
+                    Discover the latest DeFi Staking opportunities with CrossFi.
+                    Earn rewards and grow your portfolio with our new staking
+                    options.
+                  </p>
+                  <div className="flex justify-between">
+                    <a
+                      href="/defi-staking"
+                      className="hover:bg-primary-dark mt-6 inline-block h-fit rounded bg-primary px-4 py-2 text-sm font-semibold text-white"
                     >
-                      {app.name}
-                    </div>
+                      Learn More
+                    </a>
+                    <img
+                      alt="search"
+                      src="/images/telegram/canon.png"
+                      className="absolute bottom-1 right-0 w-[100px] translate-x-3 opacity-70"
+                    />
                   </div>
-                </a>
-              ))}
-            </div>
+                </div>
+                <div className="mt-10">
+                  {renderAppsBySubcategory('Earn MPX', 'earn')}
+                </div>
+              </div>
+            ) : (
+              <div className="mt-10 grid gap-y-6">
+                {apps.map((app, index) => (
+                  <a
+                    key={index}
+                    href={app.telegramUrl}
+                    className="inline-block"
+                  >
+                    <div className="relative flex cursor-pointer  gap-x-2 rounded-[5px] px-3 text-xs text-[#fff] hover:bg-[#13132c]">
+                      <img
+                        src={app.logoUrl}
+                        alt="image"
+                        className="h-[60px] w-[60px] rounded-lg"
+                      />
+                      <div className="grid gap-y-1">
+                        <div
+                          title={app.name}
+                          className="mt-1 max-w-[100px]  overflow-hidden truncate text-ellipsis whitespace-nowrap text-base font-semibold"
+                        >
+                          {app.name}
+                        </div>
+                        <div
+                          title={app.desc}
+                          className="max-w-[150px] overflow-hidden truncate text-ellipsis whitespace-nowrap"
+                        >
+                          {app.desc}
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         )}
         {apps?.length === 0 && queryInput?.length > 0 && !isLoading && (

@@ -11,6 +11,8 @@ import { getCurrentUser } from '@/utils/api'
 import { usePathname, useRouter } from 'next/navigation'
 import Menu from './Menu'
 import NotificationMenu from './NotificationMenu'
+import BlockiesAvatar from './BlockiesAvatar'
+import { MetaMaskAvatar } from 'react-metamask-avatar'
 
 const Header = () => {
   // Navbar toggle
@@ -260,6 +262,13 @@ const Header = () => {
                       src={user.profilePicture}
                       className="w-[30px] max-w-[30px] rounded-full"
                     ></img>
+                    <div className="">
+                      <MetaMaskAvatar
+                        address="0xb01F14d1C9000D453241221EB54648F1C378c970"
+                        size={24}
+                      />{' '}
+                    </div>
+
                     <img
                       alt="arrow"
                       src="/images/header/arrow.svg"
