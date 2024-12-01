@@ -45,14 +45,14 @@ const Menu = ({ user, onSignOut }: MenuI) => {
           </div>
         )}
         <div className="my-[20px] h-[1px] w-full bg-[#33323e]"></div>
-        <Link href={'/dashboard'}>
+        <Link href={'/profile'}>
           <div className="flex cursor-pointer items-center gap-x-[12px] rounded-[5px] p-[5px] hover:bg-[#c5c5c510]">
             <img
               alt="ethereum avatar"
               src="/images/header/home.svg"
               className="w-[17px] rounded-full"
             ></img>
-            <div className="text-[#c5c4c4]">Home</div>
+            <div className="text-[#c5c4c4]">My wallets</div>
           </div>
         </Link>
         <Link href={'/account'}>

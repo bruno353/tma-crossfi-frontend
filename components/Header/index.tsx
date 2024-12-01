@@ -11,7 +11,6 @@ import { getCurrentUser } from '@/utils/api'
 import { usePathname, useRouter } from 'next/navigation'
 import Menu from './Menu'
 import NotificationMenu from './NotificationMenu'
-import BlockiesAvatar from './BlockiesAvatar'
 import { MetaMaskAvatar } from 'react-metamask-avatar'
 
 const Header = () => {
