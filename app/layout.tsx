@@ -29,7 +29,7 @@ export default function RootLayout({
 
       <head />
 
-      <body className="max-w-screen h-full w-full bg-[#060621]">
+      <body className="min-h-screen w-full bg-gradient-to-br from-[#060621] via-[#0a0a3d] to-[#060621] bg-fixed bg-no-repeat">
         <Providers>
           <Web3Modal>
             <Header />

@@ -261,12 +261,12 @@ const Header = () => {
                       src={user.profilePicture}
                       className="w-[30px] max-w-[30px] rounded-full"
                     ></img>
-                    <div className="">
+                    {/* <div className="">
                       <MetaMaskAvatar
                         address="0xb01F14d1C9000D453241221EB54648F1C378c970"
                         size={24}
                       />{' '}
-                    </div>
+                    </div> */}
 
                     <img
                       alt="arrow"

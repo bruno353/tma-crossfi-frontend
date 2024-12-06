@@ -18,3 +18,13 @@ export interface TelegramAppProps {
   category: TelegramAppType
   subcategories: string[]
 }
+
+export interface TelegramWalletProps {
+  id: string
+  name: string
+  address: string
+  chain: TelegramChain
+  createdAt: string
+  updatedAt: string
+  usdBalance: string
+}
