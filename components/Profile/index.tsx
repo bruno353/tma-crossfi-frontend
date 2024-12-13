@@ -1,91 +1,93 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/no-unknown-property */
-/* eslint-disable dot-notation */
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable no-unused-vars */
 'use client'
-// import { useState } from 'react'
-import { useEffect, useState, ChangeEvent, FC, useContext } from 'react'
-import { usePathname, useSearchParams, useRouter } from 'next/navigation'
+import { useEffect, useState, useContext } from 'react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import 'react-quill/dist/quill.snow.css' // import styles
-import 'react-datepicker/dist/react-datepicker.css'
 import { parseCookies } from 'nookies'
 import { callAxiosBackend } from '@/utils/general-api'
-import { TelegramAppProps, TelegramWalletProps } from '@/types/telegram'
+import { TelegramWalletProps } from '@/types/telegram'
 import { AccountContext } from '../../contexts/AccountContext'
 import { ChevronDown, Plus, Wallet, ArrowLeft } from 'lucide-react'
 import CreateWalletView from './CreateWalletView'
-
-// Function to capitalize only the first letter and make the rest lowercase
-function capitalizeFirst(text: string): string {
-  if (!text) return ''
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
-}
+import {
+  loadLocalWallets,
+  mergeWallets,
+  CombinedWallet,
+} from './local-db/DbManager'
+import { Sparklines, SparklinesLine } from 'react-sparklines'
+import TokenCard from './TokenCard'
+import TokenCarousel from './TokenCarousel'
+import { fetchTokensData, TokenData } from './TokensData'
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [wallets, setWallets] = useState<TelegramWalletProps[]>()
-  const [walletSelected, setWalletSelected] = useState<TelegramWalletProps>()
+  const [combinedWallets, setCombinedWallets] = useState<CombinedWallet[]>([])
+  const [selectedWallet, setSelectedWallet] = useState<CombinedWallet>()
   const [showWalletList, setShowWalletList] = useState(false)
   const [showCreateWallet, setShowCreateWallet] = useState(false)
+  const [tokens, setTokens] = useState<TokenData[]>([])
+
+  // const tokens = [
+  //   {
+  //     title: 'Crossfi',
+  //     symbol: 'XFI',
+  //     priceDif: -20,
+  //     priceArray: [5, 10, 5, 20, 25, 18, 12, 5, 1, 20, 30, 50, 10, 15, 0],
+  //   },
+  //   {
+  //     title: 'Bitcoin',
+  //     symbol: 'BTC',
+  //     priceDif: -20,
+  //     priceArray: [5, 10, 5, 20, 25, 18, 12, 5, 1, 20, 30, 50, 10, 15, 0],
+  //   },
+  // ]
+
+  const tokenToImg = {
+    XFI: {
+      imgSource: '/images/telegram/xfi.webp',
+      imgStyle: 'w-[30px] p-1 bg-[#4766EA] rounded-full flex-0',
+    },
+    BTC: {
+      imgSource: '/images/telegram/bitcoin.png',
+      imgStyle: 'w-[30px] p-1 bg-[#4766EA] rounded-full flex-0',
+    },
+  }
 
   const { user } = useContext(AccountContext)
-
   const { push } = useRouter()
-
-  const getAllWalletsFromIndexedDB = async () => {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open('WalletDB', 1)
-
-      request.onsuccess = (event) => {
-        const db = event.target.result
-        const transaction = db.transaction(['WalletStore'], 'readonly')
-        const store = transaction.objectStore('WalletStore')
-        const wallets = []
-
-        const cursorRequest = store.openCursor()
-        cursorRequest.onsuccess = (event) => {
-          const cursor = event.target.result
-          if (cursor) {
-            wallets.push(cursor.value)
-            cursor.continue()
-          } else {
-            resolve(wallets) // Resolva a lista quando o cursor terminar
-          }
-        }
-
-        cursorRequest.onerror = (error) => {
-          reject(`Failed to retrieve wallets: ${error.target.error}`)
-        }
-      }
-
-      request.onerror = (error) => {
-        reject(`Failed to open database: ${error.target.error}`)
-      }
-    })
-  }
 
   async function getData() {
     setIsLoading(true)
-    const { userSessionToken } = parseCookies()
-
     try {
-      const res = await callAxiosBackend(
-        'get',
-        `/telegram/wallets`,
-        userSessionToken,
-      )
-      setWallets(res)
-      setWalletSelected(res[0])
-      const wallets = await getAllWalletsFromIndexedDB();
-      console.log('Wallets retrieved:', wallets);
-      toast.success(JSON.stringify(wallets))
+      const [walletData, tokensData] = await Promise.all([
+        Promise.all([
+          loadLocalWallets(),
+          callAxiosBackend(
+            'get',
+            `/telegram/wallets`,
+            parseCookies().userSessionToken,
+          ),
+        ]),
+        fetchTokensData(),
+      ])
+
+      const [localWallets, backendResponse] = walletData
+
+      // Atualizar wallets
+      const backendWallets = backendResponse.map((wallet) => ({
+        address: wallet.address,
+        isLocal: false,
+      }))
+      const merged = mergeWallets(localWallets, backendWallets)
+      setCombinedWallets(merged)
+      setSelectedWallet(merged[0])
+
+      // Atualizar tokens
+      setTokens(tokensData)
     } catch (err) {
-      console.log(err)
-      toast.error(`Error: ${err.response.data.message}`)
-      push('/dashboard')
+      console.error(err)
+      toast.error(
+        `Error: ${err?.response?.data?.message || 'Failed to fetch data'}`,
+      )
     }
     setIsLoading(false)
   }
@@ -108,8 +110,8 @@ const Profile = () => {
       <section className="relative z-10 overflow-hidden px-[10px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <CreateWalletView
           onWalletCreated={() => {
-            console.log('hey')
             setShowCreateWallet(false)
+            getData() // Refresh wallet list after creation
           }}
         />
       </section>
@@ -120,71 +122,116 @@ const Profile = () => {
     return (
       <section className="relative z-10 overflow-hidden px-[10px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
         <div className="container text-[#fff]">
-          <div>Select your wallet</div>
-          <div>
-            {wallets.map((wallet, index) => (
+          <div className="mb-6 flex items-center gap-2">
+            <button
+              onClick={() => setShowWalletList(false)}
+              className="rounded-full p-2 hover:bg-[#1d21448e]"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <h2>Select your wallet</h2>
+          </div>
+          <div className="space-y-4">
+            {combinedWallets.map((wallet, index) => (
               <div
                 key={index}
-                onClick={() => setShowWalletList(true)}
-                className="mx-auto mt-10 flex w-full max-w-[220px]  cursor-pointer items-center justify-between rounded-lg bg-[#1d21448e] p-3 py-4 transition-all hover:bg-[#2a2f5a]"
+                onClick={() => {
+                  setSelectedWallet(wallet)
+                  setShowWalletList(false)
+                }}
+                className="mx-auto flex w-full max-w-[220px] cursor-pointer items-center justify-between rounded-lg bg-[#1d21448e] p-3 py-4 transition-all hover:bg-[#2a2f5a]"
               >
                 <div className="flex items-center gap-2">
                   <div
-                    className="h-2 w-2 rounded-full bg-[#4646e7]"
-                    style={{ boxShadow: '0 0 8px #4646e7' }}
+                    className={`h-2 w-2 rounded-full ${
+                      wallet.isLocal ? 'bg-[#4646e7]' : 'bg-[#46e746]'
+                    }`}
+                    style={{
+                      boxShadow: wallet.isLocal
+                        ? '0 0 8px #4646e7'
+                        : '0 0 8px #46e746',
+                    }}
                   />
                   <div>
                     <p className="text-gray-400 text-sm">
-                      {wallet?.address?.slice(0, 6)}...
-                      {wallet?.address?.slice(-4)}
+                      {wallet.address.slice(0, 6)}...
+                      {wallet.address.slice(-4)}
+                    </p>
+                    <p className="text-gray-500 text-xs">
+                      {wallet.isLocal ? 'Local Wallet' : 'Custodial Wallet'}
                     </p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-        <div onClick={() => setShowCreateWallet(true)} className="mt-5">
-          + Create wallet
+          <button
+            onClick={() => setShowCreateWallet(true)}
+            className="text-blue-400 hover:text-blue-300 mx-auto mt-6 flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Create new wallet
+          </button>
         </div>
       </section>
     )
   }
 
   return (
-    <>
-      <section className="relative z-10 overflow-hidden px-[10px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
-        <div className="container text-[#fff]">
-          <div className="flex justify-between">
-            <div>Hello, {user.telegramUsername}</div>
+    <section className="relative z-10 overflow-hidden px-[10px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
+      <div className="container text-[#fff]">
+        <div className="flex justify-between">
+          <div>Hello, {user.telegramUsername}</div>
+        </div>
+        <div className="mt-10">
+          <div>
+            <div className="text-sm text-body-color">Balance</div>
+            <div>USD </div>
           </div>
-          <div className="mt-10">
-            <div>
-              <div className="text-sm text-body-color">Balance</div>
-              <div>USD </div>
-            </div>
-          </div>
+        </div>
+        {selectedWallet && (
           <div
             onClick={() => setShowWalletList(true)}
-            className="mx-auto mt-10 flex w-full  max-w-[180px] cursor-pointer items-center justify-between rounded-lg bg-[#1d21448e] p-3 transition-all hover:bg-[#2a2f5a]"
+            className="mx-auto mt-10 flex w-full max-w-[180px] cursor-pointer items-center justify-between rounded-lg bg-[#1d21448e] p-3 transition-all hover:bg-[#2a2f5a]"
           >
             <div className="flex items-center gap-2">
               <div
-                className="h-2 w-2 rounded-full bg-[#4646e7]"
-                style={{ boxShadow: '0 0 8px #4646e7' }}
+                className={`h-2 w-2 rounded-full ${
+                  selectedWallet.isLocal ? 'bg-[#4646e7]' : 'bg-[#46e746]'
+                }`}
+                style={{
+                  boxShadow: selectedWallet.isLocal
+                    ? '0 0 8px #4646e7'
+                    : '0 0 8px #46e746',
+                }}
               />
               <div>
                 <p className="text-gray-400 text-sm">
-                  {walletSelected?.address?.slice(0, 6)}...
-                  {walletSelected?.address?.slice(-4)}
+                  {selectedWallet.address.slice(0, 6)}...
+                  {selectedWallet.address.slice(-4)}
                 </p>
               </div>
             </div>
             <ChevronDown className="text-gray-400 h-5 w-5" />
           </div>
+        )}
+        <div className="mt-10">
+          <TokenCarousel>
+            {tokens.map((token, index) => (
+              <TokenCard
+                key={index}
+                name={token.title}
+                symbol={token.symbol}
+                price={6780} // Add your actual price
+                priceChange={token.priceDif}
+                priceArray={token.priceArray}
+                icon={tokenToImg[token.symbol]?.imgSource} // Add your icon path
+              />
+            ))}
+          </TokenCarousel>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   )
 }
 

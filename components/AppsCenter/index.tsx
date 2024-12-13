@@ -31,6 +31,7 @@ const AppsCenter = () => {
   const [isCreatingNewWorkspace, setIsCreatingNewWorkspace] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [workspaces, setWorkspaces] = useState<WorkspaceProps[]>([])
+  const [apps, setApps] = useState<WorkspaceProps[]>([])
 
   const { push } = useRouter()
   const pathname = usePathname()

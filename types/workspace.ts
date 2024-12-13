@@ -33,6 +33,21 @@ export interface WorkspaceProps {
   isUserAdmin: boolean
 }
 
+export interface AppsProps {
+  id: string
+  name: string
+  logoURL?: string
+  type: WorkspaceType
+  BlockchainWallets: BlockchainWalletProps[]
+  createdAt: string
+  updatedAt: string
+  icpWalletPubKPrincipal: string
+  icpWalletPubKId: string
+  icpAccountBalance: string
+  UserWorkspace: UserWorkspaceProps[]
+  isUserAdmin: boolean
+}
+
 export interface WorkspaceInviteProps {
   id: string
   workspaceId: string
