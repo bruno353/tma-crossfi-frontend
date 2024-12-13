@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Send, Wallet, CreditCard } from 'lucide-react'
+import { Send, Wallet, CreditCard, ScrollText } from 'lucide-react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import SendTokenSheet from './SendTokenSheet'
@@ -19,14 +19,14 @@ const ActionButtons = ({ walletAddress }) => {
 
   return (
     <div className="my-6">
-      <div className="flex justify-center gap-x-10">
+      <div className="flex justify-center gap-x-8">
         {/* Send Button */}
         <button
           onClick={() => setShowSendSheet(true)}
           className="text-gray-300 flex flex-col items-center gap-2 transition-colors hover:text-white"
         >
-          <div className="rounded-xl bg-[#1d21448e] p-3 hover:bg-[#2a2f5a]">
-            <Send size={24} />
+          <div className="rounded-xl bg-[#1d21448e] p-2 hover:bg-[#2a2f5a]">
+            <Send size={20} />
           </div>
           <span className="text-xs">Send</span>
         </button>
@@ -36,8 +36,8 @@ const ActionButtons = ({ walletAddress }) => {
           onClick={handleCopyAddress}
           className="text-gray-300 flex flex-col items-center gap-2 transition-colors hover:text-white"
         >
-          <div className="rounded-xl bg-[#1d21448e] p-3 hover:bg-[#2a2f5a]">
-            <Wallet size={24} />
+          <div className="rounded-xl bg-[#1d21448e] p-2 hover:bg-[#2a2f5a]">
+            <Wallet size={20} />
           </div>
           <span className="text-xs">Receive</span>
         </button>
@@ -47,10 +47,19 @@ const ActionButtons = ({ walletAddress }) => {
           onClick={() => setShowBuyModal(true)}
           className="text-gray-300 flex flex-col items-center gap-2 transition-colors hover:text-white"
         >
-          <div className="rounded-xl bg-[#1d21448e] p-3 hover:bg-[#2a2f5a]">
-            <CreditCard size={24} />
+          <div className="rounded-xl bg-[#1d21448e] p-2 hover:bg-[#2a2f5a]">
+            <CreditCard size={20} />
           </div>
           <span className="text-xs">Buy</span>
+        </button>
+        <button
+          onClick={() => setShowBuyModal(true)}
+          className="text-gray-300 flex flex-col items-center gap-2 transition-colors hover:text-white"
+        >
+          <div className="rounded-xl bg-[#1d21448e] p-2 hover:bg-[#2a2f5a]">
+            <ScrollText size={20} />
+          </div>
+          <span className="text-xs">History</span>
         </button>
       </div>
 

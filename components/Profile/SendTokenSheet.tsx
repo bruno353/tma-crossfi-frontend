@@ -3,7 +3,6 @@ import { X, ChevronDown } from 'lucide-react'
 
 const SendTokenSheet = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1)
-  const [selectedToken, setSelectedToken] = useState('XFI')
   const [toAddress, setToAddress] = useState('')
   const [amount, setAmount] = useState('')
   const [recentAddresses] = useState(['0x1234...5678', '0x8765...4321'])
@@ -12,6 +11,25 @@ const SendTokenSheet = ({ isOpen, onClose }) => {
   const dragRef = useRef(null)
   const dragStartY = useRef(0)
   const currentY = useRef(0)
+
+  // No início do componente, adicione a lista de tokens disponíveis
+  const availableTokens = [
+    {
+      name: 'Crossfi',
+      symbol: 'XFI',
+      image: '/images/telegram/xfi.webp',
+      address: '0x123...', // Endereço do contrato, não mostrado no UI
+    },
+    // Adicione mais tokens conforme necessário
+  ]
+
+  // Adicione um estado para controlar a visibilidade do dropdown
+  const [isTokenDropdownOpen, setIsTokenDropdownOpen] = useState(false)
+
+  // Modifique a seleção de token para usar o objeto completo
+  const [selectedToken, setSelectedToken] = useState(availableTokens[0])
+
+  // E então modifique a seção de Token Selection para:
 
   // Adicione este useEffect
   useEffect(() => {
@@ -101,23 +119,66 @@ const SendTokenSheet = ({ isOpen, onClose }) => {
           </div>
 
           {step === 1 && (
-            <div className="mt-6 space-y-6">
+            <div className="mt-6 space-y-6 pb-4">
               {/* Token Selection */}
               <div>
-                <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
+                <div
+                  onClick={() => setIsTokenDropdownOpen(!isTokenDropdownOpen)}
+                  className="flex cursor-pointer items-center justify-between rounded-lg bg-white/5 px-4 py-1 hover:bg-white/10"
+                >
                   <div className="flex items-center gap-3">
                     <img
-                      src="/images/telegram/xfi.webp"
-                      alt="XFI"
-                      className="h-10 w-10 rounded-full"
+                      src={selectedToken.image}
+                      alt={selectedToken.symbol}
+                      className="h-8 w-8 rounded-full"
                     />
                     <div>
-                      <p className="text-white">Crossfi</p>
-                      <p className="text-gray-400 text-sm">XFI</p>
+                      <p className="text-white">{selectedToken.name}</p>
+                      <p className="text-gray-400 text-sm">
+                        {selectedToken.symbol}
+                      </p>
                     </div>
                   </div>
-                  <ChevronDown className="text-gray-400" />
+                  <ChevronDown
+                    className={`text-gray-400 transition-transform duration-200 ${
+                      isTokenDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                  />
                 </div>
+
+                {/* Token Dropdown */}
+                {isTokenDropdownOpen && (
+                  <div className="absolute left-0 right-0 mx-6 mt-2 overflow-hidden rounded-lg bg-[#2a2f5a] shadow-lg">
+                    <div className="max-h-[200px] overflow-y-auto">
+                      {availableTokens.map((token) => (
+                        <div
+                          key={token.symbol}
+                          onClick={() => {
+                            setSelectedToken(token)
+                            setIsTokenDropdownOpen(false)
+                          }}
+                          className={`flex cursor-pointer items-center gap-3 px-4 py-2 transition-colors hover:bg-white/5 ${
+                            selectedToken.symbol === token.symbol
+                              ? 'bg-white/10'
+                              : ''
+                          }`}
+                        >
+                          <img
+                            src={token.image}
+                            alt={token.symbol}
+                            className="h-8 w-8 rounded-full"
+                          />
+                          <div>
+                            <p className="text-white">{token.name}</p>
+                            <p className="text-gray-400 text-sm">
+                              {token.symbol}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* To Address */}
@@ -128,7 +189,7 @@ const SendTokenSheet = ({ isOpen, onClose }) => {
                   value={toAddress}
                   onChange={(e) => setToAddress(e.target.value)}
                   placeholder="Enter wallet address"
-                  className="placeholder:text-gray-500 focus:ring-purple-500 w-full rounded-lg bg-white/5 p-4 text-white focus:outline-none focus:ring-2"
+                  className="placeholder:text-gray-500 focus:ring-purple-500 w-full rounded-lg bg-white/5 px-4 py-2 text-white focus:outline-none focus:ring-2"
                 />
                 {/* Recent addresses */}
                 {recentAddresses.length > 0 && (
@@ -157,7 +218,7 @@ const SendTokenSheet = ({ isOpen, onClose }) => {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.0"
-                  className="placeholder:text-gray-500 focus:ring-purple-500 w-full rounded-lg bg-white/5 p-4 text-white focus:outline-none focus:ring-2"
+                  className="placeholder:text-gray-500 focus:ring-purple-500 w-full rounded-lg bg-white/5 px-4 py-2 text-white focus:outline-none focus:ring-2"
                 />
               </div>
 
@@ -165,7 +226,7 @@ const SendTokenSheet = ({ isOpen, onClose }) => {
               <button
                 onClick={() => setStep(2)}
                 disabled={!toAddress || !amount}
-                className="from-purple-500 to-purple-700 w-full rounded-lg bg-gradient-to-r py-4 text-white disabled:opacity-50"
+                className="hover:bg-primary-dark mt-8 inline-block h-fit w-full rounded bg-primary px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
               >
                 Next
               </button>
