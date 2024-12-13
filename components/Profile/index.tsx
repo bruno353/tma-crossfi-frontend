@@ -222,7 +222,7 @@ const Profile = () => {
                 key={index}
                 name={token.title}
                 symbol={token.symbol}
-                price={6780} // Add your actual price
+                price={token.currentPrice} // Add your actual price
                 priceChange={token.priceDif}
                 priceArray={token.priceArray}
                 icon={tokenToImg[token.symbol]?.imgSource} // Add your icon path
