@@ -9,8 +9,24 @@ const TokenCard = ({
   priceChange,
   priceArray = [5, 10, 5, 20, 25, 18, 12, 5, 1, 20, 30, 50, 10, 15, 20],
 }) => {
+  // Função para normalizar os dados do gráfico entre 0 e 1
+  const normalizeData = (data) => {
+    if (!data || data.length === 0) return []
+    const min = Math.min(...data)
+    const max = Math.max(...data)
+    const range = max - min
+
+    // Se não houver variação, retorna uma linha reta
+    if (range === 0) return data.map(() => 0.5)
+
+    // Normaliza os valores entre 0 e 1
+    return data.map((value) => (value - min) / range)
+  }
+
+  const normalizedData = normalizeData(priceArray)
+
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border-primary bg-[#592a7f22] p-4">
+    <div className="relative w-full min-w-[180px] overflow-hidden rounded-2xl border-primary bg-[#592a7f22] p-4">
       {/* Radial blur effect */}
       <div
         className="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2"
@@ -29,11 +45,6 @@ const TokenCard = ({
             ) : (
               <div className="bg-purple-400 h-8 w-8 rounded-full" />
             )}
-            {/* <img
-              alt="ethereum avatar"
-              src="/images/blockchain/arrow-left.svg"
-              className="w-[20px] h-[20px]"
-            ></img> */}
           </div>
           <div>
             <h3 className="text-lg font-semibold text-white">{symbol}</h3>
@@ -42,11 +53,18 @@ const TokenCard = ({
         </div>
 
         {/* Right side with sparkline */}
-        <div className="w-full pt-2">
-          <Sparklines data={priceArray} width={100} height={30}>
+        <div className="mt-4 h-[40px] max-h-[40px] w-full">
+          <Sparklines
+            data={normalizedData}
+            width={300}
+            height={50}
+            margin={5}
+            min={0}
+            max={1}
+          >
             <SparklinesLine
               style={{
-                strokeWidth: 2,
+                strokeWidth: 2.5,
                 stroke: priceChange >= 0 ? '#22c55e' : '#ef4444',
                 fill: 'none',
               }}

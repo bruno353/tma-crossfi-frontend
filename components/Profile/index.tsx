@@ -2,6 +2,7 @@
 import { useEffect, useState, useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { parseCookies } from 'nookies'
 import { callAxiosBackend } from '@/utils/general-api'
 import { TelegramWalletProps } from '@/types/telegram'
@@ -17,6 +18,7 @@ import { Sparklines, SparklinesLine } from 'react-sparklines'
 import TokenCard from './TokenCard'
 import TokenCarousel from './TokenCarousel'
 import { fetchTokensData, TokenData } from './TokensData'
+import ActionButtons from './ActionButtons'
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -215,6 +217,7 @@ const Profile = () => {
             <ChevronDown className="text-gray-400 h-5 w-5" />
           </div>
         )}
+        <ActionButtons walletAddress={selectedWallet?.address || ''} />{' '}
         <div className="mt-10">
           <TokenCarousel>
             {tokens.map((token, index) => (

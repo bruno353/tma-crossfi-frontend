@@ -10,7 +10,6 @@
   }
 }
 
-
 @layer components {
   input[type="checkbox"]:checked ~ label span svg {
     @apply inline-flex;
@@ -36,10 +35,36 @@
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
-    }
+  }
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-    }
   }
-  
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
