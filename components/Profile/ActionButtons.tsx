@@ -3,9 +3,12 @@ import { Send, Wallet, CreditCard, ScrollText } from 'lucide-react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import SendTokenSheet from './SendTokenSheet'
+import HistorySheet from './HistorySheet'
 
 const ActionButtons = ({ walletAddress }) => {
   const [showSendSheet, setShowSendSheet] = useState(false)
+  const [showHistorySheet, setShowHistorySheet] = useState(false)
+
   const [showBuyModal, setShowBuyModal] = useState(false)
 
   const handleCopyAddress = async () => {
@@ -52,8 +55,10 @@ const ActionButtons = ({ walletAddress }) => {
           </div>
           <span className="text-xs">Buy</span>
         </button>
+
+        {/* History Button */}
         <button
-          onClick={() => setShowBuyModal(true)}
+          onClick={() => setShowHistorySheet(true)}
           className="text-gray-300 flex flex-col items-center gap-2 transition-colors hover:text-white"
         >
           <div className="rounded-xl bg-[#1d21448e] p-2 hover:bg-[#2a2f5a]">
@@ -66,6 +71,11 @@ const ActionButtons = ({ walletAddress }) => {
       <SendTokenSheet
         isOpen={showSendSheet}
         onClose={() => setShowSendSheet(false)}
+      />
+      <HistorySheet
+        isOpen={showHistorySheet}
+        onClose={() => setShowHistorySheet(false)}
+        userAddress={walletAddress}
       />
 
       {/* Buy Modal */}
