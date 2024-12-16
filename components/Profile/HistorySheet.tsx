@@ -7,6 +7,7 @@ import { SmileySad } from 'phosphor-react'
 interface Transaction {
   txhash: string
   timestamp: string
+  logs: any
   isEVM: boolean
   body?: {
     messages: Array<{
@@ -134,6 +135,18 @@ const HistorySheet = ({ isOpen, onClose, userAddress }) => {
     })
   }
 
+  const formatDateClassic = (timestamp: string) => {
+    const date = new Date(timestamp)
+
+    const day = date.getDate().toString().padStart(2, '0')
+    const month = (date.getMonth() + 1).toString().padStart(2, '0')
+    const year = date.getFullYear()
+    const hours = date.getHours().toString().padStart(2, '0')
+    const minutes = date.getMinutes().toString().padStart(2, '0')
+
+    return `${day}/${month}/${year} - ${hours}:${minutes}`
+  }
+
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text)
@@ -141,6 +154,26 @@ const HistorySheet = ({ isOpen, onClose, userAddress }) => {
     } catch (err) {
       toast.error('Failed to copy')
     }
+  }
+
+  function formatTokenAmount(amountStr: string): string {
+    // Se tiver múltiplos tokens (separados por vírgula)
+    const amounts = amountStr.split(',')
+
+    // Procura pelo valor em XFI
+    const xfiAmount = amounts.find((amount) =>
+      amount.toLowerCase().includes('xfi'),
+    )
+
+    if (!xfiAmount) return '0'
+
+    // Remove o 'xfi' ou 'XFI' do final e converte para número
+    const rawAmount = xfiAmount.replace(/xfi$/i, '').trim()
+    // Converte de wei (18 casas decimais) para XFI
+    const amount = Number(rawAmount) / Math.pow(10, 18)
+
+    // Formata com 2 casas decimais
+    return amount.toFixed(5)
   }
 
   if (!isOpen) return null
@@ -216,9 +249,9 @@ const HistorySheet = ({ isOpen, onClose, userAddress }) => {
                       key={tx.txhash}
                       className="rounded-lg bg-white/5 p-4 transition-colors hover:bg-white/10"
                     >
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
                         {/* Hash e tipo de tx à esquerda */}
-                        <div className="flex flex-col gap-1">
+                        <div className="flex justify-between gap-1">
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => copyToClipboard(tx.txhash)}
@@ -229,64 +262,67 @@ const HistorySheet = ({ isOpen, onClose, userAddress }) => {
                               </span>
                               <Copy size={14} />
                             </button>
-                            <div
-                              className={`rounded-full px-3 py-1 text-xs font-medium ${
-                                tx.isEVM
-                                  ? 'bg-blue-500/20 text-blue-400'
-                                  : 'bg-green-500/20 text-green-400'
-                              }`}
-                            >
-                              {tx.isEVM ? 'evm' : 'cosmos'}
-                            </div>
                           </div>
-                          <div className="text-gray-400 text-sm">
-                            {formatDate(tx.timestamp)}
+                          <div className="text-gray-400 text-xs">
+                            {formatDateClassic(tx.timestamp)}
                           </div>
                         </div>
 
                         {/* Tipo de tx e valor à direita */}
-                        <div className="flex flex-col items-end gap-1">
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`rounded-lg px-2 py-1 text-xs font-medium ${
-                                tx.body?.messages[0]?.['@type']?.includes(
-                                  'MsgMultiSend',
-                                )
-                                  ? 'bg-purple-500/20 text-purple-400'
-                                  : tx.body?.messages[0]?.['@type']?.includes(
-                                      'MsgEthereumTx',
-                                    )
-                                  ? 'bg-orange-500/20 text-orange-400'
-                                  : 'bg-gray-500/20 text-gray-400'
-                              }`}
-                            >
-                              {tx.body?.messages[0]?.['@type']
-                                ?.split('.')
-                                .pop()
-                                ?.replace('Msg', '')
-                                .toLowerCase() || 'transfer'}
-                            </span>
-                            <a
-                              href={`https://xfiscan.com/tx/${tx.txhash}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-purple-500 hover:text-purple-400"
-                            >
-                              <ArrowUpRight size={20} />
-                            </a>
-                          </div>
+                        <div className="mt-1 flex flex-col gap-1">
                           <div className="flex items-center gap-1">
                             <span className="text-sm font-medium text-white">
-                              {Number(
-                                tx.body?.messages[0]?.data?.value || 0,
-                              ).toLocaleString()}{' '}
+                              {formatTokenAmount(
+                                tx.logs?.[0]?.events
+                                  ?.find(
+                                    (e) =>
+                                      e.type === 'transfer' ||
+                                      e.type === 'coin_received',
+                                  )
+                                  ?.attributes?.find(
+                                    (attr) => attr.key === 'amount',
+                                  )?.value || '0',
+                              )}{' '}
                               XFI
-                            </span>
-                            <span className="text-gray-400 text-xs">
-                              ($0.00)
                             </span>
                           </div>
                         </div>
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <span
+                          className={`rounded-lg px-2 py-1 text-xs font-medium ${
+                            tx.body?.messages[0]?.['@type']?.includes(
+                              'MsgMultiSend',
+                            )
+                              ? 'bg-purple/20 text-purple'
+                              : tx.body?.messages[0]?.['@type']?.includes(
+                                  'MsgEthereumTx',
+                                )
+                              ? 'bg-orange/20 text-orange-400'
+                              : 'bg-grey/20 text-grey'
+                          }`}
+                        >
+                          {(() => {
+                            const messageType =
+                              tx.body?.messages[0]?.['@type']
+                                ?.split('.')
+                                .pop()
+                                ?.replace('Msg', '')
+                                .toLowerCase() || 'transfer'
+
+                            return messageType === 'withdrawdelegatoreward'
+                              ? 'claim'
+                              : messageType
+                          })()}{' '}
+                        </span>
+                        <a
+                          href={`https://xfiscan.com/tx/${tx.txhash}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple hover:text-purple/20"
+                        >
+                          <ArrowUpRight size={16} />
+                        </a>
                       </div>
                     </div>
                   ))}

@@ -180,59 +180,61 @@ const Profile = () => {
   }
 
   return (
-    <section className="relative z-10 overflow-hidden px-[10px] pb-16 text-[16px] md:pb-20 lg:pb-28 lg:pt-[40px]">
-      <div className="container text-[#fff]">
-        <div className="flex justify-between">
-          <div>Hello, {user.telegramUsername}</div>
-        </div>
-        <div className="mt-10">
-          <div>
-            <div className="text-sm text-body-color">Balance</div>
-            <div>USD </div>
+    <section className="pb-16 md:pb-20 lg:pb-28">
+      <section className="relative z-10 overflow-hidden px-[10px] text-[16px] lg:pt-[40px]">
+        <div className="container text-[#fff]">
+          <div className="flex justify-between">
+            <div>Hello, {user.telegramUsername}</div>
           </div>
-        </div>
-        {selectedWallet && (
-          <div
-            onClick={() => setShowWalletList(true)}
-            className="mx-auto mt-10 flex w-full max-w-[180px] cursor-pointer items-center justify-between rounded-lg bg-[#1d21448e] p-3 transition-all hover:bg-[#2a2f5a]"
-          >
-            <div className="flex items-center gap-2">
-              <div
-                className={`h-2 w-2 rounded-full ${
-                  selectedWallet.isLocal ? 'bg-[#4646e7]' : 'bg-[#46e746]'
-                }`}
-                style={{
-                  boxShadow: selectedWallet.isLocal
-                    ? '0 0 8px #4646e7'
-                    : '0 0 8px #46e746',
-                }}
-              />
-              <div>
-                <p className="text-gray-400 text-sm">
-                  {selectedWallet.address.slice(0, 6)}...
-                  {selectedWallet.address.slice(-4)}
-                </p>
-              </div>
+          <div className="mt-10">
+            <div>
+              <div className="text-sm text-body-color">Balance</div>
+              <div>USD </div>
             </div>
-            <ChevronDown className="text-gray-400 h-5 w-5" />
           </div>
-        )}
-        <ActionButtons walletAddress={selectedWallet?.address || ''} />{' '}
-        <div className="mt-10">
-          <TokenCarousel>
-            {tokens.map((token, index) => (
-              <TokenCard
-                key={index}
-                name={token.title}
-                symbol={token.symbol}
-                price={token.currentPrice} // Add your actual price
-                priceChange={token.priceDif}
-                priceArray={token.priceArray}
-                icon={tokenToImg[token.symbol]?.imgSource} // Add your icon path
-              />
-            ))}
-          </TokenCarousel>
+          {selectedWallet && (
+            <div
+              onClick={() => setShowWalletList(true)}
+              className="mx-auto mt-10 flex w-full max-w-[180px] cursor-pointer items-center justify-between rounded-lg bg-[#1d21448e] p-3 transition-all hover:bg-[#2a2f5a]"
+            >
+              <div className="flex items-center gap-2">
+                <div
+                  className={`h-2 w-2 rounded-full ${
+                    selectedWallet.isLocal ? 'bg-[#4646e7]' : 'bg-[#46e746]'
+                  }`}
+                  style={{
+                    boxShadow: selectedWallet.isLocal
+                      ? '0 0 8px #4646e7'
+                      : '0 0 8px #46e746',
+                  }}
+                />
+                <div>
+                  <p className="text-gray-400 text-sm">
+                    {selectedWallet.address.slice(0, 6)}...
+                    {selectedWallet.address.slice(-4)}
+                  </p>
+                </div>
+              </div>
+              <ChevronDown className="text-gray-400 h-5 w-5" />
+            </div>
+          )}
+          <ActionButtons walletAddress={selectedWallet?.address || ''} />{' '}
         </div>
+      </section>
+      <div className="ml-[10px] mt-8">
+        <TokenCarousel>
+          {tokens.map((token, index) => (
+            <TokenCard
+              key={index}
+              name={token.title}
+              symbol={token.symbol}
+              price={token.currentPrice} // Add your actual price
+              priceChange={token.priceDif}
+              priceArray={token.priceArray}
+              icon={tokenToImg[token.symbol]?.imgSource} // Add your icon path
+            />
+          ))}
+        </TokenCarousel>
       </div>
     </section>
   )
